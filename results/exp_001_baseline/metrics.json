@@ -1,0 +1,16 @@
+{
+  "experiment": "exp_001_baseline",
+  "hypothesis": "Baseline: the original quartic reward from HoverAviary. max(0, 2 - distance^4). No changes \u2014 establishes our reference point.",
+  "timestamp": "2026-03-14T11:08:28.755105",
+  "elapsed_seconds": 182.0,
+  "mean_reward": 474.171,
+  "std_reward": 0.0,
+  "timesteps_trained": 63489,
+  "ppo_kwargs": {
+    "learning_rate": 0.0003,
+    "n_steps": 2048,
+    "batch_size": 64,
+    "gamma": 0.99,
+    "gae_lambda": 0.95
+  }
+}
