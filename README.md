@@ -12,50 +12,74 @@ with PPO from [stable-baselines3](https://github.com/DLR-RM/stable-baselines3).
 
 ```
 Windows Claude (Orchestrator)
-    ↓ writes experiment proposals to INBOX.md
+    ↓ writes experiment config YAML + INBOX.md
 Shared Folder (bridge)
-    ↑ reads results from OUTBOX.md
+    ↑ reads outbox/exp_NNN.md results
 Linux Claude (Executor)
-    → modifies train_rl.py → runs training → documents results
+    → creates config → runs training → documents results
 ```
 
-Each successful experiment is a git commit. The history forms a readable
+Each experiment is a frozen YAML config. The history forms a readable
 research log of what worked, what didn't, and why.
 
 ---
 
-## Setup
+## Quick start
 
-### Requirements
-- Ubuntu VM with gym-pybullet-drones installed
-- Python venv with: `stable-baselines3`, `torch`, `pybullet`, `gymnasium`
-- Shared folder accessible at `/media/sf_Shared/` (VirtualBox) or similar
-
-### Running an experiment
 ```bash
-source ~/repos/drones-venv/bin/activate
-cd /path/to/drone-rl-lab
-python train_rl.py
+source /media/drones-venv/bin/activate
+cd /media/drone-rl-lab
+
+# Run an experiment
+python train_rl.py configs/exp_001_baseline.yaml
+
+# View leaderboard
+python compare.py
+
+# Generate training curve plots
+python plot.py
+
+# Per-step detail for one experiment
+python plot.py --steps exp_001_baseline
 ```
 
 ---
 
-## Experiment Log
+## Project structure
 
-See `program.md` for the full experiment history and research goals.
-
-Each experiment folder in `results/` contains:
-- `metrics.json` — quantitative results
-- `EXPERIMENT.md` — documented explanation (the lesson learned)
+```
+drone-rl-lab/
+├── train_rl.py          # Training infrastructure (don't edit)
+├── compare.py           # Leaderboard tool
+├── plot.py              # Training curve plotter
+├── program.md           # Research goals & rules
+├── INBOX.md             # Windows Claude → Linux Claude
+├── configs/             # Experiment configs (one YAML per experiment)
+│   ├── exp_001_baseline.yaml
+│   ├── exp_002_extended_budget.yaml
+│   └── ...
+├── results/             # Per-experiment outputs
+│   ├── exp_001_baseline/
+│   │   ├── config.yaml      # Frozen copy of the config used
+│   │   ├── metrics.json     # Quantitative results
+│   │   ├── evaluations.npz  # Training curve data
+│   │   ├── steps.csv        # Per-step distance/velocity (v2+)
+│   │   ├── best_model.zip   # Best policy checkpoint
+│   │   └── EXPERIMENT.md    # Documented explanation
+│   └── ...
+└── outbox/              # Linux Claude → Windows Claude (one per experiment)
+    ├── exp_001_baseline.md
+    └── ...
+```
 
 ---
 
-## Architecture
+## Experiment log
 
-| File | Purpose |
-|------|---------|
-| `train_rl.py` | The training script — Linux Claude iterates on this |
-| `program.md` | Research goals and rules for the agents |
-| `INBOX.md` | Windows Claude → Linux Claude (next experiment) |
-| `OUTBOX.md` | Linux Claude → Windows Claude (results) |
-| `results/exp_NNN/` | Per-experiment artifacts and documentation |
+| # | Name | Reward | Key finding |
+|---|------|--------|-------------|
+| 001 | quartic baseline | **474.171** | Reference point — 97.9% of theoretical max |
+| 002 | extended budget (6min) | 474.206 | More time doesn't help — reward is the ceiling |
+| 003 | quadratic reward | 465.792 | Stronger gradient = more crashes, worse performance |
+| 004 | velocity penalty | 470.394 | Penalty destabilizes rather than helps |
+| 005 | conservative PPO | 437.347 | No collapses, but lower ceiling — collapses may be useful |

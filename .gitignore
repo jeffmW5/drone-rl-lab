@@ -7,11 +7,17 @@ __pycache__/
 # Model files (large binaries — track metrics.json instead)
 results/**/*.zip
 
+# Per-step logs (can be large — regenerate by rerunning experiment)
+results/**/steps.csv
+
 # PyBullet temp files
 *.bullet
 
 # Logs
 *.log
+
+# Generated plots (regenerate with plot.py)
+results/**/*.png
 
 # OS
 .DS_Store

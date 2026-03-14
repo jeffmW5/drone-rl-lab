@@ -1,0 +1,16 @@
+name: exp_005_ppo_tuning
+hypothesis: "Lower learning rate and tuned PPO hyperparams eliminate policy collapse and push past 474 ceiling"
+budget_seconds: 180
+
+reward_code: |
+  dist = np.linalg.norm(self.TARGET_POS_CUSTOM - state[0:3])
+  return max(0, 2 - dist**4)
+
+ppo:
+  learning_rate: 0.0001
+  n_steps: 4096
+  batch_size: 128
+  n_epochs: 5
+  clip_range: 0.1
+  gamma: 0.99
+  gae_lambda: 0.95

@@ -1,0 +1,16 @@
+name: exp_003_quadratic_reward
+hypothesis: "Quadratic reward provides stronger gradient near target. Does the drone achieve tighter hover or trigger success termination?"
+budget_seconds: 180
+
+reward_code: |
+  dist = np.linalg.norm(self.TARGET_POS_CUSTOM - state[0:3])
+  return max(0, 2 - dist**2)
+
+ppo:
+  learning_rate: 0.0003
+  n_steps: 2048
+  batch_size: 64
+  n_epochs: 10
+  clip_range: 0.2
+  gamma: 0.99
+  gae_lambda: 0.95

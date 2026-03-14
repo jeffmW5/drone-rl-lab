@@ -1,0 +1,16 @@
+name: exp_002_extended_budget
+hypothesis: "Double training budget to 6 minutes. Does quartic reward plateau at ~474 or keep improving?"
+budget_seconds: 360
+
+reward_code: |
+  dist = np.linalg.norm(self.TARGET_POS_CUSTOM - state[0:3])
+  return max(0, 2 - dist**4)
+
+ppo:
+  learning_rate: 0.0003
+  n_steps: 2048
+  batch_size: 64
+  n_epochs: 10
+  clip_range: 0.2
+  gamma: 0.99
+  gae_lambda: 0.95
