@@ -30,13 +30,13 @@ from gym_pybullet_drones.utils.enums import ObservationType, ActionType
 # EXPERIMENT CONFIGURATION — Linux Claude modifies this section
 # =============================================================================
 
-EXPERIMENT_NAME = "exp_002_extended_budget"
+EXPERIMENT_NAME = "exp_003_quadratic_reward"
 EXPERIMENT_HYPOTHESIS = (
-    "Double training budget to 6 minutes. Does quartic reward plateau at ~474 or keep improving?"
+    "Quadratic reward provides stronger gradient near target. Does the drone achieve tighter hover or trigger success termination?"
 )
 
 # Wall-clock training budget in seconds (3 minutes default)
-TRAINING_BUDGET_SECONDS = 360
+TRAINING_BUDGET_SECONDS = 180
 
 # PPO hyperparameters — stable-baselines3 defaults shown explicitly
 PPO_KWARGS = dict(
@@ -71,7 +71,7 @@ class CustomHoverAviary(HoverAviary):
         """
         state = self._getDroneStateVector(0)
         dist = np.linalg.norm(self.TARGET_POS_CUSTOM - state[0:3])
-        return max(0, 2 - dist**4)
+        return max(0, 2 - dist**2)
 
 
 # =============================================================================

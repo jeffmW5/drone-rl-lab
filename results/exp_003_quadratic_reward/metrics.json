@@ -1,0 +1,16 @@
+{
+  "experiment": "exp_003_quadratic_reward",
+  "hypothesis": "Quadratic reward provides stronger gradient near target. Does the drone achieve tighter hover or trigger success termination?",
+  "timestamp": "2026-03-14T12:06:59.079212",
+  "elapsed_seconds": 180.2,
+  "mean_reward": 465.792,
+  "std_reward": 0.0,
+  "timesteps_trained": 114001,
+  "ppo_kwargs": {
+    "learning_rate": 0.0003,
+    "n_steps": 2048,
+    "batch_size": 64,
+    "gamma": 0.99,
+    "gae_lambda": 0.95
+  }
+}
