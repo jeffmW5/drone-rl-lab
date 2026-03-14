@@ -1,0 +1,16 @@
+{
+  "experiment": "exp_002_extended_budget",
+  "hypothesis": "Double training budget to 6 minutes. Does quartic reward plateau at ~474 or keep improving?",
+  "timestamp": "2026-03-14T11:32:48.730830",
+  "elapsed_seconds": 360.0,
+  "mean_reward": 474.206,
+  "std_reward": 0.0,
+  "timesteps_trained": 223070,
+  "ppo_kwargs": {
+    "learning_rate": 0.0003,
+    "n_steps": 2048,
+    "batch_size": 64,
+    "gamma": 0.99,
+    "gae_lambda": 0.95
+  }
+}

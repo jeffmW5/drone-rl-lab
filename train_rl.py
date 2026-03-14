@@ -30,14 +30,13 @@ from gym_pybullet_drones.utils.enums import ObservationType, ActionType
 # EXPERIMENT CONFIGURATION — Linux Claude modifies this section
 # =============================================================================
 
-EXPERIMENT_NAME = "exp_001_baseline"
+EXPERIMENT_NAME = "exp_002_extended_budget"
 EXPERIMENT_HYPOTHESIS = (
-    "Baseline: the original quartic reward from HoverAviary. "
-    "max(0, 2 - distance^4). No changes — establishes our reference point."
+    "Double training budget to 6 minutes. Does quartic reward plateau at ~474 or keep improving?"
 )
 
 # Wall-clock training budget in seconds (3 minutes default)
-TRAINING_BUDGET_SECONDS = 180
+TRAINING_BUDGET_SECONDS = 360
 
 # PPO hyperparameters — stable-baselines3 defaults shown explicitly
 PPO_KWARGS = dict(

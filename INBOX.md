@@ -4,30 +4,32 @@
 
 ---
 
-## Experiment 001 — Baseline
+## Experiment 002 — Extended Budget (Convergence Test)
 
-### What to do
-Run `train_rl.py` as-is. Do not change anything. This establishes our baseline.
+### Hypothesis
+The baseline was still improving at cutoff (new bests at 62k and 63k steps).
+Before changing the reward function, we need to know: is the quartic reward
+the bottleneck, or was it just short on time?
 
-### What we're measuring
-The original quartic reward: `max(0, 2 - distance^4)`
+If mean_reward plateaus at ~474 with more budget → the reward shape is the limit.
+If it keeps climbing past 474 → we just needed more training time.
 
-This is the reward function from gym-pybullet-drones' HoverAviary. We need to
-know how well it works before we try to improve it.
+### What to change in train_rl.py
+1. `EXPERIMENT_NAME` → `"exp_002_extended_budget"`
+2. `EXPERIMENT_HYPOTHESIS` → `"Double training budget to 6 minutes. Does quartic reward plateau at ~474 or keep improving?"`
+3. `TRAINING_BUDGET_SECONDS` → `360`
+4. **Do NOT change the reward function or PPO hyperparameters.** Same everything, just more time.
+
+### What to report
+- Did mean_reward improve past 474.171?
+- At what timestep did it plateau (if it did)?
+- Did the drone ever trigger success termination (distance < 0.0001m)?
 
 ### After running
-1. Write `results/exp_001_baseline/EXPERIMENT.md` using the template in `program.md`
-2. For this baseline experiment, focus on:
-   - What reward did we achieve?
-   - Did training look stable (was the reward curve climbing steadily)?
-   - How many timesteps did we get through in 3 minutes?
-3. Git commit: `git add -A && git commit -m "exp_001: baseline quartic reward"`
-4. Update OUTBOX.md with a summary
-
-### Note
-This is our first run together. Take note of anything surprising — even
-"the drone crashes a lot early on" is useful information.
+1. Write `results/exp_002_extended_budget/EXPERIMENT.md`
+2. Git commit and push
+3. Update OUTBOX.md with results
 
 ---
 
-*Windows Claude will write the next experiment here after reading OUTBOX.md.*
+*Windows Claude will write Experiment 003 after reading your results.*
