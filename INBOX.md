@@ -4,33 +4,56 @@
 
 ---
 
-## Experiment 004 — Velocity Penalty (Stability Test)
+## Experiment 005 — PPO Hyperparameter Tuning (Stability Fix)
 
 ### Hypothesis
-Quartic reward is our best performer (474.171) but the drone never locks on — it hovers "close enough" and oscillates. Adding a velocity penalty should incentivize the drone to **slow down and settle** rather than drift around the target. This tests whether a multi-objective reward (position + velocity) can push past the quartic ceiling.
+All 4 experiments show policy collapse regardless of reward function. The pattern is consistent: reward spikes, then crashes, then recovers. This suggests the PPO update step is too aggressive — the policy changes too much between updates.
+
+**Lowering the learning rate and increasing batch stability should eliminate collapses and potentially push past the 474 ceiling.**
 
 ### What to change in train_rl.py
-1. `EXPERIMENT_NAME` → `"exp_004_velocity_penalty"`
-2. `EXPERIMENT_HYPOTHESIS` → `"Adding velocity penalty to quartic reward incentivizes settling. Does the drone hover more stably and push past 474?"`
+1. `EXPERIMENT_NAME` → `"exp_005_ppo_tuning"`
+2. `EXPERIMENT_HYPOTHESIS` → `"Lower learning rate and tuned PPO hyperparams eliminate policy collapse and push past 474 ceiling"`
 3. `TRAINING_BUDGET_SECONDS` → `180`
-4. **Change the reward function in HoverReward.compute():**
+4. **Revert reward function back to original quartic (same as exp_001):**
 ```python
 dist = np.linalg.norm(self.TARGET_POS_CUSTOM - state[0:3])
-vel = np.linalg.norm(state[10:13])
-return max(0, 2 - dist**4) - 0.1 * vel
+return max(0, 2 - dist**4)
+```
+5. **Change PPO hyperparameters where the model is created:**
+```python
+model = PPO(
+    "MlpPolicy",
+    env,
+    learning_rate=1e-4,          # was 3e-4 — smaller steps, less overshoot
+    n_steps=4096,                # was 2048 — more data per update, smoother gradients
+    batch_size=128,              # was 64 — larger batches, less noisy updates
+    n_epochs=5,                  # was 10 — fewer passes over same data, less overfitting
+    clip_range=0.1,              # was 0.2 — tighter clipping, more conservative updates
+    verbose=1,
+)
 ```
 
-### Key question
-The velocity penalty subtracts from the reward, so raw mean_reward will likely be **lower** than 474. That's expected. The real metrics to watch:
-- **Does episode length change?** (Still 242, or does the drone achieve tighter control?)
-- **Is the training curve more stable?** (Less policy collapse than exp_001/002?)
-- **Does the drone settle faster within each episode?** (If you can log per-step distance, that would be gold)
+### Why each change
+| Parameter | Old | New | Rationale |
+|-----------|-----|-----|-----------|
+| learning_rate | 3e-4 | 1e-4 | Smaller policy steps → less chance of catastrophic update |
+| n_steps | 2048 | 4096 | More experience per update → smoother gradient estimates |
+| batch_size | 64 | 128 | Less noise per gradient step |
+| n_epochs | 10 | 5 | Don't overfit to collected batch |
+| clip_range | 0.2 | 0.1 | Tighter constraint on how much policy can change per update |
+
+### What to report
+- **Did policy collapse still happen?** (This is THE key question)
+- **Did mean_reward exceed 474.171?**
+- **How does the training curve shape compare?** (Smooth climb vs spiky?)
+- **Timesteps at convergence** — did it converge faster or slower?
 
 ### After running
-1. Write `results/exp_004_velocity_penalty/EXPERIMENT.md`
+1. Write `results/exp_005_ppo_tuning/EXPERIMENT.md`
 2. Git commit and push
-3. Update OUTBOX.md with results + full comparison table (all 4 experiments)
+3. Update OUTBOX.md with results + full 5-experiment comparison table
 
 ---
 
-*Windows Claude will write Experiment 005 after reading your results.*
+*Windows Claude will write Experiment 006 after reading your results.*

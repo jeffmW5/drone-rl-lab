@@ -30,21 +30,23 @@ from gym_pybullet_drones.utils.enums import ObservationType, ActionType
 # EXPERIMENT CONFIGURATION — Linux Claude modifies this section
 # =============================================================================
 
-EXPERIMENT_NAME = "exp_004_velocity_penalty"
+EXPERIMENT_NAME = "exp_005_ppo_tuning"
 EXPERIMENT_HYPOTHESIS = (
-    "Adding velocity penalty to quartic reward incentivizes settling. Does the drone hover more stably and push past 474?"
+    "Lower learning rate and tuned PPO hyperparams eliminate policy collapse and push past 474 ceiling"
 )
 
 # Wall-clock training budget in seconds (3 minutes default)
 TRAINING_BUDGET_SECONDS = 180
 
-# PPO hyperparameters — stable-baselines3 defaults shown explicitly
+# PPO hyperparameters — tuned for stability
 PPO_KWARGS = dict(
-    learning_rate=3e-4,   # step size for gradient descent
-    n_steps=2048,         # timesteps collected before each update
-    batch_size=64,        # mini-batch size for each gradient step
-    gamma=0.99,           # discount factor (how much future rewards matter)
-    gae_lambda=0.95,      # smoothing for advantage estimation
+    learning_rate=1e-4,   # reduced from 3e-4 — smaller steps, less overshoot
+    n_steps=4096,         # increased from 2048 — more data per update, smoother gradients
+    batch_size=128,       # increased from 64 — less noisy gradient steps
+    n_epochs=5,           # reduced from 10 — fewer passes, less overfitting to batch
+    clip_range=0.1,       # reduced from 0.2 — tighter constraint on policy change per update
+    gamma=0.99,
+    gae_lambda=0.95,
 )
 
 
@@ -71,8 +73,7 @@ class CustomHoverAviary(HoverAviary):
         """
         state = self._getDroneStateVector(0)
         dist = np.linalg.norm(self.TARGET_POS_CUSTOM - state[0:3])
-        vel = np.linalg.norm(state[10:13])
-        return max(0, 2 - dist**4) - 0.1 * vel
+        return max(0, 2 - dist**4)
 
 
 # =============================================================================

@@ -5,62 +5,61 @@
 
 ---
 
-## Full Experiment Comparison Table
+## Full Experiment Comparison (5 experiments)
 
-| # | Name | mean_reward | std_reward | timesteps | episode_len | crashes |
-|---|------|-------------|------------|-----------|-------------|---------|
-| 001 | quartic (baseline) | **474.171** | 0.000 | 63,489 | 242 (stable) | 1 |
-| 002 | quartic + 6min | 474.206 | 0.000 | 223,070 | 242 (stable) | 1 |
-| 003 | quadratic | 465.792 | 0.000 | 114,001 | 124–242 | many |
-| 004 | quartic + vel penalty | 470.394 | 0.288 | 108,001 | 242 (with crashes) | 2 |
-
-**Current best: exp_001, quartic reward, mean_reward = 474.171**
-
----
-
-## exp_004 Summary
-
-Velocity penalty (weight 0.1) did not improve performance:
-- mean_reward dropped to 470.394 (−3.777 vs quartic)
-- First non-zero std_reward (0.288) — policy became less consistent
-- Two crash events during training vs one for quartic alone
-- Training ended mid-crash at cutoff
-
-The velocity penalty appears to destabilize training rather than improve settling.
-Coefficient 0.1 may be too aggressive.
+| # | Name | mean_reward | std | timesteps | collapses | notes |
+|---|------|-------------|-----|-----------|-----------|-------|
+| 001 | quartic (baseline) | **474.171** | 0.000 | 63,489 | 1 | best overall |
+| 002 | quartic + 6min | 474.206 | 0.000 | 223,070 | 1 | proves reward is ceiling |
+| 003 | quadratic | 465.792 | 0.000 | 114,001 | many | stronger gradient = more crashes |
+| 004 | quartic + vel penalty | 470.394 | 0.288 | 108,001 | 2 | penalty hurts, not helps |
+| 005 | conservative PPO | 437.347 | 0.083 | 94,753 | **0** | stable training, lower ceiling |
 
 ---
 
-## Pattern across all experiments
+## exp_005 Summary
 
-Every experiment shows **policy collapse** at some point during training —
-reward drops sharply then recovers. This happens regardless of reward function:
-- exp_001: collapse at 6k–25k steps
-- exp_002: collapse at 6k–25k + brief at 201k
-- exp_003: collapse at 8k–30k, severe (down to ep_len 124)
-- exp_004: crash at 13k–16k and 105k–108k
+The conservative PPO settings achieved the stated goal: **zero policy collapses**.
+Training was smooth and monotonically climbing for 65k steps. But:
 
-This is a **PPO hyperparameter issue**, not a reward issue. The default
-`learning_rate=3e-4` with `n_steps=2048` appears too aggressive for this environment.
+- Final reward (437.347) is **−36.824 below the baseline** (474.171)
+- A new failure mode appeared at 78k: slow degradation + episode length dropping
+  to 201 (drone drifting out of bounds without crashing sharply)
+- The default PPO's collapses appear to be beneficial exploration, not bugs
+
+---
+
+## Insight: we may have hit the environment ceiling
+
+After 5 experiments, the quartic baseline (474.171, exp_001) remains the best.
+Nothing we've tried has beaten it:
+- More training time: +0.035 (negligible)
+- Quadratic reward: −8.379
+- Velocity penalty: −3.777
+- Conservative PPO: −36.824
+
+**474 may be the practical maximum for this environment/action space.**
+The drone hovers near [0,0,1] but never locks on — episode always times out at
+242 steps. With `ONE_D_RPM` action space (single-axis thrust), 3D precision
+hovering may be fundamentally limited.
 
 ---
 
 ## Suggested next experiment
 
-**Option A — Lower learning rate (PPO stability fix):**
-Change `learning_rate` from 3e-4 to 1e-4 with quartic reward.
-Hypothesis: smoother policy updates eliminate collapses and allow training to
-push past 474.
+**Option A — Randomize starting position (generalization test)**
+Change `initial_xyzs` to sample randomly within a cube around the target. Tests
+whether the policy can generalize rather than memorizing one trajectory. More
+interesting scientifically and practically useful.
 
-**Option B — Smaller velocity penalty coefficient:**
-Try `- 0.01 * vel` instead of `- 0.1 * vel`.
-Hypothesis: 10x smaller penalty provides settling incentive without conflicting
-with position gradient.
+**Option B — Middle-ground learning rate (2e-4)**
+Single targeted change to see if there's a sweet spot between aggressive (3e-4,
+collapses but high ceiling) and conservative (1e-4, stable but low ceiling).
 
-**My recommendation:** Option A first. The collapse pattern is the most consistent
-finding across all 4 experiments — fixing it before testing more reward variants
-will give us cleaner signal.
+**My recommendation:** Option A. We've exhausted incremental reward/hyperparameter
+tuning. The 474 ceiling appears real. The next interesting question is
+generalization.
 
 ---
 
-*Full analysis in: `results/exp_004_velocity_penalty/EXPERIMENT.md`*
+*Full analysis in: `results/exp_005_ppo_tuning/EXPERIMENT.md`*

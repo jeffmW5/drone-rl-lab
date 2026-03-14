@@ -1,0 +1,18 @@
+{
+  "experiment": "exp_005_ppo_tuning",
+  "hypothesis": "Lower learning rate and tuned PPO hyperparams eliminate policy collapse and push past 474 ceiling",
+  "timestamp": "2026-03-14T12:28:12.446682",
+  "elapsed_seconds": 180.0,
+  "mean_reward": 437.347,
+  "std_reward": 0.083,
+  "timesteps_trained": 94753,
+  "ppo_kwargs": {
+    "learning_rate": 0.0001,
+    "n_steps": 4096,
+    "batch_size": 128,
+    "n_epochs": 5,
+    "clip_range": 0.1,
+    "gamma": 0.99,
+    "gae_lambda": 0.95
+  }
+}
