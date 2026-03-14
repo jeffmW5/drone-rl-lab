@@ -5,60 +5,62 @@
 
 ---
 
-## exp_003_quadratic_reward — Results
+## Full Experiment Comparison Table
 
-**Hypothesis:** Quadratic reward provides stronger gradient near target. Does the drone achieve tighter hover or trigger success termination?
+| # | Name | mean_reward | std_reward | timesteps | episode_len | crashes |
+|---|------|-------------|------------|-----------|-------------|---------|
+| 001 | quartic (baseline) | **474.171** | 0.000 | 63,489 | 242 (stable) | 1 |
+| 002 | quartic + 6min | 474.206 | 0.000 | 223,070 | 242 (stable) | 1 |
+| 003 | quadratic | 465.792 | 0.000 | 114,001 | 124–242 | many |
+| 004 | quartic + vel penalty | 470.394 | 0.288 | 108,001 | 242 (with crashes) | 2 |
 
-| Metric | exp_001 (quartic) | exp_002 (quartic+time) | exp_003 (quadratic) |
-|--------|-------------------|------------------------|---------------------|
-| mean_reward | 474.171 | 474.206 | **465.792** ❌ |
-| timesteps_trained | 63,489 | 223,070 | 114,001 |
-| wall_time | 182s | 360s | 180s |
-| episode length | 242 (stable) | 242 (stable) | 124–242 (unstable) |
-| success termination | No | No | No |
-
----
-
-## Verdict: quadratic reward is worse ❌
-
-Quadratic underperformed quartic by **-8.379 mean_reward** and took **2x more
-timesteps** to converge. The stronger gradient caused the drone to crash more
-during training (episode length dropped to 124 steps = early truncation).
-The quartic reward's flat basin near the target appears to *help* stability,
-not hurt it.
+**Current best: exp_001, quartic reward, mean_reward = 474.171**
 
 ---
 
-## Key finding: success termination appears unreachable with current setup
+## exp_004 Summary
 
-Neither quartic nor quadratic ever triggered the success condition (distance <
-0.0001m). This may be a fundamental limitation of the `ONE_D_RPM` action space
-(single-axis thrust only) rather than a reward shaping problem. With only 1D
-thrust control, fine-grained 3D position correction may not be achievable.
+Velocity penalty (weight 0.1) did not improve performance:
+- mean_reward dropped to 470.394 (−3.777 vs quartic)
+- First non-zero std_reward (0.288) — policy became less consistent
+- Two crash events during training vs one for quartic alone
+- Training ended mid-crash at cutoff
+
+The velocity penalty appears to destabilize training rather than improve settling.
+Coefficient 0.1 may be too aggressive.
 
 ---
 
-## Current best: quartic reward (exp_001) at 474.171
+## Pattern across all experiments
+
+Every experiment shows **policy collapse** at some point during training —
+reward drops sharply then recovers. This happens regardless of reward function:
+- exp_001: collapse at 6k–25k steps
+- exp_002: collapse at 6k–25k + brief at 201k
+- exp_003: collapse at 8k–30k, severe (down to ep_len 124)
+- exp_004: crash at 13k–16k and 105k–108k
+
+This is a **PPO hyperparameter issue**, not a reward issue. The default
+`learning_rate=3e-4` with `n_steps=2048` appears too aggressive for this environment.
 
 ---
 
 ## Suggested next experiment
 
-**Option A — Velocity penalty on top of quartic (original suggestion):**
-```python
-dist = np.linalg.norm(self.TARGET_POS_CUSTOM - state[0:3])
-vel  = np.linalg.norm(state[10:13])
-return max(0, 2 - dist**4) - 0.1 * vel
-```
-Tests whether penalizing motion improves hover stability and pushes past 474.
+**Option A — Lower learning rate (PPO stability fix):**
+Change `learning_rate` from 3e-4 to 1e-4 with quartic reward.
+Hypothesis: smoother policy updates eliminate collapses and allow training to
+push past 474.
 
-**Option B — Tune PPO hyperparameters instead of reward:**
-The policy collapse pattern (seen in exp_001, exp_002, exp_003) suggests the
-learning rate or n_steps may be suboptimal. Reducing `learning_rate` from 3e-4
-to 1e-4 might produce smoother, more stable training.
+**Option B — Smaller velocity penalty coefficient:**
+Try `- 0.01 * vel` instead of `- 0.1 * vel`.
+Hypothesis: 10x smaller penalty provides settling incentive without conflicting
+with position gradient.
 
-Windows Claude to decide direction.
+**My recommendation:** Option A first. The collapse pattern is the most consistent
+finding across all 4 experiments — fixing it before testing more reward variants
+will give us cleaner signal.
 
 ---
 
-*Full analysis in: `results/exp_003_quadratic_reward/EXPERIMENT.md`*
+*Full analysis in: `results/exp_004_velocity_penalty/EXPERIMENT.md`*

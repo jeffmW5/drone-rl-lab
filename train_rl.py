@@ -30,9 +30,9 @@ from gym_pybullet_drones.utils.enums import ObservationType, ActionType
 # EXPERIMENT CONFIGURATION — Linux Claude modifies this section
 # =============================================================================
 
-EXPERIMENT_NAME = "exp_003_quadratic_reward"
+EXPERIMENT_NAME = "exp_004_velocity_penalty"
 EXPERIMENT_HYPOTHESIS = (
-    "Quadratic reward provides stronger gradient near target. Does the drone achieve tighter hover or trigger success termination?"
+    "Adding velocity penalty to quartic reward incentivizes settling. Does the drone hover more stably and push past 474?"
 )
 
 # Wall-clock training budget in seconds (3 minutes default)
@@ -71,7 +71,8 @@ class CustomHoverAviary(HoverAviary):
         """
         state = self._getDroneStateVector(0)
         dist = np.linalg.norm(self.TARGET_POS_CUSTOM - state[0:3])
-        return max(0, 2 - dist**2)
+        vel = np.linalg.norm(state[10:13])
+        return max(0, 2 - dist**4) - 0.1 * vel
 
 
 # =============================================================================
