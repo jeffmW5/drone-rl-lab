@@ -1,8 +1,9 @@
 # Drone RL Lab — Program
 
 ## Mission
-Train a Crazyflie CF2X drone to hover stably at position [0, 0, 1.0] meters
-using Proximal Policy Optimization (PPO) and the gym-pybullet-drones simulator.
+Train autonomous drones using Reinforcement Learning across multiple backends:
+- **hover** — Crazyflie CF2X hovering at [0,0,1] using gym-pybullet-drones + SB3 PPO
+- **racing** — Crazyflie gate racing using lsy_drone_racing + CleanRL PPO
 
 We iterate experiment-by-experiment, guided by Windows Claude (orchestrator),
 executed by Linux Claude (executor). Each experiment is a frozen YAML config.
@@ -14,7 +15,14 @@ executed by Linux Claude (executor). Each experiment is a frozen YAML config.
 ```bash
 source /media/drones-venv/bin/activate
 cd /media/drone-rl-lab
-python train_rl.py configs/exp_NNN.yaml
+python train.py configs/exp_NNN.yaml
+```
+
+The dispatcher reads the `backend:` field from the config and routes to the
+correct trainer (`train_hover.py` or `train_racing.py`). Direct calls also work:
+```bash
+python train_hover.py configs/exp_001_baseline.yaml
+python train_racing.py configs/exp_010_racing_baseline.yaml
 ```
 
 ### After training completes:
@@ -30,28 +38,46 @@ python train_rl.py configs/exp_NNN.yaml
 
 ## How to create a new experiment
 
-Linux Claude: create a new YAML file in `configs/`:
+Linux Claude: create a new YAML file in `configs/`.
 
+### Hover config (gym-pybullet-drones):
 ```yaml
 name: exp_006_description
+backend: hover          # optional, defaults to "hover"
 hypothesis: "What you're testing and why"
 budget_seconds: 180
-
 reward_code: |
   dist = np.linalg.norm(self.TARGET_POS_CUSTOM - state[0:3])
   return max(0, 2 - dist**4)
-
 ppo:
   learning_rate: 0.0003
   n_steps: 2048
   batch_size: 64
   n_epochs: 10
   clip_range: 0.2
-  gamma: 0.99
-  gae_lambda: 0.95
 ```
 
-**Do NOT edit train_rl.py** — all experiment parameters live in the config.
+### Racing config (lsy_drone_racing):
+```yaml
+name: exp_010_racing_baseline
+backend: racing
+hypothesis: "Baseline CleanRL PPO on Level 0 racing"
+budget_seconds: 600
+racing:
+  level: level0
+  total_timesteps: 500000
+  num_envs: 64
+  learning_rate: 0.0015
+  gamma: 0.94
+  gae_lambda: 0.97
+  clip_coef: 0.26
+  ent_coef: 0.007
+  vf_coef: 0.7
+  cuda: false
+  seed: 42
+```
+
+**Do NOT edit train_hover.py or train_racing.py** — all experiment parameters live in the config.
 
 ---
 
@@ -59,10 +85,57 @@ ppo:
 
 | Tool | What it does |
 |------|-------------|
-| `python train_rl.py configs/exp_NNN.yaml` | Run an experiment |
-| `python compare.py` | Print sorted leaderboard of all experiments |
+| `python train.py configs/exp_NNN.yaml` | Run an experiment (auto-detects backend) |
+| `python compare.py` | Print leaderboard of all experiments |
+| `python compare.py --backend hover` | Leaderboard filtered to hover only |
+| `python compare.py --backend racing` | Leaderboard filtered to racing only |
 | `python plot.py` | Generate training curve plots |
 | `python plot.py --steps exp_NNN` | Plot per-step distance/velocity detail |
+
+## Racing backend setup
+
+To use the racing backend, lsy_drone_racing must be installed:
+```bash
+cd /media/lsy_drone_racing    # or wherever the fork is cloned
+pip install -e ".[sim,rl]"
+```
+
+---
+
+## GPU Training (RunPod)
+
+For serious training runs, use a cloud GPU via RunPod.
+
+### First-time setup
+1. Create account at **runpod.io**, add payment method
+2. **Set spending cap**: Settings > Billing > e.g. $10/month
+3. Launch a pod: GPU Pods > Deploy > **PyTorch** template > **RTX 3090** (~$0.30/hr)
+4. SSH in and run:
+```bash
+bash scripts/setup_deploy_key.sh    # first time only — follow instructions to add key on GitHub
+bash scripts/setup_runpod.sh        # installs everything, starts 4h auto-shutdown timer
+```
+
+### Training on GPU
+```bash
+cd /root/drone-rl-lab
+python train.py configs/exp_011_racing_gpu.yaml
+```
+
+GPU configs use `cuda: true` and `num_envs: 1024` (16x more parallel envs than CPU).
+
+### After training
+```bash
+bash scripts/sync_results.sh "exp_011 racing GPU baseline"
+# STOP YOUR POD via dashboard or: runpodctl stop pod $RUNPOD_POD_ID
+```
+
+Then on your local machine: `cd /media/drone-rl-lab && git pull`
+
+### Safety features
+- **Auto-shutdown**: Pod stops itself after 4 hours max
+- **Spending cap**: Set in RunPod billing settings
+- **Deploy keys**: SSH key scoped only to drone-rl-lab repo (not your full GitHub)
 
 ---
 
@@ -75,11 +148,11 @@ ppo:
 - Git commit and push
 
 ### ❌ NO — do not modify
-- `train_rl.py` (infrastructure — don't touch)
+- `train.py`, `train_hover.py`, `train_racing.py` (infrastructure — don't touch)
 - `compare.py`, `plot.py` (tools — don't touch)
 - Physics engine, episode length, drone model
-- Observation type (keep `KIN`)
-- Action type (keep `ONE_D_RPM`) — unless explicitly instructed by Windows Claude
+- Observation type (keep `KIN` for hover)
+- Action type — unless explicitly instructed by Windows Claude
 
 ---
 

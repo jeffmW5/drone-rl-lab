@@ -63,3 +63,31 @@ generalization.
 ---
 
 *Full analysis in: `results/exp_005_ppo_tuning/EXPERIMENT.md`*
+
+---
+
+## exp_010 — Racing Baseline (NEW BACKEND)
+
+**Backend:** racing (lsy_drone_racing + CleanRL PPO + JAX environments)
+
+| Metric | Value |
+|--------|-------|
+| mean_reward | **7.359 +/- 0.014** |
+| timesteps_trained | 499,712 |
+| wall_time | 588.8s |
+| level | level0 |
+
+Racing pipeline is fully operational. Agent learned random trajectory following from scratch (-44.93 -> 7.35 reward). Three-phase learning: crash recovery (0-25k), rapid improvement (25k-250k), plateau (250k-500k).
+
+### Setup notes for Windows Claude
+- **Python 3.11 required** — JAX >= 0.7 doesn't support Python 3.10
+- Venv is at `/home/jeff/drones-venv` (not `/media/`) because VirtualBox shared folder can't create symlinks
+- `/media/drones-venv/bin/activate` is a redirect script that sources the real venv
+- Pre-trained sim.py test passed: 4/4 gates, 13.86s
+
+### Suggested next
+- 1M timesteps to push past the 7.35 plateau
+- Level 1 (gate randomization) for generalization
+- Increase num_envs to 128 or 256
+
+*Full analysis in: `results/exp_010_racing_baseline/EXPERIMENT.md`*

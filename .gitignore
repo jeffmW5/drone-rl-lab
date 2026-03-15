@@ -19,6 +19,15 @@ results/**/steps.csv
 # Generated plots (regenerate with plot.py)
 results/**/*.png
 
+# RunPod venv
+drone-venv/
+
+# Weights & Biases (if enabled later)
+wandb/
+
+# Large checkpoint files (keep in results/ but ignore loose ones)
+*.ckpt
+
 # OS
 .DS_Store
 Thumbs.db

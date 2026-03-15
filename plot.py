@@ -70,15 +70,20 @@ def plot_reward_curves(results_dir: str, experiment_names: list, output_path: st
             print(f"  [skip] {name} — no evaluations.npz")
             continue
 
-        # Load metrics for label
+        # Load metrics for label and backend
         metrics_path = os.path.join(results_dir, name, "metrics.json")
         label = name
+        backend = "hover"
         if os.path.isfile(metrics_path):
             with open(metrics_path) as f:
                 m = json.load(f)
-                label = f"{name} (best={m.get('mean_reward', '?')})"
+                backend = m.get("backend", "hover")
+                label = f"{name} [{backend}] (best={m.get('mean_reward', '?')})"
 
-        ax.plot(timesteps, rewards, label=label, color=colors[i], linewidth=1.5)
+        # Solid for hover, dashed for racing
+        linestyle = "-" if backend == "hover" else "--"
+        ax.plot(timesteps, rewards, label=label, color=colors[i],
+                linewidth=1.5, linestyle=linestyle)
 
     ax.set_xlabel("Timesteps", fontsize=12)
     ax.set_ylabel("Mean Eval Reward", fontsize=12)
