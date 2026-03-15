@@ -1,0 +1,77 @@
+# Memory — Lessons Learned
+
+Read this file BEFORE starting any experiment. Update it AFTER every experiment.
+
+---
+
+## Hard Rules (never violate these)
+
+1. **n_obs=2 with 64 envs + 600s is insufficient** — exp_013 only completed 297k/500k steps, reward regressed from 7.36 to 5.02. Need 1024+ envs or 1200s+ budget for n_obs=2.
+2. **Level 2 requires adaptive trajectories** — all controllers (state, PID, RL) use fixed polynomial trajectories from hardcoded waypoints. When gates are randomized on Level 2, the trajectory flies through empty space. 0/5 finishes for every controller.
+3. **ONE_D_RPM action space (hover backend) caps reward at ~474** — tested quartic, quadratic, velocity penalty, conservative PPO. The bottleneck is 1 action dimension, not the reward function.
+4. **Don't confuse fast crashes with fast laps** — exp_013 averaged 4.30s on Level 2 with 0/5 finishes. The low time = early crash, not speed.
+5. **Kaggle winners likely use dynamic path planning** that adapts waypoints to observed gate positions, not the static spline trajectory all current controllers use.
+
+---
+
+## Experiment Log
+
+| Exp | Backend | Level | Key Change | Reward | Lap (s) | Gates | Outcome |
+|-----|---------|-------|-----------|--------|---------|-------|---------|
+| 001 | hover | — | Baseline quartic reward | 474 | — | — | ✅ ceiling for 1D RPM |
+| 002 | hover | — | 2x budget | 474 | — | — | ✅ same ceiling, converges faster |
+| 003 | hover | — | Quadratic reward | 369 | — | — | ❌ worse than quartic |
+| 004 | hover | — | Velocity penalty | 407 | — | — | ❌ penalty hurts |
+| 005 | hover | — | Conservative PPO | 437 | — | — | ❌ stability vs performance tradeoff |
+| 010 | racing | L0 | Baseline n_obs=0, 64 envs | 7.36 | 13.36 | 4/4 | ✅ beats PID, 0.024s off reference |
+| 013 | racing | L0 | n_obs=2 fix, 64 envs | 5.02 | crash | 0-1/4 | ❌ undertrained, only 297k steps |
+
+---
+
+## Benchmark: All Controllers vs All Levels (5 runs each)
+
+### Level 0 (perfect knowledge)
+| Controller | Avg (s) | Finished | Gates |
+|-----------|:-------:|:--------:|:-----:|
+| Their RL (pre-trained) | 13.34 | 5/5 | 4/4 |
+| Our exp_010 (n_obs=0) | 13.36 | 5/5 | 4/4 |
+| PID attitude | 13.37 | 5/5 | 4/4 |
+| State trajectory | 13.86 | 5/5 | 4/4 |
+
+### Level 1 (randomized physics)
+| Controller | Avg (s) | Finished | Gates |
+|-----------|:-------:|:--------:|:-----:|
+| Their RL | 13.34 | 5/5 | 4/4 |
+| PID attitude | 13.39 | 5/5 | 4/4 |
+| State trajectory | 13.86 | 5/5 | 4/4 |
+
+### Level 2 (randomized physics + gates) — COMPETITION LEVEL
+| Controller | Avg (s) | Finished | Gates |
+|-----------|:-------:|:--------:|:-----:|
+| State trajectory | 5.96 | 1/5 | 0-4/4 |
+| Their RL | 7.25 | 0/5 | 0-3/4 |
+| PID attitude | 8.59 | 2/5 | 0-4/4 |
+
+**Nobody finishes Level 2 reliably. The problem is trajectory generation, not policy quality.**
+
+---
+
+## Kaggle Target
+
+| Rank | Team | Avg Lap (s) |
+|:----:|------|:-----------:|
+| 1 | Team Y | 3.394 |
+| 2 | Group6 | 4.886 |
+| 3 | Limo | 5.022 |
+
+**Our goal: sub-5.0s on Level 2 (top 3)**
+**Current status: DNF (0/5 finishes on Level 2 with all controllers)**
+
+---
+
+## What to Try Next
+
+1. **GPU training with 1024 envs + n_obs=2** (exp_014) — validate that more compute fixes the n_obs=2 regression
+2. **Train directly on Level 2** (exp_015) — agent must see randomized gates during training
+3. **Dynamic trajectory generation** — the real bottleneck. Need to adapt waypoints to `obs["gates_pos"]` at runtime
+4. **Extended training** (exp_016, 10M steps) — if Level 2 policy is hard to learn, throw more compute at it

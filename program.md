@@ -10,6 +10,16 @@ executed by Linux Claude (executor). Each experiment is a frozen YAML config.
 
 ---
 
+## Step 0 — Read Memory (MANDATORY)
+
+Before starting ANY experiment or task, read `MEMORY.md` in the repo root.
+- Check **Hard Rules** — never violate these
+- Check **Experiment Log** — don't repeat failed experiments without a clear reason
+- If your new experiment contradicts a Hard Rule, **STOP** and note the conflict in `outbox/`
+- Refer to INBOX.md for the current task, but MEMORY.md for historical context
+
+---
+
 ## How to run an experiment
 
 ```bash
@@ -33,6 +43,7 @@ python train_racing.py configs/exp_010_racing_baseline.yaml
 5. Update `outbox/exp_NNN.md` with your analysis
 6. `git add -A && git commit -m "exp_NNN: <short description>"`
 7. `git push`
+8. **Update `MEMORY.md`**: Append a row to the Experiment Log table. If the experiment revealed a new hard rule, add it to "Hard Rules". Update "What to Try Next" if applicable.
 
 ---
 
