@@ -156,12 +156,32 @@ Then on your local machine: `cd /media/drone-rl-lab && git pull`
 
 ---
 
-## Evaluation Metric
-**Primary:** `mean_reward` from 10 evaluation episodes after training
-**Secondary:** `timesteps_trained` within the budget (sample efficiency proxy)
+## Competition Target
 
-Higher mean_reward = better. An experiment is a success if mean_reward improves
-over the previous best.
+**Goal: sub-5s average lap time on Level 2** — top 3 on the TUM Kaggle leaderboard.
+
+Reference: WS25 Kaggle private leaderboard (Level 2, randomized physics + gates):
+
+| Rank | Team | Avg Lap (s) |
+|:----:|------|:-----------:|
+| 1 | Team Y | 3.394 |
+| 2 | Group6 | 4.886 |
+| 3 | Limo | 5.022 |
+| 4 | Liangyu Chen, Tuo Yang | 5.612 |
+| 5 | Jai Seth | 9.558 |
+
+Our Level 0 baseline: 13.36s (exp_010, CPU, 64 envs, 500k steps).
+Default controllers on Level 0: ~13.3–13.9s.
+
+---
+
+## Evaluation Metric
+**Primary (racing):** Average lap time (seconds) on the target level — lower is better.
+**Secondary (racing):** `mean_reward` from training — higher is better.
+**Primary (hover):** `mean_reward` from 10 evaluation episodes after training.
+**Secondary:** `timesteps_trained` within the budget (sample efficiency proxy).
+
+An experiment is a success if it improves the primary metric over previous best.
 
 ---
 

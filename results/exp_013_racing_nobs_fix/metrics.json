@@ -1,0 +1,32 @@
+{
+  "experiment": "exp_013_racing_nobs_fix",
+  "backend": "racing",
+  "hypothesis": "Retrain Level 0 with n_obs=2 fix \u2014 observation stacking gives the agent trajectory history, should close the 0.024s gap vs reference model",
+  "config_file": "exp_013_racing_nobs_fix.yaml",
+  "timestamp": "2026-03-15T09:30:41.226513",
+  "elapsed_seconds": 604.7,
+  "mean_reward": 5.022,
+  "std_reward": 0.199,
+  "timesteps_trained": 297472,
+  "racing_kwargs": {
+    "level": "level0",
+    "total_timesteps": 500000,
+    "num_envs": 64,
+    "num_steps": 8,
+    "learning_rate": 0.0015,
+    "anneal_lr": true,
+    "gamma": 0.94,
+    "gae_lambda": 0.97,
+    "update_epochs": 10,
+    "num_minibatches": 8,
+    "clip_coef": 0.26,
+    "ent_coef": 0.007,
+    "vf_coef": 0.7,
+    "max_grad_norm": 1.5,
+    "n_obs": 2,
+    "rpy_coef": 0.06,
+    "cuda": false,
+    "seed": 42
+  },
+  "level": "level0"
+}

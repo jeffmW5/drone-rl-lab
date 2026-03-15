@@ -168,14 +168,17 @@ def run(config_path: str):
     device = torch.device("cuda" if args.cuda and torch.cuda.is_available() else "cpu")
     jax_device = args.jax_device if args.cuda else "cpu"
 
+    n_obs = racing_cfg.get("n_obs", 2)
     print(f"[INFO] PyTorch device: {device}")
     print(f"[INFO] JAX device:     {jax_device}")
     print(f"[INFO] Num envs:       {args.num_envs}")
     print(f"[INFO] Total steps:    {args.total_timesteps:,}")
     print(f"[INFO] Level:          {level}")
+    print(f"[INFO] n_obs:          {n_obs} (observation stacking)")
 
     # ── Create environments ───────────────────────────────────────────────────
     reward_coefs = {
+        "n_obs": racing_cfg.get("n_obs", 2),  # observation stacking (default matches Args)
         "rpy_coef": racing_cfg.get("rpy_coef", 0.06),
         "d_act_th_coef": racing_cfg.get("d_act_th_coef", 0.4),
         "d_act_xy_coef": racing_cfg.get("d_act_xy_coef", 1.0),
