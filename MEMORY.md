@@ -29,7 +29,7 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 | dyn | racing | L2 | Dynamic traj from gates_pos | — | 4.64 | 0-1/4 | ❌ policy coupled to training traj shape |
 | 014 | racing | L0 | GPU, n_obs=2, 1024 envs, 1.5M | 7.29 | TBD | TBD | ✅ validates n_obs=2 works with GPU |
 | 015 | racing | L2 | GPU, 3M steps | 7.53 | TBD | TBD | ✅ first L2 training, still climbing |
-| 016 | racing | L2 | GPU, 10M steps | 7.71 | TBD | TBD | ✅ L2 converged, needs sim benchmark |
+| 016 | racing | L2 | GPU, 10M steps | 7.71 | 13.49 | 2/10 finish | ✅ first RL to finish L2, but 20% rate |
 
 ---
 
