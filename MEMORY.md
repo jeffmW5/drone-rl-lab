@@ -12,6 +12,9 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 4. **Don't confuse fast crashes with fast laps** — exp_013 averaged 4.30s on Level 2 with 0/5 finishes. The low time = early crash, not speed.
 5. **Kaggle winners likely use dynamic path planning** that adapts waypoints to observed gate positions, not the static spline trajectory all current controllers use.
 6. **Inference-time trajectory swapping doesn't work** — attitude_rl_dynamic.py built splines from obs["gates_pos"] using the exp_010 policy. Result: 0/5 finishes, 0-1 gates on L2 (4.64s avg = crashes). The policy is tightly coupled to the training trajectory shape. Fix requires training on diverse trajectories, not just swapping at inference.
+7. **Training reward plateaus ~7.7 regardless of steps** — exp_016 (10M steps) only reached 7.71 vs exp_015's 7.53 at 3M. Diminishing returns after ~6M steps. Need architectural changes, not more compute.
+8. **GPU training works but RunPod SSH proxy blocks SCP/file transfer** — use base64-over-TTY or Jupyter Lab file browser to retrieve model checkpoints. Set up deploy keys BEFORE training to enable git push from pod.
+9. **exp_016 is the first RL to finish Level 2** — 13.49s, 2/10 finishes (20%). Better than reference RL (0/5) but 3-4x slower than Kaggle winners (~3.4-5.0s).
 
 ---
 
@@ -70,7 +73,8 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 | 3 | Limo | 5.022 |
 
 **Our goal: sub-5.0s on Level 2 (top 3)**
-**Current status: DNF (0/5 finishes on Level 2 with all controllers)**
+**Current best: 13.49s, 2/10 finishes (exp_016, 10M GPU steps)**
+**Gap: ~3-4x slower than winners, 20% finish rate vs ~100%**
 
 ---
 
@@ -79,7 +83,10 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 1. ~~**GPU training with 1024 envs + n_obs=2** (exp_014)~~ — DONE. Reward 7.29, validates n_obs=2 works with GPU
 2. ~~**Train directly on Level 2** (exp_015)~~ — DONE. Reward 7.53 at 3M steps
 3. ~~**Dynamic trajectory generation**~~ — TESTED, doesn't work at inference time alone (see hard rule #6)
-4. ~~**Extended training** (exp_016, 10M steps)~~ — DONE. Reward 7.71, converged
-5. **Benchmark exp_015/016 models on Level 2 sim** — CRITICAL. Training reward ≠ lap completion. Need to download models from RunPod pod and run 5-run sim benchmark.
-6. **Retrieve model checkpoints from RunPod** — SCP blocked by RunPod proxy. Need git credentials or alternative transfer method. Pod still running.
-7. **Investigate periodic reward dips** — Every ~800k steps, reward drops ~0.3 then recovers. Likely v_loss instability from catastrophic trajectory resets. May benefit from gradient clipping or lower LR.
+4. ~~**Extended training** (exp_016, 10M steps)~~ — DONE. Reward 7.71, converged, 13.49s lap, 2/10 finishes
+5. ~~**Retrieve model checkpoints from RunPod**~~ — DONE. Used base64-over-TTY. Pod stopped.
+6. ~~**Benchmark exp_016 on Level 2 sim**~~ — DONE. 13.49s, 2/10 finishes. First RL to finish L2 but far from competitive.
+7. **Improve finish rate** — 20% is not competition-ready. Need >80% to be meaningful.
+8. **Improve lap time** — 13.49s vs target 5.0s. Need fundamental approach change, not just more training.
+9. **Investigate: train with domain randomization on trajectory shape** — the policy needs to see diverse trajectories during training, not just the default spline
+10. **Investigate: reward shaping for gate passage** — current reward is trajectory-following. A gate-proximity bonus could help the agent prioritize actually passing through gates.
