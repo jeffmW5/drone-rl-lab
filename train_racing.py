@@ -31,6 +31,17 @@ def _to_np(x):
     return np.array(x)
 
 
+def _action_for_env(action_tensor, use_jax_gpu=False):
+    """Convert PyTorch action tensor to format the env expects.
+
+    When JAX runs on GPU, the env expects JAX GPU arrays, not numpy.
+    """
+    if use_jax_gpu:
+        import jax.numpy as jnp
+        return jnp.array(action_tensor.detach().cpu().numpy())
+    return action_tensor.cpu().numpy()
+
+
 # PyYAML
 try:
     import yaml
@@ -94,7 +105,7 @@ def build_args(racing_cfg: dict) -> Args:
 # EVALUATION
 # =============================================================================
 
-def evaluate_racing(agent: Agent, envs_fn, device, n_episodes: int = 10) -> dict:
+def evaluate_racing(agent: Agent, envs_fn, device, n_episodes: int = 10, jax_on_gpu: bool = False) -> dict:
     """Run evaluation episodes and return stats."""
     eval_envs = envs_fn()
     rewards_all = []
@@ -114,7 +125,7 @@ def evaluate_racing(agent: Agent, envs_fn, device, n_episodes: int = 10) -> dict
         with torch.no_grad():
             action, _, _, _ = agent.get_action_and_value(obs_tensor, deterministic=True)
 
-        obs, reward, terminated, truncated, info = eval_envs.step(action.cpu().numpy())
+        obs, reward, terminated, truncated, info = eval_envs.step(_action_for_env(action, jax_on_gpu))
         obs_tensor = torch.Tensor(_to_np(obs)).to(device)
 
         reward_np = _to_np(reward)
@@ -177,6 +188,7 @@ def run(config_path: str):
     # ── Device setup ──────────────────────────────────────────────────────────
     device = torch.device("cuda" if args.cuda and torch.cuda.is_available() else "cpu")
     jax_device = args.jax_device if args.cuda else "cpu"
+    jax_on_gpu = jax_device == "gpu"
 
     n_obs = racing_cfg.get("n_obs", 2)
     print(f"[INFO] PyTorch device: {device}")
@@ -259,7 +271,7 @@ def run(config_path: str):
             actions_buf[step] = action
             logprobs_buf[step] = logprob
 
-            next_obs, reward, terminated, truncated, info = envs.step(action.cpu().numpy())
+            next_obs, reward, terminated, truncated, info = envs.step(_action_for_env(action, jax_on_gpu))
             reward = torch.tensor(_to_np(reward), dtype=torch.float32).to(device)
             rewards_buf[step] = reward
             next_obs = torch.Tensor(_to_np(next_obs)).to(device)
