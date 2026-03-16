@@ -28,6 +28,10 @@ wandb/
 # Large checkpoint files (keep in results/ but ignore loose ones)
 *.ckpt
 
+# SSH keys (NEVER commit these)
+ssh_key_runpod
+ssh_key_runpod.pub
+
 # OS
 .DS_Store
 Thumbs.db
