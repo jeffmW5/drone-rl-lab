@@ -26,6 +26,8 @@ def _to_np(x):
     """Convert JAX/torch/numpy arrays to numpy (handles GPU tensors)."""
     if hasattr(x, '__jax_array__') or type(x).__module__.startswith('jax'):
         return np.asarray(x)
+    if hasattr(x, 'cpu'):  # PyTorch tensor
+        return x.detach().cpu().numpy()
     return np.array(x)
 
 
