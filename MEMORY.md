@@ -11,6 +11,7 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 3. **ONE_D_RPM action space (hover backend) caps reward at ~474** — tested quartic, quadratic, velocity penalty, conservative PPO. The bottleneck is 1 action dimension, not the reward function.
 4. **Don't confuse fast crashes with fast laps** — exp_013 averaged 4.30s on Level 2 with 0/5 finishes. The low time = early crash, not speed.
 5. **Kaggle winners likely use dynamic path planning** that adapts waypoints to observed gate positions, not the static spline trajectory all current controllers use.
+6. **Inference-time trajectory swapping doesn't work** — attitude_rl_dynamic.py built splines from obs["gates_pos"] using the exp_010 policy. Result: 0/5 finishes, 0-1 gates on L2 (4.64s avg = crashes). The policy is tightly coupled to the training trajectory shape. Fix requires training on diverse trajectories, not just swapping at inference.
 
 ---
 
@@ -25,6 +26,7 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 | 005 | hover | — | Conservative PPO | 437 | — | — | ❌ stability vs performance tradeoff |
 | 010 | racing | L0 | Baseline n_obs=0, 64 envs | 7.36 | 13.36 | 4/4 | ✅ beats PID, 0.024s off reference |
 | 013 | racing | L0 | n_obs=2 fix, 64 envs | 5.02 | crash | 0-1/4 | ❌ undertrained, only 297k steps |
+| dyn | racing | L2 | Dynamic traj from gates_pos | — | 4.64 | 0-1/4 | ❌ policy coupled to training traj shape |
 
 ---
 
@@ -73,5 +75,5 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 
 1. **GPU training with 1024 envs + n_obs=2** (exp_014) — validate that more compute fixes the n_obs=2 regression
 2. **Train directly on Level 2** (exp_015) — agent must see randomized gates during training
-3. **Dynamic trajectory generation** — the real bottleneck. Need to adapt waypoints to `obs["gates_pos"]` at runtime
+3. ~~**Dynamic trajectory generation**~~ — TESTED, doesn't work at inference time alone (see hard rule #6). Need to train on diverse trajectories
 4. **Extended training** (exp_016, 10M steps) — if Level 2 policy is hard to learn, throw more compute at it
