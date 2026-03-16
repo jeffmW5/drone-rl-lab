@@ -21,6 +21,14 @@ from pathlib import Path
 
 import numpy as np
 
+
+def _to_np(x):
+    """Convert JAX/torch/numpy arrays to numpy (handles GPU tensors)."""
+    if hasattr(x, '__jax_array__') or type(x).__module__.startswith('jax'):
+        return np.asarray(x)
+    return np.array(x)
+
+
 # PyYAML
 try:
     import yaml
@@ -94,7 +102,7 @@ def evaluate_racing(agent: Agent, envs_fn, device, n_episodes: int = 10) -> dict
     if isinstance(obs, np.ndarray):
         obs_tensor = torch.Tensor(obs).to(device)
     else:
-        obs_tensor = torch.Tensor(np.array(obs)).to(device)
+        obs_tensor = torch.Tensor(_to_np(obs)).to(device)
 
     episode_rewards = np.zeros(eval_envs.num_envs)
     episode_lengths = np.zeros(eval_envs.num_envs)
@@ -105,13 +113,13 @@ def evaluate_racing(agent: Agent, envs_fn, device, n_episodes: int = 10) -> dict
             action, _, _, _ = agent.get_action_and_value(obs_tensor, deterministic=True)
 
         obs, reward, terminated, truncated, info = eval_envs.step(action.cpu().numpy())
-        obs_tensor = torch.Tensor(np.array(obs)).to(device)
+        obs_tensor = torch.Tensor(_to_np(obs)).to(device)
 
-        reward_np = np.array(reward)
+        reward_np = _to_np(reward)
         episode_rewards += reward_np
         episode_lengths += 1
 
-        dones = np.logical_or(np.array(terminated), np.array(truncated))
+        dones = np.logical_or(_to_np(terminated), _to_np(truncated))
         for i in np.where(dones)[0]:
             if completed < n_episodes:
                 rewards_all.append(float(episode_rewards[i]))
@@ -218,7 +226,7 @@ def run(config_path: str):
     wall_start = time.time()
     global_step = 0
     next_obs, _ = envs.reset()
-    next_obs = torch.Tensor(np.array(next_obs)).to(device)
+    next_obs = torch.Tensor(_to_np(next_obs)).to(device)
     next_done = torch.zeros(args.num_envs).to(device)
 
     print("[Training] Starting CleanRL PPO loop...")
@@ -250,11 +258,11 @@ def run(config_path: str):
             logprobs_buf[step] = logprob
 
             next_obs, reward, terminated, truncated, info = envs.step(action.cpu().numpy())
-            reward = torch.tensor(np.array(reward), dtype=torch.float32).to(device)
+            reward = torch.tensor(_to_np(reward), dtype=torch.float32).to(device)
             rewards_buf[step] = reward
-            next_obs = torch.Tensor(np.array(next_obs)).to(device)
+            next_obs = torch.Tensor(_to_np(next_obs)).to(device)
             next_done = torch.Tensor(
-                np.logical_or(np.array(terminated), np.array(truncated)).astype(float)
+                np.logical_or(_to_np(terminated), _to_np(truncated)).astype(float)
             ).to(device)
 
         # ── Compute advantages (GAE) ──────────────────────────────────────
