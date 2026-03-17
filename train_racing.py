@@ -205,6 +205,7 @@ def run(config_path: str):
         "d_act_th_coef": racing_cfg.get("d_act_th_coef", 0.4),
         "d_act_xy_coef": racing_cfg.get("d_act_xy_coef", 1.0),
         "act_coef": racing_cfg.get("act_coef", 0.02),
+        "gate_aware": racing_cfg.get("gate_aware", False),
     }
 
     envs = make_envs(

@@ -1,0 +1,28 @@
+{
+  "experiment": "exp_018_gate_traj",
+  "backend": "racing",
+  "hypothesis": "Gate-aware trajectories \u2014 RandTrajEnv generates splines through actual gate positions with L2 randomization. Same reward, same obs, just better trajectories.",
+  "config_file": "exp_018_gate_traj.yaml",
+  "timestamp": "2026-03-16T20:51:33.966051",
+  "elapsed_seconds": 600.7,
+  "mean_reward": 5.477,
+  "std_reward": 0.263,
+  "timesteps_trained": 213504,
+  "racing_kwargs": {
+    "level": "level2",
+    "gate_aware": true,
+    "total_timesteps": 500000,
+    "num_envs": 64,
+    "num_steps": 8,
+    "learning_rate": 0.0015,
+    "gamma": 0.94,
+    "gae_lambda": 0.97,
+    "clip_coef": 0.26,
+    "ent_coef": 0.007,
+    "vf_coef": 0.7,
+    "n_obs": 2,
+    "cuda": false,
+    "seed": 42
+  },
+  "level": "level2"
+}

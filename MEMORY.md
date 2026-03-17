@@ -17,6 +17,7 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 9. **exp_016 is the first RL to finish Level 2** — 13.49s, 2/10 finishes (20%). Better than reference RL (0/5) but 3-4x slower than Kaggle winners (~3.4-5.0s).
 10. **Training env (RandTrajEnv) has ZERO gate awareness** — the RL agent trains on random trajectory following, not gate racing. It never sees gate positions, never gets gate-passage rewards. The only configurable reward params are penalties (rpy, action smoothness, energy). Adding a gate reward requires modifying train_rl.py's RandTrajEnv or building a new training pipeline on RaceCoreEnv.
 11. **Obs space is 73 dims: drone state (13) + trajectory lookahead (30) + history (26) + last action (4)** — no gate info is included. The agent can only follow trajectories, not navigate to gates.
+12. **Gate-aware trajectory training works (exp_018)** — Modified RandTrajEnv.reset() to generate splines through gate positions with L2 randomization. CPU proof-of-concept (213k steps, reward 5.48) shows 100% gate 1 pass on L0 but crashes after gate 1 due to insufficient training. Needs GPU training (10M+ steps) to validate full circuit completion. Config flag: `gate_aware: true` in YAML.
 
 ---
 
@@ -35,6 +36,7 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 | 014 | racing | L0 | GPU, n_obs=2, 1024 envs, 1.5M | 7.29 | TBD | TBD | ✅ validates n_obs=2 works with GPU |
 | 015 | racing | L2 | GPU, 3M steps | 7.53 | TBD | TBD | ✅ first L2 training, still climbing |
 | 016 | racing | L2 | GPU, 10M steps | 7.71 | 13.49 | 2/10 finish | ✅ first RL to finish L2, but 20% rate |
+| 018 | racing | L2 | Gate-aware trajectories, CPU 213k | 5.48 | crash | 1/4 on L0 (100%), 0-1/4 on L2 | ✅ approach validated, needs GPU training |
 
 ---
 
@@ -92,6 +94,7 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 8. **Improve lap time** — 13.49s vs target 5.0s. Need fundamental approach change, not just more training.
 9. **Investigate: train with domain randomization on trajectory shape** — the policy needs to see diverse trajectories during training, not just the default spline
 10. ~~**Investigate: reward shaping for gate passage**~~ — INVESTIGATED. Gate reward is impossible via config; training env (RandTrajEnv) has no gate concept. Requires code changes. See outbox/reward_investigation.md.
-11. **[HIGH PRIORITY] Modify RandTrajEnv.reset() to generate gate-aware trajectories** — make training splines pass through actual gate positions (from level config), with randomization matching level2.toml. This is the most promising path: keeps existing architecture, makes trajectories gate-relevant. Requires modifying train_rl.py.
-12. **[ALTERNATIVE] Build new training pipeline on RaceCoreEnv** — train directly on the gate-racing env with dense gate-proximity reward. Higher effort but fundamentally correct approach.
-13. **exp_017: test reduced action penalties on CPU** — quick signal check: do lower d_act_xy_coef (0.3) and d_act_th_coef (0.15) allow faster flight? Won't fix gate problem but tests if penalties cause slowness.
+11. ~~**[HIGH PRIORITY] Modify RandTrajEnv.reset() to generate gate-aware trajectories**~~ — DONE (exp_018). Modified train_rl.py, added `gate_aware: true` config flag. CPU proof-of-concept validates approach (100% gate 1 on L0). See outbox/gate_traj_implementation.md.
+12. **[CRITICAL] exp_019: GPU training with gate-aware trajectories, 10M steps** — Same as exp_018 but `cuda: true`, `num_envs: 1024`, `total_timesteps: 10_000_000`. This will determine if gate-aware training → reliable L2 completion.
+13. **[ALTERNATIVE] Build new training pipeline on RaceCoreEnv** — train directly on the gate-racing env with dense gate-proximity reward. Higher effort but fundamentally correct approach.
+14. **exp_017: test reduced action penalties on CPU** — quick signal check: do lower d_act_xy_coef (0.3) and d_act_th_coef (0.15) allow faster flight? Won't fix gate problem but tests if penalties cause slowness.

@@ -1,0 +1,19 @@
+name: exp_018_gate_traj
+backend: racing
+hypothesis: "Gate-aware trajectories — RandTrajEnv generates splines through actual gate positions with L2 randomization. Same reward, same obs, just better trajectories."
+budget_seconds: 600
+racing:
+  level: level2
+  gate_aware: true
+  total_timesteps: 500000
+  num_envs: 64
+  num_steps: 8
+  learning_rate: 0.0015
+  gamma: 0.94
+  gae_lambda: 0.97
+  clip_coef: 0.26
+  ent_coef: 0.007
+  vf_coef: 0.7
+  n_obs: 2
+  cuda: false
+  seed: 42
