@@ -60,6 +60,36 @@ python -c "import jax; print(f'JAX devices: {jax.devices()}')"
 git config --global user.name "JefferyWhitmire"
 git config --global user.email "jeffwhitmire33@gmail.com"
 
+# ── Set up deploy key for git push ────────────────────────────────────────────
+if [ ! -f ~/.ssh/id_ed25519 ]; then
+    echo "[+] Generating deploy key for GitHub push..."
+    mkdir -p ~/.ssh
+    ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+    ssh-keygen -t ed25519 -C "runpod-drone-rl-lab" -f ~/.ssh/id_ed25519 -N ""
+
+    # Switch remote to SSH so git push works
+    cd /root/drone-rl-lab
+    git remote set-url origin git@github.com:jeffmW5/drone-rl-lab.git
+
+    echo ""
+    echo "================================================"
+    echo "  DEPLOY KEY — ADD THIS TO GITHUB"
+    echo ""
+    echo "  Go to: https://github.com/jeffmW5/drone-rl-lab/settings/keys"
+    echo "  Click 'Add deploy key', check 'Allow write access'"
+    echo "  Paste this key:"
+    echo ""
+    cat ~/.ssh/id_ed25519.pub
+    echo ""
+    echo "  Then run: ssh -T git@github.com  (to verify)"
+    echo "================================================"
+    echo ""
+else
+    echo "[+] Deploy key already exists, setting SSH remote..."
+    cd /root/drone-rl-lab
+    git remote set-url origin git@github.com:jeffmW5/drone-rl-lab.git
+fi
+
 # ── Done ──────────────────────────────────────────────────────────────────────
 echo ""
 echo "================================================"
@@ -68,6 +98,7 @@ echo ""
 echo "  cd /root/drone-rl-lab"
 echo "  python train.py configs/exp_011_racing_gpu.yaml"
 echo ""
+echo "  After training: git add -A && git commit && git push"
 echo "  Auto-shutdown in ${MAX_HOURS}h. Billing ~\$0.30/hr."
 echo "================================================"
 echo ""

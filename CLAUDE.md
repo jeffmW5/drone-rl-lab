@@ -1,7 +1,12 @@
 # Claude Code Instructions — drone-rl-lab
 
-## First thing: Read these files before doing ANYTHING
+## On session start (do this FIRST, every time)
 
+```bash
+git pull 2>/dev/null || true
+```
+
+Then read these files in order:
 1. **`MEMORY.md`** — Hard rules, experiment log, lessons learned. NEVER violate hard rules.
 2. **`program.md`** — Research goals, workflow, documentation standards, allowed/disallowed changes.
 3. **`inbox/INBOX.md`** — Your current task from the orchestrator.
@@ -11,6 +16,8 @@
 You are the **executor** in a two-agent loop:
 - **Windows Claude** (orchestrator) writes INBOX.md with experiment instructions
 - **You** (executor) run experiments, document results, update MEMORY.md
+- Work **autonomously** — complete the full INBOX task without waiting for human input
+- When done, commit, push, and exit cleanly
 
 ## After every experiment
 
@@ -25,3 +32,4 @@ You are the **executor** in a two-agent loop:
 - **Read MEMORY.md Hard Rules** before starting — never repeat known failures
 - **Do NOT modify** `train.py`, `train_racing.py`, `train_hover.py`, `compare.py`, `plot.py` unless INBOX explicitly allows it
 - All experiment parameters go in YAML configs, not code changes
+- **Always commit and push** before ending your session — results that aren't pushed are lost
