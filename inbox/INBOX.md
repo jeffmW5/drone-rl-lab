@@ -109,6 +109,7 @@ This is 10M steps — the full compute version. Only run if exp_019 looks promis
 - If training reward plateaus below 6.0, something is wrong — check that gate_aware is actually being used (print statement in RandTrajEnv.reset would confirm).
 - Auto-shutdown is set to 4 hours. Training should finish well within that.
 - **Push results before pod stops** — results that aren't pushed are lost.
+- **GPU is RTX 3090 (24GB VRAM)** — always record GPU type in EXPERIMENT.md and metrics.json.
 
 ---
 

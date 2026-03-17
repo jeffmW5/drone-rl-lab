@@ -14,6 +14,7 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 6. **Inference-time trajectory swapping doesn't work** — attitude_rl_dynamic.py built splines from obs["gates_pos"] using the exp_010 policy. Result: 0/5 finishes, 0-1 gates on L2 (4.64s avg = crashes). The policy is tightly coupled to the training trajectory shape. Fix requires training on diverse trajectories, not just swapping at inference.
 7. **Training reward plateaus ~7.7 regardless of steps** — exp_016 (10M steps) only reached 7.71 vs exp_015's 7.53 at 3M. Diminishing returns after ~6M steps. Need architectural changes, not more compute.
 8. **GPU training works but RunPod SSH proxy blocks SCP/file transfer** — use deploy key to git push directly from pod. Deploy key (read-write) is registered on GitHub. Private key is at `/media/id_ed25519_runpod` (shared folder, NOT in the git repo). To set up a pod: copy key to pod via `cat /media/id_ed25519_runpod | ssh pod 'mkdir -p ~/.ssh && cat > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519'`, then run `setup_runpod.sh`.
+13. **RunPod GPU: RTX 3090 (24GB VRAM), ~$0.30/hr** — This is our standard GPU pod. PyTorch template. All GPU experiments (014-016, 019+) run on this. 1024 envs fits comfortably. Always document GPU type in experiment results.
 9. **exp_016 is the first RL to finish Level 2** — 13.49s, 2/10 finishes (20%). Better than reference RL (0/5) but 3-4x slower than Kaggle winners (~3.4-5.0s).
 10. **Training env (RandTrajEnv) has ZERO gate awareness** — the RL agent trains on random trajectory following, not gate racing. It never sees gate positions, never gets gate-passage rewards. The only configurable reward params are penalties (rpy, action smoothness, energy). Adding a gate reward requires modifying train_rl.py's RandTrajEnv or building a new training pipeline on RaceCoreEnv.
 11. **Obs space is 73 dims: drone state (13) + trajectory lookahead (30) + history (26) + last action (4)** — no gate info is included. The agent can only follow trajectories, not navigate to gates.
@@ -33,9 +34,9 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 | 010 | racing | L0 | Baseline n_obs=0, 64 envs | 7.36 | 13.36 | 4/4 | ✅ beats PID, 0.024s off reference |
 | 013 | racing | L0 | n_obs=2 fix, 64 envs | 5.02 | crash | 0-1/4 | ❌ undertrained, only 297k steps |
 | dyn | racing | L2 | Dynamic traj from gates_pos | — | 4.64 | 0-1/4 | ❌ policy coupled to training traj shape |
-| 014 | racing | L0 | GPU, n_obs=2, 1024 envs, 1.5M | 7.29 | TBD | TBD | ✅ validates n_obs=2 works with GPU |
-| 015 | racing | L2 | GPU, 3M steps | 7.53 | TBD | TBD | ✅ first L2 training, still climbing |
-| 016 | racing | L2 | GPU, 10M steps | 7.71 | 13.49 | 2/10 finish | ✅ first RL to finish L2, but 20% rate |
+| 014 | racing | L0 | GPU (RTX 3090), n_obs=2, 1024 envs, 1.5M | 7.29 | TBD | TBD | ✅ validates n_obs=2 works with GPU |
+| 015 | racing | L2 | GPU (RTX 3090), 3M steps | 7.53 | TBD | TBD | ✅ first L2 training, still climbing |
+| 016 | racing | L2 | GPU (RTX 3090), 10M steps | 7.71 | 13.49 | 2/10 finish | ✅ first RL to finish L2, but 20% rate |
 | 018 | racing | L2 | Gate-aware trajectories, CPU 213k | 5.48 | crash | 1/4 on L0 (100%), 0-1/4 on L2 | ✅ approach validated, needs GPU training |
 
 ---
