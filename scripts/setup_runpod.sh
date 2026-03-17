@@ -65,11 +65,8 @@ echo "[+] Setting up deploy key for GitHub push..."
 mkdir -p ~/.ssh
 ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
 
-if [ -f /root/drone-rl-lab/ssh_key_runpod ]; then
-    # Use the pre-committed deploy key (already added to GitHub)
-    cp /root/drone-rl-lab/ssh_key_runpod ~/.ssh/id_ed25519
-    chmod 600 ~/.ssh/id_ed25519
-    echo "  Using pre-configured deploy key from repo"
+if [ -f ~/.ssh/id_ed25519 ]; then
+    echo "  Deploy key already in place"
 elif [ ! -f ~/.ssh/id_ed25519 ]; then
     # Fallback: generate a new key (requires manual GitHub setup)
     ssh-keygen -t ed25519 -C "runpod-drone-rl-lab" -f ~/.ssh/id_ed25519 -N ""
