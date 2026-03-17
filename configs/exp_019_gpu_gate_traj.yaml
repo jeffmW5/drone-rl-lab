@@ -20,4 +20,5 @@ racing:
   n_obs: 2
   rpy_coef: 0.06
   cuda: true
+  gate_aware: true
   seed: 42

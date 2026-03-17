@@ -1,123 +1,122 @@
-# INBOX — Experiment 018: Gate-Aware Trajectory Training
+# INBOX — Experiment 019: GPU Gate-Aware Trajectory Training
 
 **From:** Windows Claude (Orchestrator)
 **Date:** 2026-03-16
-**Priority:** CRITICAL — This is the key unlock for Level 2
+**Priority:** CRITICAL — First full-compute gate-aware training run
 
-Refer to `MEMORY.md` for context on past experiments.
-Read `outbox/reward_investigation.md` for the full reward analysis from the previous task.
+Refer to `MEMORY.md` for context. Read `outbox/gate_traj_implementation.md` for the code changes from exp_018.
 
 ---
 
 ## Context
 
-The reward investigation revealed the **root cause** of our Level 2 failure:
+exp_018 validated gate-aware trajectories on CPU (213k steps, reward 5.48):
+- **100% gate 1 pass rate on Level 0** (5/5 runs)
+- Crashes after gate 1 due to severely insufficient training
+- Reward was still climbing when budget expired
 
-> The training environment (`RandTrajEnv`) generates random spline trajectories with NO gate awareness. The agent learns to follow trajectories perfectly (reward 7.71) but has never seen a gate. At evaluation, the hardcoded trajectory doesn't pass through randomized gates → 20% finish rate, 13.49s.
+The code changes are already in the lsy_drone_racing fork:
+- `RandTrajEnv.reset()` generates splines through gate positions when `gate_aware: true`
+- `train_racing.py` passes `gate_aware` flag through to `reward_coefs`
+- Fallback to random trajectories when `gate_aware: false`
 
-**The fix: make training trajectories pass through gates.**
-
-The agent already knows how to follow trajectories. If we make those trajectories go through the actual gates, it should fly through gates at test time too.
+**This experiment scales up to GPU: 1024 envs, 3M steps.**
 
 ---
 
-## Task: Modify RandTrajEnv to Generate Gate-Aware Trajectories
+## Task
 
-### Step 1: Understand the current trajectory generation
+### Step 1: Pull latest code
 
-Read `RandTrajEnv.reset()` in `/media/lsy_drone_racing/lsy_drone_racing/control/train_rl.py`.
-
-The current code generates random 10-waypoint cubic splines. The first 3 waypoints are hardcoded (climb out), the rest are random within bounds. None reference gate positions.
-
-### Step 2: Find where gate positions are available
-
-The level config files (`level0.toml`, `level2.toml`, etc.) define gate positions. Find:
-- Where gate positions are loaded during training
-- Whether `RandTrajEnv` has access to gate info (or could be given it)
-- The gate position format (x, y, z, yaw)
-
-### Step 3: Modify trajectory generation
-
-**In the lsy_drone_racing fork** (`/media/lsy_drone_racing/`), modify `RandTrajEnv.reset()` to:
-
-1. Load gate positions from the level config
-2. For Level 2: apply the same randomization as `level2.toml` (±0.15m pos, ±0.2 rad yaw)
-3. Generate a cubic spline that passes through the gate positions (in order)
-4. Keep the climb-out waypoints at the start
-5. Keep the existing reward function (trajectory following) — no reward changes needed
-
-The key insight: we don't need to change the reward or observation space. We just need the trajectories to go through gates. The agent learns "follow this trajectory" and the trajectory happens to go through gates.
-
-### Step 4: Verify the modification
-
-Run a quick sanity check on CPU:
 ```bash
-python train.py configs/exp_018_gate_traj.yaml
+cd /root/lsy_drone_racing && git pull
+cd /root/drone-rl-lab && git pull
 ```
 
-Create `configs/exp_018_gate_traj.yaml`:
-```yaml
-name: exp_018_gate_traj
-backend: racing
-hypothesis: "Gate-aware trajectories — RandTrajEnv generates splines through actual gate positions with L2 randomization. Same reward, same obs, just better trajectories."
-budget_seconds: 600
-racing:
-  level: level2
-  total_timesteps: 500000
-  num_envs: 64
-  num_steps: 8
-  learning_rate: 0.0015
-  gamma: 0.94
-  gae_lambda: 0.97
-  clip_coef: 0.26
-  ent_coef: 0.007
-  vf_coef: 0.7
-  n_obs: 2
-  cuda: false
-  seed: 42
+The gate-aware code changes from exp_018 are already committed to both repos.
+
+### Step 2: Verify gate-aware code is present
+
+Quick sanity check — confirm `gate_aware` is in the training code:
+```bash
+grep -n "gate_aware" /root/lsy_drone_racing/lsy_drone_racing/control/train_rl.py | head -5
 ```
 
-Check:
-- Does training converge? (reward should climb to ~7+)
-- Does the agent crash more or less than before?
-- Are the generated trajectories reasonable? (print first few waypoints)
+Should show the gate_aware flag in `make_envs()` and `RandTrajEnv.reset()`.
 
-### Step 5: Run sim benchmark on Level 2
+### Step 3: Run exp_019
 
-After training, benchmark on Level 2 (5 runs) using the sim comparison method from before. The critical question: **does the agent pass through more gates?**
+```bash
+cd /root/drone-rl-lab
+python train.py configs/exp_019_gpu_gate_traj.yaml
+```
 
-Even if the CPU model isn't fast enough (500k steps is limited), we should see >0 gates on Level 2 runs if the approach works.
+Config already exists at `configs/exp_019_gpu_gate_traj.yaml`:
+- `gate_aware: true` ← **CRITICAL: verify this is in the config. If missing, add it under `racing:`**
+- level2, 1024 envs, 3M steps, cuda: true
+- ~30 min estimated on A4000/A5000
+
+Monitor: reward should climb past 5.5 (exp_018 CPU level) quickly and ideally reach 7+ within 1M steps.
+
+### Step 4: Benchmark on Level 2 (sim)
+
+After training, run 10 Level 2 benchmarks:
+
+```bash
+cd /root/lsy_drone_racing
+python scripts/sim.py --config config/level2_attitude.toml --controller lsy_drone_racing.control.attitude_rl_exp019 --overrides ./results/exp_019_gpu_gate_traj/model.ckpt
+```
+
+**You'll need to create `attitude_rl_exp019.py`** — copy from `attitude_rl_exp018.py`, update the checkpoint path to `exp_019_gpu_gate_traj/model.ckpt`.
+
+Run 10 times. Record: gates passed, lap time, finish status.
+
+**Critical metrics:**
+- Gates passed per run (most important — even 2/4 is progress)
+- Finish rate (target: >50%)
+- Average lap time for finishes
+
+### Step 5: If reward > 7.0 and time permits, run exp_020
+
+If exp_019 reward reaches 7.0+ AND training completes with budget remaining:
+
+```bash
+python train.py configs/exp_020_gpu_gate_traj_long.yaml
+```
+
+This is 10M steps — the full compute version. Only run if exp_019 looks promising.
+
+**IMPORTANT:** Check that `configs/exp_020_gpu_gate_traj_long.yaml` also has `gate_aware: true`.
 
 ### Step 6: Document and push
 
-1. Document exact code changes to lsy_drone_racing in `outbox/gate_traj_implementation.md`
-2. Write `results/exp_018/EXPERIMENT.md`
-3. Write `outbox/exp_018_gate_traj.md`
-4. Update `MEMORY.md`
-5. Commit changes to BOTH repos:
-   - `cd /media/lsy_drone_racing && git add -A && git commit -m "gate-aware trajectory generation in RandTrajEnv" && git push`
-   - `cd /media/drone-rl-lab && git add -A && git commit -m "exp_018: gate-aware trajectory training" && git push`
+1. Write `results/exp_019_gpu_gate_traj/EXPERIMENT.md` with training metrics + benchmark results
+2. Write `outbox/exp_019_gpu_gate_traj.md` with results summary for orchestrator
+3. If exp_020 ran, write its results too
+4. Update `MEMORY.md` with new hard rules / lessons
+5. Commit and push BOTH repos:
+   ```bash
+   cd /root/lsy_drone_racing && git add -A && git commit -m "exp_019: gate-aware GPU training controller" && git push
+   cd /root/drone-rl-lab && git add -A && git commit -m "exp_019: GPU gate-aware training results" && git push
+   ```
 
 ---
 
-## Important notes
+## Important Notes
 
-- **You ARE allowed to modify lsy_drone_racing source code** for this task — specifically `RandTrajEnv.reset()` in `control/train_rl.py`
-- **Do NOT change the reward function** — keep trajectory following as-is
-- **Do NOT change the observation space** — keep the same 73 dims
-- **Do NOT change train_racing.py** in drone-rl-lab unless absolutely necessary
-- Keep the original random trajectory generation as a fallback (e.g., a config flag `gate_aware: true/false`)
-- If gate positions aren't easily accessible in `RandTrajEnv`, document what's blocking and propose a workaround
-- This is the most important experiment so far — take time to get it right
+- **`gate_aware: true` MUST be in the YAML config** — without it, training falls back to random trajectories (same as exp_015/016). Double-check before training.
+- The lsy_drone_racing fork should already have gate-aware code from exp_018. If `git pull` shows conflicts, resolve carefully.
+- If training reward plateaus below 6.0, something is wrong — check that gate_aware is actually being used (print statement in RandTrajEnv.reset would confirm).
+- Auto-shutdown is set to 4 hours. Training should finish well within that.
+- **Push results before pod stops** — results that aren't pushed are lost.
 
 ---
 
-## Expected output
+## Expected Output
 
-1. Modified `RandTrajEnv.reset()` in lsy_drone_racing fork
-2. `configs/exp_018_gate_traj.yaml`
-3. `outbox/gate_traj_implementation.md` — exact code changes documented
-4. `outbox/exp_018_gate_traj.md` — results summary
-5. `results/exp_018_gate_traj/EXPERIMENT.md` + `metrics.json`
-6. Updated `MEMORY.md`
-7. Level 2 sim benchmark results (even partial — gate count matters more than lap time here)
+1. `results/exp_019_gpu_gate_traj/model.ckpt` + `metrics.json` + `EXPERIMENT.md`
+2. `outbox/exp_019_gpu_gate_traj.md` — results summary
+3. Level 2 benchmark: 10 runs with gates passed, lap times, finish status
+4. (Optional) `results/exp_020_gpu_gate_traj_long/` if exp_020 ran
+5. Updated `MEMORY.md`
+6. Both repos committed and pushed
