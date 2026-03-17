@@ -15,6 +15,8 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 7. **Training reward plateaus ~7.7 regardless of steps** — exp_016 (10M steps) only reached 7.71 vs exp_015's 7.53 at 3M. Diminishing returns after ~6M steps. Need architectural changes, not more compute.
 8. **GPU training works but RunPod SSH proxy blocks SCP/file transfer** — use base64-over-TTY or Jupyter Lab file browser to retrieve model checkpoints. Set up deploy keys BEFORE training to enable git push from pod.
 9. **exp_016 is the first RL to finish Level 2** — 13.49s, 2/10 finishes (20%). Better than reference RL (0/5) but 3-4x slower than Kaggle winners (~3.4-5.0s).
+10. **Training env (RandTrajEnv) has ZERO gate awareness** — the RL agent trains on random trajectory following, not gate racing. It never sees gate positions, never gets gate-passage rewards. The only configurable reward params are penalties (rpy, action smoothness, energy). Adding a gate reward requires modifying train_rl.py's RandTrajEnv or building a new training pipeline on RaceCoreEnv.
+11. **Obs space is 73 dims: drone state (13) + trajectory lookahead (30) + history (26) + last action (4)** — no gate info is included. The agent can only follow trajectories, not navigate to gates.
 
 ---
 
@@ -89,4 +91,7 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 7. **Improve finish rate** — 20% is not competition-ready. Need >80% to be meaningful.
 8. **Improve lap time** — 13.49s vs target 5.0s. Need fundamental approach change, not just more training.
 9. **Investigate: train with domain randomization on trajectory shape** — the policy needs to see diverse trajectories during training, not just the default spline
-10. **Investigate: reward shaping for gate passage** — current reward is trajectory-following. A gate-proximity bonus could help the agent prioritize actually passing through gates.
+10. ~~**Investigate: reward shaping for gate passage**~~ — INVESTIGATED. Gate reward is impossible via config; training env (RandTrajEnv) has no gate concept. Requires code changes. See outbox/reward_investigation.md.
+11. **[HIGH PRIORITY] Modify RandTrajEnv.reset() to generate gate-aware trajectories** — make training splines pass through actual gate positions (from level config), with randomization matching level2.toml. This is the most promising path: keeps existing architecture, makes trajectories gate-relevant. Requires modifying train_rl.py.
+12. **[ALTERNATIVE] Build new training pipeline on RaceCoreEnv** — train directly on the gate-racing env with dense gate-proximity reward. Higher effort but fundamentally correct approach.
+13. **exp_017: test reduced action penalties on CPU** — quick signal check: do lower d_act_xy_coef (0.3) and d_act_th_coef (0.15) allow faster flight? Won't fix gate problem but tests if penalties cause slowness.

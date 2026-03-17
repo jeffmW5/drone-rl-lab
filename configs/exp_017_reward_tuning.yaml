@@ -1,0 +1,28 @@
+name: exp_017_reward_tuning
+backend: racing
+hypothesis: "Reduce action penalties to allow more aggressive flight. If penalties are too conservative, the agent flies slowly/smoothly but misses time targets. Quick CPU test for signal."
+budget_seconds: 600
+
+racing:
+  level: level2
+  total_timesteps: 500000
+  num_envs: 64
+  num_steps: 8
+  learning_rate: 0.0015
+  anneal_lr: true
+  gamma: 0.94
+  gae_lambda: 0.97
+  update_epochs: 10
+  num_minibatches: 8
+  clip_coef: 0.26
+  ent_coef: 0.007
+  vf_coef: 0.7
+  max_grad_norm: 1.5
+  n_obs: 2
+  # Reward tuning — reduced penalties vs exp_016 defaults
+  rpy_coef: 0.06         # unchanged (attitude stability still needed)
+  d_act_xy_coef: 0.3     # was 1.0 — allow sharper roll/pitch changes
+  d_act_th_coef: 0.15    # was 0.4 — allow faster thrust changes
+  act_coef: 0.005        # was 0.02 — less energy penalty
+  cuda: false
+  seed: 42
