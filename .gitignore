@@ -35,3 +35,5 @@ ssh_key_runpod.pub
 # OS
 .DS_Store
 Thumbs.db
+ssh_key_runpod
+ssh_key_runpod.pub
