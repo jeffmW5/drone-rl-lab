@@ -28,4 +28,4 @@ echo ""
 # Launch Claude Code with the task
 echo "[3/3] Launching Claude Code..."
 echo ""
-claude --print "You are the executor in the drone-rl-lab agentic loop. Read CLAUDE.md, then execute the task in inbox/INBOX.md autonomously. When completely done: commit all results, push to GitHub, and exit."
+claude --dangerously-skip-permissions --print "You are the executor in the drone-rl-lab agentic loop. Read CLAUDE.md, then execute the task in inbox/INBOX.md autonomously. When completely done: commit all results, push to GitHub, and exit."
