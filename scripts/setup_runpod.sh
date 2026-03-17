@@ -61,34 +61,27 @@ git config --global user.name "JefferyWhitmire"
 git config --global user.email "jeffwhitmire33@gmail.com"
 
 # ── Set up deploy key for git push ────────────────────────────────────────────
-if [ ! -f ~/.ssh/id_ed25519 ]; then
-    echo "[+] Generating deploy key for GitHub push..."
-    mkdir -p ~/.ssh
-    ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+echo "[+] Setting up deploy key for GitHub push..."
+mkdir -p ~/.ssh
+ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+
+if [ -f /root/drone-rl-lab/ssh_key_runpod ]; then
+    # Use the pre-committed deploy key (already added to GitHub)
+    cp /root/drone-rl-lab/ssh_key_runpod ~/.ssh/id_ed25519
+    chmod 600 ~/.ssh/id_ed25519
+    echo "  Using pre-configured deploy key from repo"
+elif [ ! -f ~/.ssh/id_ed25519 ]; then
+    # Fallback: generate a new key (requires manual GitHub setup)
     ssh-keygen -t ed25519 -C "runpod-drone-rl-lab" -f ~/.ssh/id_ed25519 -N ""
-
-    # Switch remote to SSH so git push works
-    cd /root/drone-rl-lab
-    git remote set-url origin git@github.com:jeffmW5/drone-rl-lab.git
-
     echo ""
-    echo "================================================"
-    echo "  DEPLOY KEY — ADD THIS TO GITHUB"
-    echo ""
-    echo "  Go to: https://github.com/jeffmW5/drone-rl-lab/settings/keys"
-    echo "  Click 'Add deploy key', check 'Allow write access'"
-    echo "  Paste this key:"
-    echo ""
+    echo "  NEW KEY — add to https://github.com/jeffmW5/drone-rl-lab/settings/keys"
     cat ~/.ssh/id_ed25519.pub
     echo ""
-    echo "  Then run: ssh -T git@github.com  (to verify)"
-    echo "================================================"
-    echo ""
-else
-    echo "[+] Deploy key already exists, setting SSH remote..."
-    cd /root/drone-rl-lab
-    git remote set-url origin git@github.com:jeffmW5/drone-rl-lab.git
 fi
+
+# Switch remote to SSH so git push works
+cd /root/drone-rl-lab
+git remote set-url origin git@github.com:jeffmW5/drone-rl-lab.git
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 echo ""
