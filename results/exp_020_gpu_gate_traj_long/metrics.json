@@ -1,0 +1,33 @@
+{
+  "experiment": "exp_020_gpu_gate_traj_long",
+  "backend": "racing",
+  "hypothesis": "Extended gate-aware training \u2014 10M steps. If exp_019 reward is still climbing at 3M, more compute on gate-aware trajectories could push toward sub-5s.",
+  "config_file": "exp_020_gpu_gate_traj_long.yaml",
+  "timestamp": "2026-03-17T02:20:46.828143",
+  "elapsed_seconds": 1472.8,
+  "mean_reward": 7.793,
+  "std_reward": 0.051,
+  "timesteps_trained": 9994240,
+  "racing_kwargs": {
+    "level": "level2",
+    "total_timesteps": 10000000,
+    "num_envs": 1024,
+    "num_steps": 8,
+    "learning_rate": 0.0015,
+    "anneal_lr": true,
+    "gamma": 0.94,
+    "gae_lambda": 0.97,
+    "update_epochs": 10,
+    "num_minibatches": 8,
+    "clip_coef": 0.26,
+    "ent_coef": 0.007,
+    "vf_coef": 0.7,
+    "max_grad_norm": 1.5,
+    "n_obs": 2,
+    "rpy_coef": 0.06,
+    "cuda": true,
+    "gate_aware": true,
+    "seed": 42
+  },
+  "level": "level2"
+}

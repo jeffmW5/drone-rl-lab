@@ -1,0 +1,24 @@
+name: exp_020_gpu_gate_traj_long
+backend: racing
+hypothesis: "Extended gate-aware training — 10M steps. If exp_019 reward is still climbing at 3M, more compute on gate-aware trajectories could push toward sub-5s."
+budget_seconds: 3600
+racing:
+  level: level2
+  total_timesteps: 10000000
+  num_envs: 1024
+  num_steps: 8
+  learning_rate: 0.0015
+  anneal_lr: true
+  gamma: 0.94
+  gae_lambda: 0.97
+  update_epochs: 10
+  num_minibatches: 8
+  clip_coef: 0.26
+  ent_coef: 0.007
+  vf_coef: 0.7
+  max_grad_norm: 1.5
+  n_obs: 2
+  rpy_coef: 0.06
+  cuda: true
+  gate_aware: true
+  seed: 42

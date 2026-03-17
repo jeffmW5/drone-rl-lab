@@ -18,7 +18,9 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 9. **exp_016 is the first RL to finish Level 2** — 13.49s, 2/10 finishes (20%). Better than reference RL (0/5) but 3-4x slower than Kaggle winners (~3.4-5.0s).
 10. **Training env (RandTrajEnv) has ZERO gate awareness** — the RL agent trains on random trajectory following, not gate racing. It never sees gate positions, never gets gate-passage rewards. The only configurable reward params are penalties (rpy, action smoothness, energy). Adding a gate reward requires modifying train_rl.py's RandTrajEnv or building a new training pipeline on RaceCoreEnv.
 11. **Obs space is 73 dims: drone state (13) + trajectory lookahead (30) + history (26) + last action (4)** — no gate info is included. The agent can only follow trajectories, not navigate to gates.
-12. **Gate-aware trajectory training works (exp_018)** — Modified RandTrajEnv.reset() to generate splines through gate positions with L2 randomization. CPU proof-of-concept (213k steps, reward 5.48) shows 100% gate 1 pass on L0 but crashes after gate 1 due to insufficient training. Needs GPU training (10M+ steps) to validate full circuit completion. Config flag: `gate_aware: true` in YAML.
+12. **Gate-aware trajectory training works (exp_018)** — Modified RandTrajEnv.reset() to generate splines through gate positions with L2 randomization. Config flag: `gate_aware: true` in YAML.
+14. **Gate-aware midpoint trajectories crash at gate 1→2 transition (exp_019/020)** — All gate-aware models (3M and 10M GPU) crash at ~5.7s after passing gate 1. The climb from z=0.7 (gate 1) to z=1.2 (gate 2) + lateral direction change is too aggressive for the simple midpoint spline. Need approach/departure vectors based on gate yaw, or more intermediate waypoints per gate.
+15. **RunPod TCP SSH (exposed port) supports SCP/SFTP** — Use `ssh -p PORT` with the TCP endpoint, not the proxy. This enables direct file transfer. Much better than base64-over-TTY.
 
 ---
 
@@ -38,6 +40,8 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 | 015 | racing | L2 | GPU (RTX 3090), 3M steps | 7.53 | TBD | TBD | ✅ first L2 training, still climbing |
 | 016 | racing | L2 | GPU (RTX 3090), 10M steps | 7.71 | 13.49 | 2/10 finish | ✅ first RL to finish L2, but 20% rate |
 | 018 | racing | L2 | Gate-aware trajectories, CPU 213k | 5.48 | crash | 1/4 on L0 (100%), 0-1/4 on L2 | ✅ approach validated, needs GPU training |
+| 019 | racing | L2 | GPU (RTX 3090), gate-aware, 3M | 7.55 | crash | 1/4 L0 (100%), 0-1/4 L2 (50%) | ✅ gate 1 works, crashes at gate 1→2 |
+| 020 | racing | L2 | GPU (RTX 3090), gate-aware, 10M | 7.79 | crash | 1/4 L0 (100%), 0-1/4 L2 (40%) | ✅ best reward, same crash pattern |
 
 ---
 
@@ -96,6 +100,7 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 9. **Investigate: train with domain randomization on trajectory shape** — the policy needs to see diverse trajectories during training, not just the default spline
 10. ~~**Investigate: reward shaping for gate passage**~~ — INVESTIGATED. Gate reward is impossible via config; training env (RandTrajEnv) has no gate concept. Requires code changes. See outbox/reward_investigation.md.
 11. ~~**[HIGH PRIORITY] Modify RandTrajEnv.reset() to generate gate-aware trajectories**~~ — DONE (exp_018). Modified train_rl.py, added `gate_aware: true` config flag. CPU proof-of-concept validates approach (100% gate 1 on L0). See outbox/gate_traj_implementation.md.
-12. **[CRITICAL] exp_019: GPU training with gate-aware trajectories, 10M steps** — Same as exp_018 but `cuda: true`, `num_envs: 1024`, `total_timesteps: 10_000_000`. This will determine if gate-aware training → reliable L2 completion.
-13. **[ALTERNATIVE] Build new training pipeline on RaceCoreEnv** — train directly on the gate-racing env with dense gate-proximity reward. Higher effort but fundamentally correct approach.
-14. **exp_017: test reduced action penalties on CPU** — quick signal check: do lower d_act_xy_coef (0.3) and d_act_th_coef (0.15) allow faster flight? Won't fix gate problem but tests if penalties cause slowness.
+12. ~~**[CRITICAL] exp_019/020: GPU gate-aware training**~~ — DONE. exp_019 (3M): reward 7.55, 50% gate 1 on L2. exp_020 (10M): reward 7.79, 40% gate 1. Both crash at gate 1→2 transition. More training doesn't help — trajectory shape is the bottleneck.
+13. **[HIGH PRIORITY] Improve gate 1→2 trajectory** — Use gate yaw for approach/departure vectors. Each gate gets 3 waypoints (approach, center, departure) instead of 2 (midpoint, center). The current midpoint approach creates too-aggressive splines between gates at different altitudes.
+14. **[ALTERNATIVE] Build new training pipeline on RaceCoreEnv** — train directly on the gate-racing env with dense gate-proximity reward. Higher effort but fundamentally correct approach. Eliminates crazyflow→MuJoCo physics gap.
+15. **Investigate crazyflow→MuJoCo physics gap** — training reward is 7.79 but sim benchmark crashes. The two physics engines may have significantly different dynamics. Could be a fundamental limiting factor for the current approach.
