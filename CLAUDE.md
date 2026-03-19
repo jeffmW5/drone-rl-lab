@@ -40,6 +40,30 @@ You are the **executor** in a two-agent loop:
 6. Update `memory/NEXT.md` -- strikethrough completed items
 7. `git add`, `git commit`, `git push`
 
+## RunPod GPU Training
+
+When a task requires GPU training, use the pod manager instead of training locally:
+
+```bash
+# Check inbox has tasks, start pod, run full pipeline, auto-stop
+bash scripts/manage_pod.sh
+
+# Check pod status without starting
+bash scripts/manage_pod.sh --status
+
+# Stop pod manually
+bash scripts/manage_pod.sh --stop
+
+# Preview queue without starting pod
+bash scripts/manage_pod.sh --dry-run
+```
+
+**Required env vars** (set in `~/.bashrc` on VM — never in the repo):
+- `RUNPOD_API_KEY` — RunPod API key
+- `RUNPOD_POD_ID` — pod ID for "desirable_brown_mongoose" (l4lu7w9i2rvfxm)
+
+The pod auto-stops after 4 hours via a safety timer in `setup_runpod.sh`.
+
 ## Critical rules
 
 - **Read `memory/HARD_RULES.md`** before starting -- never repeat known failures
