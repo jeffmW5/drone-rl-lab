@@ -29,6 +29,16 @@ POLL_INTERVAL=10   # seconds between status checks
 MAX_WAIT=300       # max seconds to wait for pod to start (5 min)
 SSH_TIMEOUT=120    # max seconds to wait for SSH to be ready
 
+# GPU types to try when creating a new pod (order = preference)
+GPU_TYPES=(
+    "NVIDIA GeForce RTX 3090"
+    "NVIDIA RTX A5000"
+    "NVIDIA GeForce RTX 4090"
+    "NVIDIA RTX A4000"
+)
+PYTORCH_IMAGE="runpod/pytorch:2.1.0-py3.10-cuda11.8.0-devel-ubuntu22.04"
+POD_ID_FILE="/media/runpod_pod_id"  # persists new pod ID across sessions
+
 # Colors
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
 
@@ -42,6 +52,11 @@ check_env() {
         err "RUNPOD_API_KEY not set. Add to ~/.bashrc:"
         err "  export RUNPOD_API_KEY=\"your_key_here\""
         exit 1
+    fi
+    # Load persisted pod ID from file if env var not set
+    if [ -z "${RUNPOD_POD_ID:-}" ] && [ -f "$POD_ID_FILE" ]; then
+        RUNPOD_POD_ID=$(cat "$POD_ID_FILE")
+        warn "Loaded pod ID from $POD_ID_FILE: $RUNPOD_POD_ID"
     fi
     if [ -z "${RUNPOD_POD_ID:-}" ]; then
         err "RUNPOD_POD_ID not set. Add to ~/.bashrc:"
@@ -64,9 +79,66 @@ get_pod_status() {
     runpod_query "{ pod(input: {podId: \\\"${RUNPOD_POD_ID}\\\"}) { id desiredStatus runtime { uptimeInSeconds ports { ip privatePort publicPort type } } } }"
 }
 
+save_pod_id() {
+    local pod_id="$1"
+    echo "$pod_id" > "$POD_ID_FILE"
+    warn "New pod ID saved to $POD_ID_FILE"
+    warn "Update ~/.bashrc when convenient: export RUNPOD_POD_ID=\"$pod_id\""
+}
+
+create_new_pod() {
+    local gpu_type="$1"
+    log "Trying to create new pod with GPU: $gpu_type"
+    local result
+    result=$(runpod_query "mutation { podFindAndDeployOnDemand(input: { \
+name: \\\"drone-rl-lab\\\", \
+imageName: \\\"${PYTORCH_IMAGE}\\\", \
+gpuTypeId: \\\"${gpu_type}\\\", \
+cloudType: SECURE, \
+gpuCount: 1, \
+containerDiskInGb: 50, \
+ports: \\\"22/tcp\\\", \
+startSsh: true \
+}) { id } }")
+    echo "$result" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+pod = (d.get('data') or {}).get('podFindAndDeployOnDemand') or {}
+pid = pod.get('id', '')
+if pid:
+    print(pid)
+" 2>/dev/null
+}
+
 start_pod() {
-    log "Sending podResume request..."
-    runpod_query "mutation { podResume(input: {podId: \\\"${RUNPOD_POD_ID}\\\", gpuCount: ${GPU_COUNT}}) { id desiredStatus } }"
+    log "Sending podResume request for $RUNPOD_POD_ID..."
+    local result
+    result=$(runpod_query "mutation { podResume(input: {podId: \\\"${RUNPOD_POD_ID}\\\", gpuCount: ${GPU_COUNT}}) { id desiredStatus } }")
+
+    # Detect GPU availability failure and fall back to creating a new pod
+    if echo "$result" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+errors = d.get('errors') or []
+msg = ' '.join(e.get('message','') for e in errors).lower()
+sys.exit(0 if ('not enough free gpu' in msg or 'no available' in msg or 'unavailable' in msg) else 1)
+" 2>/dev/null; then
+        warn "GPU unavailable for existing pod — trying to create a new one..."
+        local new_id=""
+        for gpu_type in "${GPU_TYPES[@]}"; do
+            new_id=$(create_new_pod "$gpu_type")
+            if [ -n "$new_id" ]; then
+                log "New pod created: $new_id (GPU: $gpu_type)"
+                RUNPOD_POD_ID="$new_id"
+                save_pod_id "$new_id"
+                return 0
+            fi
+            warn "  $gpu_type — unavailable"
+        done
+        err "All GPU types exhausted. No pod available."
+        err "Try again later or check RunPod availability."
+        exit 1
+    fi
 }
 
 stop_pod() {
