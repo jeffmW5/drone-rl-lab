@@ -14,7 +14,7 @@
 9. ~~GPU gate-aware training (exp_019/020)~~ -- DONE. Both crash at gate 1->2 transition.
 10. ~~Improve gate 1->2 trajectory~~ -- DONE (exp_021). Yaw-aware vectors fix it. 2-3 gates on L0, 0-3 on L2. But 0 finishes.
 11. ~~Build new training pipeline on RaceCoreEnv~~ -- DONE (exp_022). VecDroneRaceEnv pipeline with dense gate reward. Mean reward 6.34, peak 10.04. Agent passes 1-2 gates. Needs benchmark + extended training.
-12. **Investigate crazyflow->MuJoCo physics gap** -- training reward is 7.79 but sim benchmark crashes. May be a fundamental limiting factor.
+12. ~~Investigate crazyflow->MuJoCo physics gap~~ -- RESOLVED. No physics gap. Training and benchmark both use MuJoCo via RaceCoreEnv. The 2.02s crash is caused by the 100-step grace period masking OOB during training (model never learns altitude control). Fix: add OOB penalty to reward.
 13. **Add speed incentive to training** -- current reward only penalizes trajectory deviation. Need to reward fast gate passage.
 14. **Improve finish rate** -- 20% is not competition-ready. Need >80% to be meaningful.
 15. **Improve lap time** -- 13.49s vs target 5.0s. Need fundamental approach change.

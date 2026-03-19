@@ -1,0 +1,65 @@
+{
+  "experiment": "exp_022_racecore",
+  "benchmarks": [
+    {
+      "level": "level2",
+      "controller": "attitude_rl_race.py",
+      "n_runs": 10,
+      "results": [
+        {
+          "time": 2.02,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 2.02,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 2.02,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 2.02,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 2.02,
+          "finished": false,
+          "gates": 1
+        },
+        {
+          "time": 2.02,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 2.02,
+          "finished": false,
+          "gates": 1
+        },
+        {
+          "time": 2.02,
+          "finished": false,
+          "gates": 1
+        },
+        {
+          "time": 2.02,
+          "finished": false,
+          "gates": 1
+        },
+        {
+          "time": 2.02,
+          "finished": false,
+          "gates": 1
+        }
+      ],
+      "avg_time": 2.02,
+      "finish_rate": 0.0,
+      "avg_gates": 0.5
+    }
+  ]
+}

@@ -7,18 +7,19 @@
 
 ## Queue
 
-### [NEXT] exp_022 -- Benchmark on Level 2 sim
+### [DONE] exp_022 -- Benchmark on Level 2 sim
 **Config:** Use attitude_rl_race.py controller with exp_022 checkpoint
 **Depends on:** exp_022 training (DONE)
 
-Benchmark the RaceCoreEnv-trained model on the actual L2 competition sim.
-Need to get the model.ckpt from the pod and run benchmark.py.
+**Result:** 0/10 finishes, 0.5 gates avg, all crash at 2.02s. Model passes gate 0 but flies through
+ceiling (z=3.06). Root cause: no altitude penalty in training + 100-step grace period masks OOB.
+See STATUS.md for full analysis.
 
 ---
 
-### [QUEUED] exp_023 -- Extended RaceCoreEnv Training (5M+ steps)
+### [NEXT] exp_023 -- Extended RaceCoreEnv Training (5M+ steps)
 **Config:** TBD (based on exp_022 benchmark results)
-**Depends on:** exp_022 benchmark
+**Depends on:** exp_022 benchmark (DONE)
 
 **Goal:** Extend RaceCoreEnv training to 5M+ steps with a longer time budget. exp_022 hit the 1800s wall at 1.93M/3M steps while reward was still climbing (peak 10.04 at 1.23M, ~8.26 at iter 470). More compute should push the agent from 1-2 gates toward full lap completion.
 

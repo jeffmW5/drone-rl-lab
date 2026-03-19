@@ -218,6 +218,9 @@ def run(config_path: str):
             "proximity_coef": racing_cfg.get("proximity_coef", 2.0),
             "speed_coef": racing_cfg.get("speed_coef", 0.1),
             "max_episode_steps": racing_cfg.get("max_episode_steps", 1500),
+            "oob_coef": racing_cfg.get("oob_coef", 0.0),
+            "z_low": racing_cfg.get("z_low", 0.0),
+            "z_high": racing_cfg.get("z_high", 2.0),
         }
         race_config = racing_cfg.get("race_config", f"{level}_attitude.toml")
         envs = make_race_envs(
