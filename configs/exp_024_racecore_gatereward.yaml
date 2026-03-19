@@ -1,0 +1,37 @@
+name: exp_024_racecore_gatereward
+backend: racing
+hypothesis: "Flip reward balance: gate passage must dominate over proximity. exp_023b model maximized proximity reward by flying fast with max thrust, never learning altitude control. Fix: gate_bonus 5→20, proximity_coef 2→1, z_high 1.8→1.5, oob_coef 5→10. Also grace period bug fixed in race_core.py (sim.freq→self.freq). This should make actually passing gates the only viable strategy."
+budget_seconds: 5400
+racing:
+  env_type: race
+  level: level2
+  race_config: level2_attitude.toml
+  total_timesteps: 8000000
+  num_envs: 512
+  num_steps: 8
+  learning_rate: 0.0015
+  anneal_lr: true
+  gamma: 0.94
+  gae_lambda: 0.97
+  update_epochs: 10
+  num_minibatches: 8
+  clip_coef: 0.26
+  ent_coef: 0.007
+  vf_coef: 0.7
+  max_grad_norm: 1.5
+  n_obs: 2
+  cuda: true
+  seed: 42
+  # RaceCoreEnv-specific reward coefficients
+  gate_bonus: 20.0
+  proximity_coef: 1.0
+  speed_coef: 0.1
+  rpy_coef: 0.06
+  act_coef: 0.05
+  d_act_th_coef: 0.4
+  d_act_xy_coef: 1.0
+  max_episode_steps: 1500
+  # Hard OOB termination + penalty
+  oob_coef: 10.0
+  z_low: -0.05
+  z_high: 1.5

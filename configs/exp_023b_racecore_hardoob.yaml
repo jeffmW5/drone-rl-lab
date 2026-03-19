@@ -1,6 +1,6 @@
 name: exp_023b_racecore_hardoob
 backend: racing
-hypothesis: "RaceCoreEnv with hard OOB termination. exp_023 soft penalty was insufficient — model still flies to z=4.2 during benchmark. Now terminated=True when z outside [0, 1.8], which forces PPO to learn altitude control even during the 100-step grace period. Also increased oob_coef to 5.0."
+hypothesis: "RaceCoreEnv with hard OOB termination. exp_023 soft penalty was insufficient — model still flies to z=4.2 during benchmark. Now terminated=True when z outside [-0.05, 1.8], which forces PPO to learn altitude control even during the 100-step grace period. oob_coef=5.0. z_low=-0.05 gives margin for ground contact at takeoff (drone clips to z=-0.001 in first few steps)."
 budget_seconds: 3600
 racing:
   env_type: race
@@ -33,5 +33,5 @@ racing:
   max_episode_steps: 1500
   # Hard OOB termination + penalty
   oob_coef: 5.0
-  z_low: 0.0
+  z_low: -0.05
   z_high: 1.8
