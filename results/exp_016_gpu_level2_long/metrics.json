@@ -28,5 +28,9 @@
     "cuda": true,
     "seed": 42
   },
-  "level": "level2"
+  "level": "level2",
+  "summary": {
+    "key_change": "GPU 10M steps",
+    "outcome": "first RL to finish L2, 20% rate"
+  }
 }

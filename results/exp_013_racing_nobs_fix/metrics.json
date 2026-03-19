@@ -28,5 +28,9 @@
     "cuda": false,
     "seed": 42
   },
-  "level": "level0"
+  "level": "level0",
+  "summary": {
+    "key_change": "n_obs=2 fix, 64 envs",
+    "outcome": "undertrained, only 297k steps"
+  }
 }

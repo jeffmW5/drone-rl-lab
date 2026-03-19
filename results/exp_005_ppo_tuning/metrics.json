@@ -14,5 +14,9 @@
     "clip_range": 0.1,
     "gamma": 0.99,
     "gae_lambda": 0.95
+  },
+  "summary": {
+    "key_change": "Conservative PPO",
+    "outcome": "stability vs performance tradeoff"
   }
 }

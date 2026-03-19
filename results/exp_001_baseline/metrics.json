@@ -16,5 +16,9 @@
     "gamma": 0.99,
     "gae_lambda": 0.95
   },
-  "reward_code": "dist = np.linalg.norm(self.TARGET_POS_CUSTOM - state[0:3])\nreturn max(0, 2 - dist**4)"
+  "reward_code": "dist = np.linalg.norm(self.TARGET_POS_CUSTOM - state[0:3])\nreturn max(0, 2 - dist**4)",
+  "summary": {
+    "key_change": "Baseline quartic reward",
+    "outcome": "ceiling for 1D RPM"
+  }
 }

@@ -237,6 +237,21 @@ def run(config_path: str):
     eval_timesteps = []
     eval_results = []
 
+    # ── Early stopping config ──────────────────────────────────────────────────
+    es_cfg = racing_cfg.get("early_stopping", {})
+    es_enabled = es_cfg.get("enabled", False)
+    es_window = es_cfg.get("window", 50)
+    es_patience = es_cfg.get("patience", 200)
+    es_min_delta = es_cfg.get("min_delta", 0.05)
+    es_reward_history = []
+    es_best_avg = float('-inf')
+    es_best_iteration = 0
+    early_stopped = False
+    plateau_iteration = None
+
+    if es_enabled:
+        print(f"[INFO] Early stopping: window={es_window}, patience={es_patience}, min_delta={es_min_delta}")
+
     # ── Training loop ─────────────────────────────────────────────────────────
     wall_start = time.time()
     global_step = 0
@@ -353,9 +368,29 @@ def run(config_path: str):
                 torch.nn.utils.clip_grad_norm_(agent.parameters(), args.max_grad_norm)
                 optimizer.step()
 
+        # ── Compute iteration reward (every iteration for early stopping) ──
+        iter_reward = rewards_buf.sum(0).mean().item()
+
+        # ── Early stopping check ─────────────────────────────────────────
+        if es_enabled:
+            es_reward_history.append(iter_reward)
+            if len(es_reward_history) >= es_window:
+                current_avg = np.mean(es_reward_history[-es_window:])
+                if current_avg > es_best_avg + es_min_delta:
+                    es_best_avg = current_avg
+                    es_best_iteration = iteration
+                elif iteration - es_best_iteration >= es_patience:
+                    print(f"\n[EarlyStopping] Reward plateau detected at iteration {iteration}.")
+                    print(f"  Best rolling avg: {es_best_avg:.4f} at iteration {es_best_iteration}")
+                    print(f"  Current rolling avg: {current_avg:.4f}")
+                    print(f"  No improvement for {iteration - es_best_iteration} iterations (patience={es_patience})")
+                    early_stopped = True
+                    plateau_iteration = iteration
+                    break
+
         # ── Periodic logging ──────────────────────────────────────────────
         if iteration % 10 == 0 or iteration == 1:
-            mean_reward = rewards_buf.sum(0).mean().item()
+            mean_reward = iter_reward
             elapsed = time.time() - wall_start
             print(
                 f"  iter {iteration:>5}/{args.num_iterations} | "
@@ -403,6 +438,8 @@ def run(config_path: str):
         "timesteps_trained": global_step,
         "racing_kwargs": racing_cfg,
         "level": level,
+        "early_stopped": early_stopped,
+        "plateau_iteration": plateau_iteration,
     }
 
     metrics_path = os.path.join(results_dir, "metrics.json")
@@ -417,6 +454,8 @@ def run(config_path: str):
     print(f"  timesteps    = {global_step:,}")
     print(f"  wall time    = {elapsed:.1f}s")
     print(f"  level        = {level}")
+    if early_stopped:
+        print(f"  early_stop   = iteration {plateau_iteration} (plateau)")
     print(f"{'='*65}\n")
 
     # ── Write outbox file ─────────────────────────────────────────────────────
@@ -435,6 +474,58 @@ def run(config_path: str):
         f.write(f"*(Linux Claude: write full analysis to "
                 f"`results/{name}/EXPERIMENT.md`, then update this file.)*\n")
     print(f"[Updated] {outbox_path}")
+
+    # ── Auto-benchmark (optional) ─────────────────────────────────────────────
+    import shutil as _shutil
+    bench_cfg = config.get("benchmark", {})
+    if bench_cfg.get("enabled", False):
+        benchmark_script = os.path.join(lab_dir, "scripts", "benchmark.py")
+        if os.path.isfile(benchmark_script) and _shutil.which("pixi") and os.path.isdir("/media/lsy_drone_racing"):
+            print(f"\n[AutoBenchmark] Starting structured benchmark...")
+            levels = bench_cfg.get("levels", [level])
+            if "level2" not in levels and level != "level2" and bench_cfg.get("include_level2", True):
+                levels.append("level2")
+            n_bench_runs = bench_cfg.get("n_runs", 5)
+            controller = bench_cfg.get("controller", "attitude_rl_generic.py")
+
+            env = os.environ.copy()
+            env["DRONE_RL_CKPT_PATH"] = ckpt_path
+            env["DRONE_RL_GATE_AWARE"] = str(racing_cfg.get("gate_aware", False)).lower()
+            env["SCIPY_ARRAY_API"] = "1"
+
+            import subprocess
+            try:
+                level_args = []
+                for lv in levels:
+                    level_args.extend(["--level", lv])
+                result = subprocess.run(
+                    [sys.executable, benchmark_script,
+                     "--experiment", name,
+                     "--n_runs", str(n_bench_runs),
+                     "--controller", controller,
+                     ] + level_args,
+                    env=env, capture_output=True, text=True, timeout=600,
+                )
+                if result.returncode == 0:
+                    print(result.stdout)
+                    bench_path = os.path.join(results_dir, "benchmark.json")
+                    if os.path.isfile(bench_path):
+                        with open(bench_path) as f:
+                            metrics["benchmark"] = json.load(f)
+                        with open(metrics_path, "w") as f:
+                            json.dump(metrics, f, indent=2)
+                        print(f"[Updated] {metrics_path} (with benchmark results)")
+                else:
+                    print(f"[AutoBenchmark] FAILED (exit {result.returncode})")
+                    if result.stderr:
+                        print(result.stderr[-500:])
+            except subprocess.TimeoutExpired:
+                print("[AutoBenchmark] TIMEOUT (600s) — skipping")
+            except Exception as e:
+                print(f"[AutoBenchmark] ERROR: {e}")
+        else:
+            if bench_cfg.get("enabled"):
+                print("[AutoBenchmark] Skipping — pixi or lsy_drone_racing not available")
 
     return metrics
 

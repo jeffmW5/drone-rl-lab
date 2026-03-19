@@ -13,16 +13,21 @@ Two backends:
 
 ```
 Windows Claude (Orchestrator)
-    | writes experiment config YAML + INBOX.md
-Shared Folder (bridge)
-    | reads outbox/ results + MEMORY.md
+    | writes experiment config YAML + inbox/INBOX.md
+    |
+Shared Folder / Git (bridge)
+    |
 Linux Claude (Executor)
-    -> runs training -> benchmarks in sim -> documents results
+    | reads inbox/ queue → trains → benchmarks → documents
+    | writes outbox/STATUS.md + results/
+    |
+Windows Claude
+    | reads outbox/, updates memory, queues next experiment
 ```
 
-Each experiment is a frozen YAML config. The history forms a readable
-research log of what worked, what didn't, and why. `MEMORY.md` preserves
-lessons across sessions so agents never repeat mistakes.
+Each experiment is a frozen YAML config. The executor processes a task queue
+(`inbox/INBOX.md`) with `[NEXT]`/`[QUEUED]`/`[DONE]` status tags. Memory is
+split across `memory/` files so agents never repeat mistakes.
 
 ---
 
@@ -35,7 +40,7 @@ lessons across sessions so agents never repeat mistakes.
 | 1 | Team Y | 3.394 |
 | 2 | Group6 | 4.886 |
 | 3 | Limo | 5.022 |
-| — | **Our best (exp_016)** | **13.49** |
+| — | **Our best (exp_020)** | **~13.5** |
 
 ### Progress
 
@@ -43,12 +48,13 @@ lessons across sessions so agents never repeat mistakes.
 |-------|-----------|-------------|
 | Hover (PyBullet) | 001-005 | ONE_D_RPM action space caps reward at ~474. Quartic reward is optimal. |
 | Racing CPU (L0) | 010, 013 | PPO learns trajectory following. 13.36s lap, beats PID. n_obs=2 needs more compute. |
-| Racing GPU (L0-L2) | 014-016 | n_obs=2 works with 1024 envs. First RL to finish Level 2 (2/10, 13.49s). Reward plateaus at ~7.7. |
-| Dynamic trajectory | dyn | Inference-time trajectory swap fails — policy coupled to training trajectory shape. |
+| Racing GPU (L0-L2) | 014-016 | n_obs=2 works with 1024 envs. First RL to finish Level 2 (2/10, 13.49s). |
+| Gate-aware traj | 018-020 | Gate-aware trajectories improve reward. Best reward 7.79 (exp_020, 10M GPU steps). |
+| Yaw-aware traj | 021 | Yaw approach/departure vectors fix gate 1→2 crashes. 2.4x more gates passed. |
 
 ### The gap
 
-Our exp_016 (10M GPU steps) is the **first RL model to finish Level 2 at all** — the reference RL goes 0/5. But we're 3-4x slower than competition winners. The bottleneck is **trajectory generation**: all controllers follow a fixed spline that doesn't adapt to randomized gate positions.
+We're 3-4x slower than competition winners. The bottleneck is the **trajectory-following approach** itself — the policy follows a fixed spline and can't adapt fast enough to randomized gate positions. Next step: train directly on `RaceCoreEnv` with waypoint rewards instead of trajectory tracking.
 
 ---
 
@@ -59,10 +65,16 @@ source /media/drones-venv/bin/activate
 cd /media/drone-rl-lab
 
 # Run an experiment
-python train.py configs/exp_016_gpu_level2_long.yaml
+python train.py configs/exp_020_gpu_gate_traj_long.yaml
 
 # View leaderboard
 python compare.py
+python compare.py --csv
+python compare.py --filter level=level2
+python compare.py --generate-log    # auto-update memory/EXPERIMENT_LOG.md
+
+# Benchmark in MuJoCo sim
+python scripts/benchmark.py -e exp_020_gpu_gate_traj_long -n 5
 
 # Generate training curves
 python plot.py
@@ -73,9 +85,22 @@ python plot.py
 ```bash
 # On a fresh RunPod pod (RTX 3090, PyTorch template):
 bash scripts/setup_runpod.sh        # installs everything, 4h auto-shutdown
-python train.py configs/exp_016_gpu_level2_long.yaml
+python train.py configs/exp_020_gpu_gate_traj_long.yaml
 bash scripts/sync_results.sh "description"
 # STOP YOUR POD
+```
+
+### Autonomous operation
+
+```bash
+# Process the full INBOX queue via Claude Code
+bash scripts/run_experiment.sh
+
+# Or use the pipeline (train → benchmark → document → push per task)
+bash scripts/run_experiment.sh --pipeline
+
+# Watch for results on Windows side
+bash scripts/watch_results.sh
 ```
 
 ---
@@ -84,33 +109,62 @@ bash scripts/sync_results.sh "description"
 
 ```
 drone-rl-lab/
-+-- train.py              # Dispatcher (routes to hover or racing trainer)
-+-- train_hover.py        # Hover training (SB3 PPO)
-+-- train_racing.py       # Racing training (CleanRL PPO, JAX)
-+-- compare.py            # Leaderboard tool
-+-- plot.py               # Training curve plotter
-+-- program.md            # Research goals, rules, documentation standard
-+-- MEMORY.md             # Institutional memory (hard rules, experiment log)
-+-- INBOX.md              # Windows Claude -> Linux Claude instructions
-+-- configs/              # Experiment configs (one YAML per experiment)
-+-- results/              # Per-experiment outputs (metrics, checkpoints, docs)
-+-- outbox/               # Linux Claude -> Windows Claude reports
-+-- scripts/              # RunPod setup, deploy key, sync scripts
+├── train.py              # Dispatcher (routes to hover or racing trainer)
+├── train_hover.py        # Hover training (SB3 PPO)
+├── train_racing.py       # Racing training (CleanRL PPO, JAX) + early stopping
+├── compare.py            # Leaderboard (--csv, --filter, --generate-log)
+├── plot.py               # Training curve plotter
+├── program.md            # Research goals, rules, documentation standard
+├── CLAUDE.md             # Claude Code session instructions
+├── MEMORY.md             # Index → memory/ files
+│
+├── memory/
+│   ├── HARD_RULES.md     # Absolute constraints (never violate)
+│   ├── EXPERIMENT_LOG.md # Auto-generated experiment history
+│   ├── INSIGHTS.md       # Kaggle targets, benchmarks, architecture notes
+│   └── NEXT.md           # Prioritized research queue
+│
+├── inbox/
+│   └── INBOX.md          # Task queue ([NEXT]/[QUEUED]/[DONE])
+├── outbox/
+│   ├── STATUS.md         # Quick summary for orchestrator
+│   └── exp_NNN.md        # Per-experiment reports
+│
+├── configs/              # Experiment configs (one YAML per experiment)
+├── results/              # Per-experiment outputs (metrics, checkpoints, docs)
+│
+└── scripts/
+    ├── run_experiment.sh   # One-command launcher (Claude Code or pipeline)
+    ├── pipeline.sh         # Full auto-chain: train → benchmark → document → push
+    ├── benchmark.py        # Structured MuJoCo sim benchmarking
+    ├── parse_queue.py      # INBOX queue parser
+    ├── watch_results.sh    # Windows-side git polling
+    ├── setup_runpod.sh     # RunPod GPU setup
+    ├── setup_deploy_key.sh # GitHub deploy key setup
+    └── sync_results.sh     # Pull results from RunPod
+```
+
+---
+
+## Communication protocol
+
+```
+Orchestrator                    Executor
+     │                              │
+     ├─── inbox/INBOX.md ──────────>│  [NEXT] task with config
+     │                              ├── train → benchmark → document
+     │                              ├── mark [DONE], advance queue
+     │<── outbox/STATUS.md ─────────┤  results summary
+     │<── outbox/exp_NNN.md ────────┤  detailed report
+     │                              │
+     ├── review results             │
+     ├── update memory/INSIGHTS.md  │
+     ├── queue next [QUEUED] tasks  │
+     └── git push                   │
 ```
 
 ---
 
 ## Experiment log
 
-| # | Name | Backend | Level | Reward | Lap (s) | Key finding |
-|---|------|---------|-------|:------:|:-------:|-------------|
-| 001 | quartic baseline | hover | — | 474 | — | Ceiling for 1D RPM action space |
-| 002 | extended budget | hover | — | 474 | — | More time doesn't help |
-| 003 | quadratic reward | hover | — | 369 | — | Worse — quartic is optimal |
-| 004 | velocity penalty | hover | — | 407 | — | Penalty destabilizes |
-| 005 | conservative PPO | hover | — | 437 | — | Stability vs performance tradeoff |
-| 010 | racing baseline | racing | L0 | 7.36 | 13.36 | Beats PID, 0.024s off reference |
-| 013 | n_obs=2 fix | racing | L0 | 5.02 | DNF | Undertrained — needs GPU |
-| 014 | GPU n_obs=2 | racing | L0 | 7.29 | — | Validates n_obs=2 with enough compute |
-| 015 | GPU Level 2 | racing | L2 | 7.53 | — | First L2 training, still climbing |
-| **016** | **GPU L2 extended** | **racing** | **L2** | **7.71** | **13.49** | **First RL to finish L2 (2/10)** |
+Run `python compare.py` for the live leaderboard, or see `memory/EXPERIMENT_LOG.md` for the full history.

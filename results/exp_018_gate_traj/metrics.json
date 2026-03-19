@@ -24,5 +24,9 @@
     "cuda": false,
     "seed": 42
   },
-  "level": "level2"
+  "level": "level2",
+  "summary": {
+    "key_change": "Gate-aware traj, CPU 213k",
+    "outcome": "approach validated, needs GPU"
+  }
 }

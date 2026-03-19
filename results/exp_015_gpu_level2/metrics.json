@@ -28,5 +28,9 @@
     "cuda": true,
     "seed": 42
   },
-  "level": "level2"
+  "level": "level2",
+  "summary": {
+    "key_change": "GPU 3M steps, first L2",
+    "outcome": "first L2 training, still climbing"
+  }
 }

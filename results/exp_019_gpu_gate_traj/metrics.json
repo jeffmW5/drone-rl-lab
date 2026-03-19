@@ -29,5 +29,9 @@
     "gate_aware": true,
     "seed": 42
   },
-  "level": "level2"
+  "level": "level2",
+  "summary": {
+    "key_change": "GPU gate-aware, 3M",
+    "outcome": "gate 1 works, crashes gate 1->2"
+  }
 }

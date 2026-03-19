@@ -29,5 +29,9 @@
     "gate_aware": true,
     "seed": 42
   },
-  "level": "level2"
+  "level": "level2",
+  "summary": {
+    "key_change": "GPU gate-aware, 10M",
+    "outcome": "best reward, same crash pattern"
+  }
 }

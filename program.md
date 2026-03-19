@@ -12,11 +12,13 @@ executed by Linux Claude (executor). Each experiment is a frozen YAML config.
 
 ## Step 0 — Read Memory (MANDATORY)
 
-Before starting ANY experiment or task, read `MEMORY.md` in the repo root.
-- Check **Hard Rules** — never violate these
-- Check **Experiment Log** — don't repeat failed experiments without a clear reason
+Before starting ANY experiment or task, read the memory files:
+1. **`memory/HARD_RULES.md`** — never violate these
+2. **`memory/EXPERIMENT_LOG.md`** — don't repeat failed experiments without a clear reason
+3. **`memory/INSIGHTS.md`** — Kaggle targets, benchmarks, architecture notes
+
 - If your new experiment contradicts a Hard Rule, **STOP** and note the conflict in `outbox/`
-- Refer to INBOX.md for the current task, but MEMORY.md for historical context
+- Refer to `inbox/INBOX.md` for the current task queue, memory files for historical context
 
 ---
 
@@ -43,7 +45,10 @@ python train_racing.py configs/exp_010_racing_baseline.yaml
 5. Update `outbox/exp_NNN.md` with your analysis
 6. `git add -A && git commit -m "exp_NNN: <short description>"`
 7. `git push`
-8. **Update `MEMORY.md`**: Append a row to the Experiment Log table. If the experiment revealed a new hard rule, add it to "Hard Rules". Update "What to Try Next" if applicable.
+8. Run `python compare.py --generate-log` to update `memory/EXPERIMENT_LOG.md`
+9. If you discover a new hard rule, add it to `memory/HARD_RULES.md`
+10. Update `memory/NEXT.md` — strikethrough completed items
+11. Update `outbox/STATUS.md` with the latest summary
 
 ---
 
@@ -88,7 +93,7 @@ racing:
   seed: 42
 ```
 
-**Do NOT edit train_hover.py or train_racing.py** — all experiment parameters live in the config.
+**Do NOT edit train_hover.py or train_racing.py** unless explicitly approved by the project owner — all experiment parameters should live in the config where possible.
 
 ---
 
@@ -100,6 +105,10 @@ racing:
 | `python compare.py` | Print leaderboard of all experiments |
 | `python compare.py --backend hover` | Leaderboard filtered to hover only |
 | `python compare.py --backend racing` | Leaderboard filtered to racing only |
+| `python compare.py --csv` | CSV output for machine-readable results |
+| `python compare.py --generate-log` | Auto-generate `memory/EXPERIMENT_LOG.md` |
+| `python compare.py --filter level=level2` | Filter experiments by key=value |
+| `python scripts/benchmark.py -e exp_NNN` | Structured benchmark with JSON output |
 | `python plot.py` | Generate training curve plots |
 | `python plot.py --steps exp_NNN` | Plot per-step distance/velocity detail |
 
@@ -155,12 +164,16 @@ Then on your local machine: `cd /media/drone-rl-lab && git pull`
 ### ✅ YES
 - Create new config YAML files in `configs/`
 - Write `results/exp_NNN/EXPERIMENT.md`
-- Write `outbox/exp_NNN.md`
+- Write `outbox/exp_NNN.md` and `outbox/STATUS.md`
+- Update `memory/HARD_RULES.md`, `memory/NEXT.md`
+- Run `compare.py --generate-log` (auto-updates `memory/EXPERIMENT_LOG.md`)
 - Git commit and push
+- Modify `train_racing.py`, `compare.py` for owner-approved infrastructure improvements
 
-### ❌ NO — do not modify
-- `train.py`, `train_hover.py`, `train_racing.py` (infrastructure — don't touch)
-- `compare.py`, `plot.py` (tools — don't touch)
+### ❌ NO — do not modify (without explicit approval)
+- `train.py`, `train_hover.py` (infrastructure)
+- `plot.py` (tools)
+- `memory/EXPERIMENT_LOG.md` (auto-generated — use `compare.py --generate-log`)
 - Physics engine, episode length, drone model
 - Observation type (keep `KIN` for hover)
 - Action type — unless explicitly instructed by Windows Claude
