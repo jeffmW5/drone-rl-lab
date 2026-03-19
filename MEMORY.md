@@ -21,6 +21,9 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 12. **Gate-aware trajectory training works (exp_018)** — Modified RandTrajEnv.reset() to generate splines through gate positions with L2 randomization. Config flag: `gate_aware: true` in YAML.
 14. **Gate-aware midpoint trajectories crash at gate 1→2 transition (exp_019/020)** — All gate-aware models (3M and 10M GPU) crash at ~5.7s after passing gate 1. The climb from z=0.7 (gate 1) to z=1.2 (gate 2) + lateral direction change is too aggressive for the simple midpoint spline. Need approach/departure vectors based on gate yaw, or more intermediate waypoints per gate.
 15. **RunPod TCP SSH (exposed port) supports SCP/SFTP** — Use `ssh -p PORT` with the TCP endpoint, not the proxy. This enables direct file transfer. Much better than base64-over-TTY.
+16. **Yaw-aware trajectories fix gate 1→2 crash (exp_021)** — Using gate quaternion yaw for approach/departure vectors (d=0.5m) passes 2-3 gates on L0 (vs 1 gate with midpoints). Wider distances (0.75m, 1.0m) are worse. Altitude interpolation waypoints don't help. Best L2 result: 3 gates, but 0 finishes and 40% early crash rate.
+17. **Trajectory-following approach has hit its ceiling** — exp_021 is the best trajectory-fix result achievable without retraining. The remaining gap (0 finishes vs competition sub-5s) requires a fundamentally different approach: training directly on RaceCoreEnv with gate-proximity reward, not trajectory following.
+18. **Pixi on VirtualBox shared folders needs detached-environments** — `pixi config set detached-environments /home/jeff/.pixi/envs`. Also need `git config --global --add safe.directory '*'` for acados submodules. CPU-only torch: `pixi run pip install torch --index-url https://download.pytorch.org/whl/cpu`.
 
 ---
 
@@ -42,6 +45,7 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 | 018 | racing | L2 | Gate-aware trajectories, CPU 213k | 5.48 | crash | 1/4 on L0 (100%), 0-1/4 on L2 | ✅ approach validated, needs GPU training |
 | 019 | racing | L2 | GPU (RTX 3090), gate-aware, 3M | 7.55 | crash | 1/4 L0 (100%), 0-1/4 L2 (50%) | ✅ gate 1 works, crashes at gate 1→2 |
 | 020 | racing | L2 | GPU (RTX 3090), gate-aware, 10M | 7.79 | crash | 1/4 L0 (100%), 0-1/4 L2 (40%) | ✅ best reward, same crash pattern |
+| 021 | racing | L0/L2 | Yaw-aware traj (no retrain, exp_020 model) | — | no finish | 2-3/4 L0, 0-3/4 L2 | ✅ fixes gate 1→2 crash, 2.4x more gates |
 
 ---
 
@@ -101,6 +105,7 @@ Read this file BEFORE starting any experiment. Update it AFTER every experiment.
 10. ~~**Investigate: reward shaping for gate passage**~~ — INVESTIGATED. Gate reward is impossible via config; training env (RandTrajEnv) has no gate concept. Requires code changes. See outbox/reward_investigation.md.
 11. ~~**[HIGH PRIORITY] Modify RandTrajEnv.reset() to generate gate-aware trajectories**~~ — DONE (exp_018). Modified train_rl.py, added `gate_aware: true` config flag. CPU proof-of-concept validates approach (100% gate 1 on L0). See outbox/gate_traj_implementation.md.
 12. ~~**[CRITICAL] exp_019/020: GPU gate-aware training**~~ — DONE. exp_019 (3M): reward 7.55, 50% gate 1 on L2. exp_020 (10M): reward 7.79, 40% gate 1. Both crash at gate 1→2 transition. More training doesn't help — trajectory shape is the bottleneck.
-13. **[HIGH PRIORITY] Improve gate 1→2 trajectory** — Use gate yaw for approach/departure vectors. Each gate gets 3 waypoints (approach, center, departure) instead of 2 (midpoint, center). The current midpoint approach creates too-aggressive splines between gates at different altitudes.
-14. **[ALTERNATIVE] Build new training pipeline on RaceCoreEnv** — train directly on the gate-racing env with dense gate-proximity reward. Higher effort but fundamentally correct approach. Eliminates crazyflow→MuJoCo physics gap.
+13. ~~**[HIGH PRIORITY] Improve gate 1→2 trajectory**~~ — DONE (exp_021). Yaw-aware approach/departure vectors (d=0.5m) fix the gate 1→2 crash. Now passes 2-3 gates on L0, 0-3 on L2. But 0 finishes — trajectory-following approach has hit its ceiling.
+14. **[CRITICAL] Build new training pipeline on RaceCoreEnv** — train directly on the gate-racing env with dense gate-proximity reward. Higher effort but fundamentally correct approach. Eliminates crazyflow→MuJoCo physics gap. This is now the clear next step.
 15. **Investigate crazyflow→MuJoCo physics gap** — training reward is 7.79 but sim benchmark crashes. The two physics engines may have significantly different dynamics. Could be a fundamental limiting factor for the current approach.
+16. **Add speed incentive to training** — current reward only penalizes trajectory deviation. Need to reward fast gate passage to close the 3x speed gap vs competition.
