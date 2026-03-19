@@ -17,26 +17,41 @@ See STATUS.md for full analysis.
 
 ---
 
-### [NEXT] exp_023 -- Extended RaceCoreEnv Training (5M+ steps)
+### [DONE] exp_023 -- Extended RaceCoreEnv Training (5M+ steps)
 **Config:** TBD (based on exp_022 benchmark results)
 **Depends on:** exp_022 benchmark (DONE)
 
-**Goal:** Extend RaceCoreEnv training to 5M+ steps with a longer time budget. exp_022 hit the 1800s wall at 1.93M/3M steps while reward was still climbing (peak 10.04 at 1.23M, ~8.26 at iter 470). More compute should push the agent from 1-2 gates toward full lap completion.
+**Result:** Ran exp_023 (soft OOB, oob_coef=2.0) and exp_023b (hard OOB, oob_coef=5.0, z_high=1.8).
+Both 0/5 finishes, 0 gates at benchmark. Model applies max thrust throughout, never learns altitude control.
+Root cause: cumulative proximity reward (~10-15) >> gate_bonus (5.0). Model optimizes "fly fast, die at ceiling."
+Also fixed grace period bug in race_core.py (was 2.0s, now 0.2s).
+exp_024 now training with rebalanced rewards (gate_bonus=20, proximity_coef=1, z_high=1.5, oob_coef=10).
 
-**What's new:**
-- `budget_seconds: 3600` (2x longer than exp_022)
-- Possibly larger network (128 or 256 hidden units) based on benchmark diagnostics
-- Reward tuning based on benchmark results (gate_bonus, proximity_coef)
-- Possibly reduce to 256 envs if compilation is slow on a fresh pod
+---
 
-**Training:** 512-1024 envs, 5M+ steps on GPU (RTX 3090)
+### [NEXT] exp_024 -- Benchmark + exp_025 fallback (altitude reward)
+**Config:** `configs/exp_024_racecore_gatereward.yaml` (training) / `configs/exp_025_racecore_altreward.yaml` (fallback)
+**Depends on:** exp_024 training completion
 
-**Success criteria:**
-- Passes more gates than exp_022 (agent learns beyond gate 2)
-- At least 1 lap completion on Level 2 benchmark
-- Training reward continues to climb past exp_022 peak of 10.04
+**Goal:** Benchmark exp_024 on Level 2. This experiment rebalanced rewards so gate passage dominates (gate_bonus=20, proximity_coef=1) with tighter altitude enforcement (z_high=1.5, oob_coef=10). The hypothesis is that the exp_023b model optimized proximity grinding rather than gate passage because gate_bonus (5) << cumulative proximity reward (~10-15). If exp_024 still fails altitude control, fall through to exp_025 which adds an explicit altitude-matching reward (alt_coef=1.5, survive_coef=0.3).
 
-**If it doesn't work:**
-- Try larger network (hidden_dim: 64 → 128 or 256)
-- Reduce gate_bonus, increase proximity_coef for smoother learning signal
-- Add curriculum: train first on level0, then transfer to level2
+**Benchmark procedure:**
+1. Wait for exp_024 training to complete if still running (5400s budget from ~11:23 AM 2026-03-19)
+2. Run Level 2 benchmark (10 runs): `python benchmark.py --controller attitude_rl_race --exp exp_024 --level level2 --runs 10`
+3. Write results to `outbox/exp_024.md` and update `STATUS.md`
+
+**Success criteria (exp_024):**
+- 2+ gates passed consistently (agent has learned altitude control)
+- Crash altitude < 1.6m on average (not flying to ceiling)
+- Any finish on Level 2 counts as a breakthrough
+
+**If exp_024 fails (0 gates / ceiling crash — altitude still not learned):**
+- Train exp_025: `configs/exp_025_racecore_altreward.yaml` (config already exists)
+- exp_025 adds explicit altitude-matching reward: `alt_reward = alt_coef * exp(-3 * |z - gate_z|)`
+- Also adds survive_coef=0.3 to reward staying alive (longer episodes)
+- Same budget: 8M steps, 512 envs, 5400s on RTX 3090
+- After training, benchmark exp_025 and write `outbox/exp_025.md`
+
+**If both exp_024 and exp_025 fail:**
+- Try curriculum learning: train first on Level 0 (fixed gates), then fine-tune on Level 2
+- Or try larger network (2 hidden layers → 3, or 256 units → 512)
