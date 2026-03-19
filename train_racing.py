@@ -199,6 +199,7 @@ def run(config_path: str):
     print(f"[INFO] n_obs:          {n_obs} (observation stacking)")
 
     # ── Create environments ───────────────────────────────────────────────────
+    env_type = racing_cfg.get("env_type", "trajectory")  # "trajectory" or "race"
     reward_coefs = {
         "n_obs": racing_cfg.get("n_obs", 2),  # observation stacking (default matches Args)
         "rpy_coef": racing_cfg.get("rpy_coef", 0.06),
@@ -208,13 +209,36 @@ def run(config_path: str):
         "gate_aware": racing_cfg.get("gate_aware", False),
     }
 
-    envs = make_envs(
-        config=f"{level}.toml",
-        num_envs=args.num_envs,
-        jax_device=jax_device,
-        torch_device=device,
-        coefs=reward_coefs,
-    )
+    if env_type == "race":
+        # RaceCoreEnv pipeline — train directly on gate-racing env
+        from lsy_drone_racing.control.train_race import make_race_envs
+        race_coefs = {
+            **reward_coefs,
+            "gate_bonus": racing_cfg.get("gate_bonus", 5.0),
+            "proximity_coef": racing_cfg.get("proximity_coef", 2.0),
+            "speed_coef": racing_cfg.get("speed_coef", 0.1),
+            "max_episode_steps": racing_cfg.get("max_episode_steps", 1500),
+        }
+        race_config = racing_cfg.get("race_config", f"{level}_attitude.toml")
+        envs = make_race_envs(
+            config=race_config,
+            num_envs=args.num_envs,
+            jax_device=jax_device,
+            torch_device=device,
+            coefs=race_coefs,
+        )
+        print(f"[INFO] env_type:       race (VecDroneRaceEnv)")
+        print(f"[INFO] race_config:    {race_config}")
+    else:
+        # Original trajectory-following pipeline
+        envs = make_envs(
+            config=f"{level}.toml",
+            num_envs=args.num_envs,
+            jax_device=jax_device,
+            torch_device=device,
+            coefs=reward_coefs,
+        )
+        print(f"[INFO] env_type:       trajectory (RandTrajEnv)")
 
     print(f"[INFO] Obs space:      {envs.single_observation_space}")
     print(f"[INFO] Action space:   {envs.single_action_space}\n")
