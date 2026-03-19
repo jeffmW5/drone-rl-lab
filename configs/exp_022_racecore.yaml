@@ -7,7 +7,7 @@ racing:
   level: level2
   race_config: level2_attitude.toml
   total_timesteps: 3000000
-  num_envs: 1024
+  num_envs: 512
   num_steps: 8
   learning_rate: 0.0015
   anneal_lr: true
