@@ -1,6 +1,6 @@
 name: exp_026_racecore_vzpenalty
 backend: racing
-hypothesis: "exp_025b learned altitude awareness (thrust modulation at z~1.1) but momentum carries drone past z=1.5 to z=2.3+ (benchmark terminates at 2.5). Two fixes: (1) lower z_high to 1.3 (just above highest gate at z=1.2) forces the model to brake earlier in training; (2) add vertical velocity penalty -vz_coef * max(vz, 0) when z > 0.5 to directly penalize fast upward movement during ascent phase. Also increase gamma 0.94->0.97 so the model values longer survival. Goal: model learns to ascend smoothly to gate altitude and level off, not shoot past the ceiling."
+hypothesis: "Add vertical velocity penalty to force earlier braking. exp_025b model modulates thrust near z=1.1 but momentum overshoots to z=2.3+. New vz_penalty = vz_coef * max(vz, 0) when z > vz_threshold penalizes upward velocity above 0.5m. Also tighter ceiling (z_high 1.5->1.3, just above highest gate z=1.2), stronger OOB (oob_coef 5->8), and higher gamma (0.94->0.97) for longer reward horizon."
 budget_seconds: 5400
 racing:
   env_type: race
@@ -31,14 +31,13 @@ racing:
   d_act_th_coef: 0.4
   d_act_xy_coef: 1.0
   max_episode_steps: 1500
-  # Altitude control (proven from exp_025b)
+  # Altitude control
   alt_coef: 1.5
   survive_coef: 0.3
-  # Hard OOB termination + penalty — tighter ceiling (1.3 vs 1.5)
+  # Vertical velocity penalty
+  vz_coef: 0.5
+  vz_threshold: 0.5
+  # Hard OOB termination + penalty
   oob_coef: 8.0
   z_low: -0.05
   z_high: 1.3
-  # NEW: vertical velocity penalty to prevent momentum overshoot
-  # Penalizes upward velocity when above z=0.5 (past initial takeoff phase)
-  vz_coef: 0.5
-  vz_threshold: 0.5

@@ -223,6 +223,8 @@ def run(config_path: str):
             "z_high": racing_cfg.get("z_high", 2.0),
             "alt_coef": racing_cfg.get("alt_coef", 0.0),
             "survive_coef": racing_cfg.get("survive_coef", 0.0),
+            "vz_coef": racing_cfg.get("vz_coef", 0.0),
+            "vz_threshold": racing_cfg.get("vz_threshold", 0.5),
         }
         race_config = racing_cfg.get("race_config", f"{level}_attitude.toml")
         envs = make_race_envs(

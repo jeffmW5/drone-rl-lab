@@ -17,7 +17,8 @@
 12. ~~Investigate crazyflow->MuJoCo physics gap~~ -- RESOLVED. No physics gap. Training and benchmark both use MuJoCo via RaceCoreEnv. The 2.02s crash is caused by the 100-step grace period masking OOB during training (model never learns altitude control). Fix: add OOB penalty to reward.
 11. ~~Build new training pipeline on RaceCoreEnv~~ -- DONE (exp_022-025b). VecDroneRaceEnv pipeline working. exp_025b achieved altitude awareness (thrust modulation at z~1.1) but momentum overshoots z=1.5 ceiling to z=2.3+.
 12. **Fix altitude overshoot (exp_026)** -- lower z_high to 1.3 + add vz penalty (reward -= vz_coef * max(vz,0) when z > 0.5) + gamma 0.97. Model must learn to brake before reaching ceiling.
-13. **Pass at least 1 gate** -- currently 0 gates in benchmark. Gate passage requires surviving past z=0.7+ without OOB.
-14. **Add speed incentive** -- once gate passage works, add reward for fast gate-to-gate transitions.
-15. **Improve finish rate** -- 20% is not competition-ready. Need >80% to be meaningful.
-16. **Improve lap time** -- 13.49s vs target 5.0s. Need gate-aware training to produce competitive times.
+13. **Random gate starts (exp_027)** -- Swift-style initialization from Kaufmann et al. (Nature 2023). Reset agents at random gate with bounded perturbation instead of always gate 0. Forces policy to learn all track segments. Should dramatically improve finish rate and mid/late-gate navigation.
+14. **Pass at least 1 gate** -- currently 0 gates in benchmark. Gate passage requires surviving past z=0.7+ without OOB.
+15. **Add speed incentive** -- once gate passage works, add reward for fast gate-to-gate transitions.
+16. **Improve finish rate** -- 20% is not competition-ready. Need >80% to be meaningful.
+17. **Improve lap time** -- 13.49s vs target 5.0s. Need gate-aware training to produce competitive times.
