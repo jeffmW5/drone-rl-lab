@@ -15,6 +15,9 @@
 10. ~~Improve gate 1->2 trajectory~~ -- DONE (exp_021). Yaw-aware vectors fix it. 2-3 gates on L0, 0-3 on L2. But 0 finishes.
 11. ~~Build new training pipeline on RaceCoreEnv~~ -- DONE (exp_022). VecDroneRaceEnv pipeline with dense gate reward. Mean reward 6.34, peak 10.04. Agent passes 1-2 gates. Needs benchmark + extended training.
 12. ~~Investigate crazyflow->MuJoCo physics gap~~ -- RESOLVED. No physics gap. Training and benchmark both use MuJoCo via RaceCoreEnv. The 2.02s crash is caused by the 100-step grace period masking OOB during training (model never learns altitude control). Fix: add OOB penalty to reward.
-13. **Add speed incentive to training** -- current reward only penalizes trajectory deviation. Need to reward fast gate passage.
-14. **Improve finish rate** -- 20% is not competition-ready. Need >80% to be meaningful.
-15. **Improve lap time** -- 13.49s vs target 5.0s. Need fundamental approach change.
+11. ~~Build new training pipeline on RaceCoreEnv~~ -- DONE (exp_022-025b). VecDroneRaceEnv pipeline working. exp_025b achieved altitude awareness (thrust modulation at z~1.1) but momentum overshoots z=1.5 ceiling to z=2.3+.
+12. **Fix altitude overshoot (exp_026)** -- lower z_high to 1.3 + add vz penalty (reward -= vz_coef * max(vz,0) when z > 0.5) + gamma 0.97. Model must learn to brake before reaching ceiling.
+13. **Pass at least 1 gate** -- currently 0 gates in benchmark. Gate passage requires surviving past z=0.7+ without OOB.
+14. **Add speed incentive** -- once gate passage works, add reward for fast gate-to-gate transitions.
+15. **Improve finish rate** -- 20% is not competition-ready. Need >80% to be meaningful.
+16. **Improve lap time** -- 13.49s vs target 5.0s. Need gate-aware training to produce competitive times.

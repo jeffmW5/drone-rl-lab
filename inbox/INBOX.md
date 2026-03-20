@@ -41,3 +41,31 @@ exp_024 now training with rebalanced rewards (gate_bonus=20, proximity_coef=1, z
 - **Key progress:** First model to modulate thrust based on altitude. Gap is now momentum/braking, not awareness.
 - **Grace period fixed:** `self.sim.freq→self.freq` + divisor `5→2` = 25 steps (0.5s). Both training and benchmark.
 - **Next:** Need vertical velocity penalty or lower z_high to force earlier braking. See STATUS.md.
+
+---
+
+### [NEXT] exp_026 -- Vertical Velocity Penalty + Tighter Ceiling
+**Config:** `configs/exp_026_racecore_vzpenalty.yaml`
+**Depends on:** None
+
+**Goal:** exp_025b proved the model can learn altitude awareness (thrust modulation at z~1.1), but momentum carries it past the training ceiling (z=1.5) to z=2.3+ in benchmark. Two targeted fixes: (1) lower z_high from 1.5 to 1.3 (just above the highest gate at z=1.2), forcing the model to start braking closer to gate altitude; (2) add a vertical velocity penalty that penalizes upward velocity (vz > 0) when z > 0.5m, directly teaching the model to ascend slowly and precisely rather than shooting upward. Also increases gamma 0.94→0.97 so the model values long-term survival more.
+
+**What's new:**
+- `z_high: 1.3` — tighter ceiling (was 1.5), forces braking before z=1.3 vs z=1.5
+- `vz_coef: 0.5, vz_threshold: 0.5` — new vertical velocity penalty (requires code change in training env)
+- `gamma: 0.97` — longer reward horizon (was 0.94), model values surviving future steps more
+- `oob_coef: 8.0` — slightly stronger OOB penalty (was 5.0) to reinforce the tighter ceiling
+
+**Code change required:** The `vz_coef` and `vz_threshold` params are new. Linux Claude must implement them in the training reward function (wherever the altitude reward is computed — likely `train_racing.py` or `race_core.py`). Penalty form: `reward -= vz_coef * max(obs_vz, 0)` when `obs_z > vz_threshold`. If vz is not directly in the obs, use the env's drone state.
+
+**Training:** 512 envs, 8M steps on GPU (RTX 3090), 5400s budget
+
+**Success criteria:**
+- Model brakes before z=1.3 in training (terminates from timeout, not OOB)
+- Benchmark crash time improves beyond 1.16s (exp_025b)
+- At least 1 gate passed in benchmark
+
+**If it doesn't work:**
+- If model learns to hover very low and never ascends: reduce vz_threshold to 0.7 or reduce vz_coef to 0.2
+- If model still overshoots: try vz_coef=1.0 and z_high=1.2 (exact gate height)
+- If code change is too complex: skip vz_coef and just run with z_high=1.3 + gamma=0.97 only (label as exp_026_simple)
