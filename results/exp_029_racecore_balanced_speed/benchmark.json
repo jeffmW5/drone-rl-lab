@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 0, 0],
+  "flight_times": [29.98, 29.98, 29.98, 29.98, 29.98],
+  "avg_flight_time": 29.98,
+  "avg_gates": 0.0,
+  "notes": "Training reward 16.52 ± 2.18 (very stable). Hover perfectly preserved (29.98s = max episode) but 0 gates — speed_coef=0.4 not enough lateral incentive to overcome hover local optimum. The critical transition between hover-only and navigation happens between speed_coef 0.4 and 1.0. Next: try speed_coef=0.7 (midpoint)."
+}
