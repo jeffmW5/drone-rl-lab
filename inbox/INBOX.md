@@ -25,13 +25,7 @@ but hover destroyed (3.2s vs 28.8s). Random gate starts fundamentally conflict w
 
 ---
 
-### [IN PROGRESS] exp_028 -- High Speed Reward (fine-tune exp_026, no random gates)
-**Config:** `configs/exp_028_racecore_highspeed.yaml`
-**Depends on:** exp_026 checkpoint
-
-**Goal:** Teach horizontal navigation without random gate starts. exp_026 hovers at z=0.72 but
-speed_coef=0.1 gives only 0.1 reward/step vs 1.8 for hovering — no incentive to move laterally.
-Fix: speed_coef=1.0 (10x) + proximity_coef=0.5 (gentler falloff, signal from 2m away).
-Fine-tune exp_026 with LR=0.0005 to preserve hover while adding lateral navigation.
-
-**Training:** 512 envs, 8M steps, 5400s budget. Pretrained from exp_026 checkpoint.
+### [DONE] exp_028 -- High Speed Reward (fine-tune exp_026, no random gates)
+**Result:** Reward 16.95 (highest ever), benchmark 0/5 finishes, 0.2 avg gates, avg 0.94s. speed_coef=1.0
+overwhelmed hover rewards — model zooms and crashes. BUT: first-ever gate passage (1 gate in run 4).
+Model learned navigation but lost stability. Need speed_coef between 0.1 (too low) and 1.0 (too high).

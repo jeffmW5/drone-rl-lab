@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 1, 0],
+  "flight_times": [0.82, 0.80, 0.82, 1.46, 0.78],
+  "avg_flight_time": 0.936,
+  "avg_gates": 0.2,
+  "notes": "Training reward 16.95 (highest ever) but hover destroyed. speed_coef=1.0 overwhelmed altitude/survival rewards — model zooms toward gates but crashes almost immediately (0.94s avg). HOWEVER: first-ever gate passage for RaceCoreEnv model (run 4: 1 gate in 1.46s). The model learned navigation but lost stability. Need to balance speed vs hover rewards — try speed_coef=0.3-0.5 range."
+}
