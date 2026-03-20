@@ -303,6 +303,32 @@ racing:
 **Result:** Reward 14.37 ± 4.11, benchmark 0/5 finishes, 0 gates, avg 24.58s. Truncation fix restored
 hover stability (4/5 hover @ 29.98s vs exp_032's 2.92s crash), but back in hover trap. Better value
 estimates made model conservative — the PBRS progress reward isn't strong enough with good GAE.
+
+---
+
+### [NEXT] exp_034 -- PBRS + Higher Speed (break hover with directional reward)
+**Config:** `configs/exp_034_pbrs_speed.yaml`
+**Depends on:** exp_033 complete
+
+**Goal:** The speed sweep (exp_028-031) showed a sharp phase transition between hover (≤0.55) and crash (≥0.70) because the proximity reward `exp(-k*dist)` rewarded hovering near gates. PBRS replaces that with delta-progress reward — no hover trap. speed_coef=0.7 should now create a third regime: stable navigation (>5s flight AND >0 gates). The truncation fix from exp_033 provides accurate value estimates, and PBRS provides directional incentive. Speed adds the urgency to actually move.
+
+**What's new:**
+- speed_coef increased from 0.3 (exp_033) to 0.7
+- All other reward coefficients unchanged from exp_033
+- Fine-tune from exp_033 checkpoint (has PBRS + truncation fix + hover skill)
+- No code changes needed — only config change
+
+**Training:** 512 envs, 8M steps on GPU (RTX 3090)
+
+**Success criteria:**
+- avg flight time >5s (not just crashing like exp_031's 2.02s)
+- avg gates >0 (any gate passage proves PBRS eliminated the phase transition)
+- Ideal: >0.5 avg gates with >10s flight time
+
+**If it doesn't work:**
+- If crashes (like exp_031): try speed_coef=0.55 with PBRS (exp_035) — more conservative
+- If hovers (like exp_033): try speed_coef=1.0 with PBRS (exp_035) — if still hovering, the problem isn't speed
+- If crashes AND no gates: reduce survive_coef from 0.5 to 0.2 to lower hover incentive
 **Depends on:** exp_032 complete
 
 **Context:** The current GAE computation in `train_racing.py` conflates two distinct episode-ending

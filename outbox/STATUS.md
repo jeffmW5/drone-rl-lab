@@ -18,6 +18,11 @@
 | 032 | 11.87 | 0 | 2.92s | PBRS progress (crash) |
 | **033** | **14.37** | **0** | **24.58s** | **Truncation fix (hover restored)** |
 
+## In Progress
+- **exp_034** -- PBRS + speed_coef=0.7, fine-tune from exp_033
+- Tests whether PBRS eliminates the speed phase transition (0.7 crashed with proximity but should work with PBRS)
+- No code changes — config only (speed_coef 0.3 → 0.7)
+
 ## Current Best
 - **Racing L2 (lap time):** exp_016 -- 13.49s, 2/10 finishes
 - **Racing L2 (RaceCoreEnv flight):** exp_029 -- 0/5 finishes, 0 gates, **29.98s perfect hover**
@@ -25,4 +30,4 @@
 
 ## Queue Status
 - Completed: exp_022-033
-- Awaiting next orchestrator instructions
+- In progress: exp_034 (PBRS + speed_coef=0.7)

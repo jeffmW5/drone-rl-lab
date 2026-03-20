@@ -24,7 +24,8 @@
 13e. ~~**Balanced speed reward (exp_029)**~~ -- DONE. Reward 16.52, 0 gates, 29.98s. speed_coef=0.4 still in hover-only regime. Sharp phase transition between ≤0.4 (hover) and 1.0 (crash+navigate).
 13f. ~~**Speed sweep (exp_030/031)**~~ -- DONE. 0.55: edge of hover (25.98s, 0 gates). 0.70: crash (2.02s, 0 gates). No navigation sweet spot — confirms exp(-k*dist) proximity is the root problem.
 13g. ~~**PBRS delta-progress reward (exp_032)**~~ -- DONE. Reward 11.87, 0 gates, 2.92s. Successfully broke hover trap — model attempts lateral movement! But crashes before gates. Needs stability improvements.
-13h. **Truncation vs termination fix (exp_033)** -- Fix GAE to bootstrap through timeouts instead of treating them as terminal. QUEUED after 032.
+13h. ~~**Truncation vs termination fix (exp_033)**~~ -- DONE. Restored hover stability (24.58s vs 2.92s) but 0 gates — back in hover trap. Better value estimates make model too conservative with speed_coef=0.3.
+13i. **PBRS + higher speed (exp_034)** -- speed_coef=0.7 with PBRS + truncation fix. Tests whether PBRS eliminates the speed phase transition (exp_030/031 showed crash at 0.7 with proximity, but PBRS has no hover trap).
 14. ~~**Pass at least 1 gate**~~ -- DONE (exp_028, 1 gate in run 4). Now need consistent multi-gate passage.
 15. ~~**Add speed incentive**~~ -- DONE (exp_028). speed_coef=1.0 proved navigation is learnable. Tuning needed.
 16. **Improve finish rate** -- 20% is not competition-ready. Need >80% to be meaningful.
