@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 0, 0],
+  "flight_times": [2.18, 2.00, 1.82, 1.84, 2.26],
+  "avg_flight_time": 2.02,
+  "avg_gates": 0.0,
+  "notes": "speed_coef=0.70 destroyed hover (2.02s avg) but achieved 0 gates — worse than exp_028 (1.0) which at least passed 1 gate. The phase transition between hover-only (0.55) and crash (0.70) is sharp with no navigation sweet spot. Confirms that exp(-k*dist) proximity reward is fundamentally flawed — it rewards being near gate, not moving toward it. PBRS delta-progress needed."
+}

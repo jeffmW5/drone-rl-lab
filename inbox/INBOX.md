@@ -20,19 +20,11 @@ hover local optimum. The phase transition between hover-only and navigation is b
 
 ---
 
-### [IN PROGRESS] exp_030 + exp_031 -- Speed Coefficient Phase Transition Sweep
-
-**Context:** exp_028 (speed_coef=1.0) → first gate pass, 0.94s avg (crashes). exp_029 (speed_coef=0.4)
-→ 0 gates, 29.98s (hovers perfectly). The phase transition is somewhere between 0.4 and 1.0. We need
-to bracket it more precisely. Both experiments fine-tune from exp_026 (the hover-stable baseline).
-Use a more conservative LR (0.0001) than exp_029 (0.0003) to protect hover skill.
-
-**RL concept (Kaufmann et al. 2023):** Swift uses a progress reward + command smoothness term.
-The speed_coef (velocity toward gate) is our progress signal. Finding the minimum speed_coef that
-breaks the hover local optimum without destabilizing hover is the critical tuning problem.
-
-**Task:** Create both configs and run them sequentially. Compare benchmark results for all three
-(exp_026, exp_030, exp_031) after both complete.
+### [DONE] exp_030 + exp_031 -- Speed Coefficient Phase Transition Sweep
+**exp_030 (0.55):** Reward 15.64, 0 gates, avg 25.98s (4/5 hover, 1/5 crash at 9.98s — edge of transition)
+**exp_031 (0.70):** Reward 10.44, 0 gates, avg 2.02s (hover destroyed, no navigation)
+**Conclusion:** Sharp phase transition between 0.55 and 0.70 — goes straight from hover to crash with no
+navigation sweet spot. exp(-k*dist) proximity reward is fundamentally flawed. PBRS needed.
 
 ---
 
@@ -136,7 +128,7 @@ racing:
 
 ---
 
-### [QUEUED] exp_032 -- PBRS Delta-Progress Reward (replaces exp(-k*dist) proximity)
+### [IN PROGRESS] exp_032 -- PBRS Delta-Progress Reward (replaces exp(-k*dist) proximity)
 **Depends on:** exp_030 and exp_031 complete
 
 **Context:** The proximity reward `exp(-proximity_coef * dist)` is NOT potential-based (Ng, Harada,
