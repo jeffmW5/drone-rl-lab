@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 0, 0],
+  "flight_times": [0.92, 0.92, 0.94, 0.98, 1.06],
+  "avg_flight_time": 0.964,
+  "avg_gates": 0.0,
+  "notes": "ent_coef=0.05 (7x increase) with survive_coef=0.5 crashes at 0.96s. Compare to exp_034 (same config but ent_coef=0.007) which hovered at 29.98s. Higher entropy DESTROYED hover stability — pushed the deterministic mean from hover mode to crash mode, NOT to navigation. Training was less bimodal (24.29 ± 2.08 vs exp_036's 28.61 ± 0.22) with a stabilization phase at ~16 before climbing to ~24 at end. The entropy regularization successfully prevented mode collapse during training but the resulting mean policy is unstable. The fundamental issue: deterministic mean of a wider distribution is not necessarily a viable policy."
+}

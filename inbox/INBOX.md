@@ -439,7 +439,11 @@ problem, not a reward design problem.
 
 ---
 
-### [IN PROGRESS] exp_038 -- Higher Entropy (fix policy mode collapse)
+### [DONE] exp_038 -- Higher Entropy (fix policy mode collapse)
+**Result:** Reward 24.29 ± 2.08 (less bimodal than exp_036/037), benchmark 0/5 finishes, 0 gates, avg 0.96s.
+ent_coef=0.05 with survive=0.5 DESTROYED hover (exp_034 hovered at 29.98s with same survive=0.5 but
+ent=0.007). Higher entropy pushed the deterministic mean from hover to crash, not to navigation.
+Training was less bimodal but the wider distribution's mean is not a viable policy.
 **Config:** `configs/exp_038_high_entropy.yaml`
 **Depends on:** exp_037 complete
 
