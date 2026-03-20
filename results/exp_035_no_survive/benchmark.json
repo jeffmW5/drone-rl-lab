@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 0, 0],
+  "flight_times": [0.96, 1.06, 1.34, 0.76, 0.70],
+  "avg_flight_time": 0.964,
+  "avg_gates": 0.0,
+  "notes": "survive_coef=0 destroyed hover stability — crashes at 0.96s avg with 0 gates. Same failure mode as exp_028 (0.94s). Without survival reward, the model has no incentive to stay airborne. The survive_coef parameter brackets: 0.5 = hover trap (29.98s), 0.0 = crash (0.96s). Sweet spot may be ~0.1-0.2, or the problem needs a fundamentally different approach (curriculum, separate hover/nav phases)."
+}
