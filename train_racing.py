@@ -226,6 +226,7 @@ def run(config_path: str):
             "vz_coef": racing_cfg.get("vz_coef", 0.0),
             "vz_threshold": racing_cfg.get("vz_threshold", 0.5),
             "random_gate_start": racing_cfg.get("random_gate_start", False),
+            "random_gate_ratio": racing_cfg.get("random_gate_ratio", 1.0),
             "spawn_offset": racing_cfg.get("spawn_offset", 0.75),
             "spawn_pos_noise": racing_cfg.get("spawn_pos_noise", 0.15),
             "spawn_vel_noise": racing_cfg.get("spawn_vel_noise", 0.3),

@@ -1,0 +1,47 @@
+name: exp_027b_racecore_randomgate_mix
+backend: racing
+hypothesis: "exp_027 (100% random gate starts) trained well (reward 11.67) but benchmark failed (0 gates, 1.1s) because model never learned takeoff from ground. Fix: 50/50 mix — half envs start at gate 0 (ground, learning takeoff+hover), half at random gates (learning gate approach). Model must learn both ground-start AND mid-air navigation."
+budget_seconds: 5400
+racing:
+  env_type: race
+  level: level2
+  race_config: level2_attitude.toml
+  total_timesteps: 8000000
+  num_envs: 512
+  num_steps: 8
+  learning_rate: 0.0015
+  anneal_lr: true
+  gamma: 0.97
+  gae_lambda: 0.97
+  update_epochs: 10
+  num_minibatches: 8
+  clip_coef: 0.26
+  ent_coef: 0.007
+  vf_coef: 0.7
+  max_grad_norm: 1.5
+  n_obs: 2
+  cuda: true
+  seed: 42
+  # RaceCoreEnv-specific reward coefficients (inherited from exp_026)
+  gate_bonus: 20.0
+  proximity_coef: 2.0
+  speed_coef: 0.1
+  rpy_coef: 0.06
+  act_coef: 0.02
+  d_act_th_coef: 0.4
+  d_act_xy_coef: 1.0
+  max_episode_steps: 1500
+  # Altitude control (from exp_026)
+  alt_coef: 1.5
+  survive_coef: 0.3
+  vz_coef: 0.5
+  vz_threshold: 0.5
+  oob_coef: 8.0
+  z_low: -0.05
+  z_high: 1.3
+  # Random gate start — 50/50 mix
+  random_gate_start: true
+  random_gate_ratio: 0.5  # 50% random gate, 50% normal start (ground takeoff)
+  spawn_offset: 0.75
+  spawn_pos_noise: 0.15
+  spawn_vel_noise: 0.3

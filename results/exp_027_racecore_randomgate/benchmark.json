@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 0, 0],
+  "flight_times": [1.16, 1.04, 0.94, 1.10, 1.24],
+  "avg_flight_time": 1.096,
+  "avg_gates": 0.0,
+  "notes": "Model trained with 100% random gate starts never learned ground takeoff. Crashes immediately from z=0.01 start. Training reward was 11.67 (higher than exp_026) but benchmark regressed to exp_025b levels."
+}
