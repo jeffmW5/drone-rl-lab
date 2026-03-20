@@ -1,0 +1,7 @@
+[
+  {"flight_time": 1.10, "finished": false, "gates_passed": 0},
+  {"flight_time": 1.12, "finished": false, "gates_passed": 0},
+  {"flight_time": 1.16, "finished": false, "gates_passed": 0},
+  {"flight_time": 1.28, "finished": false, "gates_passed": 0},
+  {"flight_time": 1.12, "finished": false, "gates_passed": 0}
+]
