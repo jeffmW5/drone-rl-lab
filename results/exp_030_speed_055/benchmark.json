@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 0, 0],
+  "flight_times": [29.98, 29.98, 29.98, 9.98, 29.98],
+  "avg_flight_time": 25.98,
+  "avg_gates": 0.0,
+  "notes": "Still hover-dominant but edge of instability: 4/5 runs hover full episode (29.98s), 1 run crashed at 9.98s (0 gates). speed_coef=0.55 with LR=0.0001 starts to destabilize hover without achieving navigation. The phase transition is near — hover is weakening but navigation hasn't emerged yet."
+}
