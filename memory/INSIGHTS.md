@@ -9,7 +9,8 @@
 | 3 | Limo | 5.022 |
 
 **Our goal: sub-5.0s on Level 2 (top 3)**
-**Current best: 13.49s, 2/10 finishes (exp_016, 10M GPU steps)**
+**Current best (lap): 13.49s, 2/10 finishes (exp_016, 10M GPU steps, trajectory-following)**
+**Current best (RaceCoreEnv): exp_026 — stable hover at gate altitude for 28.8s, 0 gates (altitude SOLVED, horizontal navigation needed)**
 **Gap: ~3-4x slower than winners, 20% finish rate vs ~100%**
 
 ---
