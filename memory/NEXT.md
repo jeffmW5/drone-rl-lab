@@ -23,7 +23,7 @@
 13d. ~~**High speed reward (exp_028)**~~ -- DONE. Reward 16.95, 0.2 avg gates, 0.94s flight. FIRST GATE PASSAGE EVER! But hover destroyed by speed_coef=1.0. Sweet spot is 0.3-0.5.
 13e. ~~**Balanced speed reward (exp_029)**~~ -- DONE. Reward 16.52, 0 gates, 29.98s. speed_coef=0.4 still in hover-only regime. Sharp phase transition between ≤0.4 (hover) and 1.0 (crash+navigate).
 13f. ~~**Speed sweep (exp_030/031)**~~ -- DONE. 0.55: edge of hover (25.98s, 0 gates). 0.70: crash (2.02s, 0 gates). No navigation sweet spot — confirms exp(-k*dist) proximity is the root problem.
-13g. **PBRS delta-progress reward (exp_032)** -- Replace exp(-k*dist) proximity (rewards hovering near gate) with delta-progress (rewards only approaching gate). Should eliminate hover local optimum. QUEUED after 030/031.
+13g. ~~**PBRS delta-progress reward (exp_032)**~~ -- DONE. Reward 11.87, 0 gates, 2.92s. Successfully broke hover trap — model attempts lateral movement! But crashes before gates. Needs stability improvements.
 13h. **Truncation vs termination fix (exp_033)** -- Fix GAE to bootstrap through timeouts instead of treating them as terminal. QUEUED after 032.
 14. ~~**Pass at least 1 gate**~~ -- DONE (exp_028, 1 gate in run 4). Now need consistent multi-gate passage.
 15. ~~**Add speed incentive**~~ -- DONE (exp_028). speed_coef=1.0 proved navigation is learnable. Tuning needed.
