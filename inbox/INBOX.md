@@ -369,7 +369,7 @@ Removing survive_coef forces all reward to come from altitude (passive, ~1.5/ste
 
 ---
 
-### [NEXT] exp_036 -- Binary Search survive_coef (0.15)
+### [IN PROGRESS] exp_036 -- Binary Search survive_coef (0.15)
 **Config:** `configs/exp_036_survive_015.yaml`
 **Depends on:** exp_035 complete
 
