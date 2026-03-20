@@ -403,7 +403,7 @@ learning or architecture changes, not reward tuning.
 
 ---
 
-### [NEXT] exp_037 -- Binary Search survive_coef=0.3 (final bracket step)
+### [IN PROGRESS] exp_037 -- Binary Search survive_coef=0.3 (final bracket step)
 **Config:** `configs/exp_037_survive_030.yaml`
 **Depends on:** exp_036 complete
 
