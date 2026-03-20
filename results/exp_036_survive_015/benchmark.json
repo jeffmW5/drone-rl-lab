@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 0, 0],
+  "flight_times": [0.78, 1.46, 0.84, 0.76, 0.80],
+  "avg_flight_time": 0.928,
+  "avg_gates": 0.0,
+  "notes": "survive_coef=0.15 crashes at 0.93s avg — same failure mode as survive_coef=0.0 (exp_035: 0.96s). Despite highest-ever training reward (28.61 vs exp_034's 17.26), the deterministic mean policy crashes instantly. Training reward was dominated by stochastic exploration (bimodal: 7-29 range) but the mean converged to crash mode. survive_coef bracket narrows: 0.5=hover, 0.15=crash. Phase transition is sharp between 0.15-0.5. Next: try 0.3 (midpoint of narrowed bracket) or pivot to curriculum/architecture."
+}

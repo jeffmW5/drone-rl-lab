@@ -369,7 +369,11 @@ Removing survive_coef forces all reward to come from altitude (passive, ~1.5/ste
 
 ---
 
-### [IN PROGRESS] exp_036 -- Binary Search survive_coef (0.15)
+### [DONE] exp_036 -- Binary Search survive_coef (0.15)
+**Result:** Reward 28.61 ± 0.22 (HIGHEST EVER, very stable), benchmark 0/5 finishes, 0 gates, avg 0.93s.
+survive_coef=0.15 crashes like survive_coef=0.0 (0.96s). Bracket narrows: 0.5=hover, 0.15=crash.
+Phase transition is sharp between 0.15-0.5. Training reward misleading — stochastic exploration hit 29+
+but deterministic mean policy crashes. Reward tuning alone may not solve hover-or-crash.
 **Config:** `configs/exp_036_survive_015.yaml`
 **Depends on:** exp_035 complete
 
