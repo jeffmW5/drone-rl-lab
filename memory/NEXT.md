@@ -28,7 +28,8 @@
 13i. ~~**PBRS + higher speed (exp_034)**~~ -- DONE. speed_coef=0.7 with PBRS: 29.98s stable hover, 0 gates. PBRS eliminated the speed crash (exp_031=2.02s→exp_034=29.98s) but deterministic mean policy still hovers. survive_coef is the anchor.
 13j. ~~**Remove survive_coef (exp_035)**~~ -- DONE. survive_coef=0 crashes at 0.96s, same as exp_028. alt_coef alone can't maintain hover. Bracketed: 0.5=hover, 0.0=crash.
 13k. ~~**Binary search survive_coef=0.15 (exp_036)**~~ -- DONE. Crashes at 0.93s, 0 gates, BUT highest-ever training reward (28.61). Stochastic policy navigates during training but deterministic mean crashes. Policy mode collapse — NOT a reward problem.
-13l. **Binary search survive_coef=0.3 (exp_037)** -- Last bracket step: 0.15=crash, 0.5=hover. If 0.3 crashes → sharp transition, no sweet spot → pivot to ent_coef or curriculum. If 0.3 hovers → try 0.2. If intermediate → sweet spot found.
+13l. ~~**Binary search survive_coef=0.3 (exp_037)**~~ -- DONE. Crashes at 1.62s (one 4.64s outlier). Bracket complete: 0.5=hover, 0.3=crash-edge, 0.15/0.0=crash. No sweet spot. Reward tuning exhausted.
+13m. **Higher entropy to fix mode collapse (exp_038)** -- ent_coef=0.05 (7x increase from 0.007). Prevents deterministic mean from collapsing to hover/crash mode. At survive=0.5, forces exploration away from hover. PBRS + speed provide directional reward for gate approach during exploration. Higher entropy keeps mean policy closer to successful exploration distribution.
 14. ~~**Pass at least 1 gate**~~ -- DONE (exp_028, 1 gate in run 4). Now need consistent multi-gate passage.
 15. ~~**Add speed incentive**~~ -- DONE (exp_028). speed_coef=1.0 proved navigation is learnable. Tuning needed.
 16. **Improve finish rate** -- 20% is not competition-ready. Need >80% to be meaningful.

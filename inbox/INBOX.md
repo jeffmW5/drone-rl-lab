@@ -437,6 +437,40 @@ problem, not a reward design problem.
 - If hovers (>25s, 0 gates): try 0.2 (sweet spot between 0.15-0.3)
 - If ALL survive values show binary: pivot to curriculum (max_episode_steps=300) or deploy stochastic policy
 
+---
+
+### [NEXT] exp_038 -- Higher Entropy (fix policy mode collapse)
+**Config:** `configs/exp_038_high_entropy.yaml`
+**Depends on:** exp_037 complete
+
+**Goal:** The survive_coef bracket (exp_034-037) proved reward tuning alone cannot solve hover-or-crash.
+The root cause is policy mode collapse: stochastic exploration achieves high rewards (28.61 at
+survive=0.15) but the deterministic mean policy crashes. Higher ent_coef prevents the policy from
+collapsing to a narrow peaked distribution around hover or crash. At survive=0.5 (stable hover),
+the entropy bonus forces exploration away from hover. PBRS + speed provide directional reward for
+gate approach during these exploration episodes. Higher entropy keeps the learned mean policy closer
+to the successful exploration distribution. ent_coef=0.05 is 7x the current 0.007, within standard
+PPO range for continuous control (0.01-0.1).
+
+**What's new:**
+- ent_coef increased from 0.007 to 0.05 (7x increase — strategy pivot from reward tuning)
+- survive_coef=0.5 (stable hover baseline — entropy forces exploration FROM stability)
+- All other coefficients unchanged from exp_034 (PBRS progress=50, speed=0.7, alt=1.5)
+- Fine-tune from exp_034 checkpoint (stable hover with PBRS + truncation fix)
+- No code changes needed — config only
+
+**Training:** 512 envs, 8M steps on GPU (RTX 3090)
+
+**Success criteria:**
+- avg flight time 5-20s (intermediate, not pure hover or crash)
+- Any gate passage (>0 avg gates) — would confirm entropy breaks mode collapse
+- Training reward stable (not wildly bimodal like exp_036/037)
+
+**If it doesn't work:**
+- If still hovers (>25s, 0 gates): entropy wasn't enough. Try ent_coef=0.1 or combine with survive=0.3
+- If crashes (<3s): entropy destabilized the policy. Try ent_coef=0.03 (more conservative)
+- If no improvement: pivot to curriculum (max_episode_steps=300) or stochastic deployment
+
 **Depends on:** exp_032 complete
 
 **Context:** The current GAE computation in `train_racing.py` conflates two distinct episode-ending
