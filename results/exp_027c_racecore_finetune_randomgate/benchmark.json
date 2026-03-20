@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 0, 0],
+  "flight_times": [0.86, 3.10, 3.40, 4.30, 4.16],
+  "avg_flight_time": 3.164,
+  "avg_gates": 0.0,
+  "notes": "Fine-tuning exp_026 with 50% random gate starts partially preserved takeoff (3.2s vs 1.1s for 027/027b) but largely destroyed hover skill (3.2s vs 28.8s for exp_026). Random gate starts conflict with hover objective — mid-air reward signal erodes ground-start skills."
+}

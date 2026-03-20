@@ -19,12 +19,19 @@ from step 1, never brakes. Mid-air envs dominated reward — model never learned
 
 ---
 
-### [IN PROGRESS] exp_027c -- Fine-tune exp_026 with Random Gate Starts
-**Config:** `configs/exp_027c_racecore_finetune_randomgate.yaml`
-**Depends on:** exp_026 checkpoint (pretrained hover model)
+### [DONE] exp_027c -- Fine-tune exp_026 with Random Gate Starts
+**Result:** Reward 6.34, benchmark 0/5 finishes, 0 gates, avg 3.16s. Partial takeoff preserved
+but hover destroyed (3.2s vs 28.8s). Random gate starts fundamentally conflict with hover objective.
 
-**Goal:** Fine-tune exp_026 (stable hover at z=0.72, 28.8s flight) with 50% random gate starts.
-Unlike exp_027/027b (trained from scratch), this preserves hover skill via pretrained checkpoint.
-Lower LR (0.0005 vs 0.0015) to prevent catastrophic forgetting of hover behavior.
+---
+
+### [IN PROGRESS] exp_028 -- High Speed Reward (fine-tune exp_026, no random gates)
+**Config:** `configs/exp_028_racecore_highspeed.yaml`
+**Depends on:** exp_026 checkpoint
+
+**Goal:** Teach horizontal navigation without random gate starts. exp_026 hovers at z=0.72 but
+speed_coef=0.1 gives only 0.1 reward/step vs 1.8 for hovering — no incentive to move laterally.
+Fix: speed_coef=1.0 (10x) + proximity_coef=0.5 (gentler falloff, signal from 2m away).
+Fine-tune exp_026 with LR=0.0005 to preserve hover while adding lateral navigation.
 
 **Training:** 512 envs, 8M steps, 5400s budget. Pretrained from exp_026 checkpoint.
