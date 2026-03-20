@@ -366,6 +366,37 @@ Removing survive_coef forces all reward to come from altitude (passive, ~1.5/ste
 - If crashes (<3s): alt_coef=1.5 alone isn't enough to prevent crashing. Try survive_coef=0.1 (minimal)
 - If still hovers (>25s, 0 gates): alt_coef itself is the trap. Try alt_coef=0.5 + survive_coef=0
 - If erratic movement but no gates: progress_coef may need increasing (try 100)
+
+---
+
+### [NEXT] exp_036 -- Binary Search survive_coef (0.15)
+**Config:** `configs/exp_036_survive_015.yaml`
+**Depends on:** exp_035 complete
+
+**Goal:** We've bracketed survive_coef: 0.5=hover (29.98s, 0 gates), 0.0=crash (0.96s, 0 gates).
+Binary search the midpoint at 0.15. If the survive parameter has a sweet spot, 0.15 should produce
+intermediate behavior (5-20s flight with some navigation). If it shows the same binary phase
+transition (either hover >25s or crash <3s), the problem is fundamental and requires curriculum
+learning or architecture changes, not reward tuning.
+
+**What's new:**
+- survive_coef reduced from 0.5 (exp_034) to 0.15 (midpoint of bracketed range)
+- All other coefficients unchanged from exp_034 (PBRS progress_coef=50, speed_coef=0.7, alt_coef=1.5)
+- Fine-tune from exp_034 checkpoint (stable hover baseline with PBRS + truncation fix)
+- No code changes needed — config only
+
+**Training:** 512 envs, 8M steps on GPU (RTX 3090)
+
+**Success criteria:**
+- Flight time 5-20s (intermediate, not hover and not crash)
+- Any gate passage (>0 avg gates)
+- If binary again: conclusive evidence that reward tuning alone won't solve this
+
+**If it doesn't work:**
+- If crashes (<3s): try 0.25 (closer to hover side). If THAT also crashes, the transition is very sharp
+- If hovers (>25s, 0 gates): try 0.05 (closer to crash side)
+- If binary at all tested values: pivot to curriculum (shorter max_episode_steps=300) or higher entropy
+
 **Depends on:** exp_032 complete
 
 **Context:** The current GAE computation in `train_racing.py` conflates two distinct episode-ending
