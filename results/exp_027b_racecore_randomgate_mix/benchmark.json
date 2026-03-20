@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 0, 0],
+  "flight_times": [1.08, 1.22, 1.08, 1.24, 1.26],
+  "avg_flight_time": 1.176,
+  "avg_gates": 0.0,
+  "notes": "50/50 mix (random_gate_ratio=0.5) still failed. Model applies max thrust from step 1, never brakes. Mid-air random gate envs dominated reward signal, so model never learned ground takeoff/hover despite 50% ground starts."
+}
