@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 0, 0],
+  "flight_times": [29.98, 29.98, 2.98, 29.98, 29.98],
+  "avg_flight_time": 24.58,
+  "avg_gates": 0.0,
+  "notes": "Truncation fix (Pardo et al. 2018) restored hover stability — 4/5 runs hover full 29.98s (vs exp_032's 2.92s crash-heavy). Better GAE value estimates made model more conservative. But 0 gates — back in hover trap. The fix works (better value function) but the reward signal still doesn't create enough incentive to overcome the hover local optimum with stable navigation."
+}

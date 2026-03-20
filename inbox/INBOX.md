@@ -299,7 +299,10 @@ racing:
 
 ---
 
-### [IN PROGRESS] exp_033 -- Truncation vs Termination Fix (Pardo et al. ICML 2018)
+### [DONE] exp_033 -- Truncation vs Termination Fix (Pardo et al. ICML 2018)
+**Result:** Reward 14.37 ± 4.11, benchmark 0/5 finishes, 0 gates, avg 24.58s. Truncation fix restored
+hover stability (4/5 hover @ 29.98s vs exp_032's 2.92s crash), but back in hover trap. Better value
+estimates made model conservative — the PBRS progress reward isn't strong enough with good GAE.
 **Depends on:** exp_032 complete
 
 **Context:** The current GAE computation in `train_racing.py` conflates two distinct episode-ending
