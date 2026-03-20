@@ -306,7 +306,11 @@ estimates made model conservative — the PBRS progress reward isn't strong enou
 
 ---
 
-### [IN PROGRESS] exp_034 -- PBRS + Higher Speed (break hover with directional reward)
+### [DONE] exp_034 -- PBRS + Higher Speed (break hover with directional reward)
+**Result:** Reward 17.26 ± 5.50, benchmark 0/5 finishes, 0 gates, avg 29.98s (perfect hover).
+PBRS eliminated the crash at speed_coef=0.7 (exp_031 was 2.02s) but model still hovers. High training
+rewards came from stochastic exploration, not learned navigation. Hover optimum persists because
+alt_coef(1.5)+survive_coef(0.5)=2.0/step dominates any intermittent progress/speed reward.
 **Config:** `configs/exp_034_pbrs_speed.yaml`
 **Depends on:** exp_033 complete
 

@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 0, 0],
+  "flight_times": [29.98, 29.98, 29.98, 29.98, 29.98],
+  "avg_flight_time": 29.98,
+  "avg_gates": 0.0,
+  "notes": "PBRS + speed_coef=0.7 eliminated the crash seen at same speed with old proximity (exp_031: 2.02s) — hover is stable at 29.98s. But 0 gates: the deterministic policy still hovers. Training reward 17.26 (peaks 24) came from stochastic exploration occasionally moving toward gates, but the learned mean policy is risk-averse. The hover local optimum persists despite PBRS because alt_coef(1.5)+survive_coef(0.5) still dominates. Need to reduce hover reward or add much stronger navigation incentive."
+}
