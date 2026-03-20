@@ -306,7 +306,7 @@ estimates made model conservative — the PBRS progress reward isn't strong enou
 
 ---
 
-### [NEXT] exp_034 -- PBRS + Higher Speed (break hover with directional reward)
+### [IN PROGRESS] exp_034 -- PBRS + Higher Speed (break hover with directional reward)
 **Config:** `configs/exp_034_pbrs_speed.yaml`
 **Depends on:** exp_033 complete
 
