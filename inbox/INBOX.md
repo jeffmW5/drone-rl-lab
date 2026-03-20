@@ -333,6 +333,37 @@ alt_coef(1.5)+survive_coef(0.5)=2.0/step dominates any intermittent progress/spe
 - If crashes (like exp_031): try speed_coef=0.55 with PBRS (exp_035) — more conservative
 - If hovers (like exp_033): try speed_coef=1.0 with PBRS (exp_035) — if still hovering, the problem isn't speed
 - If crashes AND no gates: reduce survive_coef from 0.5 to 0.2 to lower hover incentive
+
+---
+
+### [NEXT] exp_035 -- Remove Survive Reward (break hover anchor)
+**Config:** `configs/exp_035_no_survive.yaml`
+**Depends on:** exp_034 complete
+
+**Goal:** survive_coef=0.5 gives 2.0/step guaranteed reward (with alt_coef=1.5) for hovering. This
+is the highest reward-to-risk ratio, anchoring the policy mean at hover regardless of PBRS or speed
+signals. exp_034 proved PBRS eliminates crashes at speed=0.7 but the mean policy still hovers.
+Removing survive_coef forces all reward to come from altitude (passive, ~1.5/step) + progress/speed
+(active, requires movement). Navigation at 1 m/s yields ~1.5 (alt) + 1.0 (progress) + 0.7 (speed) =
+3.2/step vs hover at ~1.5/step (alt only). Clear 2x advantage for moving.
+
+**What's new:**
+- survive_coef reduced from 0.5 to 0.0 (single variable change from exp_034)
+- All other coefficients unchanged (PBRS progress_coef=50, speed_coef=0.7, alt_coef=1.5, oob_coef=8.0)
+- Fine-tune from exp_034 checkpoint (has PBRS + truncation fix + stable hover at 29.98s)
+- No code changes needed — config only
+
+**Training:** 512 envs, 8M steps on GPU (RTX 3090)
+
+**Success criteria:**
+- avg flight time >5s (model doesn't just crash without survive reward)
+- avg gates >0 (model navigates toward gates instead of hovering)
+- Ideal: >0.5 avg gates with >10s flight time = first "stable navigation" regime
+
+**If it doesn't work:**
+- If crashes (<3s): alt_coef=1.5 alone isn't enough to prevent crashing. Try survive_coef=0.1 (minimal)
+- If still hovers (>25s, 0 gates): alt_coef itself is the trap. Try alt_coef=0.5 + survive_coef=0
+- If erratic movement but no gates: progress_coef may need increasing (try 100)
 **Depends on:** exp_032 complete
 
 **Context:** The current GAE computation in `train_racing.py` conflates two distinct episode-ending
