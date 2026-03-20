@@ -401,6 +401,38 @@ learning or architecture changes, not reward tuning.
 - If hovers (>25s, 0 gates): try 0.05 (closer to crash side)
 - If binary at all tested values: pivot to curriculum (shorter max_episode_steps=300) or higher entropy
 
+---
+
+### [NEXT] exp_037 -- Binary Search survive_coef=0.3 (final bracket step)
+**Config:** `configs/exp_037_survive_030.yaml`
+**Depends on:** exp_036 complete
+
+**Goal:** Final binary search step on survive_coef. Bracket: 0.15=crash (0.93s), 0.5=hover (29.98s).
+Midpoint = 0.3. This is the LAST pure reward-tuning experiment. If 0.3 shows binary behavior
+(either crash <3s or hover >25s), we confirm there's no survive_coef sweet spot and pivot to
+fundamentally different approaches (higher entropy, curriculum, or stochastic deployment). The key
+insight from exp_036: training reward 28.61 (highest ever) but benchmark crashes — the stochastic
+policy navigates during exploration but the deterministic mean doesn't. This is a policy optimization
+problem, not a reward design problem.
+
+**What's new:**
+- survive_coef=0.3 (midpoint of narrowed bracket [0.15, 0.5])
+- All other coefficients unchanged from exp_034/036 (PBRS, speed=0.7, alt=1.5)
+- Fine-tune from exp_034 checkpoint (stable hover with PBRS + truncation fix)
+- No code changes needed — config only
+
+**Training:** 512 envs, 8M steps on GPU (RTX 3090)
+
+**Success criteria:**
+- Flight time 5-20s (intermediate behavior = sweet spot found!)
+- Any gate passage (>0 avg gates)
+- If binary: conclusive evidence to pivot strategy
+
+**If it doesn't work:**
+- If crashes (<3s): phase transition is between 0.3-0.5, very sharp. Pivot to higher ent_coef (0.05)
+- If hovers (>25s, 0 gates): try 0.2 (sweet spot between 0.15-0.3)
+- If ALL survive values show binary: pivot to curriculum (max_episode_steps=300) or deploy stochastic policy
+
 **Depends on:** exp_032 complete
 
 **Context:** The current GAE computation in `train_racing.py` conflates two distinct episode-ending

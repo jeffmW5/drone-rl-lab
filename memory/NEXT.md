@@ -27,7 +27,8 @@
 13h. ~~**Truncation vs termination fix (exp_033)**~~ -- DONE. Restored hover stability (24.58s vs 2.92s) but 0 gates — back in hover trap. Better value estimates make model too conservative with speed_coef=0.3.
 13i. ~~**PBRS + higher speed (exp_034)**~~ -- DONE. speed_coef=0.7 with PBRS: 29.98s stable hover, 0 gates. PBRS eliminated the speed crash (exp_031=2.02s→exp_034=29.98s) but deterministic mean policy still hovers. survive_coef is the anchor.
 13j. ~~**Remove survive_coef (exp_035)**~~ -- DONE. survive_coef=0 crashes at 0.96s, same as exp_028. alt_coef alone can't maintain hover. Bracketed: 0.5=hover, 0.0=crash.
-13k. **Binary search survive_coef (exp_036)** -- survive_coef=0.15 (midpoint of bracket). If this shows hover OR crash (binary), pivot to curriculum/shorter episodes. If intermediate behavior, refine the sweet spot.
+13k. ~~**Binary search survive_coef=0.15 (exp_036)**~~ -- DONE. Crashes at 0.93s, 0 gates, BUT highest-ever training reward (28.61). Stochastic policy navigates during training but deterministic mean crashes. Policy mode collapse — NOT a reward problem.
+13l. **Binary search survive_coef=0.3 (exp_037)** -- Last bracket step: 0.15=crash, 0.5=hover. If 0.3 crashes → sharp transition, no sweet spot → pivot to ent_coef or curriculum. If 0.3 hovers → try 0.2. If intermediate → sweet spot found.
 14. ~~**Pass at least 1 gate**~~ -- DONE (exp_028, 1 gate in run 4). Now need consistent multi-gate passage.
 15. ~~**Add speed incentive**~~ -- DONE (exp_028). speed_coef=1.0 proved navigation is learnable. Tuning needed.
 16. **Improve finish rate** -- 20% is not competition-ready. Need >80% to be meaningful.
