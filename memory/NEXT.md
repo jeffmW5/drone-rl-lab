@@ -21,7 +21,10 @@
 13b. ~~**50/50 gate start mix (exp_027b)**~~ -- FAILED. Mid-air envs still dominate reward signal even at 50/50 from scratch. Reward 10.79, 0 gates, 1.18s. Same failure as exp_027.
 13c. ~~**Fine-tune exp_026 with random gates (exp_027c)**~~ -- FAILED. Reward 6.34, 0 gates, 3.2s. Hover largely destroyed (3.2s vs 28.8s). Random gate starts are a dead end — all 3 variants (027/027b/027c) failed.
 13d. ~~**High speed reward (exp_028)**~~ -- DONE. Reward 16.95, 0.2 avg gates, 0.94s flight. FIRST GATE PASSAGE EVER! But hover destroyed by speed_coef=1.0. Sweet spot is 0.3-0.5.
-13e. **Balanced speed reward (exp_029)** -- Fine-tune exp_026 with speed_coef=0.4 + proximity_coef=1.0 + LR=0.0003 + survive_coef=0.5. Balance lateral navigation with hover stability.
+13e. ~~**Balanced speed reward (exp_029)**~~ -- DONE. Reward 16.52, 0 gates, 29.98s. speed_coef=0.4 still in hover-only regime. Sharp phase transition between ≤0.4 (hover) and 1.0 (crash+navigate).
+13f. **Speed sweep (exp_030/031)** -- Probe speed_coef=0.55 and 0.70 with LR=0.0001 to bracket the phase transition. IN PROGRESS.
+13g. **PBRS delta-progress reward (exp_032)** -- Replace exp(-k*dist) proximity (rewards hovering near gate) with delta-progress (rewards only approaching gate). Should eliminate hover local optimum. QUEUED after 030/031.
+13h. **Truncation vs termination fix (exp_033)** -- Fix GAE to bootstrap through timeouts instead of treating them as terminal. QUEUED after 032.
 14. ~~**Pass at least 1 gate**~~ -- DONE (exp_028, 1 gate in run 4). Now need consistent multi-gate passage.
 15. ~~**Add speed incentive**~~ -- DONE (exp_028). speed_coef=1.0 proved navigation is learnable. Tuning needed.
 16. **Improve finish rate** -- 20% is not competition-ready. Need >80% to be meaningful.
