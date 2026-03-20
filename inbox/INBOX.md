@@ -13,7 +13,7 @@ speed_coef=1.0 taught navigation but destroyed hover stability. Sweet spot is 0.
 
 ---
 
-### [NEXT] exp_029 -- Balanced Speed Reward (hover + navigation)
+### [IN PROGRESS] exp_029 -- Balanced Speed Reward (hover + navigation)
 **Config:** `configs/exp_029_racecore_balanced_speed.yaml`
 **Depends on:** exp_026 checkpoint (pretrained hover model)
 
