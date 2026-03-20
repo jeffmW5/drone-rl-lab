@@ -225,6 +225,10 @@ def run(config_path: str):
             "survive_coef": racing_cfg.get("survive_coef", 0.0),
             "vz_coef": racing_cfg.get("vz_coef", 0.0),
             "vz_threshold": racing_cfg.get("vz_threshold", 0.5),
+            "random_gate_start": racing_cfg.get("random_gate_start", False),
+            "spawn_offset": racing_cfg.get("spawn_offset", 0.75),
+            "spawn_pos_noise": racing_cfg.get("spawn_pos_noise", 0.15),
+            "spawn_vel_noise": racing_cfg.get("spawn_vel_noise", 0.3),
         }
         race_config = racing_cfg.get("race_config", f"{level}_attitude.toml")
         envs = make_race_envs(
