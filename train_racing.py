@@ -259,6 +259,13 @@ def run(config_path: str):
     obs_shape = envs.single_observation_space.shape
     act_shape = envs.single_action_space.shape
     agent = Agent(obs_shape, act_shape).to(device)
+
+    # Load pretrained checkpoint if specified (for fine-tuning)
+    pretrained_ckpt = racing_cfg.get("pretrained_ckpt", None)
+    if pretrained_ckpt:
+        agent.load_state_dict(torch.load(pretrained_ckpt, map_location=device))
+        print(f"[INFO] Loaded pretrained checkpoint: {pretrained_ckpt}")
+
     optimizer = torch.optim.Adam(agent.parameters(), lr=args.learning_rate, eps=1e-5)
 
     # ── Training storage ──────────────────────────────────────────────────────
