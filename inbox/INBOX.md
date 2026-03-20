@@ -475,6 +475,41 @@ PPO range for continuous control (0.01-0.1).
 - If crashes (<3s): entropy destabilized the policy. Try ent_coef=0.03 (more conservative)
 - If no improvement: pivot to curriculum (max_episode_steps=300) or stochastic deployment
 
+---
+
+### [NEXT] exp_039 -- Curriculum: Short Episodes (6s)
+**Config:** `configs/exp_039_short_episodes.yaml`
+**Depends on:** exp_038 complete
+
+**Goal:** All reward tuning (exp_026-037) and entropy regularization (exp_038) exhausted. The
+deterministic mean always lands in hover (survive≥0.5) or crash (survive<0.5, ent≥0.05) with no
+stable navigation. Fundamentally different approach: reduce max_episode_steps from 1500 (30s) to
+300 (6s). In short episodes, hover reward is bounded: max survive = 300*0.5 = 150. But navigating
+to gate 0 (~1.5m away, reachable in ~250 steps) yields survive(125) + gate_bonus(20) + progress(75)
++ speed(35) = 255. Navigation is 1.7x better than hover in short episodes! Long episodes made hover
+infinitely safe (unlimited accumulation). Short episodes force urgency. The truncation fix (exp_033)
+correctly bootstraps through these short timeouts, so the value function knows there's future value
+beyond the 300-step boundary.
+
+**What's new:**
+- max_episode_steps reduced from 1500 to 300 (30s → 6s episodes)
+- All other coefficients unchanged from exp_034 (survive=0.5, PBRS progress=50, speed=0.7)
+- ent_coef back to 0.007 (standard, don't need high entropy with short episodes)
+- Fine-tune from exp_034 checkpoint (stable hover with PBRS + truncation fix)
+- No code changes needed — config only
+
+**Training:** 512 envs, 8M steps on GPU (RTX 3090)
+
+**Success criteria:**
+- avg flight time 3-6s (NOT 29.98s hover, NOT <1s crash)
+- Any gate passage (>0 avg gates) — would be first ever from a non-crashing RaceCoreEnv model
+- Training reward different from hover regime (exp_034 was 17.26)
+
+**If it doesn't work:**
+- If still hovers: even 300 steps is too long. Try 150 (3s) or increase speed_coef to 1.0
+- If crashes (<1s): short episodes prevent learning stable hover. Try 500 (10s) as compromise
+- If navigates but no gates: gate 0 too far for 300 steps. Increase steps to 400 or start closer
+
 **Depends on:** exp_032 complete
 
 **Context:** The current GAE computation in `train_racing.py` conflates two distinct episode-ending
