@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 0, 0],
+  "flight_times": [0.90, 0.84, 4.64, 0.84, 0.86],
+  "avg_flight_time": 1.616,
+  "avg_gates": 0.0,
+  "notes": "survive_coef=0.3 mostly crashes (4/5 at ~0.85s) but one outlier at 4.64s — first intermediate flight time in the bracket. Training bimodal throughout (18.10 ± 9.66, sawtooth 5→28). Phase transition confirmed sharp between 0.3-0.5. The 4.64s outlier suggests 0.3 is RIGHT at the edge — the deterministic mean policy is unstable but occasionally survives longer. 0 gates in all runs. Bracket complete: 0.5=hover, 0.3=crash(edge), 0.15=crash, 0.0=crash. Reward tuning alone cannot solve hover-or-crash."
+}

@@ -403,7 +403,11 @@ learning or architecture changes, not reward tuning.
 
 ---
 
-### [IN PROGRESS] exp_037 -- Binary Search survive_coef=0.3 (final bracket step)
+### [DONE] exp_037 -- Binary Search survive_coef=0.3 (final bracket step)
+**Result:** Reward 18.10 ± 9.66 (bimodal sawtooth), benchmark 0/5 finishes, 0 gates, avg 1.62s.
+4/5 crash at ~0.85s but ONE outlier at 4.64s — first intermediate flight time. survive_coef=0.3
+is right at the phase transition edge. Bracket complete: 0.5=hover, 0.3=crash(edge), 0.15=crash,
+0.0=crash. **Reward tuning alone cannot solve hover-or-crash.** Pivot to ent_coef/curriculum needed.
 **Config:** `configs/exp_037_survive_030.yaml`
 **Depends on:** exp_036 complete
 
