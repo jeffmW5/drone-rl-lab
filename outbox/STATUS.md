@@ -1,17 +1,15 @@
-# Status -- Last Updated 2026-03-19
+# Status -- Last Updated 2026-03-20
 
 ## Last Completed
-- **exp_026** -- RaceCoreEnv with vertical velocity penalty + tighter ceiling
-- **Training:** Mean reward 9.77 ± 1.07, 8M steps (budget: 5400s, completed in 3893s).
-  Very stable convergence — v_loss dropped to 0.002 by 7M steps.
-- **Benchmark L2:** 0/5 finishes, 0 gates, **avg 28.8s flight time** (4/5 survive full 30s episode!)
-- **BREAKTHROUGH:** First model to achieve stable hovering at gate altitude (z≈0.72, gate 0 at z=0.70).
-  Model ascends smoothly, brakes at z~1.2, oscillates briefly, then settles to hover at z=0.72-0.77.
-  Thrust modulation: +0.89 → -0.52 (braking) → -0.12 (hover). Flight time 1.16s → 28.8s.
-- **Remaining gap:** Model hovers at correct altitude but doesn't navigate horizontally to gates.
-  It stays near the start position. Needs horizontal navigation incentive or random gate starts.
+- **exp_027** -- RaceCoreEnv with 100% random gate starts (Swift-style)
+- **Training:** Mean reward 11.67 ± 0.84, 4.575M/8M steps (budget: 5400s).
+  Highest training reward yet — random gate spawns near gates are "easier" than ground starts.
+- **Benchmark L2:** 0/5 finishes, 0 gates, **avg 1.1s flight time** — REGRESSION
+- **Root cause:** 100% random gate starts always spawn mid-air. Model never learns ground takeoff.
+  At benchmark time, drone starts at z=0.01 and crashes immediately (like exp_025b).
+- **Lesson:** Hard rule #21 — never use 100% random gate spawns. Must include ground starts.
 
-## Experiment Summary (exp_022-026)
+## Experiment Summary (exp_022-027)
 | Exp | Reward | Gates | Flight Time | Key Result |
 |-----|--------|-------|-------------|------------|
 | 022 | 10.46 | 0.5 avg | 2.02s | No altitude penalty |
@@ -19,6 +17,7 @@
 | 024 | ~0.3 | - | - | Plateaued, killed |
 | 025b | 10.79 | 0 | 1.16s | Thrust modulation but overshoots |
 | **026** | **9.77** | **0** | **28.8s** | **Stable hover at gate height!** |
+| 027 | 11.67 | 0 | 1.1s | 100% random gate starts — no takeoff learned |
 
 ## Current Best
 - **Hover:** exp_002 -- reward 474 (ceiling for ONE_D_RPM)
@@ -28,6 +27,5 @@
 - **Racing L2 (RaceCoreEnv flight):** exp_026 -- 0/5 finishes, 0 gates, **28.8s stable hover**
 
 ## Queue Status
-- Completed: exp_022-026 (altitude control SOLVED, horizontal navigation needed)
-- Next: exp_027 (random gate starts — spawn near gates to learn approach/passage)
-- Pod d54yx9n4s9i9k4 ready for exp_027
+- Completed: exp_022-027 (exp_027 failed benchmark — no takeoff learned)
+- Next: exp_027b (50/50 ground + random gate mix)
