@@ -128,7 +128,9 @@ racing:
 
 ---
 
-### [IN PROGRESS] exp_032 -- PBRS Delta-Progress Reward (replaces exp(-k*dist) proximity)
+### [DONE] exp_032 -- PBRS Delta-Progress Reward (replaces exp(-k*dist) proximity)
+**Result:** Reward 11.87 ± 3.76, benchmark 0/5 finishes, 0 gates, avg 2.92s. PBRS broke hover optimum
+(model attempts lateral movement) but crashes before reaching gates. Slightly better than exp_031 (2.02s).
 **Depends on:** exp_030 and exp_031 complete
 
 **Context:** The proximity reward `exp(-proximity_coef * dist)` is NOT potential-based (Ng, Harada,
@@ -297,7 +299,7 @@ racing:
 
 ---
 
-### [QUEUED] exp_033 -- Truncation vs Termination Fix (Pardo et al. ICML 2018)
+### [IN PROGRESS] exp_033 -- Truncation vs Termination Fix (Pardo et al. ICML 2018)
 **Depends on:** exp_032 complete
 
 **Context:** The current GAE computation in `train_racing.py` conflates two distinct episode-ending

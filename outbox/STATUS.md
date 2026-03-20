@@ -1,23 +1,24 @@
 # Status -- Last Updated 2026-03-20
 
 ## Last Completed
-- **exp_030** (speed_coef=0.55): Reward 15.64, 0 gates, avg 25.98s (4/5 hover, 1/5 crash — edge of transition)
-- **exp_031** (speed_coef=0.70): Reward 10.44, 0 gates, avg 2.02s (hover destroyed, no navigation)
-- **Conclusion:** Sharp phase transition between 0.55→0.70 with NO navigation sweet spot. exp(-k*dist) proximity reward fundamentally flawed — rewards being near gate, not moving toward it.
+- **exp_032** -- PBRS delta-progress reward (progress_coef=50, speed_coef=0.3)
+- **Training:** Mean reward 11.87 ± 3.76, 8M steps, 3014s.
+- **Benchmark L2:** 0/5 finishes, 0 gates, **avg 2.92s**
+- **Finding:** PBRS successfully broke the hover local optimum (model attempts lateral movement instead of hovering in place). But crashes before reaching gates (2.92s avg). The reward change is working directionally — the model is no longer stuck hovering — but needs better value estimation to learn stable navigation.
 
-## Speed Coefficient Map (complete)
-| speed_coef | LR | Behavior | Flight Time | Gates |
-|-----------|------|----------|-------------|-------|
-| 0.1 (exp_026) | 0.0015 | Hover only | 28.8s | 0 |
-| 0.4 (exp_029) | 0.0003 | Hover only | 29.98s | 0 |
-| 0.55 (exp_030) | 0.0001 | Edge: 4/5 hover, 1/5 crash | 25.98s | 0 |
-| **0.70 (exp_031)** | **0.0001** | **Crash, no navigation** | **2.02s** | **0** |
-| 1.0 (exp_028) | 0.0005 | Navigate + crash | 0.94s | 0.2 |
+## Experiment Summary (exp_028-032)
+| Exp | speed_coef | Reward | Gates | Flight Time | Key Result |
+|-----|-----------|--------|-------|-------------|------------|
+| 026 | 0.1 | 9.77 | 0 | 28.8s | Stable hover baseline |
+| 028 | 1.0 | 16.95 | 0.2 | 0.94s | First gate! But crash |
+| 029 | 0.4 | 16.52 | 0 | 29.98s | Perfect hover, no nav |
+| 030 | 0.55 | 15.64 | 0 | 25.98s | Edge of transition |
+| 031 | 0.70 | 10.44 | 0 | 2.02s | Crash, no nav |
+| **032** | **0.3+PBRS** | **11.87** | **0** | **2.92s** | **Hover broken, attempts nav** |
 
 ## In Progress
-- **exp_032** -- PBRS delta-progress reward (progress_coef=50, speed_coef=0.3). Fine-tune from exp_026.
-- Code change: `max(prev_dist - curr_dist, 0) * progress_coef` replaces `exp(-k*dist)`
-- This rewards movement toward gate (not proximity) — hover gets ~0 progress per step
+- **exp_033** -- Truncation fix (Pardo et al. 2018) + PBRS. Fine-tune from exp_032.
+- Uses `terminated_buf` instead of `dones_buf` for GAE nextnonterminal — bootstraps through timeouts.
 
 ## Current Best
 - **Racing L2 (lap time):** exp_016 -- 13.49s, 2/10 finishes
@@ -25,6 +26,5 @@
 - **Racing L2 (RaceCoreEnv gates):** exp_028 -- 0/5 finishes, **0.2 avg gates**, 0.94s
 
 ## Queue Status
-- Completed: exp_022-031
-- In progress: exp_032 (PBRS progress reward)
-- Queued: exp_033 (truncation fix)
+- Completed: exp_022-032
+- In progress: exp_033 (truncation fix + PBRS)

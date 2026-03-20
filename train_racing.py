@@ -274,6 +274,7 @@ def run(config_path: str):
     logprobs_buf = torch.zeros((args.num_steps, args.num_envs)).to(device)
     rewards_buf = torch.zeros((args.num_steps, args.num_envs)).to(device)
     dones_buf = torch.zeros((args.num_steps, args.num_envs)).to(device)
+    terminated_buf = torch.zeros((args.num_steps, args.num_envs)).to(device)
     values_buf = torch.zeros((args.num_steps, args.num_envs)).to(device)
 
     # For evaluations.npz compatibility
@@ -333,6 +334,7 @@ def run(config_path: str):
             next_obs, reward, terminated, truncated, info = envs.step(_action_for_env(action, jax_on_gpu))
             reward = torch.tensor(_to_np(reward), dtype=torch.float32).to(device)
             rewards_buf[step] = reward
+            terminated_buf[step] = torch.Tensor(_to_np(terminated).astype(float)).to(device)
             next_obs = torch.Tensor(_to_np(next_obs)).to(device)
             next_done = torch.Tensor(
                 np.logical_or(_to_np(terminated), _to_np(truncated)).astype(float)
@@ -348,7 +350,7 @@ def run(config_path: str):
                     nextnonterminal = 1.0 - next_done
                     nextvalues = next_value
                 else:
-                    nextnonterminal = 1.0 - dones_buf[t + 1]
+                    nextnonterminal = 1.0 - terminated_buf[t + 1]
                     nextvalues = values_buf[t + 1]
                 delta = rewards_buf[t] + args.gamma * nextvalues * nextnonterminal - values_buf[t]
                 advantages[t] = lastgaelam = (

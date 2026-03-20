@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 0, 0],
+  "flight_times": [3.68, 2.52, 2.62, 2.88, 2.90],
+  "avg_flight_time": 2.92,
+  "avg_gates": 0.0,
+  "notes": "PBRS delta-progress reward (progress_coef=50) disrupted hover (2.92s vs 29.98s) without achieving gates. Model attempts lateral movement but crashes — slightly better than exp_031 (2.02s). The progress reward successfully broke the hover optimum but the model hasn't learned stable navigation yet. May need: (1) more training steps, (2) higher survive_coef to penalize crashes more, or (3) truncation fix (exp_033) to improve value estimates near episode boundaries."
+}
