@@ -19,8 +19,9 @@
 12. ~~**Fix altitude overshoot (exp_026)**~~ -- DONE. vz_coef=0.5 + z_high=1.3 + gamma=0.97. Reward 9.77, flight time 28.8s, stable hover at z=0.72. Gap is now horizontal navigation, not altitude.
 13. ~~**Random gate starts (exp_027)**~~ -- DONE but FAILED benchmark. Reward 11.67 but 0 gates, 1.1s flight — 100% random spawns skipped ground takeoff. Fallback: exp_027b with 50/50 mix (random_gate_ratio=0.5).
 13b. ~~**50/50 gate start mix (exp_027b)**~~ -- FAILED. Mid-air envs still dominate reward signal even at 50/50 from scratch. Reward 10.79, 0 gates, 1.18s. Same failure as exp_027.
-13c. **Fine-tune exp_026 with random gates (exp_027c)** -- Load exp_026 checkpoint (stable hover), fine-tune with 50% random gate starts + lower LR (0.0005). Should preserve hover while learning gate approach. IN PROGRESS.
+13c. ~~**Fine-tune exp_026 with random gates (exp_027c)**~~ -- FAILED. Reward 6.34, 0 gates, 3.2s. Hover largely destroyed (3.2s vs 28.8s). Random gate starts are a dead end — all 3 variants (027/027b/027c) failed.
+13d. **High speed reward (exp_028)** -- Fine-tune exp_026 with speed_coef=1.0 (10x) + proximity_coef=0.5 (gentler). No random gates — just incentivize horizontal movement toward gates while preserving hover. IN PROGRESS.
 14. **Pass at least 1 gate** -- currently 0 gates in benchmark. Gate passage requires surviving past z=0.7+ without OOB.
-15. **Add speed incentive** -- once gate passage works, add reward for fast gate-to-gate transitions.
+15. ~~**Add speed incentive**~~ -- being tested now in exp_028 (speed_coef=1.0).
 16. **Improve finish rate** -- 20% is not competition-ready. Need >80% to be meaningful.
 17. **Improve lap time** -- 13.49s vs target 5.0s. Need gate-aware training to produce competitive times.
