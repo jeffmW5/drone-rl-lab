@@ -439,7 +439,7 @@ problem, not a reward design problem.
 
 ---
 
-### [NEXT] exp_038 -- Higher Entropy (fix policy mode collapse)
+### [IN PROGRESS] exp_038 -- Higher Entropy (fix policy mode collapse)
 **Config:** `configs/exp_038_high_entropy.yaml`
 **Depends on:** exp_037 complete
 
