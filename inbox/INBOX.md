@@ -336,7 +336,7 @@ alt_coef(1.5)+survive_coef(0.5)=2.0/step dominates any intermittent progress/spe
 
 ---
 
-### [NEXT] exp_035 -- Remove Survive Reward (break hover anchor)
+### [IN PROGRESS] exp_035 -- Remove Survive Reward (break hover anchor)
 **Config:** `configs/exp_035_no_survive.yaml`
 **Depends on:** exp_034 complete
 
