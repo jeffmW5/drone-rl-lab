@@ -477,7 +477,7 @@ PPO range for continuous control (0.01-0.1).
 
 ---
 
-### [NEXT] exp_039 -- Curriculum: Short Episodes (6s)
+### [IN PROGRESS] exp_039 -- Curriculum: Short Episodes (6s)
 **Config:** `configs/exp_039_short_episodes.yaml`
 **Depends on:** exp_038 complete
 
