@@ -477,7 +477,11 @@ PPO range for continuous control (0.01-0.1).
 
 ---
 
-### [IN PROGRESS] exp_039 -- Curriculum: Short Episodes (6s)
+### [DONE] exp_039 -- Curriculum: Short Episodes (6s)
+**Result:** Reward 20.50 ± 6.45 (bimodal), benchmark 0/5 finishes, 0 gates, avg 18.35s.
+NEW: **Bistable policy** — 3/5 hover (29.98s) + 2/5 crash (~0.9s) from same model. First time both
+modes appear in benchmark. Short episodes shifted policy to phase transition edge but didn't produce
+navigation. Hover runs still show 0 gates despite 29.98s flight.
 **Config:** `configs/exp_039_short_episodes.yaml`
 **Depends on:** exp_038 complete
 

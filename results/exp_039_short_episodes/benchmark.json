@@ -1,0 +1,10 @@
+{
+  "level": "level2",
+  "n_runs": 5,
+  "finishes": 0,
+  "gates_passed": [0, 0, 0, 0, 0],
+  "flight_times": [0.98, 29.98, 0.84, 29.98, 29.98],
+  "avg_flight_time": 18.352,
+  "avg_gates": 0.0,
+  "notes": "NEW BEHAVIOR: Bistable policy — 3/5 hover (29.98s) and 2/5 crash (~0.9s) from the SAME model. First time both modes appear in benchmark. Short episodes (300 steps) made the deterministic mean policy edge-unstable — it's right at the phase transition boundary. Still 0 gates in all runs. Training was bimodal throughout (20.50 ± 6.45, range 6-26). The curriculum approach shifted the policy to the edge but didn't break through to navigation. The hover runs still show 0 gates despite 29.98s flight — the policy hovers in place when it doesn't crash."
+}
