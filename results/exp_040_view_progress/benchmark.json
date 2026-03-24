@@ -1,0 +1,40 @@
+{
+  "experiment": "exp_040_view_progress",
+  "benchmarks": [
+    {
+      "level": "level2",
+      "controller": "attitude_rl_race.py",
+      "n_runs": 5,
+      "results": [
+        {
+          "time": 1.64,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 0.52,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 0.52,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.56,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 0.52,
+          "finished": false,
+          "gates": 0
+        }
+      ],
+      "avg_time": 0.95,
+      "finish_rate": 0.0,
+      "avg_gates": 0.0
+    }
+  ]
+}
