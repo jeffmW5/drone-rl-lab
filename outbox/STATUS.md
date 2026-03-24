@@ -1,28 +1,30 @@
-# Status -- Last Updated 2026-03-21
+# Status -- Last Updated 2026-03-24
 
 ## Last Completed
-- **exp_039** -- max_episode_steps=300 (6s curriculum), survive=0.5, fine-tune from exp_034
-- **Training:** Mean reward 20.50 ± 6.45 (bimodal 6-26 throughout), 8M steps, 3810s.
-- **Benchmark L2:** 0/5 finishes, 0 gates, **avg 18.35s** (BISTABLE: 3/5 hover 29.98s + 2/5 crash ~0.9s)
-- **Finding:** NEW behavior — first bistable policy. Short episodes shifted the deterministic mean to the phase transition edge. The policy is marginally stable: some initial conditions hover, others crash. Still 0 gates — curriculum alone didn't produce navigation, but it DID change the policy's stability profile.
+- **exp_041/042/043** -- Three reward variants without stability reward, random mid-air spawns
+- **exp_041** (progress only): 7.742 reward, 0 gates, 0.52s crash
+- **exp_042** (view=0.1): 7.737 reward, 0 gates, 0.52s crash
+- **exp_043** (view*progress): 7.748 reward, 0 gates, 0.52s crash
+- **Finding:** All three identical failures. Without survive/altitude reward, drone crashes in 0.5s from spawn drift. Progress/view reward alone cannot bootstrap flight — needs stability component.
 
 ## Approaches Attempted
 1. **Reward tuning** (exp_026-037): survive, speed, PBRS sweeps — all firmly hover-or-crash
 2. **Entropy regularization** (exp_038): destroys hover → crash, no navigation
 3. **Short episodes** (exp_039): bistable (hover+crash), edge of transition, still 0 gates
+4. **View+progress from mid-air** (exp_040): falling exploit (view=1.0 rewards facing gate while falling)
+5. **Progress/view variants** (exp_041-043): all crash in 0.5s without survival incentive
 
 ## Experiment Summary (recent)
 | Exp | Reward | Gates | Flight Time | Key Change |
 |-----|--------|-------|-------------|------------|
-| 034 | 17.26 | 0 | 29.98s | PBRS + speed=0.7 (hover baseline) |
-| 035 | 11.32 | 0 | 0.96s | survive=0 (crash) |
-| 036 | 28.61 | 0 | 0.93s | survive=0.15 (crash) |
-| 037 | 18.10 | 0 | 1.62s | survive=0.3 (crash edge) |
-| 038 | 24.29 | 0 | 0.96s | ent=0.05 (crash) |
-| **039** | **20.50** | **0** | **18.35s** | **300-step episodes (BISTABLE: 3/5 hover + 2/5 crash)** |
+| 039 | 20.50 | 0 | 18.35s | 300-step episodes (BISTABLE) |
+| 040 | 7.75 | 0 | 0.52s | view+progress, falling exploit |
+| 041 | 7.74 | 0 | 0.52s | progress only (no view) |
+| 042 | 7.74 | 0 | 0.52s | view=0.1 + progress |
+| 043 | 7.75 | 0 | 0.52s | view*progress multiplicative |
 
 ## In Progress
-- None — awaiting orchestrator direction
+- Designing exp_044+ — need stability + progress without hover trap
 
 ## Current Best
 - **Racing L2 (lap time):** exp_016 -- 13.49s, 2/10 finishes
@@ -30,5 +32,5 @@
 - **Racing L2 (RaceCoreEnv gates):** exp_028 -- 0/5 finishes, **0.2 avg gates**, 0.94s
 
 ## Queue Status
-- Completed: exp_022-039
-- In progress: none
+- Completed: exp_022-043
+- In progress: designing next batch
