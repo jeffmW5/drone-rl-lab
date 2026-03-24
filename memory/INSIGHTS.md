@@ -49,7 +49,13 @@
 
 | Paper | ArXiv ID | Key Insight | Used In |
 |-------|----------|-------------|---------|
-| *(none yet)* | — | — | — |
+| Swift (Kaufmann et al. Nature 2023) | PMC10468397 | 31D obs with 12D gate corners in body frame; progress reward; 2×128 MLP; 100 envs, 1e8 steps | exp_040+ |
+| Competitive Racing (Pasumarti 2024) | 2512.11781 | Sparse reward beats dense; 42D obs with 24D gate corners; [512,512,256,128] network; IPPO | exp_044 |
+| Dream to Fly (Romero 2025) | 2501.14377 | PPO fails from pixels, DreamerV3 works; progress+gate bonus reward; b1=1.0 b2=0.01 | reference |
+| RSS 2024 Vision Racing (UZH) | rss20/p082 | Asymmetric actor-critic with privileged info; gate edge sensor abstraction; 40 km/h | exp_042 |
+| Curriculum Quadrotor (2025) | 2501.18490 | 3-stage curriculum (hover→random start→random vel); weight continuation; 20M total steps | exp_041 |
+| Diverse Cluttered Tracks (RA-L 2025) | 2512.09571 | Soft-collision→hard-collision 2-phase training; preserves exploration in phase 1 | exp_041 |
+| Teacher-Student Racing (CoRL 2024) | CoRL24_Xing | Train teacher with privileged state → distill to student → fine-tune student with RL | exp_042 |
 
 ---
 
