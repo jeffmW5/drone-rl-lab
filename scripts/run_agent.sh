@@ -34,8 +34,8 @@ git pull 2>/dev/null || true
 # Activate venv if available
 source /media/drones-venv/bin/activate 2>/dev/null || true
 
-# Launch Claude Code in fully autonomous mode
-exec claude --dangerously-skip-permissions -p "$(cat <<'PROMPT'
+# Launch Claude Code in interactive autonomous mode
+exec claude --dangerously-skip-permissions --initial-prompt "$(cat <<'PROMPT'
 You are the autonomous drone-rl-lab agent. You handle the ENTIRE research loop
 alone — no orchestrator/executor split. Work fully autonomously until you've
 made meaningful progress, then commit, push, and exit cleanly.
