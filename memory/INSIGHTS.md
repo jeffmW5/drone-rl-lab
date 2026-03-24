@@ -43,6 +43,16 @@
 
 ---
 
+## Paper References
+
+> Papers that informed experiment design. Added by `/research` command.
+
+| Paper | ArXiv ID | Key Insight | Used In |
+|-------|----------|-------------|---------|
+| *(none yet)* | — | — | — |
+
+---
+
 ## Architecture Notes
 
 - **Obs space:** 73 dims: drone state (13) + trajectory lookahead (30) + history (26) + last action (4). No gate info included.

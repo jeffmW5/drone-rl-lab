@@ -97,10 +97,51 @@ racing:
 
 ---
 
+## Paper Research
+
+When experiments plateau (3+ consecutive with no improvement), the orchestrator
+auto-queues a research task. The executor uses `/research <topic>` to:
+
+1. Search Hugging Face Papers via MCP semantic search
+2. Read top 3-5 papers as markdown (`huggingface.co/papers/ARXIV_ID.md`)
+3. Extract techniques, architectures, reward designs, hyperparameters
+4. Write summary to `research/<topic_slug>.md`
+5. Propose concrete experiment configs with paper citations
+6. Update `memory/INSIGHTS.md` with paper references
+
+### Research summary documentation standard
+
+```markdown
+# Research: <Topic>
+
+**Date:** YYYY-MM-DD
+**Plateau context:** <current bottleneck summary>
+**Search queries used:** <list>
+
+## Papers Reviewed
+### Paper N: <Title>
+- **ArXiv:** <ID> | **HF:** https://huggingface.co/papers/<ID>
+- **Core technique:** ...
+- **Key insight for us:** ...
+- **Proposed experiment:** ...
+
+## Synthesis
+<What do the papers collectively suggest?>
+
+## Proposed Experiments
+### exp_NNN_<name>
+- **Hypothesis:** <from papers>
+- **What to change:** <config/code changes>
+- **Paper basis:** <citation>
+```
+
+---
+
 ## Available tools
 
 | Tool | What it does |
 |------|-------------|
+| `/research <topic>` | Search HF Papers, extract insights, propose experiments |
 | `python train.py configs/exp_NNN.yaml` | Run an experiment (auto-detects backend) |
 | `python compare.py` | Print leaderboard of all experiments |
 | `python compare.py --backend hover` | Leaderboard filtered to hover only |

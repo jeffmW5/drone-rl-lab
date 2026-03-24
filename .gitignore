@@ -32,6 +32,9 @@ wandb/
 ssh_key_runpod
 ssh_key_runpod.pub
 
+# Claude Code local settings (contains HF_TOKEN — NEVER commit)
+.claude/settings.local.json
+
 # OS
 .DS_Store
 Thumbs.db

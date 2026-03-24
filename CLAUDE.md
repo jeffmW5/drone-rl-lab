@@ -3,59 +3,79 @@
 ## On session start (do this FIRST, every time)
 
 ```bash
+cd /media/drone-rl-lab
 git pull 2>/dev/null || true
 ```
 
 Then read these files in order:
 1. **`memory/HARD_RULES.md`** -- Absolute constraints. NEVER violate these.
 2. **`memory/EXPERIMENT_LOG.md`** -- Full experiment history.
-3. **`memory/INSIGHTS.md`** -- Kaggle targets, benchmarks, architecture notes.
-4. **`inbox/INBOX.md`** -- Your current task queue. Process the first `[NEXT]` item.
+3. **`memory/INSIGHTS.md`** -- Kaggle targets, benchmarks, paper references.
+4. **`memory/NEXT.md`** -- Current priorities and open questions.
+5. **`inbox/INBOX.md`** -- Your current task queue.
+6. **`outbox/STATUS.md`** -- Latest results summary.
 
 ## Workflow
 
-You are the **executor** in a two-agent loop:
-- **Windows Claude** (orchestrator) writes `inbox/INBOX.md` with experiment instructions
-- **You** (executor) run experiments, document results, update memory
-- Work **autonomously** -- complete the full INBOX task without waiting for human input
-- When done, commit, push, and exit cleanly
+You are a **single autonomous agent** that handles the entire research loop:
+analyze → detect plateau → research papers → design experiment → train →
+benchmark → document → commit → loop.
+
+Work **fully autonomously** — no human input needed. When done making meaningful
+progress (or blocked), commit, push, and exit cleanly.
+
+## Decision loop
+
+After reading memory, decide what to do:
+
+### If INBOX has [NEXT] or [QUEUED] tasks → execute them
+1. Process in order: first `[NEXT]`, then `[QUEUED]` with no unmet dependencies
+2. If task type is `research`: use `/research` command or manually search papers
+3. If task type is training: run the experiment, benchmark, document
+4. Mark `[DONE]`, advance queue, continue
+
+### If INBOX is empty → analyze and self-direct
+1. Check for **plateau**: 3+ consecutive experiments with no improvement on
+   primary metric (lap time or gate count)
+2. **If plateau detected** → trigger paper research:
+   - Identify the specific bottleneck from recent experiments
+   - Search Hugging Face Papers for solutions (MCP semantic search or fetch
+     `https://huggingface.co/papers/ARXIV_ID.md`)
+   - Read top 3-5 papers, extract actionable techniques
+   - Write research summary to `research/<topic>.md`
+   - Design experiment configs based on findings
+   - Add to INBOX and execute immediately
+3. **If no plateau** → design next experiment based on latest results:
+   - Analyze what results suggest as next step
+   - Design config with clear hypothesis (single-variable change preferred)
+   - Add to INBOX and execute
 
 ## Queue processing
 
-1. Read `inbox/INBOX.md` and find the first `[NEXT]` task
-2. If no `[NEXT]`, find the first `[QUEUED]` task with no unmet `Depends on:`
-3. Execute the task
-4. Mark it `[DONE]` with completion date and results pointer
-5. Advance the next `[QUEUED]` to `[NEXT]`
-6. If more tasks remain, continue processing
-7. When queue is empty, commit, push, and exit
+1. Find first `[NEXT]` task (or first `[QUEUED]` with no unmet dependencies)
+2. Execute the task
+3. Mark it `[DONE]` with completion date and results pointer
+4. Advance the next `[QUEUED]` to `[NEXT]`
+5. If more tasks remain, continue processing
+6. When queue is empty, enter self-directed mode (see above)
 
 ## After every experiment
 
 1. Write `results/exp_NNN/EXPERIMENT.md` per the standard in program.md
-2. Write `outbox/exp_NNN.md` summary for the orchestrator
+2. Write `outbox/exp_NNN.md` summary
 3. Run `python compare.py --generate-log` to update `memory/EXPERIMENT_LOG.md`
 4. Update `outbox/STATUS.md` with latest results
 5. If you discover a new hard rule, add it to `memory/HARD_RULES.md`
-6. Update `memory/NEXT.md` -- strikethrough completed items
-7. `git add`, `git commit`, `git push`
+6. If paper insight used, add to `memory/INSIGHTS.md` Paper References table
+7. Update `memory/NEXT.md` -- strikethrough completed items
+8. `git add -A && git commit -m "exp_NNN: <description>" && git push`
 
 ## RunPod GPU Training
 
-When a task requires GPU training, use the pod manager instead of training locally:
+When a task requires GPU training (`cuda: true`), use the pod manager:
 
 ```bash
-# Check inbox has tasks, start pod, run full pipeline, auto-stop
 bash scripts/manage_pod.sh
-
-# Check pod status without starting
-bash scripts/manage_pod.sh --status
-
-# Stop pod manually
-bash scripts/manage_pod.sh --stop
-
-# Preview queue without starting pod
-bash scripts/manage_pod.sh --dry-run
 ```
 
 **Required env vars** (set in `~/.bashrc` on VM — never in the repo):
@@ -64,6 +84,28 @@ bash scripts/manage_pod.sh --dry-run
 
 The pod auto-stops after 4 hours via a safety timer in `setup_runpod.sh`.
 
+## Paper Research
+
+When hitting a plateau or when a research task is queued, search for papers:
+
+1. **HF MCP tools**: use Papers Semantic Search (requires HF MCP server in `.claude/settings.json`)
+2. **Direct fetch**: `https://huggingface.co/papers/ARXIV_ID.md` for any paper
+3. **Extract**: architectures, reward designs, training recipes, hyperparameters
+4. **Write**: summary to `research/<topic>.md` with proposed experiment configs
+5. **Update**: `memory/INSIGHTS.md` Paper References table
+
+Research tasks in INBOX use this format:
+```markdown
+### [NEXT] Research — <topic>
+- **Type:** research
+- **Query:** <search terms>
+- **Output:** research/<topic_slug>.md
+```
+
+**Requirements:**
+- HF MCP server configured in `.claude/settings.json`
+- `HF_TOKEN` env var set (in `.claude/settings.local.json` or `~/.bashrc`)
+
 ## Critical rules
 
 - **Read `memory/HARD_RULES.md`** before starting -- never repeat known failures
@@ -71,3 +113,5 @@ The pod auto-stops after 4 hours via a safety timer in `setup_runpod.sh`.
 - All experiment parameters go in YAML configs, not code changes
 - **Do NOT manually edit** `memory/EXPERIMENT_LOG.md` -- it's auto-generated by `compare.py --generate-log`
 - **Always commit and push** before ending your session -- results that aren't pushed are lost
+- When designing experiments, always state a clear hypothesis
+- Prefer single-variable changes from the best previous experiment
