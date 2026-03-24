@@ -1,0 +1,52 @@
+name: exp_043_view_times_progress
+backend: racing
+hypothesis: "Multiplicative reward: view * progress. Zero reward unless BOTH facing the gate AND moving
+  toward it. Facing alone = 0 (no progress component). Moving sideways = 0 (no view component).
+  Only flying toward the gate while looking at it gets reward. gate_in_view_coef=1.0 scales the
+  product. XY-only progress, random gate spawns, train from scratch."
+budget_seconds: 5400
+racing:
+  env_type: race
+  level: level2
+  race_config: level2_attitude.toml
+  total_timesteps: 8000000
+  num_envs: 512
+  num_steps: 8
+  learning_rate: 0.0003
+  anneal_lr: true
+  gamma: 0.97
+  gae_lambda: 0.97
+  update_epochs: 10
+  num_minibatches: 8
+  clip_coef: 0.2
+  ent_coef: 0.01
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  n_obs: 2
+  cuda: true
+  seed: 42
+  # === MULTIPLY MODE ===
+  gate_in_view_coef: 1.0
+  progress_coef: 50.0
+  reward_mode: multiply
+  # === EVERYTHING ELSE ZEROED ===
+  gate_bonus: 0.0
+  proximity_coef: 0.0
+  speed_coef: 0.0
+  rpy_coef: 0.0
+  act_coef: 0.0
+  d_act_th_coef: 0.0
+  d_act_xy_coef: 0.0
+  alt_coef: 0.0
+  survive_coef: 0.0
+  vz_coef: 0.0
+  vz_threshold: 0.5
+  oob_coef: 0.0
+  z_low: -0.05
+  z_high: 2.0
+  max_episode_steps: 1500
+  random_gate_start: true
+  random_gate_ratio: 1.0
+  spawn_offset: 0.75
+  spawn_pos_noise: 0.15
+  spawn_vel_noise: 0.3

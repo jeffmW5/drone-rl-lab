@@ -6,34 +6,30 @@
 
 ## Queue
 
-### [NEXT] Research — Drone Racing RL Literature Review
-- **Type:** research
-- **Query:** drone racing reinforcement learning, gate-relative observations, reward shaping
-- **Output:** research/drone_racing_rl_overview.md
-- **Completed:** 2026-03-23
-- **Result:** Key finding from Swift (Nature 2023) + Song et al. (IROS 2021): obs space must include
-  gate-relative info (distance, bearing, normal). Our 73-dim obs has ZERO gate info — #1 bottleneck.
-  PPO works for drone racing when given correct observations. See research/drone_racing_rl_overview.md.
-
----
-
-### [NEXT] exp_040 -- Gate-Relative Observations + View Reward (paper-informed)
+### [NEXT] exp_041 -- Progress Only (no view reward)
 - **Type:** training
-- **Config:** `configs/exp_040_view_progress.yaml`
+- **Config:** `configs/exp_041_progress_only.yaml`
 - **cuda:** true
-- **Hypothesis:** Literature review (Swift, Song et al.) shows gate-relative observations are critical.
-  Adding gate_in_view reward (dot product of drone forward axis with gate direction) gives the policy
-  directional information it was missing. Combined with progress-only reward (no survive, no altitude,
-  no proximity), the hover trap is eliminated — zero reward for staying still. Train from scratch
-  with mid-air random gate spawns.
-- **Code change:** Added `gate_in_view_coef` to `RaceRewardAndObs` in `train_race.py`
-  (dot product of drone forward axis with direction to gate, clamped to [0,1])
-- **Paper basis:** Swift (Kaufmann et al. Nature 2023), Song et al. (IROS 2021)
-- **Research ref:** research/drone_racing_rl_overview.md
-- **Success criteria:** Drone actively flies toward gates. Any gate passage = breakthrough.
+- **Hypothesis:** Remove view reward entirely. exp_040 showed it saturates at 1.0/step (just face
+  gate), dominating progress. Drone has gate-relative obs — doesn't need a reward to look at gates.
+
+### [QUEUED] exp_042 -- View Scaled Down (0.1)
+- **Type:** training
+- **Config:** `configs/exp_042_view_scaled_down.yaml`
+- **cuda:** true
+- **Hypothesis:** View=0.1 so progress (0.5/step) is 5x stronger. Small directional hint, can't be
+  gamed by sitting still.
+
+### [QUEUED] exp_043 -- View * Progress (multiplicative)
+- **Type:** training
+- **Config:** `configs/exp_043_view_times_progress.yaml`
+- **cuda:** true
+- **Hypothesis:** view * progress — zero unless both facing AND moving toward gate. No free reward
+  for orientation alone.
 
 ---
 
 ## Completed
 
-- exp_028-039: reward tuning, PBRS, entropy, curriculum — all hover-or-crash, 0 gates (see EXPERIMENT_LOG.md)
+- exp_028-039: reward tuning, PBRS, entropy, curriculum — all hover-or-crash, 0 gates
+- exp_040: view+progress, falling exploit (0.95s crash), then XY-only fix still saturates at 7.75 (facing-only exploit)
