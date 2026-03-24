@@ -27,10 +27,10 @@ def parse_tasks(inbox_path: Path = INBOX_PATH) -> list[dict]:
     text = inbox_path.read_text()
     tasks = []
 
-    # Match task blocks: ### [STATUS] Title
+    # Match task blocks: ### [STATUS] Title  (STATUS can be CLAIMED:agent-id)
     # Followed by optional metadata lines and body until next ### or end
     pattern = re.compile(
-        r"^###\s+\[(\w+)\]\s+(.+?)$"
+        r"^###\s+\[([\w:.\-]+)\]\s+(.+?)$"
         r"(.*?)(?=^###|\Z)",
         re.MULTILINE | re.DOTALL,
     )
@@ -60,7 +60,10 @@ def parse_tasks(inbox_path: Path = INBOX_PATH) -> list[dict]:
 
 
 def get_next_task(tasks: list[dict]) -> dict | None:
-    """Get the first actionable task ([NEXT], or first [QUEUED] with no unmet deps)."""
+    """Get the first actionable task ([NEXT], or first [QUEUED] with no unmet deps).
+
+    Skips tasks that are [DONE] or [CLAIMED:*] (in progress by another agent).
+    """
     for t in tasks:
         if t["status"] == "NEXT":
             return t
@@ -73,6 +76,11 @@ def get_next_task(tasks: list[dict]) -> dict | None:
                 return t
 
     return None
+
+
+def is_claimed(task: dict) -> bool:
+    """Check if a task is claimed by any agent."""
+    return task["status"].startswith("CLAIMED:")
 
 
 def advance_queue(inbox_path: Path = INBOX_PATH) -> str:
@@ -162,8 +170,12 @@ def main():
             print("Queue is empty.")
             return
         for t in tasks:
-            marker = {"DONE": "x", "NEXT": ">", "QUEUED": " "}.get(t["status"], "?")
-            print(f"  [{marker}] [{t['status']}] {t['title']}")
+            status = t["status"]
+            if status.startswith("CLAIMED:"):
+                marker = "~"
+            else:
+                marker = {"DONE": "x", "NEXT": ">", "QUEUED": " "}.get(status, "?")
+            print(f"  [{marker}] [{status}] {t['title']}")
 
 
 if __name__ == "__main__":

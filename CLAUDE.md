@@ -50,6 +50,35 @@ After reading memory, decide what to do:
    - Design config with clear hypothesis (single-variable change preferred)
    - Add to INBOX and execute
 
+## Parallel Agent Coordination
+
+Multiple agents can run simultaneously. Use these tools to avoid conflicts:
+
+```bash
+# Check what other agents are doing
+python3 scripts/agent_lock.py status
+
+# Claim the next available task (atomic via git push)
+python3 scripts/agent_lock.py claim <YOUR_AGENT_ID>
+
+# Update your heartbeat + status
+python3 scripts/agent_lock.py heartbeat <YOUR_AGENT_ID> --task "exp_NNN" --status "training"
+
+# Release task when done (marks [DONE] in INBOX)
+python3 scripts/agent_lock.py release <YOUR_AGENT_ID>
+
+# Reclaim tasks from dead agents (30+ min stale)
+python3 scripts/agent_lock.py reclaim-stale <YOUR_AGENT_ID>
+```
+
+**Rules:**
+- ALWAYS claim a task before working on it
+- ALWAYS release when done
+- ALWAYS `git pull --rebase` before committing
+- Each agent writes to its OWN `results/exp_NNN/` and `outbox/exp_NNN.md`
+- For shared files (HARD_RULES, NEXT, INSIGHTS): pull first, append only
+- Tasks with `[CLAIMED:agent-id]` in INBOX are in-progress — skip them
+
 ## Queue processing
 
 1. Find first `[NEXT]` task (or first `[QUEUED]` with no unmet dependencies)
