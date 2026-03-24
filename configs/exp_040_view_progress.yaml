@@ -1,0 +1,55 @@
+name: exp_040_view_progress
+backend: racing
+hypothesis: "Radical simplification: only two reward signals — gate_in_view (face the gate) and
+  progress (move toward it). No survive, altitude, RPY, speed, gate bonus, or proximity. Always
+  spawn mid-air at random gates (no takeoff needed). This eliminates the hover trap entirely since
+  there is zero reward for staying still. The drone MUST face and approach gates to get any reward.
+  Training from scratch (no pretrained checkpoint) since old policies are completely misaligned.
+  gate_in_view_coef=1.0 gives 0-1/step for alignment. progress_coef=50 gives ~0.5/step at 0.01m/step
+  approach speed. Two balanced, complementary signals."
+budget_seconds: 5400
+racing:
+  env_type: race
+  level: level2
+  race_config: level2_attitude.toml
+  total_timesteps: 8000000
+  num_envs: 512
+  num_steps: 8
+  learning_rate: 0.0003
+  anneal_lr: true
+  gamma: 0.97
+  gae_lambda: 0.97
+  update_epochs: 10
+  num_minibatches: 8
+  clip_coef: 0.2
+  ent_coef: 0.01
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  n_obs: 2
+  cuda: true
+  seed: 42
+  # === THE ONLY TWO REWARD SIGNALS ===
+  gate_in_view_coef: 1.0
+  progress_coef: 50.0
+  # === EVERYTHING ELSE ZEROED ===
+  gate_bonus: 0.0
+  proximity_coef: 0.0
+  speed_coef: 0.0
+  rpy_coef: 0.0
+  act_coef: 0.0
+  d_act_th_coef: 0.0
+  d_act_xy_coef: 0.0
+  alt_coef: 0.0
+  survive_coef: 0.0
+  vz_coef: 0.0
+  vz_threshold: 0.5
+  oob_coef: 0.0
+  z_low: -0.05
+  z_high: 2.0
+  max_episode_steps: 1500
+  # === ALWAYS SPAWN AT RANDOM GATES ===
+  random_gate_start: true
+  random_gate_ratio: 1.0
+  spawn_offset: 0.75
+  spawn_pos_noise: 0.15
+  spawn_vel_noise: 0.3
