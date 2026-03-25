@@ -1,0 +1,56 @@
+name: exp_049_survive_008
+backend: racing
+hypothesis: "exp_046 (survive=0.05, tight logstd) produced best benchmark: 1.3s flight toward gate.
+  exp_047 (survive=0.15) was hover trap. Try survive=0.08 — midpoint. With tight logstd, the mean
+  must learn precisely. survive=0.08 × 8 steps = 0.64/rollout (vs hover ceiling ~5.2). Navigation
+  at 30+ reward still dominates. The extra 0.03/step survive should buy ~0.5s more flight time."
+budget_seconds: 3600
+racing:
+  env_type: race
+  level: level2
+  race_config: level2_attitude.toml
+  total_timesteps: 20000000
+  num_envs: 512
+  num_steps: 8
+  learning_rate: 0.0003
+  anneal_lr: true
+  gamma: 0.97
+  gae_lambda: 0.97
+  update_epochs: 10
+  num_minibatches: 8
+  clip_coef: 0.2
+  ent_coef: 0.01
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  n_obs: 2
+  cuda: true
+  seed: 42
+  # === TIGHT LOGSTD CLAMP ===
+  max_logstd: -1.0
+  # === SLIGHTLY MORE STABILITY ===
+  survive_coef: 0.08
+  alt_coef: 0.5
+  z_low: -0.05
+  z_high: 2.0
+  # === MAXIMUM PROGRESS ===
+  progress_coef: 50.0
+  gate_bonus: 10.0
+  speed_coef: 0.5
+  gate_in_view_coef: 0.0
+  reward_mode: add
+  # === PENALTIES OFF ===
+  proximity_coef: 0.0
+  rpy_coef: 0.0
+  act_coef: 0.0
+  d_act_th_coef: 0.0
+  d_act_xy_coef: 0.0
+  vz_coef: 0.0
+  vz_threshold: 0.5
+  oob_coef: 0.0
+  # === SPAWNS ===
+  max_episode_steps: 1500
+  random_gate_start: true
+  random_gate_ratio: 1.0
+  spawn_offset: 0.75
+  spawn_pos_noise: 0.15
+  spawn_vel_noise: 0.3
