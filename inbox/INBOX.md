@@ -6,13 +6,33 @@
 
 ## Queue
 
+### [IN PROGRESS] exp_052 -- Action Smoothness + Tight Logstd
+- **Hypothesis:** exp_046 flies 1.3s toward gate but crashes from unstable control. Action smoothness penalties (d_act_th=0.4, d_act_xy=0.5, rpy=0.06) stabilize flight without hover trap.
+- **Training on RunPod** — started 2026-03-25 ~08:20 UTC, budget 3600s
+- Config: `configs/exp_052_smooth_actions.yaml`
+
+### [DONE 2026-03-25] exp_049 -- Survive=0.08 + Tight Logstd
+- **Result:** FAILURE — 0 gates, 0.8s crash. Training peaked at 38.2 (ALL-TIME HIGH) but v_loss collapsed, final reward 21.0. survive=0.08 causes post-breakout instability.
+- See `results/exp_049_survive_008/EXPERIMENT.md`
+
+### [DONE 2026-03-25] exp_048 -- Short Episodes + Tight Logstd + Survive=0.15
+- **Result:** FAILURE — 0 gates, 0.54s crash, reward 18.88. Short episodes → too aggressive.
+- See `results/exp_048_short_ep_tight_logstd/EXPERIMENT.md`
+
+### [DONE 2026-03-25] exp_047 -- Tight Logstd + Survive=0.15
+- **Result:** FAILURE — hover trap, reward 10.0 flat. survive×1500=225 dominates gate bonus.
+- See `results/exp_047_tight_logstd_more_survive/EXPERIMENT.md`
+
+### [DONE 2026-03-24] exp_046 -- Tight Logstd (max_logstd=-1.0)
+- **Result:** BEST BENCHMARK — 1.2-1.6s consistent flights toward gate, 29.2 train reward (peak 39.3)
+- See `results/exp_046_tight_logstd/EXPERIMENT.md`
+
 ### [DONE 2026-03-24] exp_045 -- Logstd Clamp (max_logstd=0.5)
 - **Result:** FAILURE — 0 gates, 0.7-2.2s. Pitch std clamped 90→1.65, still too wide.
 - See `results/exp_045_logstd_clamp/EXPERIMENT.md`
 
 ### [DONE 2026-03-24] exp_044 -- Min Stability + Max Progress (20M steps)
 - **Result:** Best training ever (26.38 mean, 37 peak) but FAILURE at benchmark — 0 gates, 0.9s crash
-- **Key finding:** Reward design solved. Problem is deterministic mean policy crashes (exploration-exploitation gap)
 - See `results/exp_044_min_stability_max_progress/EXPERIMENT.md`
 
 ### [DONE 2026-03-24] exp_041 -- Progress Only (no view reward)

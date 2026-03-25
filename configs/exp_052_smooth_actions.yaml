@@ -1,0 +1,58 @@
+name: exp_052_smooth_actions
+backend: racing
+hypothesis: "exp_046 (tight logstd, survive=0.05) navigates 1.3s toward gate but crashes 0.5s short.
+  The crash is caused by unstable control (large action changes). Adding action smoothness penalties
+  (d_act_th_coef=0.4, d_act_xy_coef=0.5) should stabilize flight without creating hover trap:
+  smooth actions apply equally to hover and navigation, unlike survive which differentially rewards
+  hover. Also add small rpy_coef=0.06 to penalize excessive orientation angles.
+  These were the original defaults in train_rl.py before we zeroed them out."
+budget_seconds: 3600
+racing:
+  env_type: race
+  level: level2
+  race_config: level2_attitude.toml
+  total_timesteps: 20000000
+  num_envs: 512
+  num_steps: 8
+  learning_rate: 0.0003
+  anneal_lr: true
+  gamma: 0.97
+  gae_lambda: 0.97
+  update_epochs: 10
+  num_minibatches: 8
+  clip_coef: 0.2
+  ent_coef: 0.01
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  n_obs: 2
+  cuda: true
+  seed: 42
+  # === TIGHT LOGSTD CLAMP ===
+  max_logstd: -1.0
+  # === SAME SURVIVE AS EXP_046 ===
+  survive_coef: 0.05
+  alt_coef: 0.5
+  z_low: -0.05
+  z_high: 2.0
+  # === MAXIMUM PROGRESS ===
+  progress_coef: 50.0
+  gate_bonus: 10.0
+  speed_coef: 0.5
+  gate_in_view_coef: 0.0
+  reward_mode: add
+  # === ACTION SMOOTHNESS (stabilize flight) ===
+  proximity_coef: 0.0
+  rpy_coef: 0.06
+  act_coef: 0.0
+  d_act_th_coef: 0.4
+  d_act_xy_coef: 0.5
+  vz_coef: 0.0
+  vz_threshold: 0.5
+  oob_coef: 0.0
+  # === SPAWNS ===
+  max_episode_steps: 1500
+  random_gate_start: true
+  random_gate_ratio: 1.0
+  spawn_offset: 0.75
+  spawn_pos_noise: 0.15
+  spawn_vel_noise: 0.3

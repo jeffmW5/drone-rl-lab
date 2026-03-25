@@ -1,43 +1,41 @@
-# Status -- Last Updated 2026-03-24
+# Status -- Last Updated 2026-03-25
 
 ## Last Completed
-- **exp_044** -- Min stability + max progress, 20M steps, random mid-air spawns
-- **Training reward**: 26.384 ± 0.724 (peaked at 37 — HIGHEST EVER)
-- **Benchmark L2**: 0 gates, 0.7-1.4s flight (6 runs)
-- **Finding:** Reward design is SOLVED — stochastic policy navigates and likely passes gates
-  during training (reward 37 impossible without gates). But deterministic mean crashes at
-  deployment. The problem is now purely policy optimization / exploration-exploitation gap.
+- **exp_049** -- survive=0.08 + tight logstd (binary search)
+- **Training reward**: 21.017 ± 1.098 (FINAL) — peaked at 38.20 (iter 690) then collapsed
+- **Benchmark L2**: 0 gates, 0.80s avg flight (WORSE than exp_046's 1.3s)
+- **Finding:** survive=0.08 causes post-breakout instability. Training peaks then collapses
+  (v_loss spikes to 608). Survive binary search complete: 0.05 is optimal.
 
-## Approaches Attempted
-1. **Reward tuning** (exp_026-037): survive, speed, PBRS sweeps — all firmly hover-or-crash
-2. **Entropy regularization** (exp_038): destroys hover → crash, no navigation
-3. **Short episodes** (exp_039): bistable (hover+crash), edge of transition, still 0 gates
-4. **View+progress from mid-air** (exp_040): falling exploit
-5. **Progress/view variants** (exp_041-043): all crash in 0.5s without survival incentive
-6. **Min stability + max progress** (exp_044): best training ever, still crashes at benchmark
+## In Progress
+- **exp_052** -- Action smoothness penalties + tight logstd (max_logstd=-1.0)
+  - Hypothesis: exp_046's 1.3s crash is unstable control near gate. d_act_th=0.4, d_act_xy=0.5, rpy=0.06 stabilize flight.
+  - Training on RunPod, PID 1666050, started ~08:17 UTC
 
-## Experiment Summary (recent)
-| Exp | Train Reward | Gates | Flight Time | Key Change |
-|-----|-------------|-------|-------------|------------|
-| 040 | 7.75 | 0 | 0.52s | view+progress, falling exploit |
-| 041 | 7.74 | 0 | 0.52s | progress only (no view) |
-| 042 | 7.74 | 0 | 0.52s | view=0.1 + progress |
-| 043 | 7.75 | 0 | 0.52s | view*progress multiplicative |
-| **044** | **26.38 (peak 37)** | **0** | **0.9s** | **survive=0.05 + progress + gate_bonus (BEST TRAINING EVER)** |
+## Tight Logstd Series (exp_045-052)
+| Exp | Key Change | Train Reward | Flight Time | Result |
+|-----|-----------|-------------|-------------|--------|
+| 045 | max_logstd=0.5 | 26.50 | 0.7-2.2s | std=1.65 still too wide |
+| **046** | **max_logstd=-1.0, survive=0.05** | **29.20 (peak 39)** | **1.2-1.6s** | **BEST — flies toward gate** |
+| 047 | survive=0.15 | 10.01 | 0.76s | Hover trap (survive×1500=225) |
+| 048 | short episodes (200 steps) | 18.88 | 0.54s | Too aggressive |
+| 049 | survive=0.08 | 21.02 (peak 38.2) | 0.80s | Unstable — v_loss collapse |
+| 050 | gate_bonus=100, survive=0.06 | — | — | QUEUED |
+| 051 | num_steps=64, gate_bonus=50 | — | — | QUEUED |
+| 052 | action smoothness penalties | training... | ? | IN PROGRESS |
 
-## Next Steps — Policy Optimization Problem
-Reward design is done. Need to fix the deterministic mean policy:
-1. **Deploy stochastic policy** — add noise at benchmark time
-2. **Larger network** — [512,512,256,128] per Pasumarti 2024 (needs code change)
-3. **Curriculum** — hover → navigate transition
-4. **SAC** — entropy-maximizing, no exploration/exploitation gap
+## Key Insight
+**survive_coef binary search COMPLETE:** 0.05 is optimal. Higher values either hover-trap (0.15)
+or cause post-breakout instability (0.08). The path forward is stabilizing exp_046's 1.3s
+flight to reach the gate, not increasing survive. Action smoothness (exp_052) and longer
+rollouts (exp_051) are the two most promising approaches.
 
 ## Current Best
-- **Racing L2 (lap time):** exp_016 -- 13.49s, 2/10 finishes
-- **Racing L2 (RaceCoreEnv flight):** exp_034 -- 0/5 finishes, 0 gates, **29.98s perfect hover**
-- **Racing L2 (RaceCoreEnv gates):** exp_028 -- 0/5 finishes, **0.2 avg gates**, 0.94s
-- **Racing L2 (training reward):** exp_044 -- 26.38 mean, 37 peak (BEST EVER, but 0 benchmark gates)
+- **Racing L2 (benchmark):** exp_046 -- 0 gates, **1.3s consistent flights toward gate**
+- **Racing L2 (training reward):** exp_049 -- peak 38.20 (but collapsed); exp_046 -- 29.20 stable
+- **Racing L2 (lap time, legacy):** exp_016 -- 13.49s, 2/10 finishes
 
 ## Queue Status
-- Completed: exp_022-044
-- In progress: designing next experiment
+- Completed: exp_022-049
+- In progress: exp_052 (training on RunPod)
+- Queued: exp_050 (big gate bonus), exp_051 (longer rollouts)

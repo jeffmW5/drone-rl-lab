@@ -1,0 +1,58 @@
+name: exp_050_big_gate_bonus
+backend: racing
+hypothesis: "exp_046 (survive=0.05, tight logstd) flies 1.3s toward gate but crashes 0.5s short.
+  Instead of increasing survive (which creates hover trap), increase gate_bonus from 10 to 100.
+  This makes reaching a gate MASSIVELY rewarding. The policy should learn to be more precise
+  about reaching the gate before crashing. survive=0.05 keeps hover ceiling low (75 undiscounted),
+  gate_bonus=100 makes a single gate passage worth more than 1s of hovering. Also try survive=0.06
+  (tiny increase) — the extra 0.01/step × 65 steps to gate = 0.65 total, won't create hover trap."
+budget_seconds: 3600
+racing:
+  env_type: race
+  level: level2
+  race_config: level2_attitude.toml
+  total_timesteps: 20000000
+  num_envs: 512
+  num_steps: 8
+  learning_rate: 0.0003
+  anneal_lr: true
+  gamma: 0.97
+  gae_lambda: 0.97
+  update_epochs: 10
+  num_minibatches: 8
+  clip_coef: 0.2
+  ent_coef: 0.01
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  n_obs: 2
+  cuda: true
+  seed: 42
+  # === TIGHT LOGSTD CLAMP ===
+  max_logstd: -1.0
+  # === SURVIVE — tiny increase from 046 ===
+  survive_coef: 0.06
+  alt_coef: 0.5
+  z_low: -0.05
+  z_high: 2.0
+  # === BIG GATE BONUS ===
+  progress_coef: 50.0
+  gate_bonus: 100.0
+  speed_coef: 0.5
+  gate_in_view_coef: 0.0
+  reward_mode: add
+  # === PENALTIES OFF ===
+  proximity_coef: 0.0
+  rpy_coef: 0.0
+  act_coef: 0.0
+  d_act_th_coef: 0.0
+  d_act_xy_coef: 0.0
+  vz_coef: 0.0
+  vz_threshold: 0.5
+  oob_coef: 0.0
+  # === SPAWNS ===
+  max_episode_steps: 1500
+  random_gate_start: true
+  random_gate_ratio: 1.0
+  spawn_offset: 0.75
+  spawn_pos_noise: 0.15
+  spawn_vel_noise: 0.3
