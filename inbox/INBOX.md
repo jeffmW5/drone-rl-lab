@@ -6,10 +6,14 @@
 
 ## Queue
 
-### [IN PROGRESS] exp_053 -- Farther Spawn (offset=1.5)
-- **Hypothesis:** DOMAIN GAP: training spawns 0.75m from gate mid-air, benchmark starts 2.06m away at ground level. Doubling spawn_offset to 1.5m trains longer flights.
-- **Training on RunPod** — started 2026-03-25 10:26 UTC, budget 3600s, PID 1855701
-- Config: `configs/exp_053_farther_spawn.yaml`
+### [IN PROGRESS] exp_054 -- Race Start (no random gates)
+- **Hypothesis:** VERTICAL domain gap (ground z=0.01 vs gate z=0.7). Train from actual race start position. Eliminates all domain gaps (altitude + distance). Sparser reward but perfect benchmark alignment.
+- **Training on RunPod** — started 2026-03-25 ~11:27 UTC, budget 3600s
+- Config: `configs/exp_054_race_start.yaml`
+
+### [DONE 2026-03-25] exp_053 -- Farther Spawn (offset=1.5)
+- **Result:** FAILURE — 0 gates, 0.70s (WORSE than exp_046). Farther horizontal spawn doesn't fix vertical domain gap.
+- See `results/exp_053_farther_spawn/EXPERIMENT.md`
 
 ### [DONE 2026-03-25] exp_051 -- Longer Rollouts (num_steps=64)
 - **Result:** FAILURE — 0 gates, 1.22s flight. Same crash pattern as exp_046/052 despite 64-step rollouts. Domain gap is the real bottleneck.

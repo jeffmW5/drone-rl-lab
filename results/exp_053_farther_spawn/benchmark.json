@@ -1,0 +1,40 @@
+{
+  "experiment": "exp_053_farther_spawn",
+  "benchmarks": [
+    {
+      "level": "level2",
+      "controller": "attitude_rl_race.py",
+      "n_runs": 5,
+      "results": [
+        {
+          "time": 0.64,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 0.72,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 0.78,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 0.62,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 0.72,
+          "finished": false,
+          "gates": 0
+        }
+      ],
+      "avg_time": 0.7,
+      "finish_rate": 0.0,
+      "avg_gates": 0.0
+    }
+  ]
+}
