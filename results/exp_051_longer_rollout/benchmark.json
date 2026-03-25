@@ -1,0 +1,40 @@
+{
+  "experiment": "exp_051_longer_rollout",
+  "benchmarks": [
+    {
+      "level": "level2",
+      "controller": "attitude_rl_race.py",
+      "n_runs": 5,
+      "results": [
+        {
+          "time": 1.32,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.16,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.24,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.26,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.12,
+          "finished": false,
+          "gates": 0
+        }
+      ],
+      "avg_time": 1.22,
+      "finish_rate": 0.0,
+      "avg_gates": 0.0
+    }
+  ]
+}

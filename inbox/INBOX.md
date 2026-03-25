@@ -6,10 +6,14 @@
 
 ## Queue
 
-### [IN PROGRESS] exp_051 -- Longer Rollouts (num_steps=64)
-- **Hypothesis:** 8-step rollouts can't observe full 65-step flight to gate. 64-step rollouts let GAE directly see navigation + gate bonus. gate_bonus=50 (5x increase).
-- **Training on RunPod** — started 2026-03-25 09:20 UTC, budget 3600s, PID 1754832
-- Config: `configs/exp_051_longer_rollout.yaml`
+### [IN PROGRESS] exp_053 -- Farther Spawn (offset=1.5)
+- **Hypothesis:** DOMAIN GAP: training spawns 0.75m from gate mid-air, benchmark starts 2.06m away at ground level. Doubling spawn_offset to 1.5m trains longer flights.
+- **Training on RunPod** — started 2026-03-25 10:26 UTC, budget 3600s, PID 1855701
+- Config: `configs/exp_053_farther_spawn.yaml`
+
+### [DONE 2026-03-25] exp_051 -- Longer Rollouts (num_steps=64)
+- **Result:** FAILURE — 0 gates, 1.22s flight. Same crash pattern as exp_046/052 despite 64-step rollouts. Domain gap is the real bottleneck.
+- See `results/exp_051_longer_rollout/EXPERIMENT.md`
 
 ### [DONE 2026-03-25] exp_052 -- Action Smoothness + Tight Logstd
 - **Result:** FAILURE — 0 gates, 1.19s flight. Training reward ALL-TIME HIGH (45.2) but benchmark same as exp_046. Action instability is NOT the crash cause.
