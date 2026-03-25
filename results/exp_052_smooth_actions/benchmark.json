@@ -1,0 +1,40 @@
+{
+  "experiment": "exp_052_smooth_actions",
+  "benchmarks": [
+    {
+      "level": "level2",
+      "controller": "attitude_rl_race.py",
+      "n_runs": 5,
+      "results": [
+        {
+          "time": 1.34,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.14,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.34,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.12,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.02,
+          "finished": false,
+          "gates": 0
+        }
+      ],
+      "avg_time": 1.19,
+      "finish_rate": 0.0,
+      "avg_gates": 0.0
+    }
+  ]
+}

@@ -6,10 +6,14 @@
 
 ## Queue
 
-### [IN PROGRESS] exp_052 -- Action Smoothness + Tight Logstd
-- **Hypothesis:** exp_046 flies 1.3s toward gate but crashes from unstable control. Action smoothness penalties (d_act_th=0.4, d_act_xy=0.5, rpy=0.06) stabilize flight without hover trap.
-- **Training on RunPod** — started 2026-03-25 ~08:20 UTC, budget 3600s
-- Config: `configs/exp_052_smooth_actions.yaml`
+### [IN PROGRESS] exp_051 -- Longer Rollouts (num_steps=64)
+- **Hypothesis:** 8-step rollouts can't observe full 65-step flight to gate. 64-step rollouts let GAE directly see navigation + gate bonus. gate_bonus=50 (5x increase).
+- **Training on RunPod** — started 2026-03-25 09:20 UTC, budget 3600s, PID 1754832
+- Config: `configs/exp_051_longer_rollout.yaml`
+
+### [DONE 2026-03-25] exp_052 -- Action Smoothness + Tight Logstd
+- **Result:** FAILURE — 0 gates, 1.19s flight. Training reward ALL-TIME HIGH (45.2) but benchmark same as exp_046. Action instability is NOT the crash cause.
+- See `results/exp_052_smooth_actions/EXPERIMENT.md`
 
 ### [DONE 2026-03-25] exp_049 -- Survive=0.08 + Tight Logstd
 - **Result:** FAILURE — 0 gates, 0.8s crash. Training peaked at 38.2 (ALL-TIME HIGH) but v_loss collapsed, final reward 21.0. survive=0.08 causes post-breakout instability.
