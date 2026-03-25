@@ -6,14 +6,9 @@
 
 ## Queue
 
-### [NEXT] exp_045 -- Logstd Clamp (max_logstd=0.5)
-- **Type:** training
-- **Config:** `configs/exp_045_logstd_clamp.yaml`
-- **cuda:** true
-- **Code change:** Added `max_logstd` param to Agent in `train_rl.py` — clamps actor_logstd
-- **Hypothesis:** Same as exp_044 but with max_logstd=0.5 (std ≤ 1.65). exp_044's pitch std
-  exploded to 90, making the mean meaningless. Clamping forces the policy to learn a meaningful
-  mean action. If the mean can learn, the deterministic policy should navigate at benchmark.
+### [DONE 2026-03-24] exp_045 -- Logstd Clamp (max_logstd=0.5)
+- **Result:** FAILURE — 0 gates, 0.7-2.2s. Pitch std clamped 90→1.65, still too wide.
+- See `results/exp_045_logstd_clamp/EXPERIMENT.md`
 
 ### [DONE 2026-03-24] exp_044 -- Min Stability + Max Progress (20M steps)
 - **Result:** Best training ever (26.38 mean, 37 peak) but FAILURE at benchmark — 0 gates, 0.9s crash
