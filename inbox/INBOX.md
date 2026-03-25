@@ -6,10 +6,14 @@
 
 ## Queue
 
-### [IN PROGRESS] exp_054 -- Race Start (no random gates)
-- **Hypothesis:** VERTICAL domain gap (ground z=0.01 vs gate z=0.7). Train from actual race start position. Eliminates all domain gaps (altitude + distance). Sparser reward but perfect benchmark alignment.
-- **Training on RunPod** — started 2026-03-25 ~11:27 UTC, budget 3600s
-- Config: `configs/exp_054_race_start.yaml`
+### [IN PROGRESS] exp_055 -- Race Start + Takeoff Incentive
+- **Hypothesis:** exp_054 stuck at ground (z_low=-0.05 gives full alt_reward at z=0.01). Fix: z_low=0.5, alt_coef=1.0 penalizes ground sitting (+6.17/rollout incentive to climb).
+- **Training on RunPod** — started 2026-03-25 ~12:30 UTC, budget 3600s
+- Config: `configs/exp_055_race_start_takeoff.yaml`
+
+### [DONE 2026-03-25] exp_054 -- Race Start (no random gates)
+- **Result:** FAILURE — stuck at reward 8.89 for 14.5M steps (ground hover trap). z_low=-0.05 gives full alt reward at z=0.01.
+- See `results/exp_054_race_start/EXPERIMENT.md`
 
 ### [DONE 2026-03-25] exp_053 -- Farther Spawn (offset=1.5)
 - **Result:** FAILURE — 0 gates, 0.70s (WORSE than exp_046). Farther horizontal spawn doesn't fix vertical domain gap.
