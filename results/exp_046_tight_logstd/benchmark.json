@@ -1,0 +1,40 @@
+{
+  "experiment": "exp_046_tight_logstd",
+  "benchmarks": [
+    {
+      "level": "level2",
+      "controller": "attitude_rl_race.py",
+      "n_runs": 5,
+      "results": [
+        {
+          "time": 1.36,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.24,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.58,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.4,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.28,
+          "finished": false,
+          "gates": 0
+        }
+      ],
+      "avg_time": 1.37,
+      "finish_rate": 0.0,
+      "avg_gates": 0.0
+    }
+  ]
+}
