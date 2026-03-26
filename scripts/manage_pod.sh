@@ -298,7 +298,7 @@ run_pipeline_on_pod() {
             fi
 
             # Setup if not already done
-            if ! python3 -c \"import jax\" 2>/dev/null; then
+            if [ ! -f /root/.drone_rl_runpod_setup_complete ]; then
                 bash /root/drone-rl-lab/scripts/setup_runpod.sh
             else
                 echo \"[skip] Setup already done.\"

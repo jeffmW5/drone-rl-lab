@@ -107,6 +107,8 @@ When a task requires GPU training (`cuda: true`), use the pod manager:
 bash scripts/manage_pod.sh
 ```
 
+Fresh pods are bootstrapped by `scripts/setup_runpod.sh` via the fork's Pixi GPU environment. On-pod training commands should use `drone-rl-gpu-python ...` rather than a raw `python ...` so the local editable `lsy_drone_racing` checkout and Pixi-managed dependencies are used consistently.
+
 **Required env vars** (set in `~/.bashrc` on VM — never in the repo):
 - `RUNPOD_API_KEY` — RunPod API key
 - `RUNPOD_POD_ID` — pod ID for "desirable_brown_mongoose" (l4lu7w9i2rvfxm)

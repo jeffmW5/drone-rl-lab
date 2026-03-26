@@ -155,11 +155,12 @@ auto-queues a research task. The executor uses `/research <topic>` to:
 
 ## Racing backend setup
 
-To use the racing backend, lsy_drone_racing must be installed:
+To use the racing backend locally, lsy_drone_racing must be installed. For ad-hoc local installs:
 ```bash
 cd /media/lsy_drone_racing    # or wherever the fork is cloned
 pip install -e ".[sim,rl]"
 ```
+On fresh RunPod pods, prefer `bash scripts/setup_runpod.sh`, which bootstraps the fork through Pixi and adds the RL extras inside the Pixi GPU environment.
 
 ---
 
@@ -174,13 +175,13 @@ For serious training runs, use a cloud GPU via RunPod.
 4. SSH in and run:
 ```bash
 bash scripts/setup_deploy_key.sh    # first time only — follow instructions to add key on GitHub
-bash scripts/setup_runpod.sh        # installs everything, starts 4h auto-shutdown timer
+bash scripts/setup_runpod.sh        # installs Pixi GPU env + RL extras, starts 4h auto-shutdown timer
 ```
 
 ### Training on GPU
 ```bash
 cd /root/drone-rl-lab
-python train.py configs/exp_011_racing_gpu.yaml
+drone-rl-gpu-python train.py configs/exp_011_racing_gpu.yaml
 ```
 
 GPU configs use `cuda: true` and `num_envs: 1024` (16x more parallel envs than CPU).

@@ -84,8 +84,8 @@ python plot.py
 
 ```bash
 # On a fresh RunPod pod (RTX 3090, PyTorch template):
-bash scripts/setup_runpod.sh        # installs everything, 4h auto-shutdown
-python train.py configs/exp_020_gpu_gate_traj_long.yaml
+bash scripts/setup_runpod.sh        # installs Pixi GPU env + RL extras, 4h auto-shutdown
+drone-rl-gpu-python train.py configs/exp_020_gpu_gate_traj_long.yaml
 bash scripts/sync_results.sh "description"
 # STOP YOUR POD
 ```
@@ -139,7 +139,7 @@ drone-rl-lab/
     ├── benchmark.py        # Structured MuJoCo sim benchmarking
     ├── parse_queue.py      # INBOX queue parser
     ├── watch_results.sh    # Windows-side git polling
-    ├── setup_runpod.sh     # RunPod GPU setup
+    ├── setup_runpod.sh     # RunPod GPU setup (Pixi-first)
     ├── setup_deploy_key.sh # GitHub deploy key setup
     └── sync_results.sh     # Pull results from RunPod
 ```
