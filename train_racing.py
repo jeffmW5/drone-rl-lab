@@ -230,6 +230,16 @@ def run(config_path: str):
             "spawn_offset": racing_cfg.get("spawn_offset", 0.75),
             "spawn_pos_noise": racing_cfg.get("spawn_pos_noise", 0.15),
             "spawn_vel_noise": racing_cfg.get("spawn_vel_noise", 0.3),
+            # exp_056: bilateral progress
+            "bilateral_progress": racing_cfg.get("bilateral_progress", False),
+            # exp_057: body-frame gate observations
+            "body_frame_obs": racing_cfg.get("body_frame_obs", False),
+            # exp_058: soft-collision curriculum
+            "soft_collision": racing_cfg.get("soft_collision", False),
+            "soft_collision_penalty": racing_cfg.get("soft_collision_penalty", 5.0),
+            "soft_collision_steps": racing_cfg.get("soft_collision_steps", 5000000),
+            # exp_059: asymmetric actor-critic
+            "asymmetric_critic": racing_cfg.get("asymmetric_critic", False),
         }
         race_config = racing_cfg.get("race_config", f"{level}_attitude.toml")
         envs = make_race_envs(
@@ -258,7 +268,13 @@ def run(config_path: str):
     # ── Create agent ──────────────────────────────────────────────────────────
     obs_shape = envs.single_observation_space.shape
     act_shape = envs.single_action_space.shape
-    agent = Agent(obs_shape, act_shape).to(device)
+    if racing_cfg.get("asymmetric_critic", False):
+        from lsy_drone_racing.control.train_rl import AsymmetricAgent
+        actor_obs_dim = getattr(envs, 'actor_obs_dim', obs_shape[0])
+        agent = AsymmetricAgent(obs_shape, act_shape, actor_obs_dim).to(device)
+        print(f"[INFO] AsymmetricAgent: actor={actor_obs_dim}D, total={obs_shape[0]}D")
+    else:
+        agent = Agent(obs_shape, act_shape).to(device)
 
     # Load pretrained checkpoint if specified (for fine-tuning)
     pretrained_ckpt = racing_cfg.get("pretrained_ckpt", None)
