@@ -6,6 +6,27 @@
 
 ## Queue
 
+### [IMPLEMENTED 2026-03-25] exp_057 -- Gate Observations in Body Frame
+- **Status:** Code implemented, config created. Ready to train.
+- **What was done:** `body_frame_obs=true` flag. Transforms gate rel positions + normals to drone body frame. Obs: 57D→55D (normal(3) replaces quat(4) per gate). Inference controller updated with `DRONE_RL_BODY_FRAME_OBS` env var.
+- **Config:** `configs/exp_057_body_frame_obs.yaml`
+
+### [IMPLEMENTED 2026-03-25] exp_058 -- Soft-Collision Curriculum (2-phase)
+- **Status:** Code implemented, config created. Ready to train.
+- **What was done:** `soft_collision=true` flag. Phase 1 (0-10M steps): crashes suppressed, -5.0 penalty + respawn. Phase 2 (10M+): hard termination restored. Env autoreset + random_gate_start handles respawn.
+- **Config:** `configs/exp_058_soft_collision.yaml`
+
+### [IMPLEMENTED 2026-03-25] exp_059 -- Asymmetric Actor-Critic
+- **Status:** Code implemented, config created. Ready to train.
+- **What was done:** `asymmetric_critic=true` flag. `AsymmetricAgent` class in train_rl.py. `AppendPrivilegedObs` wrapper adds all gate pos/quat (28D) to obs. Actor uses 57D, critic uses 85D. Inference auto-detects and loads only actor weights.
+- **Config:** `configs/exp_059_asymmetric_critic.yaml`
+
+### [NOTE] All three are structural changes based on literature
+- Recommended training order: exp_057 (body-frame obs), then exp_058 (soft-collision), then exp_059 (asymmetric critic).
+- Can be combined in future experiments (e.g., body_frame_obs + asymmetric_critic).
+
+---
+
 ### [IN PROGRESS] exp_055 -- Race Start + Takeoff Incentive
 - **Hypothesis:** exp_054 stuck at ground (z_low=-0.05 gives full alt_reward at z=0.01). Fix: z_low=0.5, alt_coef=1.0 penalizes ground sitting (+6.17/rollout incentive to climb).
 - **Training on RunPod** — started 2026-03-25 ~12:30 UTC, budget 3600s
