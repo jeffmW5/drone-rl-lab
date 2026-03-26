@@ -68,6 +68,10 @@ while [ $TASKS_DONE -lt $MAX_TASKS ]; do
         python3 train.py "configs/$CONFIG"
 
         echo ""
+        echo "[3a.1] Capturing provenance..."
+        python3 scripts/capture_provenance.py --experiment "$EXPERIMENT" || echo "[WARN] Provenance capture failed (non-fatal)"
+
+        echo ""
         echo "[3b] Post-training: generating log..."
         python3 compare.py --generate-log
 
@@ -82,13 +86,16 @@ while [ $TASKS_DONE -lt $MAX_TASKS ]; do
         echo "[3d] Documenting results..."
         # Use Claude Code for documentation (EXPERIMENT.md, outbox)
         claude --dangerously-skip-permissions --print \
-            "You are the executor. The experiment $EXPERIMENT just finished training. Write results/$EXPERIMENT/EXPERIMENT.md and outbox/$EXPERIMENT.md per program.md standards. Update outbox/STATUS.md and memory/NEXT.md. Then commit and push."
+            "You are the executor. The experiment $EXPERIMENT just finished training. Write results/$EXPERIMENT/EXPERIMENT.md and outbox/$EXPERIMENT.md per program.md standards. Update outbox/STATUS.md, memory/NEXT.md, and state/current.json (via scripts/lab_state.py). Then commit and push."
     fi
 
     # Advance queue
     echo ""
     echo "[3e] Advancing queue..."
     python3 scripts/parse_queue.py --advance
+
+    echo "[3e.1] Refreshing lab state..."
+    python3 scripts/lab_state.py || true
 
     # Commit and push
     echo "[3f] Committing and pushing..."

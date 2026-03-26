@@ -131,11 +131,12 @@ Read these files in order:
 4. \`memory/NEXT.md\` — priorities and open questions
 5. \`inbox/INBOX.md\` — task queue (check for [CLAIMED:*] tasks = other agents)
 6. \`outbox/STATUS.md\` — latest results
-7. Check other active agents: \`python3 scripts/agent_lock.py status\`
+7. \`state/current.json\` if present — canonical machine-readable lab state
+8. Check other active agents: \`python3 scripts/agent_lock.py status\`
 
 ## Decision loop
 
-### If INBOX has unclaimed [NEXT] or [QUEUED] tasks → claim and execute
+### If INBOX has unclaimed actionable tasks → claim and execute
 1. \`python3 scripts/agent_lock.py claim $AGENT_ID\`
 2. If task type is \`research\`: run /research command
 3. If task type is training: run the experiment, benchmark, document
@@ -152,13 +153,15 @@ Read these files in order:
 
 1. Write \`results/exp_NNN/EXPERIMENT.md\` per program.md standard
 2. Write \`outbox/exp_NNN.md\` summary
-3. Run \`python compare.py --generate-log\`
-4. Update \`outbox/STATUS.md\`
-5. Update \`memory/NEXT.md\` — strikethrough completed items
-6. If new hard rule → add to \`memory/HARD_RULES.md\`
-7. If paper insight → add to \`memory/INSIGHTS.md\` Paper References table
-8. \`python3 scripts/agent_lock.py release $AGENT_ID\`
-9. \`git add -A && git commit -m "exp_NNN: <description>" && git push\`
+3. Run \`python3 scripts/capture_provenance.py --experiment exp_NNN\`
+4. Run \`python compare.py --generate-log\`
+5. Update \`outbox/STATUS.md\`
+6. Run \`python3 scripts/lab_state.py\`
+7. Update \`memory/NEXT.md\` — strikethrough completed items
+8. If new hard rule → add to \`memory/HARD_RULES.md\`
+9. If paper insight → add to \`memory/INSIGHTS.md\` Paper References table
+10. \`python3 scripts/agent_lock.py release $AGENT_ID\`
+11. \`git add -A && git commit -m "exp_NNN: <description>" && git push\`
 
 ## Git safety for parallel agents
 

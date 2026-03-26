@@ -11,123 +11,12 @@ Usage:
 
 import argparse
 import json
-import re
 import sys
-from datetime import datetime
 from pathlib import Path
 
+from task_queue import advance_queue, get_next_task, parse_tasks
+
 INBOX_PATH = Path(__file__).resolve().parent.parent / "inbox" / "INBOX.md"
-
-
-def parse_tasks(inbox_path: Path = INBOX_PATH) -> list[dict]:
-    """Parse [NEXT]/[QUEUED]/[DONE] tasks from INBOX.md."""
-    if not inbox_path.is_file():
-        return []
-
-    text = inbox_path.read_text()
-    tasks = []
-
-    # Match task blocks: ### [STATUS] Title  (STATUS can be CLAIMED:agent-id)
-    # Followed by optional metadata lines and body until next ### or end
-    pattern = re.compile(
-        r"^###\s+\[([\w:.\-]+)\]\s+(.+?)$"
-        r"(.*?)(?=^###|\Z)",
-        re.MULTILINE | re.DOTALL,
-    )
-
-    for m in pattern.finditer(text):
-        status = m.group(1).strip()
-        title = m.group(2).strip()
-        body = m.group(3).strip()
-
-        task = {"status": status, "title": title, "body": body}
-
-        # Extract metadata from body
-        for line in body.split("\n"):
-            line = line.strip()
-            if line.startswith("- **Experiment:**"):
-                task["experiment"] = line.split(":**", 1)[1].strip()
-            elif line.startswith("- **Config:**"):
-                task["config"] = line.split(":**", 1)[1].strip()
-            elif line.startswith("- **Depends on:**"):
-                task["depends_on"] = line.split(":**", 1)[1].strip()
-            elif line.startswith("- **Completed:**"):
-                task["completed"] = line.split(":**", 1)[1].strip()
-
-        tasks.append(task)
-
-    return tasks
-
-
-def get_next_task(tasks: list[dict]) -> dict | None:
-    """Get the first actionable task ([NEXT], or first [QUEUED] with no unmet deps).
-
-    Skips tasks that are [DONE] or [CLAIMED:*] (in progress by another agent).
-    """
-    for t in tasks:
-        if t["status"] == "NEXT":
-            return t
-
-    done_titles = {t["title"] for t in tasks if t["status"] == "DONE"}
-    for t in tasks:
-        if t["status"] == "QUEUED":
-            dep = t.get("depends_on", "")
-            if not dep or dep in done_titles:
-                return t
-
-    return None
-
-
-def is_claimed(task: dict) -> bool:
-    """Check if a task is claimed by any agent."""
-    return task["status"].startswith("CLAIMED:")
-
-
-def advance_queue(inbox_path: Path = INBOX_PATH) -> str:
-    """Mark [NEXT] as [DONE] with today's date, promote next [QUEUED] to [NEXT]."""
-    if not inbox_path.is_file():
-        return "No INBOX.md found"
-
-    text = inbox_path.read_text()
-    today = datetime.now().strftime("%Y-%m-%d")
-    changed = False
-
-    # Mark [NEXT] → [DONE]
-    new_text, n = re.subn(
-        r"^(###\s+)\[NEXT\]",
-        rf"\1[DONE]",
-        text,
-        count=1,
-        flags=re.MULTILINE,
-    )
-    if n > 0:
-        # Add completion date if not present
-        new_text = re.sub(
-            r"(\[DONE\]\s+.+?\n)((?:- \*\*.*\n)*)",
-            lambda m: m.group(0) if "Completed:" in m.group(0)
-            else m.group(1) + m.group(2) + f"- **Completed:** {today}\n",
-            new_text,
-            count=1,
-        )
-        changed = True
-
-    # Promote first [QUEUED] → [NEXT]
-    if changed:
-        new_text, n2 = re.subn(
-            r"^(###\s+)\[QUEUED\]",
-            r"\1[NEXT]",
-            new_text,
-            count=1,
-            flags=re.MULTILINE,
-        )
-        if n2 > 0:
-            changed = True
-
-    if changed:
-        inbox_path.write_text(new_text)
-        return f"Advanced queue (marked DONE, promoted next QUEUED)"
-    else:
-        return "No [NEXT] task found to advance"
 
 
 def main():
@@ -141,8 +30,11 @@ def main():
     inbox_path = Path(args.inbox)
 
     if args.advance:
-        result = advance_queue(inbox_path)
-        print(result)
+        task = advance_queue(inbox_path)
+        if task:
+            print(f"Advanced queue (marked DONE): {task['title']}")
+        else:
+            print("No actionable task found to advance")
         return
 
     tasks = parse_tasks(inbox_path)
@@ -151,7 +43,7 @@ def main():
         task = get_next_task(tasks)
         if task:
             if args.json:
-                print(json.dumps(task, indent=2))
+                print(json.dumps({k: v for k, v in task.items() if not k.startswith("_")}, indent=2))
             else:
                 print(f"[{task['status']}] {task['title']}")
                 if task.get("experiment"):
@@ -164,18 +56,26 @@ def main():
         return
 
     if args.json:
-        print(json.dumps(tasks, indent=2))
+        public_tasks = [{k: v for k, v in task.items() if not k.startswith("_")} for task in tasks]
+        print(json.dumps(public_tasks, indent=2))
     else:
         if not tasks:
             print("Queue is empty.")
             return
         for t in tasks:
-            status = t["status"]
-            if status.startswith("CLAIMED:"):
-                marker = "~"
-            else:
-                marker = {"DONE": "x", "NEXT": ">", "QUEUED": " "}.get(status, "?")
-            print(f"  [{marker}] [{status}] {t['title']}")
+            kind = t["status_kind"]
+            marker = {
+                "done": "x",
+                "next": ">",
+                "ready": ">",
+                "implemented": "+",
+                "queued": " ",
+                "claimed": "~",
+                "in_progress": "~",
+                "note": "i",
+                "blocked": "!",
+            }.get(kind, "?")
+            print(f"  [{marker}] [{t['status']}] {t['title']}")
 
 
 if __name__ == "__main__":

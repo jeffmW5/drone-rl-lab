@@ -20,18 +20,26 @@ Usage:
 import argparse
 import json
 import os
-import re
 import socket
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+from task_queue import (
+    claim_next_task,
+    list_claimed_agent_ids,
+    mark_claimed_task_done,
+    parse_tasks,
+    reclaim_claims,
+)
 
 REPO_DIR = Path(__file__).resolve().parent.parent
 AGENTS_DIR = REPO_DIR / "agents"
 INBOX_PATH = REPO_DIR / "inbox" / "INBOX.md"
 STALE_MINUTES = 30
+HEARTBEAT_PUSH_INTERVAL_MINUTES = 15
 
 
 def _now_iso() -> str:
@@ -100,6 +108,15 @@ def _is_stale(agent: dict) -> bool:
         return True  # no heartbeat = stale
 
 
+def _parse_iso(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(value)
+    except ValueError:
+        return None
+
+
 # ─── Commands ────────────────────────────────────────────────────────────────
 
 
@@ -116,6 +133,7 @@ def cmd_register(args):
         "pid": pid,
         "started": _now_iso(),
         "heartbeat": _now_iso(),
+        "last_pushed_heartbeat": _now_iso(),
         "task": None,
         "status": "idle",
     }
@@ -134,16 +152,27 @@ def cmd_heartbeat(args):
         print(f"Agent {args.agent_id} not found", file=sys.stderr)
         sys.exit(1)
 
-    data["heartbeat"] = _now_iso()
+    now_iso = _now_iso()
+    push_now = args.task is not None or args.status is not None
+
     if args.task is not None:
         data["task"] = args.task
     if args.status is not None:
         data["status"] = args.status
 
-    _write_agent(path, data)
-    # Heartbeat commits are lightweight — push but don't fail hard
-    _git_sync_and_push(f"agent {args.agent_id}: heartbeat", max_retries=1)
-    print(f"Heartbeat updated: {data['heartbeat']}")
+    if not push_now:
+        last_pushed = _parse_iso(data.get("last_pushed_heartbeat")) or _parse_iso(data.get("heartbeat"))
+        if last_pushed is None or datetime.now(timezone.utc) - last_pushed >= timedelta(minutes=HEARTBEAT_PUSH_INTERVAL_MINUTES):
+            push_now = True
+
+    if push_now:
+        data["heartbeat"] = now_iso
+        data["last_pushed_heartbeat"] = now_iso
+        _write_agent(path, data)
+        _git_sync_and_push(f"agent {args.agent_id}: heartbeat", max_retries=1)
+        print(f"Heartbeat pushed: {data['heartbeat']}")
+    else:
+        print(f"Heartbeat skipped (throttled to {HEARTBEAT_PUSH_INTERVAL_MINUTES}m pushes)")
 
 
 def cmd_status(args):
@@ -196,37 +225,11 @@ def cmd_claim(args):
             print("No INBOX.md found", file=sys.stderr)
             sys.exit(1)
 
-        text = INBOX_PATH.read_text()
-
-        # Find all claimed tasks (by any agent)
-        claimed_pattern = re.compile(r"\[CLAIMED:([^\]]+)\]")
-        claimed_tasks = set(claimed_pattern.findall(text))
-
-        # Find first [NEXT] or [QUEUED] that isn't claimed
-        task_pattern = re.compile(
-            r"^(###\s+)\[(NEXT|QUEUED)\]\s+(.+?)$",
-            re.MULTILINE,
-        )
-
-        match = None
-        for m in task_pattern.finditer(text):
-            match = m
-            break
-
-        if not match:
+        task = claim_next_task(INBOX_PATH, agent_id)
+        if task is None:
             print("No available tasks to claim.")
             sys.exit(1)
-
-        task_title = match.group(3).strip()
-        old_status = match.group(2)
-
-        # Replace [NEXT] or [QUEUED] with [CLAIMED:agent-id]
-        new_text = (
-            text[: match.start()]
-            + f"{match.group(1)}[CLAIMED:{agent_id}] {task_title}"
-            + text[match.end() :]
-        )
-        INBOX_PATH.write_text(new_text)
+        task_title = task["title"]
 
         # Update agent status
         agent_path = _agent_path(agent_id)
@@ -235,6 +238,7 @@ def cmd_claim(args):
             agent_data["task"] = task_title
             agent_data["status"] = "claimed"
             agent_data["heartbeat"] = _now_iso()
+            agent_data["last_pushed_heartbeat"] = agent_data["heartbeat"]
             _write_agent(agent_path, agent_data)
 
         # Try to push — if fails, another agent beat us
@@ -253,7 +257,6 @@ def cmd_claim(args):
 def cmd_release(args):
     """Mark the agent's claimed task as [DONE]."""
     agent_id = args.agent_id
-    today = datetime.now().strftime("%Y-%m-%d")
 
     _git("pull", "--rebase", check=False)
 
@@ -261,32 +264,11 @@ def cmd_release(args):
         print("No INBOX.md found", file=sys.stderr)
         sys.exit(1)
 
-    text = INBOX_PATH.read_text()
-
-    # Find [CLAIMED:agent-id] and replace with [DONE]
-    pattern = re.compile(
-        rf"^(###\s+)\[CLAIMED:{re.escape(agent_id)}\]\s+(.+?)$",
-        re.MULTILINE,
-    )
-    match = pattern.search(text)
-    if not match:
+    task = mark_claimed_task_done(INBOX_PATH, agent_id)
+    if task is None:
         print(f"No claimed task found for agent {agent_id}", file=sys.stderr)
         sys.exit(1)
-
-    task_title = match.group(2).strip()
-    new_text = pattern.sub(rf"\1[DONE] \2\n- **Completed:** {today}", text, count=1)
-
-    # Promote next [QUEUED] → [NEXT] if no other [NEXT] exists
-    if "[NEXT]" not in new_text:
-        new_text = re.sub(
-            r"^(###\s+)\[QUEUED\]",
-            r"\1[NEXT]",
-            new_text,
-            count=1,
-            flags=re.MULTILINE,
-        )
-
-    INBOX_PATH.write_text(new_text)
+    task_title = task["title"]
 
     # Update agent status
     agent_path = _agent_path(agent_id)
@@ -295,49 +277,45 @@ def cmd_release(args):
         agent_data["task"] = None
         agent_data["status"] = "idle"
         agent_data["heartbeat"] = _now_iso()
+        agent_data["last_pushed_heartbeat"] = agent_data["heartbeat"]
         _write_agent(agent_path, agent_data)
 
     _git_sync_and_push(f"agent {agent_id}: released '{task_title}' [DONE]")
-    print(f"Released: {task_title} → [DONE]")
+    print(f"Released: {task_title} -> [DONE]")
 
 
 def cmd_reclaim_stale(args):
-    """Find tasks claimed by stale agents and reset them to [NEXT]."""
+    """Find tasks claimed by stale or missing agents and reset them to [READY]."""
     agent_id = args.agent_id  # the agent doing the reclaiming
 
     _git("pull", "--rebase", check=False)
 
-    stale_agents = [a for a in _all_agents() if _is_stale(a) and a["id"] != agent_id]
-    if not stale_agents:
-        print("No stale agents to reclaim from.")
-        return
+    known_agents = {agent["id"]: agent for agent in _all_agents()}
+    stale_ids = {
+        known_id
+        for known_id, agent in known_agents.items()
+        if known_id != agent_id and _is_stale(agent)
+    }
 
-    text = INBOX_PATH.read_text()
-    reclaimed = []
+    claimed_ids = list_claimed_agent_ids(parse_tasks(INBOX_PATH))
+    missing_ids = {claimed_id for claimed_id in claimed_ids if claimed_id not in known_agents}
+    reclaim_ids = stale_ids | missing_ids
 
-    for sa in stale_agents:
-        pattern = re.compile(
-            rf"^(###\s+)\[CLAIMED:{re.escape(sa['id'])}\]\s+(.+?)$",
-            re.MULTILINE,
-        )
-        match = pattern.search(text)
-        if match:
-            task_title = match.group(2).strip()
-            text = pattern.sub(rf"\1[NEXT] \2", text, count=1)
-            reclaimed.append(f"{task_title} (from {sa['id']})")
-
-        # Remove stale agent file
-        stale_path = _agent_path(sa["id"])
+    for stale_id in stale_ids:
+        stale_path = _agent_path(stale_id)
         if stale_path.exists():
             stale_path.unlink()
 
-    if reclaimed:
-        INBOX_PATH.write_text(text)
-        _git_sync_and_push(f"agent {agent_id}: reclaimed {len(reclaimed)} stale task(s)")
-        for r in reclaimed:
-            print(f"Reclaimed: {r}")
+    reclaimed_titles = reclaim_claims(INBOX_PATH, reclaim_ids)
+    if reclaimed_titles:
+        _git_sync_and_push(f"agent {agent_id}: reclaimed {len(reclaimed_titles)} stale task(s)")
+        for title in reclaimed_titles:
+            print(f"Reclaimed: {title}")
+    elif reclaim_ids:
+        _git_sync_and_push(f"agent {agent_id}: cleaned stale agent records", max_retries=1)
+        print("No claimed tasks needed reclaiming, but stale agent records were cleaned up.")
     else:
-        print("No stale claims found in INBOX.")
+        print("No stale or missing claims found in INBOX.")
 
 
 # ─── CLI ─────────────────────────────────────────────────────────────────────
