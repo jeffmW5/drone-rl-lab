@@ -27,7 +27,18 @@
 
 ---
 
-### [IN PROGRESS] exp_055 -- Race Start + Takeoff Incentive
+### [IN PROGRESS] exp_057 -- Body-Frame Gate Observations
+- **Training on RunPod** — started 2026-03-26 ~01:56 UTC, budget 3600s
+- **Config:** `configs/exp_057_body_frame_obs.yaml`
+- progress_coef reduced to 20 (from exp_056's 50) since body-frame obs provides directional info
+- **Pod:** cw7hef3jd7kijr, SSH 213.144.200.243:10118
+
+### [DONE 2026-03-25] exp_056 -- Bilateral Progress Reward
+- **Result:** Training reward 28.92 (peak 40.96) but benchmark 0 gates, 0.64s avg dive crash
+- **Diagnosis:** Bilateral progress works (correct gate direction) but progress_coef=50 too aggressive
+- See `results/exp_056_bilateral_progress/EXPERIMENT.md`
+
+### [DONE 2026-03-25] exp_055 -- Race Start + Takeoff Incentive
 - **Hypothesis:** exp_054 stuck at ground (z_low=-0.05 gives full alt_reward at z=0.01). Fix: z_low=0.5, alt_coef=1.0 penalizes ground sitting (+6.17/rollout incentive to climb).
 - **Training on RunPod** — started 2026-03-25 ~12:30 UTC, budget 3600s
 - Config: `configs/exp_055_race_start_takeoff.yaml`
