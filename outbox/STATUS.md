@@ -1,46 +1,42 @@
 # Status -- Last Updated 2026-03-25
 
-## BREAKTHROUGH: Root Cause Identified
-**ALL experiments (046-052) crash at ~1.3s due to DOMAIN MISMATCH, not training issues.**
+## BREAKTHROUGH: Bilateral Progress Reward (exp_056)
+**Training reward 40.96 at iter 480 (2M steps) — new all-time high and still climbing.**
 
-| Condition | Training | Benchmark |
-|-----------|----------|-----------|
-| Start position | 0.75m from gate, mid-air | [-1.5, 0.75, 0.01] (ground) |
-| Start altitude | Gate altitude (~0.7m) | Ground level (0.01m) |
-| Distance to gate 0 | 0.75m | 2.06m (XY) + 0.69m (climb) |
+exp_056 uses `bilateral_progress=true`: raw delta `(prev_dist - curr_dist)` instead of
+`max(prev_dist - curr_dist, 0)`. Moving AWAY from the gate is now penalized, creating
+a proper gradient for the deterministic mean policy. Previous one-sided reward only
+rewarded stochastic movements that happened to get closer.
 
-Three different approaches (survive tuning, action smoothness, longer rollouts) ALL produce
-the same ~1.2-1.3s benchmark crash. Training rewards vary wildly (29-176) but benchmark is
-stuck. The policy was never trained on the benchmark starting condition.
+Training on RunPod RTX 3090, ~37min into 60min budget.
+
+## Structural Changes Implemented (Ready to Train)
+Three literature-based structural changes (exp_057/058/059) have been implemented and
+are ready for training once exp_056 completes:
+
+| Exp | Change | Obs | Key Mechanism |
+|-----|--------|-----|---------------|
+| 057 | Body-frame gate obs | 55D | Gate rel pos + normal in body frame |
+| 058 | Soft-collision curriculum | 57D | Phase 1: no crash termination, Phase 2: hard |
+| 059 | Asymmetric actor-critic | 85D (57+28) | Critic sees all gate pos/quat |
 
 ## In Progress
-- **exp_053** -- spawn_offset=1.5 (2x current), spawn_pos_noise=0.3
-  - Trains at 1.5m from gate (vs 0.75m), closer to benchmark's 2.06m distance
-  - Training on RunPod, PID 1855701, started 10:26 UTC
+- **exp_056** -- bilateral_progress=true, training on RunPod (reward 40.96 at 2M/20M steps)
 
-## Queued
-- **exp_054** -- random_gate_ratio=0.0 (NO random gate starts)
-  - Trains from actual race start position, eliminates domain gap entirely
-  - More aggressive test: ground takeoff + 2.06m navigation from scratch
-
-## Results Summary (exp_046-052)
-| Exp | Key Change | Train Reward | Benchmark Time | Gates |
-|-----|-----------|-------------|----------------|-------|
-| **046** | baseline tight logstd | 29.20 | **1.3s** | 0 |
-| 047 | survive=0.15 | 10.01 | 0.76s | 0 |
-| 048 | short episodes | 18.88 | 0.54s | 0 |
-| 049 | survive=0.08 | 21.02 (peak 38.2) | 0.80s | 0 |
-| 050 | gate_bonus=100 | — | — | — |
-| 051 | num_steps=64 | 175.60 | **1.22s** | 0 |
-| 052 | action smoothness | 45.22 (peak 55) | **1.19s** | 0 |
-| 053 | spawn_offset=1.5 | training... | ? | ? |
+## Recent Results (exp_053-055)
+| Exp | Key Change | Train Reward | Benchmark | Gates |
+|-----|-----------|-------------|-----------|-------|
+| 053 | spawn_offset=1.5 | ? | 0.70s | 0 |
+| 054 | race start (ground) | 8.89 (flat) | FAILURE | 0 |
+| 055 | takeoff incentive | training | ? | ? |
+| **056** | **bilateral progress** | **40.96 (2M steps)** | **pending** | **pending** |
 
 ## Current Best
+- **Racing L2 (training reward):** exp_056 -- 40.96 mean at 2M steps (new record, still climbing)
 - **Racing L2 (benchmark):** exp_046 -- 0 gates, 1.3s consistent flights toward gate
-- **Racing L2 (training reward):** exp_051 -- 175.60 mean (per-step 2.74)
 - **Racing L2 (lap time, legacy):** exp_016 -- 13.49s, 2/10 finishes
 
-## Queue Status
-- Completed: exp_022-052
-- In progress: exp_053 (training on RunPod)
-- Queued: exp_054 (race start), exp_050 (big gate bonus)
+## Queue
+- In progress: exp_056 (bilateral progress, training on RunPod)
+- Ready to train: exp_057 (body-frame obs), exp_058 (soft-collision), exp_059 (asymmetric critic)
+- Recommended order: exp_057 → exp_058 → exp_059
