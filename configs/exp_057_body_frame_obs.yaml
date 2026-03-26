@@ -1,12 +1,11 @@
 name: exp_057_body_frame_obs
 backend: racing
-hypothesis: "Every competitive paper (Swift, Pasumarti, RSS 2024, CoRL 2024) provides gate
-  corners/normals in body frame. Our agent has 0 gate info in body frame — it must combine
-  world-frame relative vectors with its own quaternion to determine where the gate is.
-  This is hard for a 2-layer MLP. Fix: transform rel_target_gate and gate normal into
-  drone body frame. The policy directly sees 'gate is 0.5m forward-left' instead of
-  needing to mentally rotate world-frame vectors. Obs dim: 57→55 (normal replaces quat).
-  Uses bilateral_progress from exp_056."
+hypothesis: "exp_056 showed bilateral progress creates correct gate direction, but progress_coef=50
+  is too aggressive (dive crashes at 0.64s avg). Root cause: policy must combine world-frame gate
+  vectors with quaternion to determine gate direction — hard for 2-layer MLP. With body-frame obs,
+  'gate is 0.5m forward' is directly in the obs vector. Lower progress_coef=20 (from 50) since
+  body-frame obs provides directional info that progress_coef was brute-forcing. Keep bilateral
+  progress. Expected: same gate direction learning but with altitude stability."
 budget_seconds: 3600
 racing:
   env_type: race
@@ -35,9 +34,9 @@ racing:
   alt_coef: 0.5
   z_low: -0.05
   z_high: 2.0
-  # === BILATERAL PROGRESS (from exp_056) ===
+  # === BILATERAL PROGRESS (reduced from exp_056's 50 to 20) ===
   bilateral_progress: true
-  progress_coef: 50.0
+  progress_coef: 20.0
   gate_bonus: 10.0
   speed_coef: 0.5
   gate_in_view_coef: 0.0
