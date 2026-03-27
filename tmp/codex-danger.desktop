@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Codex (Danger Mode)
+Comment=Launch Codex with approvals and sandbox disabled
+Exec=/home/jeff/.local/bin/codex-danger.sh
+Terminal=false
+Categories=Development;
