@@ -14,6 +14,8 @@ POD_ROOT="/root"
 LAB_DIR="${POD_ROOT}/drone-rl-lab"
 LSY_DIR="${POD_ROOT}/lsy_drone_racing"
 SETUP_MARKER="${POD_ROOT}/.drone_rl_runpod_setup_complete"
+JAX_CACHE_DIR="${POD_ROOT}/.cache/jax/compilation_cache"
+RUNPOD_ENV_FILE="/etc/profile.d/drone_rl_runpod.sh"
 
 # ── Safety: Auto-shutdown timer ──────────────────────────────────────────────
 MAX_HOURS=4
@@ -61,11 +63,26 @@ pixi run -e gpu pip install -e ".[rl]" --quiet
 echo "[4/5] Installing drone-rl-lab deps into the Pixi GPU environment..."
 pixi run -e gpu pip install pyyaml stable-baselines3 gym-pybullet-drones matplotlib --quiet
 
+# ── Persistent JAX cache ─────────────────────────────────────────────────────
+echo "[cache] Configuring persistent JAX compilation cache..."
+mkdir -p "${JAX_CACHE_DIR}"
+cat > "${RUNPOD_ENV_FILE}" <<INNER
+export JAX_COMPILATION_CACHE_DIR="${JAX_CACHE_DIR}"
+export JAX_PERSISTENT_CACHE_MIN_COMPILE_TIME_SECS="0"
+INNER
+chmod 644 "${RUNPOD_ENV_FILE}"
+export JAX_COMPILATION_CACHE_DIR="${JAX_CACHE_DIR}"
+export JAX_PERSISTENT_CACHE_MIN_COMPILE_TIME_SECS="0"
+echo "[cache] JAX_COMPILATION_CACHE_DIR=${JAX_COMPILATION_CACHE_DIR}"
+echo "[cache] Persistent cache env written to ${RUNPOD_ENV_FILE}"
+
 # Helper wrappers keep future pod commands short and guarantee they use the
 # editable Pixi environment from the local fork checkout.
 cat > /usr/local/bin/drone-rl-gpu-python <<'INNER'
 #!/bin/bash
 set -e
+export JAX_COMPILATION_CACHE_DIR="/root/.cache/jax/compilation_cache"
+export JAX_PERSISTENT_CACHE_MIN_COMPILE_TIME_SECS="0"
 cd /root/lsy_drone_racing
 exec /root/.pixi/bin/pixi run -e gpu python "$@"
 INNER
@@ -74,6 +91,8 @@ chmod +x /usr/local/bin/drone-rl-gpu-python
 cat > /usr/local/bin/drone-rl-gpu-pip <<'INNER'
 #!/bin/bash
 set -e
+export JAX_COMPILATION_CACHE_DIR="/root/.cache/jax/compilation_cache"
+export JAX_PERSISTENT_CACHE_MIN_COMPILE_TIME_SECS="0"
 cd /root/lsy_drone_racing
 exec /root/.pixi/bin/pixi run -e gpu pip "$@"
 INNER
@@ -86,6 +105,7 @@ nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
 drone-rl-gpu-python -c "import torch; print(f'PyTorch CUDA: {torch.cuda.is_available()}, Device: {torch.cuda.get_device_name(0)}')"
 drone-rl-gpu-python -c "import jax; print(f'JAX devices: {jax.devices()}')"
 drone-rl-gpu-python -c "import lsy_drone_racing; print(f'lsy_drone_racing: {lsy_drone_racing.__file__}')"
+drone-rl-gpu-python -c "import os; print(f'JAX cache dir: {os.environ.get(\"JAX_COMPILATION_CACHE_DIR\")}')"
 
 # ── Configure git ─────────────────────────────────────────────────────────────
 git config --global user.name "JefferyWhitmire"
@@ -111,12 +131,25 @@ fi
 cd "${LAB_DIR}"
 git remote set-url origin git@github.com:jeffmW5/drone-rl-lab.git
 
+# ── Optional one-shot JAX warmup ─────────────────────────────────────────────
+if [ "${DRONE_RL_SKIP_JAX_WARMUP:-0}" = "1" ]; then
+    echo "[warmup] Skipping JAX warmup because DRONE_RL_SKIP_JAX_WARMUP=1"
+else
+    echo "[warmup] Running lightweight JAX warmup..."
+    if bash "${LAB_DIR}/scripts/warmup_jax.sh"; then
+        echo "[warmup] Warmup complete."
+    else
+        echo "[warmup] Warmup failed; continuing setup without blocking the pod workflow."
+    fi
+fi
+
 cat > "${SETUP_MARKER}" <<INNER
 setup_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 lab_dir=${LAB_DIR}
 lsy_dir=${LSY_DIR}
 pixi_env=gpu
 pixi_bin=/root/.pixi/bin/pixi
+jax_cache_dir=${JAX_CACHE_DIR}
 INNER
 
 # ── Done ──────────────────────────────────────────────────────────────────────
@@ -126,9 +159,11 @@ echo "  SETUP COMPLETE"
 echo ""
 echo "  cd ${LAB_DIR}"
 echo "  drone-rl-gpu-python train.py configs/exp_011_racing_gpu.yaml"
+echo "  Optional targeted warmup: bash scripts/warmup_jax.sh configs/exp_NNN.yaml"
 echo ""
 echo "  Benchmark helper: cd ${LSY_DIR} && pixi run -e gpu python scripts/sim.py -r"
 echo "  After training: git add -A && git commit && git push"
+echo "  JAX cache: ${JAX_CACHE_DIR}"
 echo "  Auto-shutdown in ${MAX_HOURS}h. Billing ~\$0.30/hr."
 echo "================================================"
 echo ""

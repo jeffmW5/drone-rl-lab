@@ -42,6 +42,11 @@ def _action_for_env(action_tensor, use_jax_gpu=False):
     return action_tensor.cpu().numpy()
 
 
+def _startup_log(start_time: float, message: str) -> None:
+    elapsed = time.perf_counter() - start_time
+    print(f"[Startup +{elapsed:6.1f}s] {message}", flush=True)
+
+
 # PyYAML
 try:
     import yaml
@@ -156,6 +161,8 @@ def evaluate_racing(agent: Agent, envs_fn, device, n_episodes: int = 10, jax_on_
 # =============================================================================
 
 def run(config_path: str):
+    startup_start = time.perf_counter()
+    _startup_log(startup_start, f"Loading config from {config_path}")
     config = load_config(config_path)
 
     name = config["name"]
@@ -197,6 +204,7 @@ def run(config_path: str):
     print(f"[INFO] Total steps:    {args.total_timesteps:,}")
     print(f"[INFO] Level:          {level}")
     print(f"[INFO] n_obs:          {n_obs} (observation stacking)")
+    _startup_log(startup_start, "Built training args and selected devices")
 
     # ── Create environments ───────────────────────────────────────────────────
     env_type = racing_cfg.get("env_type", "trajectory")  # "trajectory" or "race"
@@ -264,6 +272,7 @@ def run(config_path: str):
 
     print(f"[INFO] Obs space:      {envs.single_observation_space}")
     print(f"[INFO] Action space:   {envs.single_action_space}\n")
+    _startup_log(startup_start, "Environment construction complete")
 
     # ── Create agent ──────────────────────────────────────────────────────────
     obs_shape = envs.single_observation_space.shape
@@ -283,6 +292,7 @@ def run(config_path: str):
         print(f"[INFO] Loaded pretrained checkpoint: {pretrained_ckpt}")
 
     optimizer = torch.optim.Adam(agent.parameters(), lr=args.learning_rate, eps=1e-5)
+    _startup_log(startup_start, "Model and optimizer initialized")
 
     # ── Training storage ──────────────────────────────────────────────────────
     obs_buf = torch.zeros((args.num_steps, args.num_envs) + obs_shape).to(device)
@@ -315,11 +325,16 @@ def run(config_path: str):
     # ── Training loop ─────────────────────────────────────────────────────────
     wall_start = time.time()
     global_step = 0
+    _startup_log(startup_start, "Resetting environments (may trigger initial JAX compile)")
     next_obs, _ = envs.reset()
     next_obs = torch.Tensor(_to_np(next_obs)).to(device)
     next_done = torch.zeros(args.num_envs).to(device)
+    _startup_log(startup_start, "Environment reset complete")
 
     print("[Training] Starting CleanRL PPO loop...")
+    _startup_log(startup_start, "Entering PPO rollout loop")
+    first_step_logged = False
+    first_iteration_logged = False
 
     for iteration in range(1, args.num_iterations + 1):
         # Check time budget
@@ -336,6 +351,8 @@ def run(config_path: str):
 
         # ── Rollout phase ─────────────────────────────────────────────────
         for step in range(args.num_steps):
+            if not first_step_logged:
+                _startup_log(startup_start, "Starting first rollout step (compile/warmup likely here)")
             global_step += args.num_envs
             obs_buf[step] = next_obs
             dones_buf[step] = next_done
@@ -348,6 +365,9 @@ def run(config_path: str):
             logprobs_buf[step] = logprob
 
             next_obs, reward, terminated, truncated, info = envs.step(_action_for_env(action, jax_on_gpu))
+            if not first_step_logged:
+                _startup_log(startup_start, "First rollout env.step complete")
+                first_step_logged = True
             reward = torch.tensor(_to_np(reward), dtype=torch.float32).to(device)
             rewards_buf[step] = reward
             terminated_buf[step] = torch.Tensor(_to_np(terminated).astype(float)).to(device)
@@ -465,6 +485,10 @@ def run(config_path: str):
             # Save for evaluations.npz
             eval_timesteps.append(global_step)
             eval_results.append(mean_reward)
+
+        if not first_iteration_logged:
+            _startup_log(startup_start, f"First training iteration complete at global_step={global_step:,}")
+            first_iteration_logged = True
 
     elapsed = time.time() - wall_start
     envs.close()
