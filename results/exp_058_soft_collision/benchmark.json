@@ -1,0 +1,40 @@
+{
+  "experiment": "exp_058_soft_collision",
+  "benchmarks": [
+    {
+      "level": "level2_midair",
+      "controller": "attitude_rl_race.py",
+      "n_runs": 5,
+      "results": [
+        {
+          "time": 2.2,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 0.84,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 0.84,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 0.82,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.4,
+          "finished": false,
+          "gates": 0
+        }
+      ],
+      "avg_time": 1.22,
+      "finish_rate": 0.0,
+      "avg_gates": 0.0
+    }
+  ]
+}

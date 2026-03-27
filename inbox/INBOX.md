@@ -11,10 +11,10 @@
 - **What was done:** `body_frame_obs=true` flag. Transforms gate rel positions + normals to drone body frame. Obs: 57D→55D (normal(3) replaces quat(4) per gate). Inference controller updated with `DRONE_RL_BODY_FRAME_OBS` env var.
 - **Config:** `configs/exp_057_body_frame_obs.yaml`
 
-### [IMPLEMENTED 2026-03-25] exp_058 -- Soft-Collision Curriculum (2-phase)
-- **Status:** Code implemented, config created. Ready to train.
-- **What was done:** `soft_collision=true` flag. Phase 1 (0-10M steps): crashes suppressed, -5.0 penalty + respawn. Phase 2 (10M+): hard termination restored. Env autoreset + random_gate_start handles respawn.
-- **Config:** `configs/exp_058_soft_collision.yaml`
+### [DONE 2026-03-27] exp_058 -- Soft-Collision Curriculum (2-phase)
+- **Result:** FAILURE — training reward 37.84, benchmark 0 gates, 1.22s avg crash
+- **Diagnosis:** Soft collision boosted training reward (multi-life episodes) but domain gap (mid-air spawn vs ground benchmark) is the bottleneck, not crash termination
+- See `results/exp_058_soft_collision/EXPERIMENT.md`
 
 ### [IMPLEMENTED 2026-03-25] exp_059 -- Asymmetric Actor-Critic
 - **Status:** Code implemented, config created. Ready to train.
@@ -27,11 +27,11 @@
 
 ---
 
-### [IN PROGRESS] exp_057 -- Body-Frame Gate Observations
-- **Training on RunPod** — started 2026-03-26 ~01:56 UTC, budget 3600s
+### [READY] exp_057 -- Body-Frame Gate Observations (re-run)
+- **Previous attempt:** Launched 2026-03-26 but results never landed (pod likely timed out)
 - **Config:** `configs/exp_057_body_frame_obs.yaml`
-- progress_coef reduced to 20 (from exp_056's 50) since body-frame obs provides directional info
-- **Pod:** cw7hef3jd7kijr, SSH 213.144.200.243:10118
+- progress_coef=20 (from exp_056's 50) + body_frame_obs=true
+- **Action:** Re-run on RunPod, collect results, benchmark
 
 ### [DONE 2026-03-25] exp_056 -- Bilateral Progress Reward
 - **Result:** Training reward 28.92 (peak 40.96) but benchmark 0 gates, 0.64s avg dive crash
