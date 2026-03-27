@@ -27,7 +27,7 @@
 
 ---
 
-### [READY] exp_057 -- Body-Frame Gate Observations (re-run)
+### [CLAIMED:jeff-VirtualBox-6047-1774638579] exp_057 -- Body-Frame Gate Observations (re-run)
 - **Previous attempt:** Launched 2026-03-26 but results never landed (pod likely timed out)
 - **Config:** `configs/exp_057_body_frame_obs.yaml`
 - progress_coef=20 (from exp_056's 50) + body_frame_obs=true
