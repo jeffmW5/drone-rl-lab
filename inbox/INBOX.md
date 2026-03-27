@@ -6,10 +6,10 @@
 
 ## Queue
 
-### [IMPLEMENTED 2026-03-25] exp_057 -- Gate Observations in Body Frame
-- **Status:** Code implemented, config created. Ready to train.
-- **What was done:** `body_frame_obs=true` flag. Transforms gate rel positions + normals to drone body frame. Obs: 57D→55D (normal(3) replaces quat(4) per gate). Inference controller updated with `DRONE_RL_BODY_FRAME_OBS` env var.
-- **Config:** `configs/exp_057_body_frame_obs.yaml`
+### [DONE 2026-03-27] exp_057 -- Gate Observations in Body Frame
+- **Result:** FAILURE — training reward 9.78 (flat), benchmark 0.2 gates, 0.63s avg crash
+- **Diagnosis:** progress_coef=20 too weak; body-frame obs alone doesn't compensate
+- See `results/exp_057_body_frame_obs/EXPERIMENT.md`
 
 ### [DONE 2026-03-27] exp_058 -- Soft-Collision Curriculum (2-phase)
 - **Result:** FAILURE — training reward 37.84, benchmark 0 gates, 1.22s avg crash
@@ -27,11 +27,8 @@
 
 ---
 
-### [CLAIMED:jeff-VirtualBox-6047-1774638579] exp_057 -- Body-Frame Gate Observations (re-run)
-- **Previous attempt:** Launched 2026-03-26 but results never landed (pod likely timed out)
-- **Config:** `configs/exp_057_body_frame_obs.yaml`
-- progress_coef=20 (from exp_056's 50) + body_frame_obs=true
-- **Action:** Re-run on RunPod, collect results, benchmark
+### [DONE 2026-03-27] exp_057 -- Body-Frame Gate Observations (re-run)
+- **Result:** See exp_057 above — same experiment, this was the re-run entry
 
 ### [DONE 2026-03-25] exp_056 -- Bilateral Progress Reward
 - **Result:** Training reward 28.92 (peak 40.96) but benchmark 0 gates, 0.64s avg dive crash

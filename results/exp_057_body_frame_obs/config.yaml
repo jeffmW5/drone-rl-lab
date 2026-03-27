@@ -1,0 +1,61 @@
+name: exp_057_body_frame_obs
+backend: racing
+hypothesis: "exp_056 showed bilateral progress creates correct gate direction, but progress_coef=50
+  is too aggressive (dive crashes at 0.64s avg). Root cause: policy must combine world-frame gate
+  vectors with quaternion to determine gate direction — hard for 2-layer MLP. With body-frame obs,
+  'gate is 0.5m forward' is directly in the obs vector. Lower progress_coef=20 (from 50) since
+  body-frame obs provides directional info that progress_coef was brute-forcing. Keep bilateral
+  progress. Expected: same gate direction learning but with altitude stability."
+budget_seconds: 3600
+racing:
+  env_type: race
+  level: level2
+  race_config: level2_attitude.toml
+  total_timesteps: 20000000
+  num_envs: 512
+  num_steps: 8
+  learning_rate: 0.0003
+  anneal_lr: true
+  gamma: 0.97
+  gae_lambda: 0.97
+  update_epochs: 10
+  num_minibatches: 8
+  clip_coef: 0.2
+  ent_coef: 0.01
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  n_obs: 2
+  cuda: true
+  seed: 42
+  # === TIGHT LOGSTD CLAMP ===
+  max_logstd: -1.0
+  # === MINIMUM STABILITY (same as exp_046) ===
+  survive_coef: 0.05
+  alt_coef: 0.5
+  z_low: -0.05
+  z_high: 2.0
+  # === BILATERAL PROGRESS (reduced from exp_056's 50 to 20) ===
+  bilateral_progress: true
+  progress_coef: 20.0
+  gate_bonus: 10.0
+  speed_coef: 0.5
+  gate_in_view_coef: 0.0
+  reward_mode: add
+  # === BODY-FRAME GATE OBSERVATIONS (NEW) ===
+  body_frame_obs: true
+  # === PENALTIES OFF ===
+  proximity_coef: 0.0
+  rpy_coef: 0.0
+  act_coef: 0.0
+  d_act_th_coef: 0.0
+  d_act_xy_coef: 0.0
+  vz_coef: 0.0
+  vz_threshold: 0.5
+  oob_coef: 0.0
+  # === SPAWNS (same as exp_046) ===
+  max_episode_steps: 1500
+  random_gate_start: true
+  random_gate_ratio: 1.0
+  spawn_offset: 0.75
+  spawn_pos_noise: 0.15
+  spawn_vel_noise: 0.3
