@@ -1,44 +1,36 @@
 # Status -- Last Updated 2026-03-27
 
-## Latest Completed Results
+## Latest Result
 
-**exp_057 -- Body-Frame Gate Observations** completed 2026-03-27.
+**exp_060 -- Combined** completed 2026-03-27.
 
-- Training reward: **9.78 mean** (flat, never broke out) at 1.67M steps
-- Benchmark: **0.2 avg gates, 0.63s avg flight** — worse than exp_056
-- Takeaway: `progress_coef=20` too weak. Body-frame obs alone doesn't replace
-  strong progress reward. Needs combining with `progress_coef=50`.
+- Training reward: **28.02 mean** (still climbing at budget, peak ~29)
+- Benchmark: **0 gates, 0.66s avg** — same crash as exp_056
+- Combined body_frame_obs + soft_collision + progress_coef=50
+- Confirms: stochastic-to-deterministic deployment gap is THE bottleneck
 
-**exp_058 -- Soft-Collision Curriculum** completed 2026-03-27.
+## The Pattern (exp_056-060)
 
-- Training reward: **37.84 mean** at 5.37M steps (high due to multi-life episodes)
-- Benchmark: **0 gates, 1.22s avg flight** — same domain gap ceiling
-- Takeaway: soft collision doesn't fix the mid-air→ground domain gap
+| Exp | Train Reward | Benchmark Gates | Flight Time | Change |
+|-----|:---:|:---:|:---:|------|
+| 056 | 28.92 | 0 | 0.64s | bilateral progress |
+| 057 | 9.78 | 0.2 | 0.63s | body_frame_obs (weak progress) |
+| 058 | 37.84 | 0 | 1.22s | soft_collision |
+| 060 | 28.02 | 0 | 0.66s | all three combined |
 
-## Combined Results Summary
+All produce 0 benchmark gates. The stochastic training policy navigates
+(that's where the 25-38 reward comes from) but the deterministic mean crashes.
 
-| Experiment | Change | Train Reward | Benchmark Gates | Benchmark Time |
-|------------|--------|:------------:|:---------------:|:--------------:|
-| exp_056 | bilateral progress, coef=50 | 28.92 | 0 | 0.64s (dive) |
-| exp_057 | body_frame_obs, coef=20 | 9.78 | 0.2 | 0.63s (crash) |
-| exp_058 | soft_collision | 37.84 | 0 | 1.22s (crash) |
+## Current Bottleneck
 
-## Ready Next
+**Deterministic mean policy crashes at deployment.** This is NOT a reward
+design, observation, or curriculum problem. It's a policy optimization /
+deployment problem. The mean action at each state does not produce stable flight.
 
-- **exp_060 -- Combined** (body_frame_obs + progress_coef=50 + soft_collision)
-  - Config ready: `configs/exp_060_combined.yaml`
-  - Combines the structural changes that each showed partial promise
-- **exp_059 -- Asymmetric Actor-Critic** (CLAIMED by another agent, status unknown)
+## Next Steps
 
-## Key Bottleneck
-
-The **domain gap** (Hard Rule #36) remains the primary issue. All three structural
-experiments (057/058/060) use `random_gate_start=true` (mid-air spawns). Benchmark
-starts from ground level. Until training includes ground starts, benchmark will
-remain at ~0.6-1.3s regardless of reward or obs improvements.
-
-## Reference Milestones
-
-- **Legacy trajectory-following best lap:** `exp_016` -- 13.49s avg, 2/10 L2 finishes
-- **Direct-racing benchmark reference:** `exp_046` -- 1.37s avg flight, 0 gates
-- **Best gate passage:** `exp_028` -- 0.2 avg gates (1 gate in 1/5 runs)
+Focus on fixing the deterministic deployment gap:
+1. Deploy stochastic policy (sample from distribution, not mean)
+2. Temperature scaling at deployment
+3. Deterministic evaluation during training
+4. Architecture changes (mixture policy, mode-seeking loss)

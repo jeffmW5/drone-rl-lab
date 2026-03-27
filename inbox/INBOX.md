@@ -21,9 +21,14 @@
 - **What was done:** `asymmetric_critic=true` flag. `AsymmetricAgent` class in train_rl.py. `AppendPrivilegedObs` wrapper adds all gate pos/quat (28D) to obs. Actor uses 57D, critic uses 85D. Inference auto-detects and loads only actor weights.
 - **Config:** `configs/exp_059_asymmetric_critic.yaml`
 
-### [NOTE] All three are structural changes based on literature
-- Recommended training order: exp_057 (body-frame obs), then exp_058 (soft-collision), then exp_059 (asymmetric critic).
-- Can be combined in future experiments (e.g., body_frame_obs + asymmetric_critic).
+### [DONE 2026-03-27] exp_060 -- Combined (Body-Frame + Soft Collision + Strong Progress)
+- **Result:** FAILURE — training reward 28.02, benchmark 0 gates, 0.66s avg crash
+- **Diagnosis:** Same stochastic-to-deterministic gap as exp_056. Combined structural changes don't fix deployment.
+- See `results/exp_060_combined/EXPERIMENT.md`
+
+### [NOTE] All three structural changes (057/058/059) are done except exp_059 (asymmetric critic, claimed by another agent).
+- **Key finding:** exp_056-060 all show 25-38 training reward with 0 benchmark gates.
+- **Bottleneck:** deterministic mean policy crashes; stochastic training policy navigates fine.
 
 ---
 
