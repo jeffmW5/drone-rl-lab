@@ -18,7 +18,7 @@ JAX_CACHE_DIR="${POD_ROOT}/.cache/jax/compilation_cache"
 RUNPOD_ENV_FILE="/etc/profile.d/drone_rl_runpod.sh"
 
 # ── Safety: Auto-shutdown timer ──────────────────────────────────────────────
-MAX_HOURS=4
+MAX_HOURS="${DRONE_RL_POD_MAX_HOURS:-1}"
 echo ""
 echo "================================================"
 echo "  AUTO-SHUTDOWN in ${MAX_HOURS} hours"
@@ -61,7 +61,10 @@ pixi run -e gpu python -c "import jax; print(jax.devices())" >/dev/null
 pixi run -e gpu pip install -e ".[rl]" --quiet
 
 echo "[4/5] Installing drone-rl-lab deps into the Pixi GPU environment..."
-pixi run -e gpu pip install pyyaml stable-baselines3 gym-pybullet-drones matplotlib --quiet
+pixi run -e gpu pip install pyyaml stable-baselines3 matplotlib --quiet
+if ! pixi run -e gpu pip install gym-pybullet-drones --quiet; then
+    echo "[4/5] gym-pybullet-drones install failed; continuing because RunPod racing runs do not require hover deps."
+fi
 
 # ── Persistent JAX cache ─────────────────────────────────────────────────────
 echo "[cache] Configuring persistent JAX compilation cache..."
@@ -83,7 +86,7 @@ cat > /usr/local/bin/drone-rl-gpu-python <<'INNER'
 set -e
 export JAX_COMPILATION_CACHE_DIR="/root/.cache/jax/compilation_cache"
 export JAX_PERSISTENT_CACHE_MIN_COMPILE_TIME_SECS="0"
-cd /root/lsy_drone_racing
+cd /root/drone-rl-lab
 exec /root/.pixi/bin/pixi run -e gpu python "$@"
 INNER
 chmod +x /usr/local/bin/drone-rl-gpu-python
@@ -93,7 +96,7 @@ cat > /usr/local/bin/drone-rl-gpu-pip <<'INNER'
 set -e
 export JAX_COMPILATION_CACHE_DIR="/root/.cache/jax/compilation_cache"
 export JAX_PERSISTENT_CACHE_MIN_COMPILE_TIME_SECS="0"
-cd /root/lsy_drone_racing
+cd /root/drone-rl-lab
 exec /root/.pixi/bin/pixi run -e gpu pip "$@"
 INNER
 chmod +x /usr/local/bin/drone-rl-gpu-pip

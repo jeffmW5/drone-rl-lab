@@ -3,7 +3,7 @@
 # Drone RL Lab — RunPod Pod Manager
 # =============================================================================
 # Starts the pod, waits for SSH, copies deploy key, runs the full pipeline,
-# then exits (pod auto-stops via its own 4hr shutdown timer).
+# then exits (pod auto-stops via its own safety timer).
 #
 # Usage:
 #   bash scripts/manage_pod.sh              # check inbox, start pod, run pipeline
@@ -17,6 +17,7 @@
 #
 # Optional env vars:
 #   RUNPOD_GPU_COUNT — GPUs to resume with (default: 1)
+#   RUNPOD_CLOUD_TYPE — pod cloud type (default: SECURE)
 # =============================================================================
 
 set -euo pipefail
@@ -25,6 +26,7 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 DEPLOY_KEY="/media/id_ed25519_runpod"
 GPU_COUNT="${RUNPOD_GPU_COUNT:-1}"
+RUNPOD_CLOUD_TYPE="${RUNPOD_CLOUD_TYPE:-SECURE}"
 POLL_INTERVAL=10   # seconds between status checks
 MAX_WAIT=300       # max seconds to wait for pod to start (5 min)
 SSH_TIMEOUT=120    # max seconds to wait for SSH to be ready
@@ -32,9 +34,6 @@ SSH_TIMEOUT=120    # max seconds to wait for SSH to be ready
 # GPU types to try when creating a new pod (order = preference)
 GPU_TYPES=(
     "NVIDIA GeForce RTX 3090"
-    "NVIDIA RTX A5000"
-    "NVIDIA GeForce RTX 4090"
-    "NVIDIA RTX A4000"
 )
 PYTORCH_IMAGE="runpod/pytorch:2.1.0-py3.10-cuda11.8.0-devel-ubuntu22.04"
 POD_ID_FILE="/media/runpod_pod_id"  # persists new pod ID across sessions
@@ -75,6 +74,17 @@ runpod_query() {
         "https://api.runpod.io/graphql"
 }
 
+pod_exists() {
+    local pod_id="$1"
+    local status_json
+    status_json=$(runpod_query "{ pod(input: {podId: \\\"${pod_id}\\\"}) { id } }")
+    echo "$status_json" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+sys.exit(0 if ((d.get('data') or {}).get('pod') or {}).get('id') else 1)
+" 2>/dev/null
+}
+
 get_pod_status() {
     runpod_query "{ pod(input: {podId: \\\"${RUNPOD_POD_ID}\\\"}) { id desiredStatus runtime { uptimeInSeconds ports { ip privatePort publicPort type } } } }"
 }
@@ -89,16 +99,23 @@ save_pod_id() {
 create_new_pod() {
     local gpu_type="$1"
     log "Trying to create new pod with GPU: $gpu_type"
+    local public_key
+    public_key=$(ssh-keygen -y -f "$DEPLOY_KEY" 2>/dev/null | tr -d '\n')
+    if [ -z "$public_key" ]; then
+        err "Could not derive public key from $DEPLOY_KEY"
+        return 1
+    fi
     local result
     result=$(runpod_query "mutation { podFindAndDeployOnDemand(input: { \
 name: \\\"drone-rl-lab\\\", \
 imageName: \\\"${PYTORCH_IMAGE}\\\", \
 gpuTypeId: \\\"${gpu_type}\\\", \
-cloudType: SECURE, \
+cloudType: ${RUNPOD_CLOUD_TYPE}, \
 gpuCount: 1, \
 containerDiskInGb: 50, \
 ports: \\\"22/tcp\\\", \
-startSsh: true \
+startSsh: true, \
+env: [{key: \\\"PUBLIC_KEY\\\", value: \\\"${public_key}\\\"}] \
 }) { id } }")
     echo "$result" | python3 -c "
 import sys, json
@@ -111,6 +128,23 @@ if pid:
 }
 
 start_pod() {
+    if ! pod_exists "$RUNPOD_POD_ID"; then
+        warn "Configured pod $RUNPOD_POD_ID does not exist anymore — creating a fresh RTX 3090 pod..."
+        local new_id=""
+        for gpu_type in "${GPU_TYPES[@]}"; do
+            new_id=$(create_new_pod "$gpu_type")
+            if [ -n "$new_id" ]; then
+                log "New pod created: $new_id (GPU: $gpu_type)"
+                RUNPOD_POD_ID="$new_id"
+                save_pod_id "$new_id"
+                return 0
+            fi
+            warn "  $gpu_type — unavailable"
+        done
+        err "RTX 3090 pod unavailable."
+        exit 1
+    fi
+
     log "Sending podResume request for $RUNPOD_POD_ID..."
     local result
     result=$(runpod_query "mutation { podResume(input: {podId: \\\"${RUNPOD_POD_ID}\\\", gpuCount: ${GPU_COUNT}}) { id desiredStatus } }")
