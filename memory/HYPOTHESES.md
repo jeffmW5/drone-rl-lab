@@ -15,12 +15,12 @@
 ## HYP-002
 - **Statement:** The direct-racing line is still materially undertrained, and mean-policy convergence has not completed by the current 3600s budget.
 - **Type:** hypothesis
-- **Scope:** GPU direct-racing runs with current 3600s budgets
+- **Scope:** GPU direct-racing runs with current 3600-7200s budgets
 - **Supported by:** `exp_060` reward still climbing at budget end; literature comparison in `research/stochastic_deployment_gap.md`
-- **Counterevidence:** Some longer direct-racing runs plateau without solving navigation.
-- **Confidence:** medium
-- **Last reviewed:** 2026-03-27
-- **Next falsification test:** Run a longer-budget experiment with best-checkpoint saving and see whether deterministic benchmark meaningfully improves.
+- **Counterevidence:** `exp_068` doubled budget (7200s) to 42.84 reward but deterministic benchmark was flat (1.67s, 0 gates vs exp_067's 1.70s, 0 gates). Training reward gains did NOT translate to benchmark improvement.
+- **Confidence:** low (weakened by exp_068)
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** If exp_069 (larger network, same budget) shows benchmark gates, then capacity was the bottleneck, not training duration.
 
 ## HYP-003
 - **Statement:** Asymmetric critic improves training efficiency in this family, but by itself is insufficient to produce matched mid-air benchmark gains.
@@ -51,3 +51,13 @@
 - **Confidence:** medium
 - **Last reviewed:** 2026-03-27
 - **Next falsification test:** Run a clean ablation where body-frame observations are toggled and reward weights are held fixed.
+
+## HYP-006
+- **Statement:** The 2×64 MLP lacks capacity for the deterministic mean to represent precise gate navigation, causing the persistent deployment gap.
+- **Type:** hypothesis
+- **Scope:** Direct `RaceCoreEnv` policies with 55D obs and 4D action
+- **Supported by:** Swift (Nature 2023) uses 2×128 and achieves real-world gate navigation; our 2×64 (16K params) may be insufficient for 55D→4D mapping with the precision needed for gates; stochastic policy navigates (reward 43) but mean does not
+- **Counterevidence:** none yet; exp_069 will test this
+- **Confidence:** medium
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** exp_069 with hidden_size=128 (48K params). If benchmark gates improve, capacity was limiting. If unchanged, the gap is structural (reward/exploration), not capacity.
