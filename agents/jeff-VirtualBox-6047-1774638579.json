@@ -3,8 +3,8 @@
   "hostname": "jeff-VirtualBox",
   "pid": 6047,
   "started": "2026-03-27T19:09:39+00:00",
-  "heartbeat": "2026-03-28T02:18:33+00:00",
-  "last_pushed_heartbeat": "2026-03-28T02:18:33+00:00",
-  "task": "exp_059 -- Asymmetric Actor-Critic",
-  "status": "claimed"
+  "heartbeat": "2026-03-28T02:18:42+00:00",
+  "last_pushed_heartbeat": "2026-03-28T02:18:42+00:00",
+  "task": null,
+  "status": "idle"
 }

@@ -16,7 +16,8 @@
 - **Diagnosis:** Soft collision boosted training reward (multi-life episodes) but domain gap (mid-air spawn vs ground benchmark) is the bottleneck, not crash termination
 - See `results/exp_058_soft_collision/EXPERIMENT.md`
 
-### [CLAIMED:jeff-VirtualBox-6047-1774638579] exp_059 -- Asymmetric Actor-Critic
+### [DONE 2026-03-27] exp_059 -- Asymmetric Actor-Critic
+- **Completed:** 2026-03-27
 - **Status:** Code implemented, config created. Ready to train.
 - **What was done:** `asymmetric_critic=true` flag. `AsymmetricAgent` class in train_rl.py. `AppendPrivilegedObs` wrapper adds all gate pos/quat (28D) to obs. Actor uses 57D, critic uses 85D. Inference auto-detects and loads only actor weights.
 - **Config:** `configs/exp_059_asymmetric_critic.yaml`
