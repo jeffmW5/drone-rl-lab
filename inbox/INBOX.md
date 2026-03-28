@@ -70,6 +70,12 @@
 - **Diagnosis:** More training increases reward but doesn't proportionally improve deployment. Weakens simple undertraining hypothesis.
 - See `results/exp_068_extended_no_clamp/EXPERIMENT.md`
 
+### [CLAIMED:jeff-VirtualBox-18828-1774687836] exp_069 -- Larger Network (2x128)
+- **Hypothesis:** Swift (Nature 2023) uses 2x128 MLP; we use 2x64. The deterministic mean may lack capacity to represent precise gate navigation. Single change from exp_068: hidden_size 64 → 128.
+- **What to change:** hidden_size: 128 in config. Uses new configurable hidden_size parameter in train_rl.py Agent class.
+- **Expected outcome:** If capacity is the bottleneck, benchmark gates should improve even at similar training reward. If not, the mean policy's failure is structural (reward shape, exploration), not capacity.
+- **Config:** `configs/exp_069_larger_network.yaml`
+
 ### [DEFERRED] exp_063 -- Extended Training (10M+ steps, no logstd clamp)
 - **Depends on:** exp_061, 062, 064 results
 - **Hypothesis:** Swift trains 100M steps; we train 1.5M. Remove max_logstd clamp and train much longer.
