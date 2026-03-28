@@ -65,6 +65,10 @@
 - **Diagnosis:** Clamp removal does not hurt training; ent_coef=0.03 was exp_064's failure cause. Unclamped model has better deployment stability.
 - See `results/exp_067_no_logstd_clamp/EXPERIMENT.md`
 
+### [CLAIMED:jeff-VirtualBox-16081-1774673983] exp_068 -- Extended No-Clamp Training (7200s)
+- **Hypothesis:** exp_067 was still climbing steeply at 32.01 reward at budget end. Doubling budget tests HYP-002 (undertraining). Single change: budget 3600→7200s.
+- **Config:** `configs/exp_068_extended_no_clamp.yaml`
+
 ### [DEFERRED] exp_063 -- Extended Training (10M+ steps, no logstd clamp)
 - **Depends on:** exp_061, 062, 064 results
 - **Hypothesis:** Swift trains 100M steps; we train 1.5M. Remove max_logstd clamp and train much longer.
