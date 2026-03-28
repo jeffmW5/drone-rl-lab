@@ -41,14 +41,14 @@
 - **Diagnosis:** Policy mean hasn't learned gate navigation; deployment-time fixes insufficient
 - See `results/exp_062_temperature_scaled/EXPERIMENT.md`
 
-### [CLAIMED:codex-exp065] exp_064 -- Entropy Annealing Schedule
+### [READY] exp_064 -- Entropy Annealing Schedule
 - **Hypothesis:** Start with high entropy (ent_coef=0.05, no logstd clamp) for exploration, then anneal both to low values. Lets mean converge naturally.
 - **What to change:** Implement ent_coef annealing (0.05 → 0.001). Remove max_logstd clamp. Train 10M+ steps on GPU.
 - **Expected outcome:** Smoother convergence, mean finds the navigation mode.
 - **Paper basis:** Entropy Annealing (2405.20250)
 - **Config:** `configs/exp_064_entropy_annealing.yaml` (to create)
 
-### [READY] exp_065 -- Periodic Deterministic Eval + Best Checkpoint
+### [CLAIMED:jeff-VirtualBox-15078-1774669522] exp_065 -- Periodic Deterministic Eval + Best Checkpoint
 - **Hypothesis:** We are currently blind to whether the deployable deterministic mean improves during training. If periodic deterministic eval rises late, or `best_det.ckpt` beats the final checkpoint, that supports undertraining and checkpoint-selection effects. If training reward rises while deterministic eval stays flat, that weakens the simple "just train longer" story.
 - **What to change:** Use the new `periodic_deterministic_eval` trainer hook. Every 50 iterations, run 8 deterministic eval episodes on a matched training env, save `best_det.ckpt`, and write `deterministic_evaluations.npz`. After training, benchmark both `best_det.ckpt` and the final `model.ckpt`.
 - **Expected outcome:** Cleaner visibility into whether the mean policy is maturing, plus protection against saving a late-collapsed final checkpoint.
