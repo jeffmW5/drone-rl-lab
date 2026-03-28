@@ -16,7 +16,7 @@
 - **Diagnosis:** Soft collision boosted training reward (multi-life episodes) but domain gap (mid-air spawn vs ground benchmark) is the bottleneck, not crash termination
 - See `results/exp_058_soft_collision/EXPERIMENT.md`
 
-### [READY] exp_059 -- Asymmetric Actor-Critic
+### [CLAIMED:jeff-VirtualBox-6047-1774638579] exp_059 -- Asymmetric Actor-Critic
 - **Status:** Code implemented, config created. Ready to train.
 - **What was done:** `asymmetric_critic=true` flag. `AsymmetricAgent` class in train_rl.py. `AppendPrivilegedObs` wrapper adds all gate pos/quat (28D) to obs. Actor uses 57D, critic uses 85D. Inference auto-detects and loads only actor weights.
 - **Config:** `configs/exp_059_asymmetric_critic.yaml`
@@ -26,9 +26,34 @@
 - **Diagnosis:** Same stochastic-to-deterministic gap as exp_056. Combined structural changes don't fix deployment.
 - See `results/exp_060_combined/EXPERIMENT.md`
 
-### [NOTE] All three structural changes (057/058/059) are done except exp_059 (asymmetric critic, claimed by another agent).
+### [NOTE] All three structural changes (057/058/059) are done except exp_059 (asymmetric critic, reclaimed).
 - **Key finding:** exp_056-060 all show 25-38 training reward with 0 benchmark gates.
 - **Bottleneck:** deterministic mean policy crashes; stochastic training policy navigates fine.
+
+### [READY] exp_061 -- Stochastic Deployment of exp_060 Model
+- **Hypothesis:** Stochastic training policy navigates (28.02 reward) but deterministic mean crashes. Deploying with stochastic sampling should recover navigation behavior.
+- **What to change:** Benchmark with `DRONE_RL_STOCHASTIC=true` env var. No retraining needed — use exp_060's model.ckpt.
+- **Expected outcome:** Flight time > 2s, possibly gate passages.
+- **Paper basis:** Dynamic Entropy Tuning (2512.18336)
+- **Config:** No new config — inference-only change.
+
+### [READY] exp_062 -- Temperature-Scaled Deployment
+- **Hypothesis:** Full stochastic may be too noisy. Scaling temperature (std *= T) reduces noise while keeping policy away from unstable mean.
+- **What to change:** Add `DRONE_RL_NOISE_SCALE` support to attitude_rl_race.py. Sweep T=0.1, 0.3, 0.5, 1.0.
+- **Expected outcome:** Sweet spot between deterministic crash and full stochastic noise.
+- **Paper basis:** Standard RL practice + entropy annealing theory (2405.20250)
+
+### [READY] exp_064 -- Entropy Annealing Schedule
+- **Hypothesis:** Start with high entropy (ent_coef=0.05, no logstd clamp) for exploration, then anneal both to low values. Lets mean converge naturally.
+- **What to change:** Implement ent_coef annealing (0.05 → 0.001). Remove max_logstd clamp. Train 10M+ steps on GPU.
+- **Expected outcome:** Smoother convergence, mean finds the navigation mode.
+- **Paper basis:** Entropy Annealing (2405.20250)
+- **Config:** `configs/exp_064_entropy_annealing.yaml` (to create)
+
+### [DEFERRED] exp_063 -- Extended Training (10M+ steps, no logstd clamp)
+- **Depends on:** exp_061, 062, 064 results
+- **Hypothesis:** Swift trains 100M steps; we train 1.5M. Remove max_logstd clamp and train much longer.
+- **Paper basis:** Swift (Nature 2023)
 
 ---
 
