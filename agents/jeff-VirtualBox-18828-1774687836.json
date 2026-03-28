@@ -1,0 +1,10 @@
+{
+  "id": "jeff-VirtualBox-18828-1774687836",
+  "hostname": "jeff-VirtualBox",
+  "pid": 18828,
+  "started": "2026-03-28T08:50:36+00:00",
+  "heartbeat": "2026-03-28T08:50:36+00:00",
+  "last_pushed_heartbeat": "2026-03-28T08:50:36+00:00",
+  "task": null,
+  "status": "idle"
+}
