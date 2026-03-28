@@ -41,3 +41,13 @@
 - **Confidence:** high
 - **Last reviewed:** 2026-03-27
 - **Next falsification test:** Add best-checkpoint saving and show it never changes benchmark conclusions.
+
+## LESSON-005
+- **Statement:** Evaluation tooling must match both the training start-state regime and the deployed checkpoint architecture, or benchmark conclusions become confounded.
+- **Type:** tentative_lesson
+- **Scope:** Direct-racing evaluation for random-gate-start experiments and asymmetric checkpoints
+- **Supported by:** `exp_059` requiring `level2_midair` rather than race-start evaluation, plus the actor-only asymmetric checkpoint patch in `attitude_rl_generic.py`
+- **Counterevidence:** none noted
+- **Confidence:** high
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** Show a mismatched evaluator or loader producing the same benchmark outcome as the matched path across multiple asymmetric experiments.

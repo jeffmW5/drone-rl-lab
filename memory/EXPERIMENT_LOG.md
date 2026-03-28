@@ -18,3 +18,43 @@
 | 018 | racing | level2 | 5.48 | 213,504 | -- | -- | -- | Gate-aware traj, CPU 213k |
 | 019 | racing | level2 | 7.55 | 2,998,272 | -- | -- | -- | GPU gate-aware, 3M |
 | 020 | racing | level2 | 7.79 | 9,994,240 | -- | -- | -- | GPU gate-aware, 10M |
+| 022 | racing | level2 | 10.46 | 2,027,520 | 0% | 2.0s | 0.5 | Train directly on VecDroneRaceEnv (MuJoCo gate-racing env... |
+| 023 | racing | level2 | 10.14 | 4,145,152 | 0% | 2.0s | 0.8 | Extended RaceCoreEnv training with OOB altitude penalty. ... |
+| 023b | racing | level2 | 6.42 | 4,055,040 | 0% | 0.8s | 0.0 | RaceCoreEnv with hard OOB termination. exp_023 soft penal... |
+| 025 | racing | level2 | 3.41 | 7,999,488 | -- | -- | -- | Add altitude-matching reward to teach drone what height t... |
+| 025b | racing | level2 | 10.79 | 7,446,528 | 0% | 1.2s | 0.0 | Same as exp_025 but with correct 25-step (0.5s) grace per... |
+| 026 | racing | level2 | 9.77 | 7,999,488 | 0% | 28.8s | 0.0 | Add vertical velocity penalty to force earlier braking. e... |
+| 027 | racing | level2 | 11.67 | 4,575,232 | -- | -- | -- | Swift (Kaufmann et al., Nature 2023) resets agents at ran... |
+| 027b | racing | level2 | 10.79 | 4,870,144 | -- | -- | -- | exp_027 (100% random gate starts) trained well (reward 11... |
+| 027c | racing | level2 | 6.34 | 6,991,872 | -- | -- | -- | Fine-tune exp_026 (stable hover at z=0.72) with 50% rando... |
+| 028 | racing | level2 | 16.95 | 7,999,488 | -- | -- | -- | Fine-tune exp_026 hover model with much higher speed rewa... |
+| 029 | racing | level2 | 16.52 | 7,999,488 | -- | -- | -- | exp_028 proved navigation is learnable (first gate pass!)... |
+| 030 | racing | level2 | 15.64 | 7,999,488 | -- | -- | -- | Phase transition sweep: speed_coef=0.55 fine-tuned from e... |
+| 031 | racing | level2 | 10.44 | 7,999,488 | -- | -- | -- | Phase transition sweep: speed_coef=0.70 fine-tuned from e... |
+| 032 | racing | level2 | 11.87 | 7,999,488 | -- | -- | -- | Replace exp(-k*dist) proximity with PBRS delta-progress r... |
+| 033 | racing | level2 | 14.37 | 7,999,488 | -- | -- | -- | Fix truncation vs termination conflation in GAE (Pardo et... |
+| 034 | racing | level2 | 17.26 | 7,999,488 | -- | -- | -- | PBRS + speed_coef=0.7 to break hover trap. The speed swee... |
+| 035 | racing | level2 | 11.32 | 7,999,488 | -- | -- | -- | Remove survive_coef to break the hover anchor. exp_034 pr... |
+| 036 | racing | level2 | 28.61 | 7,999,488 | -- | -- | -- | Binary search survive_coef at 0.15 — midpoint of brackete... |
+| 037 | racing | level2 | 18.10 | 7,999,488 | -- | -- | -- | Final binary search on survive_coef. Bracket: 0.15=crash ... |
+| 038 | racing | level2 | 24.29 | 7,999,488 | -- | -- | -- | Higher entropy (ent_coef=0.05, 7x increase) to fix policy... |
+| 039 | racing | level2 | 20.50 | 7,999,488 | -- | -- | -- | Curriculum with short episodes (300 steps = 6s). All rewa... |
+| 040 | racing | level2 | 7.74 | 3,227,648 | 0% | 0.9s | 0.0 | Radical simplification: only two reward signals — gate_in... |
+| 041 | racing | level2 | 7.74 | 4,825,088 | -- | -- | -- | Progress only — no view reward. exp_040 showed gate_in_vi... |
+| 042 | racing | level2 | 7.74 | 4,784,128 | -- | -- | -- | View reward scaled to 0.1 so progress dominates. exp_040 ... |
+| 043 | racing | level2 | 7.75 | 4,747,264 | -- | -- | -- | Multiplicative reward: view * progress. Zero reward unles... |
+| 044 | racing | level2 | 26.38 | 18,325,504 | -- | -- | -- | Minimum viable stability + maximum progress incentive. ex... |
+| 045 | racing | level2 | 26.52 | 4,681,728 | -- | -- | -- | Same as exp_044 (min stability + max progress) but with m... |
+| 046 | racing | level2 | 29.20 | 4,345,856 | 0% | 1.4s | 0.0 | Same as exp_044/045 but with max_logstd=-1.0 (std ≤ 0.37)... |
+| 047 | racing | level2 | 10.01 | 2,809,856 | -- | -- | -- | exp_046 showed tight logstd (std<=0.37) produces consiste... |
+| 048 | racing | level2 | 18.88 | 2,383,872 | -- | -- | -- | Combine tight logstd (exp_046) with short episodes + surv... |
+| 049 | racing | level2 | 21.02 | 3,690,496 | 0% | 0.8s | 0.0 | exp_046 (survive=0.05, tight logstd) produced best benchm... |
+| 051 | racing | level2 | 175.60 | 3,899,392 | 0% | 1.2s | 0.0 | exp_046 (survive=0.05, tight logstd, num_steps=8) flies 1... |
+| 052 | racing | level2 | 45.22 | 5,951,488 | 0% | 1.2s | 0.0 | exp_046 (tight logstd, survive=0.05) navigates 1.3s towar... |
+| 053 | racing | level2 | 28.52 | 4,395,008 | 0% | 0.7s | 0.0 | exp_046-052 all crash at ~1.3s benchmark because training... |
+| 054 | racing | level2 | 8.71 | 14,770,176 | -- | -- | -- | ALL experiments (046-052) crash at ~1.3s benchmark becaus... |
+| 056 | racing | level2 | 28.92 | 3,706,880 | -- | -- | -- | Mid-air benchmark reveals policy never learned navigation... |
+| 057 | racing | level2 | 9.78 | 1,671,168 | 0% | 0.6s | 0.2 | exp_056 showed bilateral progress creates correct gate di... |
+| 058 | racing | level2 | 37.84 | 5,373,952 | 0% | 1.2s | 0.0 | Hover-or-crash binary trap (Hard Rule #28, #34): policy e... |
+| 059 | racing | level2 | 32.50 | 1,974,272 | 0% | 0.8s | 0.0 | RSS 2024, CoRL 2024, RA-L 2025 all use asymmetric actor-c... |
+| 060 | racing | level2 | 28.02 | 1,564,672 | 0% | 0.7s | 0.0 | Combines lessons from exp_056/057/058: - exp_056: bilater... |

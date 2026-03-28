@@ -21,6 +21,41 @@ import json
 import sys
 
 
+def _benchmark_entries(bench: dict | list | None) -> list[dict]:
+    """Normalize benchmark.json payloads across legacy and structured formats."""
+    if not bench:
+        return []
+    if isinstance(bench, list):
+        if not bench:
+            return []
+        results = []
+        for item in bench:
+            results.append(
+                {
+                    "time": item.get("time", item.get("flight_time")),
+                    "finished": item.get("finished", False),
+                    "gates": item.get("gates", item.get("gates_passed", 0)),
+                }
+            )
+        finished_runs = [r for r in results if r["finished"]]
+        avg_time = sum(r["time"] for r in results) / len(results)
+        avg_gates = sum(r["gates"] for r in results) / len(results)
+        entry = {
+            "level": "legacy",
+            "n_runs": len(results),
+            "results": results,
+            "avg_time": round(avg_time, 2),
+            "finish_rate": round(len(finished_runs) / len(results), 2),
+            "avg_gates": round(avg_gates, 1),
+        }
+        if finished_runs:
+            entry["avg_finish_time"] = round(
+                sum(r["time"] for r in finished_runs) / len(finished_runs), 2
+            )
+        return [entry]
+    return bench.get("benchmarks", [])
+
+
 def load_all_metrics(results_dir: str) -> list:
     """Load metrics.json from every experiment folder."""
     experiments = []
@@ -74,7 +109,7 @@ def get_benchmark_summary(exp: dict) -> dict:
         return {}
 
     results = {}
-    benchmarks = bench.get("benchmarks", [])
+    benchmarks = _benchmark_entries(bench)
     for b in benchmarks:
         level = b.get("level", "?")
         results[level] = {

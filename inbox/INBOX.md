@@ -16,19 +16,20 @@
 - **Diagnosis:** Soft collision boosted training reward (multi-life episodes) but domain gap (mid-air spawn vs ground benchmark) is the bottleneck, not crash termination
 - See `results/exp_058_soft_collision/EXPERIMENT.md`
 
-### [READY] exp_059 -- Asymmetric Actor-Critic
-- **Status:** Code implemented, config created. Ready to train.
-- **What was done:** `asymmetric_critic=true` flag. `AsymmetricAgent` class in train_rl.py. `AppendPrivilegedObs` wrapper adds all gate pos/quat (28D) to obs. Actor uses 57D, critic uses 85D. Inference auto-detects and loads only actor weights.
-- **Config:** `configs/exp_059_asymmetric_critic.yaml`
+### [DONE 2026-03-28] exp_059 -- Asymmetric Actor-Critic
+- **Result:** MIXED — training reward improved to 32.50, but matched mid-air benchmark stayed at 0 gates with 0.79s avg flight
+- **Diagnosis:** asymmetric critic helped 1-hour training efficiency but did not fix deployment
+- **Operational note:** benchmarking required actor-only loading support for asymmetric checkpoints in `attitude_rl_generic.py`
+- See `results/exp_059_asymmetric_critic/EXPERIMENT.md`
 
 ### [DONE 2026-03-27] exp_060 -- Combined (Body-Frame + Soft Collision + Strong Progress)
 - **Result:** FAILURE — training reward 28.02, benchmark 0 gates, 0.66s avg crash
 - **Diagnosis:** Same stochastic-to-deterministic gap as exp_056. Combined structural changes don't fix deployment.
 - See `results/exp_060_combined/EXPERIMENT.md`
 
-### [NOTE] All three structural changes (057/058/059) are done except exp_059 (asymmetric critic, reclaimed).
-- **Key finding:** exp_056-060 all show 25-38 training reward with 0 benchmark gates.
-- **Bottleneck:** deterministic mean policy crashes; stochastic training policy navigates fine.
+### [NOTE] Structural change sweep 057/058/059 is now complete.
+- **Key finding:** body-frame obs, soft collision, and asymmetric critic all changed training behavior, but none produced a successful matched benchmark.
+- **Scope note:** `exp_059` improved training reward, so "no training-side gain" would be too strong; the stronger conclusion is that benchmark success still did not follow.
 
 ### [DONE 2026-03-28] exp_061 -- Stochastic Deployment of exp_060 Model
 - **Result:** PARTIAL — avg 1.67s flight (2.5x improvement) but still 0 gates

@@ -61,3 +61,23 @@
 - **Confidence:** high
 - **Last reviewed:** 2026-03-27
 - **Next falsification test:** none needed; this is a recorded result.
+
+## FACT-007
+- **Statement:** `exp_059` reached 32.502 +/- 1.149 mean training reward and 0 gates with 0.79s average matched mid-air benchmark flight.
+- **Type:** fact
+- **Scope:** Direct `RaceCoreEnv`, asymmetric critic, `level2_midair` benchmark
+- **Supported by:** `results/exp_059_asymmetric_critic/metrics.json`, `results/exp_059_asymmetric_critic/benchmark.json`, `results/exp_059_asymmetric_critic/EXPERIMENT.md`
+- **Counterevidence:** none noted
+- **Confidence:** high
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** none needed; this is a recorded result.
+
+## FACT-008
+- **Statement:** The preexisting generic deployment controller could not load `exp_059`'s asymmetric checkpoint correctly; actor-only asymmetric loading support was required before benchmarking.
+- **Type:** fact
+- **Scope:** Evaluation tooling for asymmetric direct-racing checkpoints
+- **Supported by:** local checkpoint load test on 2026-03-28, local patch to `lsy_drone_racing/control/attitude_rl_generic.py`
+- **Counterevidence:** none noted
+- **Confidence:** high
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** A later benchmark path loads the same checkpoint correctly without architecture-aware logic.

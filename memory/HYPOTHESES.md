@@ -23,14 +23,14 @@
 - **Next falsification test:** Run a longer-budget experiment with best-checkpoint saving and see whether deterministic benchmark meaningfully improves.
 
 ## HYP-003
-- **Statement:** Asymmetric critic training may improve value estimation enough to stabilize the deployed mean policy.
+- **Statement:** Asymmetric critic improves training efficiency in this family, but by itself is insufficient to produce matched mid-air benchmark gains.
 - **Type:** hypothesis
 - **Scope:** Direct `RaceCoreEnv` line with privileged critic observations
-- **Supported by:** Literature review; `exp_059` remains untested locally
-- **Counterevidence:** none yet inside this repo
+- **Supported by:** `exp_059` training vs `exp_056` baseline; literature on asymmetric actor-critic
+- **Counterevidence:** `exp_059` still achieved 0 gates on the matched mid-air benchmark
 - **Confidence:** medium
-- **Last reviewed:** 2026-03-27
-- **Next falsification test:** Train `exp_059` and compare against matched non-asymmetric baseline.
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** Combine asymmetric critic with a separate mean-policy stabilization change and show that benchmark performance then moves.
 
 ## HYP-004
 - **Statement:** Tight logstd helps late deterministic deployment but may hurt early exploration and attribution if applied from the start.

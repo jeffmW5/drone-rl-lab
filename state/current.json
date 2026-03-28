@@ -1,0 +1,78 @@
+{
+  "generated_at": "2026-03-28T03:30:49+00:00",
+  "repo": {
+    "path": "/media/drone-rl-lab",
+    "available": true,
+    "branch": "master",
+    "commit": "a73a3e24af0dc24c1990917fba7f16e2be3c44f4",
+    "dirty": true
+  },
+  "external_repos": {
+    "lsy_drone_racing": {
+      "path": "/media/lsy_drone_racing",
+      "available": true,
+      "branch": "main",
+      "commit": "06ec55f04f0bbd99720cac1eeb851a88972b1d14",
+      "dirty": true
+    }
+  },
+  "agents": [
+    {
+      "id": "jeff-VirtualBox-6047-1774638579",
+      "status": "training on pod 32eutll6uvb5um",
+      "task": "exp_064",
+      "heartbeat": "2026-03-28T02:45:09+00:00"
+    }
+  ],
+  "queue": {
+    "counts": {
+      "done": 22,
+      "note": 1,
+      "claimed": 1,
+      "deferred": 1
+    },
+    "running": [
+      {
+        "status": "CLAIMED:jeff-VirtualBox-6047-1774638579",
+        "status_kind": "claimed",
+        "title": "exp_064 -- Entropy Annealing Schedule",
+        "body": "- **Hypothesis:** Start with high entropy (ent_coef=0.05, no logstd clamp) for exploration, then anneal both to low values. Lets mean converge naturally.\n- **What to change:** Implement ent_coef annealing (0.05 \u2192 0.001). Remove max_logstd clamp. Train 10M+ steps on GPU.\n- **Expected outcome:** Smoother convergence, mean finds the navigation mode.\n- **Paper basis:** Entropy Annealing (2405.20250)\n- **Config:** `configs/exp_064_entropy_annealing.yaml` (to create)",
+        "task_id": "exp_064"
+      }
+    ],
+    "actionable": [],
+    "next_task": null
+  },
+  "evaluation": {
+    "racing_primary_metric": "benchmark",
+    "benchmark_ranking": [
+      "finish_rate",
+      "avg_gates",
+      "avg_time"
+    ],
+    "training_reward_note": "Training reward is secondary and only comparable within similar reward definitions."
+  },
+  "experiments": {
+    "total_results": 53,
+    "highest_recorded_mean_reward": {
+      "experiment": "exp_051_longer_rollout",
+      "mean_reward": 175.604,
+      "timesteps_trained": 3899392,
+      "timestamp": "2026-03-25T10:20:17.464279"
+    },
+    "best_benchmark": {
+      "experiment": "exp_023_racecore_oob",
+      "level": "level2",
+      "finish_rate": 0.0,
+      "avg_gates": 0.8,
+      "avg_time": 2.02,
+      "avg_finish_time": null
+    },
+    "latest_result": {
+      "experiment": "exp_059_asymmetric_critic",
+      "timestamp": "2026-03-28T03:10:09.957972",
+      "mean_reward": 32.502,
+      "timesteps_trained": 1974272
+    }
+  }
+}

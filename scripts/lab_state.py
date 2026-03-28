@@ -21,6 +21,39 @@ INBOX_PATH = LAB_DIR / "inbox" / "INBOX.md"
 AGENTS_DIR = LAB_DIR / "agents"
 
 
+def _benchmark_entries(benchmark: dict | list | None) -> list[dict]:
+    """Normalize benchmark.json payloads across legacy and structured formats."""
+    if not benchmark:
+        return []
+    if isinstance(benchmark, list):
+        if not benchmark:
+            return []
+        results = []
+        for item in benchmark:
+            results.append(
+                {
+                    "time": item.get("time", item.get("flight_time")),
+                    "finished": item.get("finished", False),
+                    "gates": item.get("gates", item.get("gates_passed", 0)),
+                }
+            )
+        finished_runs = [r for r in results if r["finished"]]
+        entry = {
+            "level": "legacy",
+            "n_runs": len(results),
+            "results": results,
+            "avg_time": round(sum(r["time"] for r in results) / len(results), 2),
+            "finish_rate": round(len(finished_runs) / len(results), 2),
+            "avg_gates": round(sum(r["gates"] for r in results) / len(results), 1),
+        }
+        if finished_runs:
+            entry["avg_finish_time"] = round(
+                sum(r["time"] for r in finished_runs) / len(finished_runs), 2
+            )
+        return [entry]
+    return benchmark.get("benchmarks", [])
+
+
 def _git_output(repo_dir: Path, *args: str) -> str:
     result = subprocess.run(
         ["git", *args],
@@ -76,7 +109,7 @@ def _load_experiments(excluded_ids: set[str] | None = None) -> list[dict]:
 
 def _benchmark_entry(exp: dict) -> dict | None:
     benchmark = exp.get("benchmark") or {}
-    entries = benchmark.get("benchmarks", [])
+    entries = _benchmark_entries(benchmark)
     if not entries:
         return None
 

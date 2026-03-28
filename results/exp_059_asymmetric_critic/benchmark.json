@@ -1,0 +1,40 @@
+{
+  "experiment": "exp_059_asymmetric_critic",
+  "benchmarks": [
+    {
+      "level": "level2_midair",
+      "controller": "attitude_rl_generic.py",
+      "n_runs": 5,
+      "results": [
+        {
+          "time": 0.52,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 0.52,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 0.84,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 1.38,
+          "finished": false,
+          "gates": 0
+        },
+        {
+          "time": 0.70,
+          "finished": false,
+          "gates": 0
+        }
+      ],
+      "avg_time": 0.79,
+      "finish_rate": 0.0,
+      "avg_gates": 0.0
+    }
+  ]
+}
