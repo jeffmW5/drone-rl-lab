@@ -55,6 +55,13 @@
 - **Scope note:** This is primarily an instrumentation experiment attached to the exp_064-style long-budget line, not a claim that eval logic alone will improve the policy.
 - **Config:** `configs/exp_065_periodic_det_eval.yaml`
 
+### [READY] exp_066 -- Asymmetric Critic + Entropy Annealing
+- **Hypothesis:** If the remaining bottleneck is a combination of weak value targets and insufficient mean-policy convergence time, then exp_059's asymmetric critic plus exp_064's unclamped variance / higher entropy / longer budget should outperform either intervention alone.
+- **What to change:** Start from the exp_064 long-budget line, add `asymmetric_critic: true`, and keep the periodic deterministic eval / best-checkpoint instrumentation from exp_065.
+- **Expected outcome:** Better deterministic-eval trajectory during training and a better selected checkpoint than exp_064 alone. Benchmark improvement would support the "critic quality + convergence" story.
+- **Scope note:** This is a highest-upside combination experiment, not a clean attribution study. A positive result would justify follow-up ablations; a negative result would weaken multiple training-side hypotheses at once.
+- **Config:** `configs/exp_066_asym_entropy_annealing.yaml`
+
 ### [DEFERRED] exp_063 -- Extended Training (10M+ steps, no logstd clamp)
 - **Depends on:** exp_061, 062, 064 results
 - **Hypothesis:** Swift trains 100M steps; we train 1.5M. Remove max_logstd clamp and train much longer.
