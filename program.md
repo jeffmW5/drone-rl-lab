@@ -15,9 +15,14 @@ and executed by Linux Claude (executor). Each experiment is a frozen YAML config
 ## Step 0 -- Read Memory (MANDATORY)
 
 Before starting ANY experiment or task, read:
-1. **`memory/HARD_RULES.md`** -- never violate these
-2. **`memory/EXPERIMENT_LOG.md`** -- do not repeat failed experiments without a clear reason
-3. **`memory/INSIGHTS.md`** -- Kaggle targets, benchmarks, architecture notes
+1. **`memory/HARD_RULES.md`** -- repo integrity and evaluation constraints
+2. **`memory/EPISTEMIC_SCHEMA.md`** -- how to classify claims
+3. **`memory/BELIEF_AUDIT.md`** -- current claims under review
+4. **`memory/FACTS.md`** -- direct observations with sources
+5. **`memory/HYPOTHESES.md`** -- active explanations being tested
+6. **`memory/TENTATIVE_LESSONS.md`** -- scoped heuristics, not absolutes
+7. **`memory/EXPERIMENT_LOG.md`** -- do not repeat failed experiments without a clear reason
+8. **`memory/INSIGHTS.md`** -- benchmarks, papers, and background context
 
 - If your new experiment contradicts a hard rule, **STOP** and note the conflict in `outbox/`.
 - Refer to `inbox/INBOX.md` for the current task queue.
@@ -50,12 +55,14 @@ python train_racing.py configs/exp_010_racing_baseline.yaml
 5. Run `python plot.py` to generate training curves.
 6. Update `outbox/exp_NNN.md` with your analysis.
 7. Run `python compare.py --generate-log` to update `memory/EXPERIMENT_LOG.md`.
-8. If you discover a new hard rule, add it to `memory/HARD_RULES.md`.
-9. Update `memory/NEXT.md` by striking through completed items.
-10. Update `outbox/STATUS.md` with the latest summary.
-11. Run `python3 scripts/lab_state.py`.
-12. `git add -A && git commit -m "exp_NNN: <short description>"`
-13. `git push`
+8. Add direct observations to `memory/FACTS.md` when they matter beyond one report.
+9. Add explanations to `memory/HYPOTHESES.md` or `memory/TENTATIVE_LESSONS.md` using the schema.
+10. Only add something to `memory/HARD_RULES.md` if it is a true process invariant, not an empirical interpretation.
+11. Update `memory/NEXT.md` by striking through completed items.
+12. Update `outbox/STATUS.md` with the latest summary.
+13. Run `python3 scripts/lab_state.py`.
+14. `git add -A && git commit -m "exp_NNN: <short description>"`
+15. `git push`
 
 ---
 
@@ -118,6 +125,7 @@ can queue a research task. The executor uses `/research <topic>` to:
 4. Write a summary to `research/<topic_slug>.md`.
 5. Propose concrete experiment configs with citations.
 6. Update `memory/INSIGHTS.md` with paper references.
+7. Add or revise repo hypotheses only after separating paper-supported ideas from local evidence.
 
 ### Research summary documentation standard
 
@@ -291,6 +299,9 @@ Every experiment produces `results/exp_NNN/EXPERIMENT.md`:
 ## What we changed
 <Specific change -- reference the config file>
 
+## What was held constant
+<Name the important things that did NOT change>
+
 ## Why (the RL concept)
 <What RL principle does this test? Explain simply and accurately.>
 
@@ -300,13 +311,24 @@ Every experiment produces `results/exp_NNN/EXPERIMENT.md`:
 | mean_reward | X.XX | Y.YY |
 | timesteps_trained | N | M |
 
-## What this tells us
-<Conclusions. Be honest about uncertainty.>
+## Observations
+<Direct measurements only>
 
-## Questions this opens up
-- <Question 1>
-- <Question 2>
+## Inference
+<Interpretation. Be explicit about uncertainty and scope.>
+
+## Confidence
+low | medium | high
+
+## What this does NOT prove
+<Prevent over-promotion of the claim>
+
+## Next falsification test
+<What result would overturn your current interpretation?>
 
 ## Suggested next experiment
 <One specific hypothesis to test next>
 ```
+
+Avoid universal claims like "the bottleneck is" or "X is exhausted" unless the
+repo has replicated that conclusion cleanly.

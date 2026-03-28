@@ -1,5 +1,9 @@
 # Insights & Benchmarks
 
+> Background context, benchmark tables, and paper notes.
+> This file is not a source of hard rules. Current repo beliefs should be stored
+> in `FACTS.md`, `HYPOTHESES.md`, `TENTATIVE_LESSONS.md`, or `BELIEF_AUDIT.md`.
+
 ## Kaggle Target
 
 | Rank | Team | Avg Lap (s) |
@@ -39,7 +43,8 @@
 | Their RL | 7.25 | 0/5 | 0-3/4 |
 | PID attitude | 8.59 | 2/5 | 0-4/4 |
 
-**Nobody finishes Level 2 reliably. The problem is trajectory generation, not policy quality.**
+**Historical benchmark context:** nobody in this table finishes Level 2 reliably.
+This legacy table does not by itself diagnose the active direct-racing line.
 
 ---
 
