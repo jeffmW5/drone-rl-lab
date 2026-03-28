@@ -56,6 +56,9 @@
 | Curriculum Quadrotor (2025) | 2501.18490 | 3-stage curriculum (hover→random start→random vel); weight continuation; 20M total steps | exp_041 |
 | Diverse Cluttered Tracks (RA-L 2025) | 2512.09571 | Soft-collision→hard-collision 2-phase training; preserves exploration in phase 1 | exp_041 |
 | Teacher-Student Racing (CoRL 2024) | CoRL24_Xing | Train teacher with privileged state → distill to student → fine-tune student with RL | exp_042 |
+| Dynamic Entropy Tuning Quadcopter (2024) | 2512.18336 | Stochastic policies generalize where deterministic crash; dynamic entropy target=-dim(A) | exp_061 |
+| When MaxEnt Misleads (2025) | 2506.05615 | PPO beats SAC for precision control; entropy corrupts Q-values in narrow-corridor tasks | reference |
+| Entropy Annealing (2024) | 2405.20250 | Decay entropy τ=1/√(s+1) for continuous; start high, anneal to deterministic | exp_064 |
 
 ---
 
