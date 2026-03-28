@@ -111,3 +111,23 @@
 - **Confidence:** high
 - **Last reviewed:** 2026-03-28
 - **Next falsification test:** none needed; this is a recorded result.
+
+## FACT-012
+- **Statement:** `exp_067` with only max_logstd removed from exp_060 (ent_coef=0.01): 29.99 mean reward (matched exp_060's 28.02), 0 gates, but 1.70s deterministic flight (2.6x longer than exp_060's 0.66s). Stochastic: 2.42s.
+- **Type:** fact
+- **Scope:** Direct `RaceCoreEnv`, mid-air benchmark, logstd clamp ablation
+- **Supported by:** `results/exp_067_no_logstd_clamp/metrics.json`, `results/exp_067_no_logstd_clamp/benchmark.json`
+- **Counterevidence:** none noted
+- **Confidence:** high
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** none needed; this is a recorded result.
+
+## FACT-013
+- **Statement:** exp_064's training failure (flat reward ~8) was caused by ent_coef=0.03, not by removal of the max_logstd clamp. exp_067 with ent_coef=0.01 and no clamp matched exp_060's reward trajectory.
+- **Type:** fact
+- **Scope:** Direct `RaceCoreEnv`, entropy coefficient effect at 3600s budget
+- **Supported by:** exp_064 vs exp_067 comparison (same clamp removal, different ent_coef)
+- **Counterevidence:** none noted
+- **Confidence:** high
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** Run with ent_coef between 0.01 and 0.03 to find the threshold.
