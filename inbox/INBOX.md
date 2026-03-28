@@ -16,8 +16,7 @@
 - **Diagnosis:** Soft collision boosted training reward (multi-life episodes) but domain gap (mid-air spawn vs ground benchmark) is the bottleneck, not crash termination
 - See `results/exp_058_soft_collision/EXPERIMENT.md`
 
-### [DONE 2026-03-27] exp_059 -- Asymmetric Actor-Critic
-- **Completed:** 2026-03-27
+### [READY] exp_059 -- Asymmetric Actor-Critic
 - **Status:** Code implemented, config created. Ready to train.
 - **What was done:** `asymmetric_critic=true` flag. `AsymmetricAgent` class in train_rl.py. `AppendPrivilegedObs` wrapper adds all gate pos/quat (28D) to obs. Actor uses 57D, critic uses 85D. Inference auto-detects and loads only actor weights.
 - **Config:** `configs/exp_059_asymmetric_critic.yaml`
@@ -31,7 +30,7 @@
 - **Key finding:** exp_056-060 all show 25-38 training reward with 0 benchmark gates.
 - **Bottleneck:** deterministic mean policy crashes; stochastic training policy navigates fine.
 
-### [READY] exp_061 -- Stochastic Deployment of exp_060 Model
+### [CLAIMED:jeff-VirtualBox-6047-1774638579] exp_061 -- Stochastic Deployment of exp_060 Model
 - **Hypothesis:** Stochastic training policy navigates (28.02 reward) but deterministic mean crashes. Deploying with stochastic sampling should recover navigation behavior.
 - **What to change:** Benchmark with `DRONE_RL_STOCHASTIC=true` env var. No retraining needed — use exp_060's model.ckpt.
 - **Expected outcome:** Flight time > 2s, possibly gate passages.
