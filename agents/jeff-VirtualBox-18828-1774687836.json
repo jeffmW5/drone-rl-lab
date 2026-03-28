@@ -3,8 +3,8 @@
   "hostname": "jeff-VirtualBox",
   "pid": 18828,
   "started": "2026-03-28T08:50:36+00:00",
-  "heartbeat": "2026-03-28T08:50:52+00:00",
-  "last_pushed_heartbeat": "2026-03-28T08:50:52+00:00",
+  "heartbeat": "2026-03-28T09:09:00+00:00",
+  "last_pushed_heartbeat": "2026-03-28T09:09:00+00:00",
   "task": "exp_069",
-  "status": "preparing config and pod"
+  "status": "training on pod jvujprdmoblhli"
 }
