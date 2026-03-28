@@ -123,6 +123,10 @@ bash scripts/run_experiment.sh --pipeline
 bash scripts/watch_results.sh
 ```
 
+`CLAUDE.md` is the canonical agent charter and workflow prompt for autonomous
+work. Launch scripts should defer to it rather than carrying their own
+long-lived copies of agent instructions.
+
 ---
 
 ## Project structure
@@ -135,14 +139,19 @@ drone-rl-lab/
 |-- compare.py            # Leaderboard (--csv, --filter, --generate-log)
 |-- plot.py               # Training curve plotter
 |-- program.md            # Research goals, rules, documentation standard
-|-- CLAUDE.md             # Claude Code session instructions
+|-- CLAUDE.md             # Canonical agent charter and repo workflow
 |-- MEMORY.md             # Index -> memory/ files
 |
 |-- memory/
-|   |-- HARD_RULES.md     # Absolute constraints (never violate)
-|   |-- EXPERIMENT_LOG.md # Auto-generated experiment history
-|   |-- INSIGHTS.md       # Kaggle targets, benchmarks, architecture notes
-|   `-- NEXT.md           # Prioritized research queue
+|   |-- HARD_RULES.md         # Process invariants only
+|   |-- EPISTEMIC_SCHEMA.md   # Claim types, promotion, demotion
+|   |-- BELIEF_AUDIT.md       # Over-promoted claims under review
+|   |-- FACTS.md              # Direct observations with sources
+|   |-- HYPOTHESES.md         # Active explanations being tested
+|   |-- TENTATIVE_LESSONS.md  # Reusable but revisable patterns
+|   |-- EXPERIMENT_LOG.md     # Auto-generated experiment history
+|   |-- INSIGHTS.md           # Background context and paper references
+|   `-- NEXT.md               # Prioritized research queue
 |
 |-- state/
 |   `-- current.json      # Machine-readable snapshot for autonomous agents
@@ -158,6 +167,7 @@ drone-rl-lab/
 |
 `-- scripts/
     |-- run_experiment.sh   # One-command launcher (Claude Code or pipeline)
+    |-- run_agent.sh        # Parallel-safe launcher with claim/heartbeat flow
     |-- pipeline.sh         # Full auto-chain: train -> benchmark -> document -> push
     |-- benchmark.py        # Structured MuJoCo sim benchmarking
     |-- parse_queue.py      # INBOX queue parser

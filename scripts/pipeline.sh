@@ -61,7 +61,7 @@ while [ $TASKS_DONE -lt $MAX_TASKS ]; do
         echo "[WARN] No config found for task. Skipping to Claude Code."
         # Fall back to Claude Code for non-standard tasks
         claude --dangerously-skip-permissions --print \
-            "You are the executor in the drone-rl-lab agentic loop. Read CLAUDE.md, then execute the [NEXT] task in inbox/INBOX.md autonomously. When done: commit, push, and exit."
+            "You are the executor in the drone-rl-lab loop. Read and follow CLAUDE.md exactly, then execute the next actionable task from inbox/INBOX.md. Commit and push before exiting."
     else
         echo "[3a] Training: python3 train.py configs/$CONFIG"
         source /media/drones-venv/bin/activate 2>/dev/null || true
@@ -86,7 +86,7 @@ while [ $TASKS_DONE -lt $MAX_TASKS ]; do
         echo "[3d] Documenting results..."
         # Use Claude Code for documentation (EXPERIMENT.md, outbox)
         claude --dangerously-skip-permissions --print \
-            "You are the executor. The experiment $EXPERIMENT just finished training. Write results/$EXPERIMENT/EXPERIMENT.md and outbox/$EXPERIMENT.md per program.md standards. Update outbox/STATUS.md, memory/NEXT.md, and state/current.json (via scripts/lab_state.py). Then commit and push."
+            "You are the executor. Read and follow CLAUDE.md exactly. The experiment $EXPERIMENT just finished training. Write results/$EXPERIMENT/EXPERIMENT.md and outbox/$EXPERIMENT.md per program.md, update any required memory/outbox/state files, then commit and push."
     fi
 
     # Advance queue

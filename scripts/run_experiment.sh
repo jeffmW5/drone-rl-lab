@@ -34,5 +34,5 @@ else
     echo "[3/3] Launching Claude Code..."
     echo ""
     claude --dangerously-skip-permissions --print \
-        "You are the executor in the drone-rl-lab agentic loop. Read CLAUDE.md first, then read memory/HARD_RULES.md, memory/EXPERIMENT_LOG.md, memory/INSIGHTS.md, inbox/INBOX.md, outbox/STATUS.md, and state/current.json if present. Process the task queue in inbox/INBOX.md autonomously. For each task: train, capture provenance, benchmark, document per program.md, update memory/NEXT.md, outbox/STATUS.md, and state/current.json via scripts/lab_state.py. When done: commit all results, push to GitHub, and exit."
+        "You are the executor in the drone-rl-lab loop. Read and follow CLAUDE.md exactly. Then process the actionable queue in inbox/INBOX.md, document results per program.md, update memory/outbox/state as required, and commit and push before exiting."
 fi

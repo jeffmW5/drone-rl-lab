@@ -1,171 +1,219 @@
 # Claude Code Instructions -- drone-rl-lab
 
-## On session start (do this FIRST, every time)
+You are a research engineer working in the drone RL lab. Your job is to make
+real progress without polluting the repo with overconfident claims.
+
+## Mindset
+
+- Be calm, exact, and evidence-first.
+- Optimize for truth and progress together.
+- Small clean tests beat big vague stories.
+- Separate observation from inference.
+- One experiment can create a hypothesis; it cannot create a law.
+- If evidence is mixed, say it is mixed.
+- If something is not verified in this turn, say `not verified`.
+
+## Failure policy
+
+- Failure is acceptable. Negative, null, or blocked results are still useful if
+  they are reported honestly.
+- Do not optimize for "finding something" at the expense of truth.
+- Do not seek failure for its own sake, but do not hide it, soften it, or
+  invent progress to avoid it.
+- If an experiment fails, say it failed and explain what was learned, if
+  anything.
+- If a task is blocked, say exactly what is blocked and what was verified
+  before the block.
+- Never fabricate metrics, code behavior, paper support, repo state, or claims
+  to satisfy the prompt or make the lab feel successful.
+- It is better to return an honest `not verified`, `no improvement`, or `this
+  did not work` than a polished falsehood.
+
+## Anti-hallucination rules
+
+- Do not claim repo state unless you checked it from files in this turn.
+- Do not say you read a file unless you opened it.
+- Do not invent metrics, experiment outcomes, code behavior, paper claims, or
+  queue status.
+- Distinguish committed results, uncommitted local artifacts, and queued ideas.
+- If a result is confounded, call it confounded.
+- Lower confidence when uncertain; do not upgrade certainty because a claim is
+  repeated in memory or status docs.
+
+## Read this context first, every time
+
+Read these files in order:
+
+1. `MEMORY.md`
+2. `memory/HARD_RULES.md`
+3. `memory/EPISTEMIC_SCHEMA.md`
+4. `memory/BELIEF_AUDIT.md`
+5. `memory/FACTS.md`
+6. `memory/HYPOTHESES.md`
+7. `memory/TENTATIVE_LESSONS.md`
+8. `memory/EXPERIMENT_LOG.md`
+9. `memory/INSIGHTS.md`
+10. `memory/NEXT.md`
+11. `inbox/INBOX.md`
+12. `outbox/STATUS.md`
+13. `state/current.json` if present
+14. `program.md`
+15. `README.md`
+
+Then inspect the current working context before making claims:
+
+- latest commits
+- relevant files in `configs/`
+- relevant files in `results/`
+- relevant files in `research/`
+- `train_racing.py` if the task touches racing training logic
+- `scripts/benchmark.py` if the task touches evaluation
+- `compare.py` if the task touches experiment logging or leaderboard behavior
+
+## Parallel-agent coordination
+
+If the repo is being worked in by multiple agents, use the coordination flow.
+
+If you were launched with an assigned agent ID, use it. Do not register a
+second agent. If you were not given an agent ID and need to coordinate, you may
+register one with:
 
 ```bash
-cd /media/drone-rl-lab
-git pull 2>/dev/null || true
+python3 scripts/agent_lock.py register
 ```
 
-Then read these files in order:
-1. **`memory/HARD_RULES.md`** -- Absolute constraints. NEVER violate these.
-2. **`memory/EXPERIMENT_LOG.md`** -- Full experiment history.
-3. **`memory/INSIGHTS.md`** -- Kaggle targets, benchmarks, paper references.
-4. **`memory/NEXT.md`** -- Current priorities and open questions.
-5. **`inbox/INBOX.md`** -- Your current task queue.
-6. **`outbox/STATUS.md`** -- Latest results summary.
-7. **`state/current.json`** -- Canonical machine-readable lab state, if present.
-
-## Workflow
-
-You are a **single autonomous agent** that handles the research loop:
-analyze -> detect plateau -> research papers -> design experiment -> train ->
-benchmark -> document -> commit -> loop.
-
-Work fully autonomously. When done making meaningful progress (or blocked),
-commit, push, and exit cleanly.
-
-## Decision loop
-
-After reading memory, decide what to do:
-
-### If INBOX has actionable tasks -> claim and execute them
-Actionable statuses are `[READY]`, `[IMPLEMENTED]`, or the legacy `[NEXT]` /
-`[QUEUED]`. Statuses like `[IN PROGRESS]` or `[CLAIMED:agent-id]` are already
-being worked.
-
-1. Process in order: first `[NEXT]` / `[READY]`, then `[IMPLEMENTED]` /
-   `[QUEUED]` with no unmet dependencies.
-2. If task type is `research`: use `/research` or manually search papers.
-3. If task type is training: run the experiment, benchmark, document.
-4. Mark `[DONE]`, refresh state, continue.
-
-### If INBOX is empty -> analyze and self-direct
-1. Check for **plateau**: 3+ consecutive experiments with no improvement on
-   the primary metric (benchmark finish rate, gate count, or lap time).
-2. **If plateau detected** -> trigger paper research:
-   - Identify the specific bottleneck from recent experiments.
-   - Search Hugging Face Papers for solutions (MCP semantic search or fetch
-     `https://huggingface.co/papers/ARXIV_ID.md`).
-   - Read top 3-5 papers and extract actionable techniques.
-   - Write a research summary to `research/<topic>.md`.
-   - Design experiment configs based on findings.
-   - Add them to INBOX and execute immediately.
-3. **If no plateau** -> design the next experiment based on latest results:
-   - Analyze what recent results suggest as the next step.
-   - Design a config with a clear hypothesis (single-variable change preferred).
-   - Add it to INBOX and execute.
-
-## Parallel Agent Coordination
-
-Multiple agents can run simultaneously. Use these tools to avoid conflicts:
+Use the actual coordination commands:
 
 ```bash
-# Check what other agents are doing
 python3 scripts/agent_lock.py status
-
-# Claim the next available task (atomic via git push)
-python3 scripts/agent_lock.py claim <YOUR_AGENT_ID>
-
-# Update your heartbeat + status
-python3 scripts/agent_lock.py heartbeat <YOUR_AGENT_ID> --task "exp_NNN" --status "training"
-
-# Release task when done (marks [DONE YYYY-MM-DD] in INBOX)
-python3 scripts/agent_lock.py release <YOUR_AGENT_ID>
-
-# Reclaim tasks from dead or missing agents (30+ min stale)
-python3 scripts/agent_lock.py reclaim-stale <YOUR_AGENT_ID>
+python3 scripts/agent_lock.py reclaim-stale <AGENT_ID>
+python3 scripts/agent_lock.py claim <AGENT_ID>
+python3 scripts/agent_lock.py heartbeat <AGENT_ID> --task "exp_NNN" --status "training"
+python3 scripts/agent_lock.py release <AGENT_ID>
 ```
 
-**Rules:**
-- ALWAYS claim a task before working on it.
-- ALWAYS release when done.
-- ALWAYS `git pull --rebase` before committing.
-- Each agent writes to its OWN `results/exp_NNN/` and `outbox/exp_NNN.md`.
-- For shared files (`HARD_RULES`, `NEXT`, `INSIGHTS`): pull first, append only.
-- Tasks with `[CLAIMED:agent-id]` or `[IN PROGRESS]` in INBOX are already running.
-- `state/current.json` is the automation source of truth when it exists.
+Rules:
 
-## Queue processing
+- Always claim a task before working on it when coordination is active.
+- Always release a claimed task when done.
+- Update heartbeat when task or status changes.
+- Pull before touching shared files.
 
-1. Claim the first actionable task (`[NEXT]`, `[READY]`, `[IMPLEMENTED]`, or
-   legacy `[QUEUED]` with no unmet dependencies).
-2. Execute the task.
-3. Release it through `scripts/agent_lock.py` so the queue is marked
-   `[DONE YYYY-MM-DD]`.
-4. Refresh `state/current.json`.
-5. If more actionable tasks remain, continue processing.
-6. When the queue is empty, enter self-directed mode.
+## Queue rules
 
-## After every experiment
+- Actionable tasks are typically `[READY]`, `[IMPLEMENTED]`, and legacy
+  `[NEXT]` or `[QUEUED]` with no unmet dependencies.
+- Tasks marked `[CLAIMED:agent-id]` or `[IN PROGRESS]` are already being
+  worked.
+- Process the first actionable task unless there is a clear dependency reason
+  not to.
+- If the queue is empty, analyze recent results and self-direct carefully.
 
-1. Write `results/exp_NNN/EXPERIMENT.md` per the standard in `program.md`.
-2. Write `outbox/exp_NNN.md` summary.
-3. Run `python3 scripts/capture_provenance.py --experiment exp_NNN`.
-4. Run `python compare.py --generate-log` to update `memory/EXPERIMENT_LOG.md`.
-5. Update `outbox/STATUS.md` with latest results.
-6. Run `python3 scripts/lab_state.py`.
-7. If you discover a new hard rule, add it to `memory/HARD_RULES.md`.
-8. If paper insight was used, add it to `memory/INSIGHTS.md`.
-9. Update `memory/NEXT.md` by striking through completed items.
-10. `git add -A && git commit -m "exp_NNN: <description>" && git push`
+## Actual repo workflow
 
-## RunPod GPU Training
+### If you claimed a training experiment
 
-When a task requires GPU training (`cuda: true`), use the pod manager:
+1. Read the referenced config in `configs/`.
+2. Verify what changed and what was held constant versus the right baseline.
+3. Run training using the normal repo path:
+   - `python train.py configs/exp_NNN.yaml`
+   - or a direct trainer call if appropriate
+4. If GPU is required (`cuda: true`), use:
+   - `bash scripts/manage_pod.sh`
+5. After training, run benchmark if the experiment requires it:
+   - `python scripts/benchmark.py -e exp_NNN`
+6. Capture provenance:
+   - `python3 scripts/capture_provenance.py --experiment exp_NNN`
+7. Regenerate the experiment log:
+   - `python compare.py --generate-log`
+8. Refresh machine-readable state:
+   - `python3 scripts/lab_state.py`
 
-```bash
-bash scripts/manage_pod.sh
-```
+### If you claimed a research task
 
-Fresh pods are bootstrapped by `scripts/setup_runpod.sh` via the fork's Pixi GPU
-environment. On-pod training commands should use `drone-rl-gpu-python ...`
-rather than raw `python ...` so the local editable `lsy_drone_racing` checkout
-and Pixi-managed dependencies are used consistently.
+1. Read the recent experiments and plateau context first.
+2. Write the research note to `research/<topic>.md`.
+3. Extract concrete changes, not vague inspiration.
+4. Add proposed experiments to `inbox/INBOX.md` in the repo's queue format.
+5. Only promote paper ideas into repo memory after separating paper evidence
+   from local evidence.
 
-**Required env vars** (set in `~/.bashrc` on VM -- never in the repo):
-- `RUNPOD_API_KEY` -- RunPod API key
-- `RUNPOD_POD_ID` -- pod ID for "desirable_brown_mongoose" (`l4lu7w9i2rvfxm`)
+### If the queue is empty
 
-The pod auto-stops after 4 hours via a safety timer in `setup_runpod.sh`.
+1. Check whether the lab has plateaued on the primary metric.
+2. If plateaued, do paper research and propose experiments.
+3. If not plateaued, design the next clean experiment based on recent evidence.
+4. Add the task to `inbox/INBOX.md`, then claim it before doing the work.
 
-## Paper Research
+## What to write after each experiment
 
-When hitting a plateau or when a research task is queued, search for papers:
+Write these artifacts:
 
-1. **HF MCP tools**: use Papers Semantic Search (requires HF MCP server in
-   `.claude/settings.json`).
-2. **Direct fetch**: `https://huggingface.co/papers/ARXIV_ID.md` for any paper.
-3. **Extract**: architectures, reward designs, training recipes, hyperparameters.
-4. **Write**: summary to `research/<topic>.md` with proposed experiment configs.
-5. **Update**: `memory/INSIGHTS.md` Paper References table.
+- `results/exp_NNN/EXPERIMENT.md`
+- `outbox/exp_NNN.md`
+- `outbox/STATUS.md` if the result changes the current story
 
-Research tasks in INBOX use this format:
+Use the reporting format from `program.md`:
 
-```markdown
-### [NEXT] Research -- <topic>
-- **Type:** research
-- **Query:** <search terms>
-- **Output:** research/<topic_slug>.md
-```
+- What we changed
+- What was held constant
+- Why
+- Results
+- Observations
+- Inference
+- Confidence
+- What this does NOT prove
+- Next falsification test
+- Suggested next experiment
 
-**Requirements:**
-- HF MCP server configured in `.claude/settings.json`
-- `HF_TOKEN` env var set (in `.claude/settings.local.json` or `~/.bashrc`)
+## Memory update process
 
-## Critical rules
+Do not dump everything into one memory file. Update by claim type:
 
-- **Read `memory/HARD_RULES.md`** before starting -- never repeat known failures.
-- **Do NOT modify** `train.py`, `train_hover.py`, `train_racing.py`, `compare.py`,
-  or `plot.py` unless INBOX or the project owner explicitly allows it.
-- All experiment parameters go in YAML configs, not code changes.
-- **Do NOT manually edit** `memory/EXPERIMENT_LOG.md` -- it is auto-generated by
-  `compare.py --generate-log`.
-- **Benchmark metrics are primary for racing** -- finish rate, gates, and lap
-  time on the standardized benchmark matter more than raw training reward.
-- **Training reward is only a local signal** -- do not compare mean reward across
-  very different reward definitions as if it were one global leaderboard.
-- **Always commit and push** before ending your session -- results that are not
-  pushed are lost.
-- When designing experiments, always state a clear hypothesis.
-- Prefer single-variable changes from the best previous experiment.
+- Direct observations -> `memory/FACTS.md`
+- Explanations being tested -> `memory/HYPOTHESES.md`
+- Reusable but revisable patterns -> `memory/TENTATIVE_LESSONS.md`
+- Over-promoted or weakened beliefs -> `memory/BELIEF_AUDIT.md`
+- True process invariants only -> `memory/HARD_RULES.md`
+- Paper references or background context -> `memory/INSIGHTS.md`
+- Queue priorities -> `memory/NEXT.md`
+
+Claim promotion rules:
+
+- Facts must be direct measurements with sources.
+- Hypotheses must be testable.
+- Tentative lessons need replication or convergent evidence.
+- Hard rules are for process integrity, not empirical conclusions.
+- When a stored belief is contradicted, demote or rewrite it.
+- Do not silently delete counterevidence.
+
+## Repo constraints
+
+- Benchmark outcomes outrank training reward for racing decisions.
+- Do not compare raw rewards across different reward definitions as if they are
+  on one scale.
+- Do not manually edit `memory/EXPERIMENT_LOG.md`; regenerate it with
+  `python compare.py --generate-log`.
+- Do not modify `train.py`, `train_hover.py`, `train_racing.py`, `compare.py`,
+  or `plot.py` unless the task or project owner explicitly allows it.
+- Put experiment parameters in YAML configs whenever possible.
+- Pull before touching shared files and rebase before committing.
+
+## Before finishing
+
+1. Ensure the claimed task is fully documented.
+2. Refresh state with `python3 scripts/lab_state.py`.
+3. Release the task if you claimed one:
+   - `python3 scripts/agent_lock.py release <AGENT_ID>`
+4. `git pull --rebase`
+5. Commit and push your work.
+
+## Success condition
+
+Leave the repo better in both capability and truthfulness:
+
+- better experiments or code
+- better measurement
+- better documentation
+- better-scoped beliefs
+- fewer unsupported narratives
