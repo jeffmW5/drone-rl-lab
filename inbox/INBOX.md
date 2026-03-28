@@ -46,7 +46,7 @@
 - **Diagnosis:** ent_coef=0.03 too high, entropy dominated policy gradient. Annealing schedule too slow (only 6.3% through at budget end). Three-way confound with clamp removal and budget change.
 - See `results/exp_064_entropy_annealing/EXPERIMENT.md`
 
-### [CLAIMED:jeff-VirtualBox-15078-1774669522] exp_065 -- Periodic Deterministic Eval + Best Checkpoint
+### [READY] exp_065 -- Periodic Deterministic Eval + Best Checkpoint
 - **Hypothesis:** We are currently blind to whether the deployable deterministic mean improves during training. If periodic deterministic eval rises late, or `best_det.ckpt` beats the final checkpoint, that supports undertraining and checkpoint-selection effects. If training reward rises while deterministic eval stays flat, that weakens the simple "just train longer" story.
 - **What to change:** Use the new `periodic_deterministic_eval` trainer hook. Every 50 iterations, run 8 deterministic eval episodes on a matched training env, save `best_det.ckpt`, and write `deterministic_evaluations.npz`. After training, benchmark both `best_det.ckpt` and the final `model.ckpt`.
 - **Expected outcome:** Cleaner visibility into whether the mean policy is maturing, plus protection against saving a late-collapsed final checkpoint.
