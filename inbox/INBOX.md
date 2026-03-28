@@ -60,7 +60,7 @@
 - **Scope note:** This is a highest-upside combination experiment, not a clean attribution study. A positive result would justify follow-up ablations; a negative result would weaken multiple training-side hypotheses at once.
 - **Config:** `configs/exp_066_asym_entropy_annealing.yaml`
 
-### [CLAIMED:jeff-VirtualBox-6047-1774638579] exp_067 -- No Logstd Clamp (Clean Ablation from exp_060)
+### [CLAIMED:jeff-VirtualBox-16081-1774673983] exp_067 -- No Logstd Clamp (Clean Ablation from exp_060)
 - **Hypothesis:** exp_064 changed three things (clamp, ent_coef, budget) and failed. This isolates the clamp effect: exp_060 with only max_logstd removed. If reward climbs ~28, ent_coef=0.03 was exp_064's problem. If flat ~8, clamp removal itself is harmful at this budget.
 - **Config:** `configs/exp_067_no_logstd_clamp.yaml`
 
