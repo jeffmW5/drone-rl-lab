@@ -27,6 +27,7 @@ racing:
   num_minibatches: 8
   clip_coef: 0.2
   ent_coef: 0.03
+  ent_coef_final: 0.001
   vf_coef: 0.5
   max_grad_norm: 0.5
   n_obs: 2
