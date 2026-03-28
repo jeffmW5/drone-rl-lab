@@ -277,13 +277,16 @@ def run(config_path: str):
     # ── Create agent ──────────────────────────────────────────────────────────
     obs_shape = envs.single_observation_space.shape
     act_shape = envs.single_action_space.shape
+    hidden_size = args.hidden_size
     if racing_cfg.get("asymmetric_critic", False):
         from lsy_drone_racing.control.train_rl import AsymmetricAgent
         actor_obs_dim = getattr(envs, 'actor_obs_dim', obs_shape[0])
-        agent = AsymmetricAgent(obs_shape, act_shape, actor_obs_dim).to(device)
-        print(f"[INFO] AsymmetricAgent: actor={actor_obs_dim}D, total={obs_shape[0]}D")
+        agent = AsymmetricAgent(obs_shape, act_shape, actor_obs_dim, hidden_size=hidden_size).to(device)
+        print(f"[INFO] AsymmetricAgent: actor={actor_obs_dim}D, total={obs_shape[0]}D, hidden={hidden_size}")
     else:
-        agent = Agent(obs_shape, act_shape).to(device)
+        agent = Agent(obs_shape, act_shape, hidden_size=hidden_size).to(device)
+    if hidden_size != 64:
+        print(f"[INFO] Network hidden_size={hidden_size} (params: {sum(p.numel() for p in agent.parameters()):,})")
 
     # Load pretrained checkpoint if specified (for fine-tuning)
     pretrained_ckpt = racing_cfg.get("pretrained_ckpt", None)
