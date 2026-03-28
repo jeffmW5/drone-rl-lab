@@ -3,8 +3,8 @@
   "hostname": "jeff-VirtualBox",
   "pid": 18828,
   "started": "2026-03-28T08:50:36+00:00",
-  "heartbeat": "2026-03-28T10:52:11+00:00",
-  "last_pushed_heartbeat": "2026-03-28T10:52:11+00:00",
+  "heartbeat": "2026-03-28T11:21:35+00:00",
+  "last_pushed_heartbeat": "2026-03-28T11:21:35+00:00",
   "task": "exp_069",
-  "status": "training iter 670, reward 43.17 at 2.7M steps, 5766s elapsed, ~24min remaining"
+  "status": "RESTARTED training with hidden_size=128 fix, iter 10 at 41K steps"
 }
