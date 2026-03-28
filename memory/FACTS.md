@@ -131,3 +131,23 @@
 - **Confidence:** high
 - **Last reviewed:** 2026-03-28
 - **Next falsification test:** Run with ent_coef between 0.01 and 0.03 to find the threshold.
+
+## FACT-014
+- **Statement:** `exp_068` with 7200s budget (no clamp, ent_coef=0.01): 42.84 mean reward (all-time high, peak 44.53 still climbing), 0/15 deterministic gates (1.67s avg), 3 gate passages in 45 total runs across stochastic/temperature modes.
+- **Type:** fact
+- **Scope:** Direct `RaceCoreEnv`, mid-air benchmark, extended unclamped training
+- **Supported by:** `results/exp_068_extended_no_clamp/metrics.json`, `results/exp_068_extended_no_clamp/benchmark.json`
+- **Counterevidence:** none noted
+- **Confidence:** high
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** none needed; this is a recorded result.
+
+## FACT-015
+- **Statement:** Doubling training budget from 3600s to 7200s increased training reward from 30 to 43 but did not meaningfully improve deterministic benchmark flight time (1.70s → 1.67s) or gate passage (0 → 0).
+- **Type:** fact
+- **Scope:** exp_067 vs exp_068 comparison, same config except budget
+- **Supported by:** exp_067 and exp_068 benchmark results
+- **Counterevidence:** 3 sparse gate passages in stochastic/temperature modes (vs 0 for exp_067) could indicate marginal improvement, but sample size is small
+- **Confidence:** high
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** 4x budget training to see if trend continues or breaks through.

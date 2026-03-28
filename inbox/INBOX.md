@@ -65,9 +65,10 @@
 - **Diagnosis:** Clamp removal does not hurt training; ent_coef=0.03 was exp_064's failure cause. Unclamped model has better deployment stability.
 - See `results/exp_067_no_logstd_clamp/EXPERIMENT.md`
 
-### [CLAIMED:jeff-VirtualBox-16081-1774673983] exp_068 -- Extended No-Clamp Training (7200s)
-- **Hypothesis:** exp_067 was still climbing steeply at 32.01 reward at budget end. Doubling budget tests HYP-002 (undertraining). Single change: budget 3600→7200s.
-- **Config:** `configs/exp_068_extended_no_clamp.yaml`
+### [DONE 2026-03-28] exp_068 -- Extended No-Clamp Training (7200s)
+- **Result:** MIXED — 42.84 reward (all-time high) but 0/15 det. gates (1.67s avg). 3 gate passages in 45 total runs across modes.
+- **Diagnosis:** More training increases reward but doesn't proportionally improve deployment. Weakens simple undertraining hypothesis.
+- See `results/exp_068_extended_no_clamp/EXPERIMENT.md`
 
 ### [DEFERRED] exp_063 -- Extended Training (10M+ steps, no logstd clamp)
 - **Depends on:** exp_061, 062, 064 results
