@@ -81,3 +81,33 @@
 - **Confidence:** high
 - **Last reviewed:** 2026-03-28
 - **Next falsification test:** A later benchmark path loads the same checkpoint correctly without architecture-aware logic.
+
+## FACT-009
+- **Statement:** `exp_061` stochastic deployment of exp_060 model: 1.67s avg flight (2.5x longer than deterministic 0.66s), 0 gates in 5 runs.
+- **Type:** fact
+- **Scope:** Direct `RaceCoreEnv`, mid-air benchmark, stochastic vs deterministic deployment
+- **Supported by:** `results/exp_061_stochastic_deploy/benchmark.json`
+- **Counterevidence:** none noted
+- **Confidence:** high
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** none needed; this is a recorded result.
+
+## FACT-010
+- **Statement:** `exp_062` temperature-scaled deployment across T=0.1-1.0: 2 gate passages in 70 total runs. No temperature value produced reliable gate passage.
+- **Type:** fact
+- **Scope:** Direct `RaceCoreEnv`, mid-air benchmark, temperature-scaled deployment of exp_060 model
+- **Supported by:** `results/exp_062_temperature_scaled/benchmark.json`
+- **Counterevidence:** none noted
+- **Confidence:** high
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** none needed; this is a recorded result.
+
+## FACT-011
+- **Statement:** `exp_064` with ent_coef=0.03, no max_logstd clamp, ent_coef_final=0.001, 7200s budget: 7.78 mean reward (flat ~8 throughout 2.5M steps), 0 gates, 0.52s deterministic crash.
+- **Type:** fact
+- **Scope:** Direct `RaceCoreEnv`, mid-air benchmark, entropy annealing configuration
+- **Supported by:** `results/exp_064_entropy_annealing/metrics.json`, `results/exp_064_entropy_annealing/benchmark.json`
+- **Counterevidence:** none noted
+- **Confidence:** high
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** none needed; this is a recorded result.

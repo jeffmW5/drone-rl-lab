@@ -41,12 +41,10 @@
 - **Diagnosis:** Policy mean hasn't learned gate navigation; deployment-time fixes insufficient
 - See `results/exp_062_temperature_scaled/EXPERIMENT.md`
 
-### [READY] exp_064 -- Entropy Annealing Schedule
-- **Hypothesis:** Start with high entropy (ent_coef=0.05, no logstd clamp) for exploration, then anneal both to low values. Lets mean converge naturally.
-- **What to change:** Implement ent_coef annealing (0.05 → 0.001). Remove max_logstd clamp. Train 10M+ steps on GPU.
-- **Expected outcome:** Smoother convergence, mean finds the navigation mode.
-- **Paper basis:** Entropy Annealing (2405.20250)
-- **Config:** `configs/exp_064_entropy_annealing.yaml` (to create)
+### [DONE 2026-03-28] exp_064 -- Entropy Annealing Schedule
+- **Result:** FAILURE — 7.78 mean reward (flat at ~8 for 2.5M steps), 0 gates, 0.52s deterministic crash
+- **Diagnosis:** ent_coef=0.03 too high, entropy dominated policy gradient. Annealing schedule too slow (only 6.3% through at budget end). Three-way confound with clamp removal and budget change.
+- See `results/exp_064_entropy_annealing/EXPERIMENT.md`
 
 ### [CLAIMED:jeff-VirtualBox-15078-1774669522] exp_065 -- Periodic Deterministic Eval + Best Checkpoint
 - **Hypothesis:** We are currently blind to whether the deployable deterministic mean improves during training. If periodic deterministic eval rises late, or `best_det.ckpt` beats the final checkpoint, that supports undertraining and checkpoint-selection effects. If training reward rises while deterministic eval stays flat, that weakens the simple "just train longer" story.
@@ -61,6 +59,10 @@
 - **Expected outcome:** Better deterministic-eval trajectory during training and a better selected checkpoint than exp_064 alone. Benchmark improvement would support the "critic quality + convergence" story.
 - **Scope note:** This is a highest-upside combination experiment, not a clean attribution study. A positive result would justify follow-up ablations; a negative result would weaken multiple training-side hypotheses at once.
 - **Config:** `configs/exp_066_asym_entropy_annealing.yaml`
+
+### [CLAIMED:jeff-VirtualBox-6047-1774638579] exp_067 -- No Logstd Clamp (Clean Ablation from exp_060)
+- **Hypothesis:** exp_064 changed three things (clamp, ent_coef, budget) and failed. This isolates the clamp effect: exp_060 with only max_logstd removed. If reward climbs ~28, ent_coef=0.03 was exp_064's problem. If flat ~8, clamp removal itself is harmful at this budget.
+- **Config:** `configs/exp_067_no_logstd_clamp.yaml`
 
 ### [DEFERRED] exp_063 -- Extended Training (10M+ steps, no logstd clamp)
 - **Depends on:** exp_061, 062, 064 results

@@ -1,0 +1,32 @@
+{
+  "experiment": "exp_064_entropy_annealing",
+  "model": "results/exp_064_entropy_annealing/model.ckpt",
+  "benchmark_config": "level2_midair.toml",
+  "controller": "attitude_rl_race.py",
+  "deterministic": {
+    "n_runs": 5,
+    "runs": [
+      {"flight_time": 0.52, "finished": false, "gates": 0},
+      {"flight_time": 0.52, "finished": false, "gates": 0},
+      {"flight_time": 0.52, "finished": false, "gates": 0},
+      {"flight_time": 0.52, "finished": false, "gates": 0},
+      {"flight_time": 0.52, "finished": false, "gates": 0}
+    ],
+    "avg_flight_time": 0.52,
+    "avg_gates": 0.0,
+    "finish_rate": "0/5"
+  },
+  "stochastic": {
+    "n_runs": 5,
+    "runs": [
+      {"flight_time": 0.66, "finished": false, "gates": 0},
+      {"flight_time": 0.68, "finished": false, "gates": 0},
+      {"flight_time": 0.70, "finished": false, "gates": 0},
+      {"flight_time": 1.86, "finished": false, "gates": 0},
+      {"flight_time": 0.52, "finished": false, "gates": 0}
+    ],
+    "avg_flight_time": 0.884,
+    "avg_gates": 0.0,
+    "finish_rate": "0/5"
+  }
+}

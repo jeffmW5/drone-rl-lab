@@ -1,0 +1,64 @@
+name: exp_067_no_logstd_clamp
+backend: racing
+hypothesis: "Clean ablation from exp_060: remove only max_logstd=-1.0 clamp.
+  exp_064 changed three things (clamp, ent_coef, budget) and failed.
+  This isolates the clamp effect. If reward climbs like exp_060 (~28),
+  then ent_coef=0.03 was exp_064's problem. If reward stays flat (~8),
+  then the clamp removal itself prevents learning at this budget."
+budget_seconds: 3600
+racing:
+  env_type: race
+  level: level2
+  race_config: level2_attitude.toml
+  total_timesteps: 20000000
+  num_envs: 512
+  num_steps: 8
+  learning_rate: 0.0003
+  anneal_lr: true
+  gamma: 0.97
+  gae_lambda: 0.97
+  update_epochs: 10
+  num_minibatches: 8
+  clip_coef: 0.2
+  ent_coef: 0.01
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  n_obs: 2
+  cuda: true
+  seed: 42
+  # === NO LOGSTD CLAMP (single change from exp_060) ===
+  # max_logstd: removed — was -1.0 in exp_060
+  # === MINIMUM STABILITY (same as exp_060) ===
+  survive_coef: 0.05
+  alt_coef: 0.5
+  z_low: -0.05
+  z_high: 2.0
+  # === BILATERAL PROGRESS (same as exp_060) ===
+  bilateral_progress: true
+  progress_coef: 50.0
+  gate_bonus: 10.0
+  speed_coef: 0.5
+  gate_in_view_coef: 0.0
+  reward_mode: add
+  # === BODY-FRAME GATE OBSERVATIONS (same as exp_060) ===
+  body_frame_obs: true
+  # === SOFT-COLLISION CURRICULUM (same as exp_060) ===
+  soft_collision: true
+  soft_collision_penalty: 5.0
+  soft_collision_steps: 10000000
+  # === PENALTIES OFF (same as exp_060) ===
+  proximity_coef: 0.0
+  rpy_coef: 0.0
+  act_coef: 0.0
+  d_act_th_coef: 0.0
+  d_act_xy_coef: 0.0
+  vz_coef: 0.0
+  vz_threshold: 0.5
+  oob_coef: 0.0
+  # === SPAWNS (same as exp_060) ===
+  max_episode_steps: 1500
+  random_gate_start: true
+  random_gate_ratio: 1.0
+  spawn_offset: 0.75
+  spawn_pos_noise: 0.15
+  spawn_vel_noise: 0.3
