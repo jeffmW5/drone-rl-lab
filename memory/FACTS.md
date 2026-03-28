@@ -151,3 +151,23 @@
 - **Confidence:** high
 - **Last reviewed:** 2026-03-28
 - **Next falsification test:** 4x budget training to see if trend continues or breaks through.
+
+## FACT-016
+- **Statement:** `exp_069` with hidden_size=128 (2×128 MLP, 48K params): 42.29 mean reward (peak 52.39, new all-time high), 2/15 deterministic gates (first ever in this family), 5/15 T=0.3 gates (33%), 0/15 stochastic gates. 7 total in 45 runs.
+- **Type:** fact
+- **Scope:** Direct `RaceCoreEnv`, mid-air benchmark, network capacity experiment
+- **Supported by:** `results/exp_069_larger_network/metrics.json`, `results/exp_069_larger_network/benchmark.json`
+- **Counterevidence:** none noted
+- **Confidence:** high
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** none needed; this is a recorded result.
+
+## FACT-017
+- **Statement:** Increasing hidden_size from 64 to 128 (same 7200s budget, same config) improved deterministic gate passage from 0/15 to 2/15 and T=0.3 from 2/15 to 5/15, while matching mean reward (42.29 vs 42.84) and exceeding peak reward (52.39 vs 44.53).
+- **Type:** fact
+- **Scope:** exp_068 vs exp_069 comparison, same config except hidden_size
+- **Supported by:** exp_068 and exp_069 benchmark results
+- **Counterevidence:** Sample sizes are small (15 runs per mode); the rates could be noise. Average deterministic flight time was shorter (0.86s vs 1.67s), suggesting different behavior.
+- **Confidence:** medium (directional signal is clear, exact rates may be noisy)
+- **Last reviewed:** 2026-03-28
+- **Next falsification test:** Run 50+ benchmark runs to confirm statistical significance of gate passage improvement.

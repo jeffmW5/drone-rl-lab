@@ -58,3 +58,7 @@
 | 058 | racing | level2 | 37.84 | 5,373,952 | 0% | 1.2s | 0.0 | Hover-or-crash binary trap (Hard Rule #28, #34): policy e... |
 | 059 | racing | level2 | 32.50 | 1,974,272 | 0% | 0.8s | 0.0 | RSS 2024, CoRL 2024, RA-L 2025 all use asymmetric actor-c... |
 | 060 | racing | level2 | 28.02 | 1,564,672 | 0% | 0.7s | 0.0 | Combines lessons from exp_056/057/058: - exp_056: bilater... |
+| 064 | racing | level2 | 7.78 | 2,510,848 | -- | -- | -- | exp_061/062 confirm deployment-time fixes are insufficien... |
+| 067 | racing | level2 | 29.99 | 1,540,096 | -- | -- | -- | Clean ablation from exp_060: remove only max_logstd=-1.0 ... |
+| 068 | racing | level2 | 42.84 | 3,235,840 | -- | -- | -- | exp_067 reached 32.01 reward and was still climbing steep... |
+| 069 | racing | level2 | 42.29 | 3,469,312 | -- | -- | -- | Swift (Nature 2023) uses 2x128 MLP; we use 2x64. The dete... |

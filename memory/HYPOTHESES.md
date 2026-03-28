@@ -57,7 +57,7 @@
 - **Type:** hypothesis
 - **Scope:** Direct `RaceCoreEnv` policies with 55D obs and 4D action
 - **Supported by:** Swift (Nature 2023) uses 2×128 and achieves real-world gate navigation; our 2×64 (16K params) may be insufficient for 55D→4D mapping with the precision needed for gates; stochastic policy navigates (reward 43) but mean does not
-- **Counterevidence:** none yet; exp_069 will test this
-- **Confidence:** medium
+- **Counterevidence:** Improvement is modest (2/15 det gates, 7/45 total); 87% deterministic failure rate remains. Average flight time is shorter (0.86s vs 1.67s), suggesting the larger network is more aggressive but not more stable.
+- **Confidence:** medium-high (supported by exp_069 but not fully resolved)
 - **Last reviewed:** 2026-03-28
-- **Next falsification test:** exp_069 with hidden_size=128 (48K params). If benchmark gates improve, capacity was limiting. If unchanged, the gap is structural (reward/exploration), not capacity.
+- **Next falsification test:** Even larger network (2×256) or longer training (14400s with 2×128) to see if the capacity trend continues. If 2×256 shows no further improvement, capacity alone is insufficient.

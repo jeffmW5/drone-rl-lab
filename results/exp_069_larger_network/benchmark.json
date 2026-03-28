@@ -1,0 +1,38 @@
+{
+  "experiment": "exp_069_larger_network",
+  "benchmark_config": "level2_midair.toml",
+  "controller": "attitude_rl_race.py",
+  "checkpoint": "results/exp_069_larger_network/model.ckpt",
+  "hidden_size": 128,
+  "body_frame_obs": true,
+  "deterministic": {
+    "n_runs": 15,
+    "gates_passed": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    "flight_times": [0.60, 0.60, 0.56, 1.08, 1.80, 1.24, 0.56, 0.62, 0.56, 1.56, 0.58, 0.54, 0.62, 0.60, 1.44],
+    "total_gates": 2,
+    "avg_flight_time": 0.86,
+    "gate_passage_rate": 0.133
+  },
+  "stochastic": {
+    "n_runs": 15,
+    "gates_passed": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "flight_times": [0.52, 0.86, 0.66, 0.66, 0.72, 0.70, 0.64, 0.84, 0.80, 0.88, 0.68, 0.94, 1.58, 0.74, 0.52],
+    "total_gates": 0,
+    "avg_flight_time": 0.78,
+    "gate_passage_rate": 0.0
+  },
+  "temperature_0.3": {
+    "n_runs": 15,
+    "gates_passed": [1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0],
+    "flight_times": [1.34, 0.70, 1.04, 0.64, 0.56, 1.26, 0.66, 1.32, 0.56, 1.90, 0.62, 0.56, 0.58, 1.82, 0.76],
+    "total_gates": 5,
+    "avg_flight_time": 0.95,
+    "gate_passage_rate": 0.333
+  },
+  "summary": {
+    "total_runs": 45,
+    "total_gates": 7,
+    "best_mode": "temperature_0.3",
+    "best_gate_rate": 0.333
+  }
+}

@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-03-28T03:30:49+00:00",
+  "generated_at": "2026-03-28T13:29:01+00:00",
   "repo": {
     "path": "/media/drone-rl-lab",
     "available": true,
     "branch": "master",
-    "commit": "a73a3e24af0dc24c1990917fba7f16e2be3c44f4",
+    "commit": "aa9ea68556abdb6104aa047dfaf7641ee992c4ab",
     "dirty": true
   },
   "external_repos": {
@@ -12,36 +12,63 @@
       "path": "/media/lsy_drone_racing",
       "available": true,
       "branch": "main",
-      "commit": "06ec55f04f0bbd99720cac1eeb851a88972b1d14",
-      "dirty": true
+      "commit": "99ce3297a120b1ba9d8752e226f67f2180fcff69",
+      "dirty": false
     }
   },
   "agents": [
     {
-      "id": "jeff-VirtualBox-6047-1774638579",
-      "status": "training on pod 32eutll6uvb5um",
-      "task": "exp_064",
-      "heartbeat": "2026-03-28T02:45:09+00:00"
+      "id": "jeff-VirtualBox-15078-1774669522",
+      "status": "waiting on fresh pod build",
+      "task": "exp_065",
+      "heartbeat": "2026-03-28T03:48:58+00:00"
+    },
+    {
+      "id": "jeff-VirtualBox-16081-1774673983",
+      "status": "launching training",
+      "task": "exp_068",
+      "heartbeat": "2026-03-28T06:29:08+00:00"
+    },
+    {
+      "id": "jeff-VirtualBox-18828-1774687836",
+      "status": "training v2, reward peaked 48.30 at 2.5M steps, 5580s elapsed, all-time high!",
+      "task": "exp_069",
+      "heartbeat": "2026-03-28T12:54:25+00:00"
     }
   ],
   "queue": {
     "counts": {
-      "done": 22,
+      "done": 26,
       "note": 1,
       "claimed": 1,
+      "ready": 1,
       "deferred": 1
     },
     "running": [
       {
-        "status": "CLAIMED:jeff-VirtualBox-6047-1774638579",
+        "status": "CLAIMED:jeff-VirtualBox-15078-1774669522",
         "status_kind": "claimed",
-        "title": "exp_064 -- Entropy Annealing Schedule",
-        "body": "- **Hypothesis:** Start with high entropy (ent_coef=0.05, no logstd clamp) for exploration, then anneal both to low values. Lets mean converge naturally.\n- **What to change:** Implement ent_coef annealing (0.05 \u2192 0.001). Remove max_logstd clamp. Train 10M+ steps on GPU.\n- **Expected outcome:** Smoother convergence, mean finds the navigation mode.\n- **Paper basis:** Entropy Annealing (2405.20250)\n- **Config:** `configs/exp_064_entropy_annealing.yaml` (to create)",
-        "task_id": "exp_064"
+        "title": "exp_065 -- Periodic Deterministic Eval + Best Checkpoint",
+        "body": "- **Hypothesis:** We are currently blind to whether the deployable deterministic mean improves during training. If periodic deterministic eval rises late, or `best_det.ckpt` beats the final checkpoint, that supports undertraining and checkpoint-selection effects. If training reward rises while deterministic eval stays flat, that weakens the simple \"just train longer\" story.\n- **What to change:** Use the new `periodic_deterministic_eval` trainer hook. Every 50 iterations, run 8 deterministic eval episodes on a matched training env, save `best_det.ckpt`, and write `deterministic_evaluations.npz`. After training, benchmark both `best_det.ckpt` and the final `model.ckpt`.\n- **Expected outcome:** Cleaner visibility into whether the mean policy is maturing, plus protection against saving a late-collapsed final checkpoint.\n- **Scope note:** This is primarily an instrumentation experiment attached to the exp_064-style long-budget line, not a claim that eval logic alone will improve the policy.\n- **Config:** `configs/exp_065_periodic_det_eval.yaml`",
+        "task_id": "exp_065"
       }
     ],
-    "actionable": [],
-    "next_task": null
+    "actionable": [
+      {
+        "status": "READY",
+        "status_kind": "ready",
+        "title": "exp_066 -- Asymmetric Critic + Entropy Annealing",
+        "body": "- **Hypothesis:** If the remaining bottleneck is a combination of weak value targets and insufficient mean-policy convergence time, then exp_059's asymmetric critic plus exp_064's unclamped variance / higher entropy / longer budget should outperform either intervention alone.\n- **What to change:** Start from the exp_064 long-budget line, add `asymmetric_critic: true`, and keep the periodic deterministic eval / best-checkpoint instrumentation from exp_065.\n- **Expected outcome:** Better deterministic-eval trajectory during training and a better selected checkpoint than exp_064 alone. Benchmark improvement would support the \"critic quality + convergence\" story.\n- **Scope note:** This is a highest-upside combination experiment, not a clean attribution study. A positive result would justify follow-up ablations; a negative result would weaken multiple training-side hypotheses at once.\n- **Config:** `configs/exp_066_asym_entropy_annealing.yaml`",
+        "task_id": "exp_066"
+      }
+    ],
+    "next_task": {
+      "status": "READY",
+      "status_kind": "ready",
+      "title": "exp_066 -- Asymmetric Critic + Entropy Annealing",
+      "body": "- **Hypothesis:** If the remaining bottleneck is a combination of weak value targets and insufficient mean-policy convergence time, then exp_059's asymmetric critic plus exp_064's unclamped variance / higher entropy / longer budget should outperform either intervention alone.\n- **What to change:** Start from the exp_064 long-budget line, add `asymmetric_critic: true`, and keep the periodic deterministic eval / best-checkpoint instrumentation from exp_065.\n- **Expected outcome:** Better deterministic-eval trajectory during training and a better selected checkpoint than exp_064 alone. Benchmark improvement would support the \"critic quality + convergence\" story.\n- **Scope note:** This is a highest-upside combination experiment, not a clean attribution study. A positive result would justify follow-up ablations; a negative result would weaken multiple training-side hypotheses at once.\n- **Config:** `configs/exp_066_asym_entropy_annealing.yaml`",
+      "task_id": "exp_066"
+    }
   },
   "evaluation": {
     "racing_primary_metric": "benchmark",
@@ -53,7 +80,7 @@
     "training_reward_note": "Training reward is secondary and only comparable within similar reward definitions."
   },
   "experiments": {
-    "total_results": 53,
+    "total_results": 57,
     "highest_recorded_mean_reward": {
       "experiment": "exp_051_longer_rollout",
       "mean_reward": 175.604,
@@ -69,10 +96,10 @@
       "avg_finish_time": null
     },
     "latest_result": {
-      "experiment": "exp_059_asymmetric_critic",
-      "timestamp": "2026-03-28T03:10:09.957972",
-      "mean_reward": 32.502,
-      "timesteps_trained": 1974272
+      "experiment": "exp_069_larger_network",
+      "timestamp": "2026-03-28T13:20:30.146379",
+      "mean_reward": 42.291,
+      "timesteps_trained": 3469312
     }
   }
 }
