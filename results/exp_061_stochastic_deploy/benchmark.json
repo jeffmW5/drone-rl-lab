@@ -1,0 +1,21 @@
+{
+  "experiment": "exp_061_stochastic_deploy",
+  "model": "results/exp_060_combined/model.ckpt",
+  "benchmark_config": "level2_midair.toml",
+  "controller": "attitude_rl_race.py",
+  "env_vars": {
+    "DRONE_RL_STOCHASTIC": "true",
+    "DRONE_RL_BODY_FRAME_OBS": "true"
+  },
+  "n_runs": 5,
+  "runs": [
+    {"flight_time": 0.78, "finished": false, "gates": 0},
+    {"flight_time": 2.14, "finished": false, "gates": 0},
+    {"flight_time": 2.24, "finished": false, "gates": 0},
+    {"flight_time": 1.88, "finished": false, "gates": 0},
+    {"flight_time": 1.30, "finished": false, "gates": 0}
+  ],
+  "avg_flight_time": 1.668,
+  "avg_gates": 0.0,
+  "finish_rate": "0/5"
+}

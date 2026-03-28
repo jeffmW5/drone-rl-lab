@@ -30,18 +30,15 @@
 - **Key finding:** exp_056-060 all show 25-38 training reward with 0 benchmark gates.
 - **Bottleneck:** deterministic mean policy crashes; stochastic training policy navigates fine.
 
-### [CLAIMED:jeff-VirtualBox-6047-1774638579] exp_061 -- Stochastic Deployment of exp_060 Model
-- **Hypothesis:** Stochastic training policy navigates (28.02 reward) but deterministic mean crashes. Deploying with stochastic sampling should recover navigation behavior.
-- **What to change:** Benchmark with `DRONE_RL_STOCHASTIC=true` env var. No retraining needed — use exp_060's model.ckpt.
-- **Expected outcome:** Flight time > 2s, possibly gate passages.
-- **Paper basis:** Dynamic Entropy Tuning (2512.18336)
-- **Config:** No new config — inference-only change.
+### [DONE 2026-03-28] exp_061 -- Stochastic Deployment of exp_060 Model
+- **Result:** PARTIAL — avg 1.67s flight (2.5x improvement) but still 0 gates
+- **Diagnosis:** Stochastic sampling stabilizes flight but full noise too imprecise for gates
+- See `results/exp_061_stochastic_deploy/EXPERIMENT.md`
 
-### [READY] exp_062 -- Temperature-Scaled Deployment
-- **Hypothesis:** Full stochastic may be too noisy. Scaling temperature (std *= T) reduces noise while keeping policy away from unstable mean.
-- **What to change:** Add `DRONE_RL_NOISE_SCALE` support to attitude_rl_race.py. Sweep T=0.1, 0.3, 0.5, 1.0.
-- **Expected outcome:** Sweet spot between deterministic crash and full stochastic noise.
-- **Paper basis:** Standard RL practice + entropy annealing theory (2405.20250)
+### [DONE 2026-03-28] exp_062 -- Temperature-Scaled Deployment
+- **Result:** FAILURE — 2 gates in 70 runs across T=0.1-1.0. No sweet spot found.
+- **Diagnosis:** Policy mean hasn't learned gate navigation; deployment-time fixes insufficient
+- See `results/exp_062_temperature_scaled/EXPERIMENT.md`
 
 ### [READY] exp_064 -- Entropy Annealing Schedule
 - **Hypothesis:** Start with high entropy (ent_coef=0.05, no logstd clamp) for exploration, then anneal both to low values. Lets mean converge naturally.

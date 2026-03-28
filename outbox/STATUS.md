@@ -1,15 +1,17 @@
-# Status -- Last Updated 2026-03-27
+# Status -- Last Updated 2026-03-28
 
-## Latest Result
+## Latest Results
 
-**exp_060 -- Combined** completed 2026-03-27.
+**exp_061 -- Stochastic Deployment** completed 2026-03-28.
+- Benchmark: **0 gates, 1.67s avg** — 2.5x longer flight than deterministic (0.66s)
+- Stochastic sampling stabilizes but too imprecise for gates
 
-- Training reward: **28.02 mean** (still climbing at budget, peak ~29)
-- Benchmark: **0 gates, 0.66s avg** — same crash as exp_056
-- Combined body_frame_obs + soft_collision + progress_coef=50
-- Confirms: stochastic-to-deterministic deployment gap is THE bottleneck
+**exp_062 -- Temperature-Scaled Deployment** completed 2026-03-28.
+- Swept T=0.1 to 1.0, 70 total runs
+- Benchmark: **2 gate passages in 70 runs** — essentially noise
+- No sweet spot found; deployment-time fixes are insufficient
 
-## The Pattern (exp_056-060)
+## The Pattern (exp_056-062)
 
 | Exp | Train Reward | Benchmark Gates | Flight Time | Change |
 |-----|:---:|:---:|:---:|------|
@@ -17,20 +19,21 @@
 | 057 | 9.78 | 0.2 | 0.63s | body_frame_obs (weak progress) |
 | 058 | 37.84 | 0 | 1.22s | soft_collision |
 | 060 | 28.02 | 0 | 0.66s | all three combined |
-
-All produce 0 benchmark gates. The stochastic training policy navigates
-(that's where the 25-38 reward comes from) but the deterministic mean crashes.
+| 061 | — | 0 | 1.67s | stochastic deployment |
+| 062 | — | 0.03 | 0.7-0.9s | temperature sweep |
 
 ## Current Bottleneck
 
-**Deterministic mean policy crashes at deployment.** This is NOT a reward
-design, observation, or curriculum problem. It's a policy optimization /
-deployment problem. The mean action at each state does not produce stable flight.
+**Policy mean hasn't learned gate navigation.** The stochastic training policy
+gets reward by randomly sampling actions that happen to move toward gates, but
+the mean action doesn't converge to a useful navigation strategy. This is a
+training problem, not a deployment problem.
+
+Deployment fixes (stochastic, temperature) confirmed insufficient.
 
 ## Next Steps
 
-Focus on fixing the deterministic deployment gap:
-1. Deploy stochastic policy (sample from distribution, not mean)
-2. Temperature scaling at deployment
-3. Deterministic evaluation during training
-4. Architecture changes (mixture policy, mode-seeking loss)
+Training-time fixes needed:
+1. **exp_064 — Entropy annealing** (high→low ent_coef, no logstd clamp, 10M+ steps) — READY, needs GPU
+2. **exp_059 — Asymmetric actor-critic** (privileged critic) — READY, needs GPU
+3. **exp_063 — Extended training** (10M+ steps, no logstd clamp) — DEFERRED until 064 done
