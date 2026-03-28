@@ -64,6 +64,14 @@ This legacy table does not by itself diagnose the active direct-racing line.
 | Dynamic Entropy Tuning Quadcopter (2024) | 2512.18336 | Stochastic policies generalize where deterministic crash; dynamic entropy target=-dim(A) | exp_061 |
 | When MaxEnt Misleads (2025) | 2506.05615 | PPO beats SAC for precision control; entropy corrupts Q-values in narrow-corridor tasks | reference |
 | Entropy Annealing (2024) | 2405.20250 | Decay entropy τ=1/√(s+1) for continuous; start high, anneal to deterministic | exp_064 |
+| Optimal Det. Policies from Stochastic PG (ICML 2024) | 2405.02235 | Mean is side effect of stochastic training, not the objective; action-space noise degrades mean more than parameter-space | exp_071-073 |
+| gSDE: Smooth Exploration (CoRL 2022) | 2005.05719 | State-dependent noise forces mean to encode recovery; temporally correlated; available in SB3 | exp_075 (deferred) |
+| CAPS: Action Smoothness (ICRA 2021) | 2012.06644 | Temporal + spatial smoothness regularization; 80% power reduction on real quadrotor | exp_072 |
+| SimpleFlight: Sim-to-Real Factors (2024) | 2412.11764 | 5 critical factors; action-difference penalty critical for transfer; obs normalization | exp_071-072 |
+| What Matters in On-Policy RL (ICLR 2021) | 2006.05990 | 250K agents: obs normalization critical, tanh, small final-layer init, softplus std | exp_071 |
+| Structured Control Nets (ICML 2018) | 1802.08311 | Linear + nonlinear parallel branches; linear provides stability guarantee | reference |
+| Colored Noise PPO (AAAI 2024) | 2312.11091 | Temporally correlated noise improves exploration and final perf in continuous control | reference |
+| L2 Regularization in Policy Opt (2019) | 1910.09191 | L2 on policy network improves harder tasks; constrains mean drift | reference |
 
 ---
 

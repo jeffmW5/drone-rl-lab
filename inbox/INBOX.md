@@ -75,10 +75,46 @@
 - **Diagnosis:** Network capacity helps — 2×128 outperforms 2×64 on benchmark gates. But 87% deterministic failure rate persists.
 - See `results/exp_069_larger_network/EXPERIMENT.md`
 
-### [CLAIMED:jeff-VirtualBox-23316-1774704612] exp_070 -- Larger Network + Extended Training (14400s)
+### [READY] exp_070 -- Larger Network + Extended Training (14400s)
 - **Hypothesis:** exp_069 (2×128) peaked at 52.39 at iter 650/848 (still climbing). Doubling budget to 14400s gives the larger network time to converge. Single change from exp_069: budget 7200→14400.
 - **Expected outcome:** If capacity + training time is the key, deterministic gates should improve further. If gates plateau despite higher reward, something else is limiting.
 - **Config:** `configs/exp_070_larger_longer.yaml`
+
+### [READY] exp_071 -- Observation Normalization
+- **Hypothesis:** Missing observation normalization causes poorly conditioned mean actions. The "What Matters in On-Policy RL" study (250K agents) identifies obs normalization as critical. Our Agent has NONE. Adding running-mean/std normalization should directly improve mean policy quality.
+- **What to change:** Add VecNormalize or equivalent running observation normalization to the training environment wrapper. Single change from exp_069 baseline (2×128, 7200s budget).
+- **Expected outcome:** Improved deterministic benchmark gates, potentially large improvement.
+- **Paper basis:** "What Matters In On-Policy RL?" (2006.05990), SimpleFlight (2412.11764), Swift (all normalize observations)
+- **Config:** `configs/exp_071_obs_normalization.yaml`
+
+### [READY] exp_072 -- Action Smoothness Penalty
+- **Hypothesis:** The mean policy produces jerky, unstable commands because there is no incentive for temporal coherence. Re-enabling action-difference penalties forces the mean to produce smooth action sequences, reducing reliance on stochastic corrections.
+- **What to change:** From exp_069 baseline, set d_act_th_coef=0.4, d_act_xy_coef=1.0 (the defaults in train_racing.py). These penalties exist in the reward code but are disabled (0.0) in recent configs.
+- **Expected outcome:** Smoother deterministic actions, more stable flight and gate passage. Training reward may decrease but benchmark should improve.
+- **Paper basis:** CAPS (2012.06644), SimpleFlight (2412.11764)
+- **Config:** `configs/exp_072_action_smoothness.yaml`
+
+### [READY] exp_073 -- Entropy Annealing (Late Mean Convergence)
+- **Hypothesis:** The mean doesn't converge because entropy stays constant. Annealing ent_coef from 0.01→0.001 over the last 30% of training forces the distribution to collapse onto the mean, making the mean carry all performance.
+- **What to change:** From exp_069 baseline, add ent_coef annealing schedule: 0.01 for first 70%, linearly anneal to 0.001 over remaining 30%.
+- **Expected outcome:** Deterministic benchmark should improve as mean sharpens late in training.
+- **Paper basis:** "Learning Optimal Deterministic Policies" (2405.02235), "Entropy Annealing" (2405.20250)
+- **Risk note:** exp_064 failed with ent_coef=0.03 start (3x too high). This starts from the working 0.01 and only anneals late.
+- **Config:** `configs/exp_073_entropy_annealing_late.yaml`
+
+### [READY] exp_074 -- Obs Normalization + Action Smoothness (Combined)
+- **Hypothesis:** If both obs normalization and action smoothness independently help, combining them should produce the best deterministic deployment yet.
+- **What to change:** Both exp_071 and exp_072 changes applied together on exp_069 baseline.
+- **Expected outcome:** Best deterministic gate passage rate. If positive, follow up with clean ablations.
+- **Paper basis:** Combined evidence from CAPS, SimpleFlight, "What Matters"
+- **Config:** `configs/exp_074_obs_norm_smooth.yaml`
+
+### [DEFERRED] exp_075 -- State-Dependent Exploration (gSDE)
+- **Hypothesis:** State-dependent exploration forces the mean to encode recovery behavior, directly reducing the deployment gap.
+- **What to change:** Replace i.i.d. Gaussian noise with gSDE in the PPO loop. Requires code changes to Agent class.
+- **Expected outcome:** Better mean-policy quality, smoother deployment.
+- **Paper basis:** gSDE (2005.05719)
+- **Scope note:** Requires non-trivial code changes. Defer until simpler interventions tested.
 
 ### [DEFERRED] exp_063 -- Extended Training (10M+ steps, no logstd clamp)
 - **Depends on:** exp_061, 062, 064 results
