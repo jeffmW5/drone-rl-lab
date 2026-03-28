@@ -48,6 +48,13 @@
 - **Paper basis:** Entropy Annealing (2405.20250)
 - **Config:** `configs/exp_064_entropy_annealing.yaml` (to create)
 
+### [READY] exp_065 -- Periodic Deterministic Eval + Best Checkpoint
+- **Hypothesis:** We are currently blind to whether the deployable deterministic mean improves during training. If periodic deterministic eval rises late, or `best_det.ckpt` beats the final checkpoint, that supports undertraining and checkpoint-selection effects. If training reward rises while deterministic eval stays flat, that weakens the simple "just train longer" story.
+- **What to change:** Use the new `periodic_deterministic_eval` trainer hook. Every 50 iterations, run 8 deterministic eval episodes on a matched training env, save `best_det.ckpt`, and write `deterministic_evaluations.npz`. After training, benchmark both `best_det.ckpt` and the final `model.ckpt`.
+- **Expected outcome:** Cleaner visibility into whether the mean policy is maturing, plus protection against saving a late-collapsed final checkpoint.
+- **Scope note:** This is primarily an instrumentation experiment attached to the exp_064-style long-budget line, not a claim that eval logic alone will improve the policy.
+- **Config:** `configs/exp_065_periodic_det_eval.yaml`
+
 ### [DEFERRED] exp_063 -- Extended Training (10M+ steps, no logstd clamp)
 - **Depends on:** exp_061, 062, 064 results
 - **Hypothesis:** Swift trains 100M steps; we train 1.5M. Remove max_logstd clamp and train much longer.

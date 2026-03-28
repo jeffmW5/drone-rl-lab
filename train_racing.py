@@ -307,6 +307,50 @@ def run(config_path: str):
     eval_timesteps = []
     eval_results = []
 
+    # Optional periodic deterministic evaluation on a matched training env.
+    det_eval_cfg = racing_cfg.get("periodic_deterministic_eval", {})
+    det_eval_enabled = det_eval_cfg.get("enabled", False)
+    det_eval_every = int(det_eval_cfg.get("every_iterations", 50))
+    det_eval_episodes = int(det_eval_cfg.get("n_episodes", 8))
+    det_eval_num_envs = int(det_eval_cfg.get("num_envs", min(args.num_envs, 8)))
+    det_eval_save_best = det_eval_cfg.get("save_best_checkpoint", True)
+    det_eval_timesteps = []
+    det_eval_results = []
+    det_eval_lengths = []
+    best_det_eval = float("-inf")
+    best_det_iteration = None
+    best_det_global_step = None
+    best_det_ckpt_path = os.path.join(results_dir, "best_det.ckpt")
+    final_det_eval = None
+
+    if det_eval_enabled:
+        print(
+            "[INFO] Periodic deterministic eval: "
+            f"every={det_eval_every} iter, episodes={det_eval_episodes}, "
+            f"num_envs={det_eval_num_envs}, save_best={det_eval_save_best}"
+        )
+
+        if env_type == "race":
+            from lsy_drone_racing.control.train_race import make_race_envs
+
+            def make_det_eval_envs():
+                return make_race_envs(
+                    config=race_config,
+                    num_envs=det_eval_num_envs,
+                    jax_device=jax_device,
+                    torch_device=device,
+                    coefs=dict(race_coefs),
+                )
+        else:
+            def make_det_eval_envs():
+                return make_envs(
+                    config=f"{level}.toml",
+                    num_envs=det_eval_num_envs,
+                    jax_device=jax_device,
+                    torch_device=device,
+                    coefs=dict(reward_coefs),
+                )
+
     # ── Early stopping config ──────────────────────────────────────────────────
     es_cfg = racing_cfg.get("early_stopping", {})
     es_enabled = es_cfg.get("enabled", False)
@@ -486,6 +530,34 @@ def run(config_path: str):
             eval_timesteps.append(global_step)
             eval_results.append(mean_reward)
 
+        if det_eval_enabled and iteration % det_eval_every == 0:
+            det_stats = evaluate_racing(
+                agent,
+                make_det_eval_envs,
+                device,
+                n_episodes=det_eval_episodes,
+                jax_on_gpu=jax_on_gpu,
+            )
+            det_eval_timesteps.append(global_step)
+            det_eval_results.append(det_stats["mean_reward"])
+            det_eval_lengths.append(det_stats["mean_episode_length"])
+            print(
+                "  [DetEval] "
+                f"iter {iteration:>5} | step {global_step:>10,} | "
+                f"reward {det_stats['mean_reward']:>8.2f} +/- {det_stats['std_reward']:<6.2f} | "
+                f"ep_len {det_stats['mean_episode_length']:>7.1f}"
+            )
+
+            if det_eval_save_best and det_stats["mean_reward"] > best_det_eval:
+                best_det_eval = det_stats["mean_reward"]
+                best_det_iteration = iteration
+                best_det_global_step = global_step
+                torch.save(agent.state_dict(), best_det_ckpt_path)
+                print(
+                    f"  [DetEval] New best checkpoint: {best_det_ckpt_path} "
+                    f"(reward={best_det_eval:.2f})"
+                )
+
         if not first_iteration_logged:
             _startup_log(startup_start, f"First training iteration complete at global_step={global_step:,}")
             first_iteration_logged = True
@@ -498,12 +570,48 @@ def run(config_path: str):
     torch.save(agent.state_dict(), ckpt_path)
     print(f"[Saved] {ckpt_path}")
 
+    if det_eval_enabled:
+        final_det_eval = evaluate_racing(
+            agent,
+            make_det_eval_envs,
+            device,
+            n_episodes=det_eval_episodes,
+            jax_on_gpu=jax_on_gpu,
+        )
+        if not det_eval_timesteps or det_eval_timesteps[-1] != global_step:
+            det_eval_timesteps.append(global_step)
+            det_eval_results.append(final_det_eval["mean_reward"])
+            det_eval_lengths.append(final_det_eval["mean_episode_length"])
+        if final_det_eval["mean_reward"] > best_det_eval:
+            best_det_eval = final_det_eval["mean_reward"]
+            best_det_iteration = iteration
+            best_det_global_step = global_step
+            if det_eval_save_best:
+                torch.save(agent.state_dict(), best_det_ckpt_path)
+                print(
+                    f"[FinalDetEval] Updated best checkpoint: {best_det_ckpt_path} "
+                    f"(reward={best_det_eval:.2f})"
+                )
+        print(
+            "[FinalDetEval] "
+            f"reward {final_det_eval['mean_reward']:.2f} +/- {final_det_eval['std_reward']:.2f} | "
+            f"ep_len {final_det_eval['mean_episode_length']:.1f}"
+        )
+
     # ── Save evaluations.npz for plot.py compatibility ────────────────────────
     if eval_timesteps:
         np.savez(
             os.path.join(results_dir, "evaluations.npz"),
             timesteps=np.array(eval_timesteps),
             results=np.array(eval_results).reshape(-1, 1),
+        )
+
+    if det_eval_timesteps:
+        np.savez(
+            os.path.join(results_dir, "deterministic_evaluations.npz"),
+            timesteps=np.array(det_eval_timesteps),
+            rewards=np.array(det_eval_results),
+            mean_episode_lengths=np.array(det_eval_lengths),
         )
 
     # ── Final eval stats (from training data, not separate eval) ──────────────
@@ -525,6 +633,24 @@ def run(config_path: str):
         "level": level,
         "early_stopped": early_stopped,
         "plateau_iteration": plateau_iteration,
+        "periodic_deterministic_eval_enabled": det_eval_enabled,
+        "best_det_eval_mean_reward": round(best_det_eval, 3) if best_det_iteration is not None else None,
+        "best_det_eval_iteration": best_det_iteration,
+        "best_det_eval_global_step": best_det_global_step,
+        "best_det_ckpt_path": (
+            os.path.basename(best_det_ckpt_path)
+            if det_eval_save_best and best_det_iteration is not None
+            else None
+        ),
+        "final_det_eval_mean_reward": (
+            round(final_det_eval["mean_reward"], 3) if final_det_eval else None
+        ),
+        "final_det_eval_std_reward": (
+            round(final_det_eval["std_reward"], 3) if final_det_eval else None
+        ),
+        "final_det_eval_mean_episode_length": (
+            round(final_det_eval["mean_episode_length"], 3) if final_det_eval else None
+        ),
     }
 
     metrics_path = os.path.join(results_dir, "metrics.json")
@@ -536,6 +662,13 @@ def run(config_path: str):
     print(f"\n{'='*65}")
     print(f"  RESULTS — {name}")
     print(f"  mean_reward  = {mean_reward:.3f} +/- {std_reward:.3f}")
+    if best_det_iteration is not None:
+        print(f"  best_det_eval = {best_det_eval:.3f} at iter {best_det_iteration}")
+    if final_det_eval:
+        print(
+            "  final_det_eval = "
+            f"{final_det_eval['mean_reward']:.3f} +/- {final_det_eval['std_reward']:.3f}"
+        )
     print(f"  timesteps    = {global_step:,}")
     print(f"  wall time    = {elapsed:.1f}s")
     print(f"  level        = {level}")

@@ -1,0 +1,75 @@
+name: exp_065_periodic_det_eval
+backend: racing
+hypothesis: "We do not currently know whether the deployable deterministic mean
+  is improving during training or whether stochastic rollout reward is masking a
+  flat deployable policy. Add periodic deterministic evaluation on a matched
+  training env, save the best deterministic checkpoint, and compare it against
+  the final checkpoint. If deterministic eval improves late or best_det.ckpt
+  beats the final checkpoint, that supports undertraining and checkpoint
+  selection effects. If deterministic eval stays flat while training reward
+  rises, that weakens the simple undertraining story."
+budget_seconds: 7200
+racing:
+  env_type: race
+  level: level2
+  race_config: level2_attitude.toml
+  total_timesteps: 40000000
+  num_envs: 512
+  num_steps: 8
+  learning_rate: 0.0003
+  anneal_lr: true
+  gamma: 0.97
+  gae_lambda: 0.97
+  update_epochs: 10
+  num_minibatches: 8
+  clip_coef: 0.2
+  ent_coef: 0.03
+  ent_coef_final: 0.001
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  n_obs: 2
+  cuda: true
+  seed: 42
+  # === NO LOGSTD CLAMP (same as exp_064) ===
+  # max_logstd: removed
+  # === MINIMUM STABILITY ===
+  survive_coef: 0.05
+  alt_coef: 0.5
+  z_low: -0.05
+  z_high: 2.0
+  # === BILATERAL PROGRESS ===
+  bilateral_progress: true
+  progress_coef: 50.0
+  gate_bonus: 10.0
+  speed_coef: 0.5
+  gate_in_view_coef: 0.0
+  reward_mode: add
+  # === BODY-FRAME GATE OBSERVATIONS ===
+  body_frame_obs: true
+  # === SOFT-COLLISION CURRICULUM ===
+  soft_collision: true
+  soft_collision_penalty: 5.0
+  soft_collision_steps: 10000000
+  # === PENALTIES OFF ===
+  proximity_coef: 0.0
+  rpy_coef: 0.0
+  act_coef: 0.0
+  d_act_th_coef: 0.0
+  d_act_xy_coef: 0.0
+  vz_coef: 0.0
+  vz_threshold: 0.5
+  oob_coef: 0.0
+  # === SPAWNS ===
+  max_episode_steps: 1500
+  random_gate_start: true
+  random_gate_ratio: 1.0
+  spawn_offset: 0.75
+  spawn_pos_noise: 0.15
+  spawn_vel_noise: 0.3
+  # === PERIODIC DETERMINISTIC EVAL (NEW) ===
+  periodic_deterministic_eval:
+    enabled: true
+    every_iterations: 50
+    n_episodes: 8
+    num_envs: 8
+    save_best_checkpoint: true
