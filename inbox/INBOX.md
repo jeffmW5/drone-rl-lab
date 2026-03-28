@@ -75,6 +75,11 @@
 - **Diagnosis:** Network capacity helps — 2×128 outperforms 2×64 on benchmark gates. But 87% deterministic failure rate persists.
 - See `results/exp_069_larger_network/EXPERIMENT.md`
 
+### [READY] exp_070 -- Larger Network + Extended Training (14400s)
+- **Hypothesis:** exp_069 (2×128) peaked at 52.39 at iter 650/848 (still climbing). Doubling budget to 14400s gives the larger network time to converge. Single change from exp_069: budget 7200→14400.
+- **Expected outcome:** If capacity + training time is the key, deterministic gates should improve further. If gates plateau despite higher reward, something else is limiting.
+- **Config:** `configs/exp_070_larger_longer.yaml`
+
 ### [DEFERRED] exp_063 -- Extended Training (10M+ steps, no logstd clamp)
 - **Depends on:** exp_061, 062, 064 results
 - **Hypothesis:** Swift trains 100M steps; we train 1.5M. Remove max_logstd clamp and train much longer.
