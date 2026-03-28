@@ -3,8 +3,8 @@
   "hostname": "jeff-VirtualBox",
   "pid": 15078,
   "started": "2026-03-28T03:45:22+00:00",
-  "heartbeat": "2026-03-28T03:47:33+00:00",
-  "last_pushed_heartbeat": "2026-03-28T03:47:33+00:00",
+  "heartbeat": "2026-03-28T03:48:58+00:00",
+  "last_pushed_heartbeat": "2026-03-28T03:48:58+00:00",
   "task": "exp_065",
-  "status": "pod bootstrap in progress"
+  "status": "waiting on fresh pod build"
 }
