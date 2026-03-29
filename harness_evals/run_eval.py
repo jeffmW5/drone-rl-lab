@@ -170,10 +170,32 @@ def eval_repeated_failure_guard(case: dict, fixture: dict, verbose: bool) -> tup
         shutil.rmtree(tmpdir)
 
 
+def eval_dependency_ordering(case: dict, fixture: dict, verbose: bool) -> tuple[bool, str]:
+    """Evaluate: tasks with unmet dependencies are skipped."""
+    store, _job_store, tmpdir = setup_temp_store(fixture)
+    try:
+        expected_id = case["expected"]["chosen_task_id"]
+        skipped_id = case["expected"]["skipped_task_id"]
+
+        nxt = store.get_next(check_failures=False)
+        if nxt is None:
+            return False, f"get_next() returned None, expected {expected_id}"
+
+        actual_id = nxt.get("task_id")
+        if actual_id == skipped_id:
+            return False, f"chose {skipped_id} which has unmet dependency"
+        if actual_id == expected_id:
+            return True, f"correctly skipped {skipped_id} (unmet dep), chose {expected_id}"
+        return False, f"chose {actual_id}, expected {expected_id}"
+    finally:
+        shutil.rmtree(tmpdir)
+
+
 EVALUATORS = {
     "next_task_choice": eval_next_task_choice,
     "stale_claim_recovery": eval_stale_claim_recovery,
     "repeated_failure_guard": eval_repeated_failure_guard,
+    "dependency_ordering": eval_dependency_ordering,
 }
 
 

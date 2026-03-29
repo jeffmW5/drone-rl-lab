@@ -1,0 +1,12 @@
+{
+  "case_id": "dependency_ordering",
+  "description": "A task with an unmet dependency should be skipped even if it is higher priority than tasks without dependencies.",
+  "fixture": "queue_basic.json",
+  "evaluator": "dependency_ordering",
+  "expected": {
+    "skipped_task_id": "exp_054",
+    "reason": "exp_054 depends on exp_053 which is not done yet",
+    "chosen_task_id": "exp_053"
+  },
+  "tags": ["queue-selection", "dependency-check"]
+}
