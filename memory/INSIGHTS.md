@@ -82,3 +82,11 @@ This legacy table does not by itself diagnose the active direct-racing line.
 - **Physics gap:** Training uses crazyflow, benchmarking uses MuJoCo sim. Different dynamics may be a limiting factor.
 - **Action space (hover):** ONE_D_RPM = single-axis thrust. Fundamentally limits 3D precision.
 - **Action space (racing):** attitude control (roll, pitch, yaw, thrust). 4 DOF.
+
+---
+
+## Harness Engineering Plan (2026-03-28)
+
+- Repo plan saved at `docs/agentic_harness_upgrade_plan.md`.
+- Priority order: typed artifacts -> resumable job runner -> skills/handoffs -> semantic tools -> harness evals -> observability -> memory promotion -> selective multi-agent work.
+- If a task concerns queueing, agent orchestration, state management, or harness architecture, read that plan before making structural changes.
