@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-03-28T13:29:01+00:00",
+  "generated_at": "2026-03-29T04:03:50+00:00",
   "repo": {
     "path": "/media/drone-rl-lab",
     "available": true,
     "branch": "master",
-    "commit": "aa9ea68556abdb6104aa047dfaf7641ee992c4ab",
+    "commit": "791211c6782f61cf76703f09b45b704e64e57936",
     "dirty": true
   },
   "external_repos": {
@@ -16,58 +16,86 @@
       "dirty": false
     }
   },
-  "agents": [
-    {
-      "id": "jeff-VirtualBox-15078-1774669522",
-      "status": "waiting on fresh pod build",
-      "task": "exp_065",
-      "heartbeat": "2026-03-28T03:48:58+00:00"
-    },
-    {
-      "id": "jeff-VirtualBox-16081-1774673983",
-      "status": "launching training",
-      "task": "exp_068",
-      "heartbeat": "2026-03-28T06:29:08+00:00"
-    },
-    {
-      "id": "jeff-VirtualBox-18828-1774687836",
-      "status": "training v2, reward peaked 48.30 at 2.5M steps, 5580s elapsed, all-time high!",
-      "task": "exp_069",
-      "heartbeat": "2026-03-28T12:54:25+00:00"
-    }
-  ],
+  "agents": [],
   "queue": {
     "counts": {
       "done": 26,
       "note": 1,
-      "claimed": 1,
-      "ready": 1,
-      "deferred": 1
+      "ready": 7,
+      "deferred": 2
     },
-    "running": [
+    "running": [],
+    "actionable": [
       {
-        "status": "CLAIMED:jeff-VirtualBox-15078-1774669522",
-        "status_kind": "claimed",
+        "status": "READY",
+        "status_kind": "ready",
         "title": "exp_065 -- Periodic Deterministic Eval + Best Checkpoint",
         "body": "- **Hypothesis:** We are currently blind to whether the deployable deterministic mean improves during training. If periodic deterministic eval rises late, or `best_det.ckpt` beats the final checkpoint, that supports undertraining and checkpoint-selection effects. If training reward rises while deterministic eval stays flat, that weakens the simple \"just train longer\" story.\n- **What to change:** Use the new `periodic_deterministic_eval` trainer hook. Every 50 iterations, run 8 deterministic eval episodes on a matched training env, save `best_det.ckpt`, and write `deterministic_evaluations.npz`. After training, benchmark both `best_det.ckpt` and the final `model.ckpt`.\n- **Expected outcome:** Cleaner visibility into whether the mean policy is maturing, plus protection against saving a late-collapsed final checkpoint.\n- **Scope note:** This is primarily an instrumentation experiment attached to the exp_064-style long-budget line, not a claim that eval logic alone will improve the policy.\n- **Config:** `configs/exp_065_periodic_det_eval.yaml`",
         "task_id": "exp_065"
-      }
-    ],
-    "actionable": [
+      },
       {
         "status": "READY",
         "status_kind": "ready",
         "title": "exp_066 -- Asymmetric Critic + Entropy Annealing",
         "body": "- **Hypothesis:** If the remaining bottleneck is a combination of weak value targets and insufficient mean-policy convergence time, then exp_059's asymmetric critic plus exp_064's unclamped variance / higher entropy / longer budget should outperform either intervention alone.\n- **What to change:** Start from the exp_064 long-budget line, add `asymmetric_critic: true`, and keep the periodic deterministic eval / best-checkpoint instrumentation from exp_065.\n- **Expected outcome:** Better deterministic-eval trajectory during training and a better selected checkpoint than exp_064 alone. Benchmark improvement would support the \"critic quality + convergence\" story.\n- **Scope note:** This is a highest-upside combination experiment, not a clean attribution study. A positive result would justify follow-up ablations; a negative result would weaken multiple training-side hypotheses at once.\n- **Config:** `configs/exp_066_asym_entropy_annealing.yaml`",
         "task_id": "exp_066"
+      },
+      {
+        "status": "READY",
+        "status_kind": "ready",
+        "title": "exp_070 -- Larger Network + Extended Training (14400s)",
+        "body": "- **Hypothesis:** exp_069 (2\u00d7128) peaked at 52.39 at iter 650/848 (still climbing). Doubling budget to 14400s gives the larger network time to converge. Single change from exp_069: budget 7200\u219214400.\n- **Expected outcome:** If capacity + training time is the key, deterministic gates should improve further. If gates plateau despite higher reward, something else is limiting.\n- **Config:** `configs/exp_070_larger_longer.yaml`",
+        "task_id": "exp_070"
+      },
+      {
+        "status": "READY",
+        "status_kind": "ready",
+        "title": "exp_071 -- Observation Normalization",
+        "body": "- **Hypothesis:** Missing observation normalization causes poorly conditioned mean actions. The \"What Matters in On-Policy RL\" study (250K agents) identifies obs normalization as critical. Our Agent has NONE. Adding running-mean/std normalization should directly improve mean policy quality.\n- **What to change:** Add VecNormalize or equivalent running observation normalization to the training environment wrapper. Single change from exp_069 baseline (2\u00d7128, 7200s budget).\n- **Expected outcome:** Improved deterministic benchmark gates, potentially large improvement.\n- **Paper basis:** \"What Matters In On-Policy RL?\" (2006.05990), SimpleFlight (2412.11764), Swift (all normalize observations)\n- **Config:** `configs/exp_071_obs_normalization.yaml`",
+        "task_id": "exp_071"
+      },
+      {
+        "status": "READY",
+        "status_kind": "ready",
+        "title": "exp_072 -- Action Smoothness Penalty",
+        "body": "- **Hypothesis:** The mean policy produces jerky, unstable commands because there is no incentive for temporal coherence. Re-enabling action-difference penalties forces the mean to produce smooth action sequences, reducing reliance on stochastic corrections.\n- **What to change:** From exp_069 baseline, set d_act_th_coef=0.4, d_act_xy_coef=1.0 (the defaults in train_racing.py). These penalties exist in the reward code but are disabled (0.0) in recent configs.\n- **Expected outcome:** Smoother deterministic actions, more stable flight and gate passage. Training reward may decrease but benchmark should improve.\n- **Paper basis:** CAPS (2012.06644), SimpleFlight (2412.11764)\n- **Config:** `configs/exp_072_action_smoothness.yaml`",
+        "task_id": "exp_072"
+      },
+      {
+        "status": "READY",
+        "status_kind": "ready",
+        "title": "exp_073 -- Entropy Annealing (Late Mean Convergence)",
+        "body": "- **Hypothesis:** The mean doesn't converge because entropy stays constant. Annealing ent_coef from 0.01\u21920.001 over the last 30% of training forces the distribution to collapse onto the mean, making the mean carry all performance.\n- **What to change:** From exp_069 baseline, add ent_coef annealing schedule: 0.01 for first 70%, linearly anneal to 0.001 over remaining 30%.\n- **Expected outcome:** Deterministic benchmark should improve as mean sharpens late in training.\n- **Paper basis:** \"Learning Optimal Deterministic Policies\" (2405.02235), \"Entropy Annealing\" (2405.20250)\n- **Risk note:** exp_064 failed with ent_coef=0.03 start (3x too high). This starts from the working 0.01 and only anneals late.\n- **Config:** `configs/exp_073_entropy_annealing_late.yaml`",
+        "task_id": "exp_073"
+      },
+      {
+        "status": "READY",
+        "status_kind": "ready",
+        "title": "exp_074 -- Obs Normalization + Action Smoothness (Combined)",
+        "body": "- **Hypothesis:** If both obs normalization and action smoothness independently help, combining them should produce the best deterministic deployment yet.\n- **What to change:** Both exp_071 and exp_072 changes applied together on exp_069 baseline.\n- **Expected outcome:** Best deterministic gate passage rate. If positive, follow up with clean ablations.\n- **Paper basis:** Combined evidence from CAPS, SimpleFlight, \"What Matters\"\n- **Config:** `configs/exp_074_obs_norm_smooth.yaml`",
+        "task_id": "exp_074"
       }
     ],
     "next_task": {
       "status": "READY",
       "status_kind": "ready",
+      "title": "exp_065 -- Periodic Deterministic Eval + Best Checkpoint",
+      "body": "- **Hypothesis:** We are currently blind to whether the deployable deterministic mean improves during training. If periodic deterministic eval rises late, or `best_det.ckpt` beats the final checkpoint, that supports undertraining and checkpoint-selection effects. If training reward rises while deterministic eval stays flat, that weakens the simple \"just train longer\" story.\n- **What to change:** Use the new `periodic_deterministic_eval` trainer hook. Every 50 iterations, run 8 deterministic eval episodes on a matched training env, save `best_det.ckpt`, and write `deterministic_evaluations.npz`. After training, benchmark both `best_det.ckpt` and the final `model.ckpt`.\n- **Expected outcome:** Cleaner visibility into whether the mean policy is maturing, plus protection against saving a late-collapsed final checkpoint.\n- **Scope note:** This is primarily an instrumentation experiment attached to the exp_064-style long-budget line, not a claim that eval logic alone will improve the policy.\n- **Config:** `configs/exp_065_periodic_det_eval.yaml`",
+      "task_id": "exp_065"
+    }
+  },
+  "task_store": {
+    "total": 9,
+    "by_status": {
+      "claimed": 1,
+      "ready": 6,
+      "deferred": 2
+    },
+    "next_json_task": {
+      "task_id": "exp_066",
       "title": "exp_066 -- Asymmetric Critic + Entropy Annealing",
-      "body": "- **Hypothesis:** If the remaining bottleneck is a combination of weak value targets and insufficient mean-policy convergence time, then exp_059's asymmetric critic plus exp_064's unclamped variance / higher entropy / longer budget should outperform either intervention alone.\n- **What to change:** Start from the exp_064 long-budget line, add `asymmetric_critic: true`, and keep the periodic deterministic eval / best-checkpoint instrumentation from exp_065.\n- **Expected outcome:** Better deterministic-eval trajectory during training and a better selected checkpoint than exp_064 alone. Benchmark improvement would support the \"critic quality + convergence\" story.\n- **Scope note:** This is a highest-upside combination experiment, not a clean attribution study. A positive result would justify follow-up ablations; a negative result would weaken multiple training-side hypotheses at once.\n- **Config:** `configs/exp_066_asym_entropy_annealing.yaml`",
-      "task_id": "exp_066"
+      "priority": 1,
+      "config": "configs/exp_066_asym_entropy_annealing.yaml"
     }
   },
   "evaluation": {

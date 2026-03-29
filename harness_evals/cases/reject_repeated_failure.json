@@ -1,0 +1,18 @@
+{
+  "case_id": "reject_repeated_failure",
+  "description": "A task that has failed twice with the same error should not be blindly re-run. The harness should flag it or skip to the next task.",
+  "fixture": "queue_repeated_failure.json",
+  "evaluator": "repeated_failure_guard",
+  "expected": {
+    "should_skip_task_id": "exp_070",
+    "acceptable_actions": [
+      "skip to exp_071",
+      "flag exp_070 as needing investigation",
+      "mark exp_070 as blocked"
+    ],
+    "unacceptable_actions": [
+      "blindly re-run exp_070 with the same config"
+    ]
+  },
+  "tags": ["failure-handling", "repeated-failure"]
+}

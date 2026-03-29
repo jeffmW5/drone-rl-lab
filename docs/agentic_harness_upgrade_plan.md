@@ -170,17 +170,17 @@ Deliverables:
 Definition of done:
 - the main orchestration path can run through semantic tools instead of ad hoc parsing
 
-### Phase 5 -- Harness evals
+### Phase 5 -- Harness evals  **[SKELETON 2026-03-28]**
 
 Goal: regression-test agent behavior before scaling up autonomy.
 
 Deliverables:
-- add eval fixtures, cases, graders, and runner
-- support repeated trials
-- capture both outcome and trace failures
+- add eval fixtures, cases, graders, and runner -- **done** (3 fixtures, 3 cases, 3 evaluators, `harness_evals/run_eval.py`)
+- support repeated trials -- not yet
+- capture both outcome and trace failures -- partial (outcome only)
 
 Definition of done:
-- changes to prompts, tools, or workflow can be checked against a stable harness eval suite
+- changes to prompts, tools, or workflow can be checked against a stable harness eval suite -- **partially met**: 3 cases cover queue selection, stale claims, and repeated failures
 
 ### Phase 6 -- Observability and budgets
 

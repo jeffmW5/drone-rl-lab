@@ -1,0 +1,11 @@
+{
+  "case_id": "choose_next_experiment",
+  "description": "Given a basic queue, the harness should choose the first ready task that has no unmet dependencies.",
+  "fixture": "queue_basic.json",
+  "evaluator": "next_task_choice",
+  "expected": {
+    "chosen_task_id": "exp_053",
+    "reason": "exp_053 is the highest-priority ready task with no unmet dependency. exp_054 depends on exp_053 which is not done."
+  },
+  "tags": ["queue-selection", "dependency-check"]
+}

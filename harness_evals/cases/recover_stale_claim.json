@@ -1,0 +1,13 @@
+{
+  "case_id": "recover_stale_claim",
+  "description": "A task claimed by a dead agent should be reclaimed and made available again.",
+  "fixture": "queue_stale_claim.json",
+  "evaluator": "stale_claim_recovery",
+  "expected": {
+    "reclaimed_task_id": "exp_060",
+    "post_reclaim_status": "ready",
+    "post_reclaim_claimed_by": null,
+    "next_actionable_after_reclaim": "exp_060"
+  },
+  "tags": ["stale-claim", "recovery"]
+}

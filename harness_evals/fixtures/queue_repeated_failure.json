@@ -1,0 +1,59 @@
+{
+  "_description": "Queue where the next ready task has already failed twice. A correct agent should not blindly re-run it without a reason.",
+  "tasks": [
+    {
+      "task_id": "exp_070",
+      "title": "exp_070 -- Failed Twice Already",
+      "status": "ready",
+      "claimed_by": null,
+      "hypothesis": "This has failed twice with the same diagnosis",
+      "what_to_change": "Same config as before",
+      "expected_outcome": "Probably fails again without a change",
+      "config": "configs/exp_070_test.yaml",
+      "depends_on": null,
+      "tags": ["test", "repeated-failure"],
+      "priority": 1,
+      "result_summary": null,
+      "result_diagnosis": null,
+      "result_path": null,
+      "created_at": "2026-03-20T00:00:00+00:00",
+      "updated_at": "2026-03-22T00:00:00+00:00",
+      "completed_at": null
+    },
+    {
+      "task_id": "exp_071",
+      "title": "exp_071 -- Fresh Experiment",
+      "status": "ready",
+      "claimed_by": null,
+      "hypothesis": "New approach not yet tried",
+      "what_to_change": "Novel technique",
+      "expected_outcome": "Unknown, worth trying",
+      "config": "configs/exp_071_test.yaml",
+      "depends_on": null,
+      "tags": ["test", "novel"],
+      "priority": 2,
+      "result_summary": null,
+      "result_diagnosis": null,
+      "result_path": null,
+      "created_at": "2026-03-22T00:00:00+00:00",
+      "updated_at": "2026-03-22T00:00:00+00:00",
+      "completed_at": null
+    }
+  ],
+  "job_history": [
+    {
+      "job_id": "job_exp_070_001",
+      "task_id": "exp_070",
+      "status": "failed",
+      "last_error": "Training diverged at step 50000",
+      "created_at": "2026-03-20T10:00:00+00:00"
+    },
+    {
+      "job_id": "job_exp_070_002",
+      "task_id": "exp_070",
+      "status": "failed",
+      "last_error": "Training diverged at step 48000",
+      "created_at": "2026-03-21T10:00:00+00:00"
+    }
+  ]
+}
