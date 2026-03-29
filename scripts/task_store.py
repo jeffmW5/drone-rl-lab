@@ -74,12 +74,27 @@ class TaskStore:
     def list_by_status(self, *statuses: str) -> list[dict]:
         return [t for t in self.list_all() if t.get("status") in statuses]
 
-    def get_next(self) -> dict | None:
-        """Return the highest-priority ready task with no unmet dependencies."""
+    def get_next(self, check_failures: bool = True) -> dict | None:
+        """Return the highest-priority ready task with no unmet dependencies.
+
+        If check_failures is True and job_store is available, skip tasks
+        with repeated consecutive failures.
+        """
         done_ids = {t["task_id"] for t in self.list_by_status("done")}
+
+        blocked_ids: set[str] = set()
+        if check_failures:
+            try:
+                from job_store import JobStore
+                blocked_ids = JobStore().task_ids_with_repeated_failures()
+            except ImportError:
+                pass
+
         for task in self.list_by_status("ready"):
             dep = task.get("depends_on")
             if dep and dep not in done_ids:
+                continue
+            if task["task_id"] in blocked_ids:
                 continue
             return task
         return None

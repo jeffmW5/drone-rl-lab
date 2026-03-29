@@ -26,6 +26,7 @@ REPO_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_DIR / "scripts"))
 
 from task_store import TaskStore
+from job_store import JobStore
 
 CASES_DIR = Path(__file__).resolve().parent / "cases"
 FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
@@ -48,25 +49,34 @@ def load_cases(case_filter: str | None = None, tag_filter: str | None = None) ->
     return cases
 
 
-def setup_temp_store(fixture: dict) -> tuple[TaskStore, Path]:
-    """Create a temporary task store populated from fixture data."""
+def setup_temp_store(fixture: dict) -> tuple[TaskStore, JobStore, Path]:
+    """Create temporary task and job stores populated from fixture data."""
     tmpdir = Path(tempfile.mkdtemp(prefix="harness_eval_"))
     tasks_dir = tmpdir / "tasks"
     tasks_dir.mkdir()
+    jobs_dir = tmpdir / "jobs"
+    jobs_dir.mkdir()
+
     store = TaskStore(tasks_dir=tasks_dir)
     for task in fixture.get("tasks", []):
         store.save(task)
-    return store, tmpdir
+
+    job_store = JobStore(jobs_dir=jobs_dir)
+    for job in fixture.get("job_history", []):
+        job_path = jobs_dir / f"{job['job_id']}.json"
+        job_path.write_text(json.dumps(job, indent=2) + "\n")
+
+    return store, job_store, tmpdir
 
 
 # ─── Evaluators ────────────────────────────────────────────────────────────
 
 def eval_next_task_choice(case: dict, fixture: dict, verbose: bool) -> tuple[bool, str]:
     """Evaluate: does get_next() return the expected task?"""
-    store, tmpdir = setup_temp_store(fixture)
+    store, _job_store, tmpdir = setup_temp_store(fixture)
     try:
         expected_id = case["expected"]["chosen_task_id"]
-        result = store.get_next()
+        result = store.get_next(check_failures=False)
         if result is None:
             return False, f"get_next() returned None, expected {expected_id}"
         actual_id = result.get("task_id")
@@ -79,7 +89,7 @@ def eval_next_task_choice(case: dict, fixture: dict, verbose: bool) -> tuple[boo
 
 def eval_stale_claim_recovery(case: dict, fixture: dict, verbose: bool) -> tuple[bool, str]:
     """Evaluate: can we reclaim a stale task and get it back to ready?"""
-    store, tmpdir = setup_temp_store(fixture)
+    store, _job_store, tmpdir = setup_temp_store(fixture)
     try:
         reclaim_id = case["expected"]["reclaimed_task_id"]
         task = store.load(reclaim_id)
@@ -99,7 +109,7 @@ def eval_stale_claim_recovery(case: dict, fixture: dict, verbose: bool) -> tuple
         if task_after.get("claimed_by") != case["expected"]["post_reclaim_claimed_by"]:
             return False, f"post-reclaim claimed_by is {task_after.get('claimed_by')}, expected {case['expected']['post_reclaim_claimed_by']}"
 
-        nxt = store.get_next()
+        nxt = store.get_next(check_failures=False)
         expected_next = case["expected"]["next_actionable_after_reclaim"]
         if nxt is None or nxt.get("task_id") != expected_next:
             actual = nxt.get("task_id") if nxt else None
@@ -111,14 +121,8 @@ def eval_stale_claim_recovery(case: dict, fixture: dict, verbose: bool) -> tuple
 
 
 def eval_repeated_failure_guard(case: dict, fixture: dict, verbose: bool) -> tuple[bool, str]:
-    """Evaluate: does the system handle repeated failures correctly?
-
-    This is a structural eval -- it checks whether the fixture + job history
-    provides enough signal for an agent to avoid blindly re-running.
-    For now, we verify the job history is present and the task is identifiable.
-    Full LLM-graded evaluation would check agent behavior.
-    """
-    store, tmpdir = setup_temp_store(fixture)
+    """Evaluate: does get_next(check_failures=True) skip repeatedly-failed tasks?"""
+    store, job_store, tmpdir = setup_temp_store(fixture)
     try:
         skip_id = case["expected"]["should_skip_task_id"]
         job_history = fixture.get("job_history", [])
@@ -131,18 +135,37 @@ def eval_repeated_failure_guard(case: dict, fixture: dict, verbose: bool) -> tup
         if task is None:
             return False, f"task {skip_id} not in store"
 
-        # The task is ready but has a failure history -- a correct harness
-        # should detect this. For now, we verify the data is available.
-        nxt = store.get_next()
-        if nxt and nxt["task_id"] == skip_id:
-            # Current get_next() doesn't check job history (it's purely priority-based).
-            # This is a known limitation. Mark as a partial pass with a note.
-            return True, (
-                f"PARTIAL: get_next() returns {skip_id} (has failures). "
-                f"Future: integrate job history into task selection."
-            )
+        # Verify job_store detects the failures
+        if not job_store.has_repeated_failures(skip_id):
+            return False, f"job_store did not detect repeated failures for {skip_id}"
 
-        return True, f"correctly avoided {skip_id}"
+        # Monkey-patch task_store to use our temp job_store
+        import task_store as ts_mod
+        original_import = None
+        import importlib
+        import sys
+
+        # Temporarily make job_store point to our temp dir
+        class PatchedJobStore(JobStore):
+            def __init__(self, jobs_dir=None):
+                super().__init__(jobs_dir=job_store.jobs_dir)
+
+        old_class = sys.modules.get("job_store")
+        if old_class:
+            old_jobstore_class = old_class.JobStore
+            old_class.JobStore = PatchedJobStore
+
+        try:
+            nxt = store.get_next(check_failures=True)
+        finally:
+            if old_class:
+                old_class.JobStore = old_jobstore_class
+
+        if nxt is None:
+            return True, f"correctly returned None (all ready tasks blocked by failures)"
+        if nxt["task_id"] == skip_id:
+            return False, f"get_next() still returned {skip_id} despite repeated failures"
+        return True, f"correctly skipped {skip_id}, chose {nxt['task_id']}"
     finally:
         shutil.rmtree(tmpdir)
 
