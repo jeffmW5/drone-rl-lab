@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from task_queue import get_next_task, parse_tasks
+from task_store import TaskStore
 
 LAB_DIR = Path(__file__).resolve().parent.parent
 RESULTS_DIR = LAB_DIR / "results"
@@ -241,6 +242,26 @@ def build_state() -> dict:
                 continue
             queue_summary["actionable"].append(public_task)
 
+    # JSON task store summary
+    store = TaskStore()
+    json_tasks = store.list_all()
+    json_task_summary = {
+        "total": len(json_tasks),
+        "by_status": {},
+        "next_json_task": None,
+    }
+    for jt in json_tasks:
+        s = jt.get("status", "unknown")
+        json_task_summary["by_status"][s] = json_task_summary["by_status"].get(s, 0) + 1
+    json_next = store.get_next()
+    if json_next:
+        json_task_summary["next_json_task"] = {
+            "task_id": json_next["task_id"],
+            "title": json_next["title"],
+            "priority": json_next.get("priority"),
+            "config": json_next.get("config"),
+        }
+
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "repo": _git_info(LAB_DIR),
@@ -249,6 +270,7 @@ def build_state() -> dict:
         },
         "agents": _active_agents(),
         "queue": queue_summary,
+        "task_store": json_task_summary,
         "evaluation": {
             "racing_primary_metric": "benchmark",
             "benchmark_ranking": ["finish_rate", "avg_gates", "avg_time"],

@@ -34,6 +34,7 @@ from task_queue import (
     parse_tasks,
     reclaim_claims,
 )
+from task_store import TaskStore
 
 REPO_DIR = Path(__file__).resolve().parent.parent
 AGENTS_DIR = REPO_DIR / "agents"
@@ -217,6 +218,7 @@ def cmd_deregister(args):
 def cmd_claim(args):
     """Claim the next available task in INBOX. Uses git push as atomic lock."""
     agent_id = args.agent_id
+    store = TaskStore()
 
     for attempt in range(3):
         _git("pull", "--rebase", check=False)
@@ -230,6 +232,11 @@ def cmd_claim(args):
             print("No available tasks to claim.")
             sys.exit(1)
         task_title = task["title"]
+        task_id = task.get("task_id")
+
+        # Dual-write: also update the JSON task artifact if it exists
+        if task_id and store.exists(task_id):
+            store.claim(task_id, agent_id)
 
         # Update agent status
         agent_path = _agent_path(agent_id)
@@ -257,6 +264,7 @@ def cmd_claim(args):
 def cmd_release(args):
     """Mark the agent's claimed task as [DONE]."""
     agent_id = args.agent_id
+    store = TaskStore()
 
     _git("pull", "--rebase", check=False)
 
@@ -269,6 +277,11 @@ def cmd_release(args):
         print(f"No claimed task found for agent {agent_id}", file=sys.stderr)
         sys.exit(1)
     task_title = task["title"]
+    task_id = task.get("task_id")
+
+    # Dual-write: also update the JSON task artifact if it exists
+    if task_id and store.exists(task_id):
+        store.complete(task_id)
 
     # Update agent status
     agent_path = _agent_path(agent_id)
@@ -287,6 +300,7 @@ def cmd_release(args):
 def cmd_reclaim_stale(args):
     """Find tasks claimed by stale or missing agents and reset them to [READY]."""
     agent_id = args.agent_id  # the agent doing the reclaiming
+    store = TaskStore()
 
     _git("pull", "--rebase", check=False)
 
@@ -307,6 +321,12 @@ def cmd_reclaim_stale(args):
             stale_path.unlink()
 
     reclaimed_titles = reclaim_claims(INBOX_PATH, reclaim_ids)
+
+    # Dual-write: also release claimed JSON tasks owned by stale agents
+    for jt in store.list_by_status("claimed"):
+        if jt.get("claimed_by") in reclaim_ids:
+            store.release(jt["task_id"])
+
     if reclaimed_titles:
         _git_sync_and_push(f"agent {agent_id}: reclaimed {len(reclaimed_titles)} stale task(s)")
         for title in reclaimed_titles:
