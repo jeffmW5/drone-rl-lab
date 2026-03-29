@@ -1,0 +1,20 @@
+{
+  "task_id": "exp_073",
+  "title": "exp_073 -- Entropy Annealing (Late Mean Convergence)",
+  "status": "ready",
+  "claimed_by": null,
+  "hypothesis": "The mean doesn't converge because entropy stays constant. Annealing ent_coef from 0.01 to 0.001 over the last 30% of training forces the distribution to collapse onto the mean, making the mean carry all performance.",
+  "what_to_change": "From exp_069 baseline, add ent_coef annealing schedule: 0.01 for first 70%, linearly anneal to 0.001 over remaining 30%.",
+  "expected_outcome": "Deterministic benchmark should improve as mean sharpens late in training.",
+  "scope_note": "exp_064 failed with ent_coef=0.03 start (3x too high). This starts from the working 0.01 and only anneals late.",
+  "config": "configs/exp_073_entropy_annealing_late.yaml",
+  "depends_on": null,
+  "tags": ["training", "entropy-annealing", "paper-driven"],
+  "priority": 3,
+  "result_summary": null,
+  "result_diagnosis": null,
+  "result_path": null,
+  "created_at": "2026-03-28T14:00:00+00:00",
+  "updated_at": "2026-03-28T14:00:00+00:00",
+  "completed_at": null
+}

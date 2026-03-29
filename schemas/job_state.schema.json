@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://drone-rl-lab/schemas/job_state.schema.json",
+  "title": "JobState",
+  "description": "Persisted state for a resumable job execution in drone-rl-lab.",
+  "type": "object",
+  "required": ["job_id", "task_id", "run_id", "step", "status", "created_at", "updated_at"],
+  "properties": {
+    "job_id": {
+      "type": "string",
+      "description": "Unique job identifier, e.g. job_exp_066_001"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "The task_id this job executes"
+    },
+    "run_id": {
+      "type": "string",
+      "description": "Unique run identifier within this job, e.g. run_20260328_1430"
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 1,
+      "description": "Attempt number (increments on retry)"
+    },
+    "step": {
+      "type": "string",
+      "enum": [
+        "claimed",
+        "preparing",
+        "training",
+        "capturing_provenance",
+        "benchmarking",
+        "documenting",
+        "publishing",
+        "done",
+        "failed",
+        "blocked"
+      ],
+      "description": "Current pipeline step"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["running", "completed", "failed", "blocked", "pending"],
+      "description": "Overall job status"
+    },
+    "agent_id": {
+      "type": ["string", "null"],
+      "description": "Agent executing this job"
+    },
+    "heartbeat": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Last heartbeat from the executing agent"
+    },
+    "lease_expires_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the current agent's lease expires"
+    },
+    "resume_from_step": {
+      "type": ["string", "null"],
+      "enum": [
+        null,
+        "claimed",
+        "preparing",
+        "training",
+        "capturing_provenance",
+        "benchmarking",
+        "documenting",
+        "publishing"
+      ],
+      "description": "Step to resume from after interruption"
+    },
+    "last_error": {
+      "type": ["string", "null"],
+      "description": "Error message from the last failure"
+    },
+    "step_log": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "status", "timestamp"],
+        "properties": {
+          "step": { "type": "string" },
+          "status": { "type": "string", "enum": ["started", "completed", "failed", "skipped"] },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "detail": { "type": "string" }
+        }
+      },
+      "description": "Ordered log of step transitions"
+    },
+    "artifacts": {
+      "type": "object",
+      "properties": {
+        "config_path": { "type": "string" },
+        "results_dir": { "type": "string" },
+        "model_path": { "type": "string" },
+        "benchmark_path": { "type": "string" },
+        "experiment_doc": { "type": "string" },
+        "provenance_path": { "type": "string" }
+      },
+      "additionalProperties": { "type": "string" },
+      "description": "Paths to artifacts produced during execution"
+    },
+    "config_snapshot": {
+      "type": "object",
+      "description": "Frozen copy of the YAML config at job start",
+      "additionalProperties": true
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

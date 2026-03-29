@@ -117,32 +117,34 @@ The first evals should cover:
 
 ## Phased implementation
 
-### Phase 1 -- Typed artifacts first
+### Phase 1 -- Typed artifacts first  **[DONE 2026-03-28]**
 
 Goal: make JSON the source of truth for tasks, job state, traces, and summaries.
 
 Deliverables:
-- create `schemas/`
-- create `inbox/tasks/`
-- add validation helpers
-- dual-write or render `inbox/INBOX.md` from JSON
+- create `schemas/` -- **done** (`task.schema.json`, `job_state.schema.json`)
+- create `inbox/tasks/` -- **done** (7 tasks: exp_065-074)
+- add validation helpers -- **done** (`scripts/validate_artifact.py`)
+- dual-write or render `inbox/INBOX.md` from JSON -- **done** (`scripts/render_inbox.py`, `scripts/task_store.py`)
 
 Definition of done:
-- no core queue mutation depends on raw Markdown editing
-- artifacts validate before they are written
+- no core queue mutation depends on raw Markdown editing -- **partially met**: new tasks use JSON; legacy tasks still Markdown
+- artifacts validate before they are written -- **met**: validator passes on all artifacts
 
-### Phase 2 -- Resumable job runner
+See `docs/typed_artifacts.md` for usage reference.
+
+### Phase 2 -- Resumable job runner  **[SKELETON 2026-03-28]**
 
 Goal: replace the brittle linear flow with a stateful runner.
 
 Deliverables:
-- add `scripts/run_job.py`
-- add `scripts/job_store.py`
-- add step transitions and resume logic
-- write step-by-step run artifacts into `state/runs/<run_id>/`
+- add `scripts/run_job.py` -- **done** (skeleton with dry-run support)
+- add `scripts/job_store.py` -- **done** (merged into `run_job.py` as `JobRunner` class)
+- add step transitions and resume logic -- **done** (8-step pipeline with resume)
+- write step-by-step run artifacts into `state/runs/<run_id>/` -- **scaffolded** (directories created, step_log persisted in job state)
 
 Definition of done:
-- killing the process mid-run and rerunning resumes from the last completed step
+- killing the process mid-run and rerunning resumes from the last completed step -- **met for dry-run; needs GPU integration test**
 
 ### Phase 3 -- Skills and handoffs
 

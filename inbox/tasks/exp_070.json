@@ -1,0 +1,20 @@
+{
+  "task_id": "exp_070",
+  "title": "exp_070 -- Larger Network + Extended Training (14400s)",
+  "status": "ready",
+  "claimed_by": null,
+  "hypothesis": "exp_069 (2x128) peaked at 52.39 at iter 650/848 (still climbing). Doubling budget to 14400s gives the larger network time to converge. Single change from exp_069: budget 7200 to 14400.",
+  "what_to_change": "Increase budget_seconds from 7200 to 14400, keeping all other exp_069 settings.",
+  "expected_outcome": "If capacity + training time is the key, deterministic gates should improve further. If gates plateau despite higher reward, something else is limiting.",
+  "scope_note": null,
+  "config": "configs/exp_070_larger_longer.yaml",
+  "depends_on": null,
+  "tags": ["training", "larger-network", "extended-budget"],
+  "priority": 2,
+  "result_summary": null,
+  "result_diagnosis": null,
+  "result_path": null,
+  "created_at": "2026-03-28T14:00:00+00:00",
+  "updated_at": "2026-03-28T14:00:00+00:00",
+  "completed_at": null
+}

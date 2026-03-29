@@ -1,0 +1,20 @@
+{
+  "task_id": "exp_074",
+  "title": "exp_074 -- Obs Normalization + Action Smoothness (Combined)",
+  "status": "ready",
+  "claimed_by": null,
+  "hypothesis": "If both obs normalization and action smoothness independently help, combining them should produce the best deterministic deployment yet.",
+  "what_to_change": "Both exp_071 and exp_072 changes applied together on exp_069 baseline.",
+  "expected_outcome": "Best deterministic gate passage rate. If positive, follow up with clean ablations.",
+  "scope_note": null,
+  "config": "configs/exp_074_obs_norm_smooth.yaml",
+  "depends_on": null,
+  "tags": ["training", "observation-normalization", "action-smoothness", "combination"],
+  "priority": 4,
+  "result_summary": null,
+  "result_diagnosis": null,
+  "result_path": null,
+  "created_at": "2026-03-28T14:00:00+00:00",
+  "updated_at": "2026-03-28T14:00:00+00:00",
+  "completed_at": null
+}

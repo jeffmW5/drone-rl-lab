@@ -1,0 +1,20 @@
+{
+  "task_id": "exp_072",
+  "title": "exp_072 -- Action Smoothness Penalty",
+  "status": "ready",
+  "claimed_by": null,
+  "hypothesis": "The mean policy produces jerky, unstable commands because there is no incentive for temporal coherence. Re-enabling action-difference penalties forces the mean to produce smooth action sequences, reducing reliance on stochastic corrections.",
+  "what_to_change": "From exp_069 baseline, set d_act_th_coef=0.4, d_act_xy_coef=1.0 (the defaults in train_racing.py). These penalties exist in the reward code but are disabled (0.0) in recent configs.",
+  "expected_outcome": "Smoother deterministic actions, more stable flight and gate passage. Training reward may decrease but benchmark should improve.",
+  "scope_note": null,
+  "config": "configs/exp_072_action_smoothness.yaml",
+  "depends_on": null,
+  "tags": ["training", "action-smoothness", "paper-driven"],
+  "priority": 3,
+  "result_summary": null,
+  "result_diagnosis": null,
+  "result_path": null,
+  "created_at": "2026-03-28T14:00:00+00:00",
+  "updated_at": "2026-03-28T14:00:00+00:00",
+  "completed_at": null
+}

@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://drone-rl-lab/schemas/task.schema.json",
+  "title": "Task",
+  "description": "A typed task artifact for the drone-rl-lab experiment queue.",
+  "type": "object",
+  "required": ["task_id", "title", "status", "created_at"],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "pattern": "^exp_[0-9]+[a-z]?(_[a-z0-9_]+)*$",
+      "description": "Canonical experiment identifier, e.g. exp_066"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable title, e.g. 'exp_066 -- Asymmetric Critic + Entropy Annealing'"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ready",
+        "claimed",
+        "in_progress",
+        "done",
+        "blocked",
+        "deferred",
+        "failed"
+      ],
+      "description": "Current lifecycle status of the task"
+    },
+    "claimed_by": {
+      "type": ["string", "null"],
+      "description": "Agent ID that claimed this task, or null"
+    },
+    "hypothesis": {
+      "type": "string",
+      "description": "What this experiment tests and why"
+    },
+    "what_to_change": {
+      "type": "string",
+      "description": "Concrete changes from baseline"
+    },
+    "expected_outcome": {
+      "type": "string",
+      "description": "What a positive result would look like"
+    },
+    "scope_note": {
+      "type": ["string", "null"],
+      "description": "Limits on what this experiment proves"
+    },
+    "config": {
+      "type": "string",
+      "description": "Path to YAML config file, e.g. configs/exp_066_asym_entropy_annealing.yaml"
+    },
+    "depends_on": {
+      "type": ["string", "null"],
+      "description": "Task ID or title this task depends on"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Freeform tags for filtering, e.g. ['training', 'asymmetric-critic']"
+    },
+    "priority": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Lower number = higher priority. 0 is highest."
+    },
+    "result_summary": {
+      "type": ["string", "null"],
+      "description": "One-line outcome after completion, e.g. 'MIXED -- 2/15 det gates'"
+    },
+    "result_diagnosis": {
+      "type": ["string", "null"],
+      "description": "Short diagnosis after completion"
+    },
+    "result_path": {
+      "type": ["string", "null"],
+      "description": "Path to results directory, e.g. results/exp_066_asym_entropy_annealing/"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 creation timestamp"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 last-update timestamp"
+    },
+    "completed_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "ISO 8601 completion timestamp"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,20 @@
+{
+  "task_id": "exp_065",
+  "title": "exp_065 -- Periodic Deterministic Eval + Best Checkpoint",
+  "status": "claimed",
+  "claimed_by": "jeff-VirtualBox-15078-1774669522",
+  "hypothesis": "We are currently blind to whether the deployable deterministic mean improves during training. If periodic deterministic eval rises late, or best_det.ckpt beats the final checkpoint, that supports undertraining and checkpoint-selection effects. If training reward rises while deterministic eval stays flat, that weakens the simple 'just train longer' story.",
+  "what_to_change": "Use the new periodic_deterministic_eval trainer hook. Every 50 iterations, run 8 deterministic eval episodes on a matched training env, save best_det.ckpt, and write deterministic_evaluations.npz. After training, benchmark both best_det.ckpt and the final model.ckpt.",
+  "expected_outcome": "Cleaner visibility into whether the mean policy is maturing, plus protection against saving a late-collapsed final checkpoint.",
+  "scope_note": "This is primarily an instrumentation experiment attached to the exp_064-style long-budget line, not a claim that eval logic alone will improve the policy.",
+  "config": "configs/exp_065_periodic_det_eval.yaml",
+  "depends_on": null,
+  "tags": ["instrumentation", "deterministic-eval", "checkpoint-selection"],
+  "priority": 0,
+  "result_summary": null,
+  "result_diagnosis": null,
+  "result_path": null,
+  "created_at": "2026-03-28T03:00:00+00:00",
+  "updated_at": "2026-03-28T03:48:58+00:00",
+  "completed_at": null
+}

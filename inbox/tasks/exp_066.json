@@ -1,0 +1,25 @@
+{
+  "task_id": "exp_066",
+  "title": "exp_066 -- Asymmetric Critic + Entropy Annealing",
+  "status": "ready",
+  "claimed_by": null,
+  "hypothesis": "If the remaining bottleneck is a combination of weak value targets and insufficient mean-policy convergence time, then exp_059's asymmetric critic plus exp_064's unclamped variance / higher entropy / longer budget should outperform either intervention alone.",
+  "what_to_change": "Start from the exp_064 long-budget line, add asymmetric_critic: true, and keep the periodic deterministic eval / best-checkpoint instrumentation from exp_065.",
+  "expected_outcome": "Better deterministic-eval trajectory during training and a better selected checkpoint than exp_064 alone. Benchmark improvement would support the 'critic quality + convergence' story.",
+  "scope_note": "This is a highest-upside combination experiment, not a clean attribution study. A positive result would justify follow-up ablations; a negative result would weaken multiple training-side hypotheses at once.",
+  "config": "configs/exp_066_asym_entropy_annealing.yaml",
+  "depends_on": null,
+  "tags": [
+    "training",
+    "asymmetric-critic",
+    "entropy-annealing",
+    "combination"
+  ],
+  "priority": 1,
+  "result_summary": null,
+  "result_diagnosis": null,
+  "result_path": null,
+  "created_at": "2026-03-28T14:00:00+00:00",
+  "updated_at": "2026-03-29T03:58:54+00:00",
+  "completed_at": null
+}
