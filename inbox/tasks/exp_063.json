@@ -1,0 +1,20 @@
+{
+  "task_id": "exp_063",
+  "title": "exp_063 -- Extended Training (10M+ steps, no logstd clamp)",
+  "status": "deferred",
+  "claimed_by": null,
+  "hypothesis": "Swift trains 100M steps; we train 1.5M. Remove max_logstd clamp and train much longer.",
+  "what_to_change": "Remove logstd clamp and train for 10M+ steps.",
+  "expected_outcome": "If undertraining is the bottleneck, extended training with unclamped variance should show continued improvement.",
+  "scope_note": "Depends on exp_061, 062, 064 results. High compute cost.",
+  "config": null,
+  "depends_on": null,
+  "tags": ["training", "extended-budget", "paper-driven"],
+  "priority": 10,
+  "result_summary": null,
+  "result_diagnosis": null,
+  "result_path": null,
+  "created_at": "2026-03-28T14:00:00+00:00",
+  "updated_at": "2026-03-28T14:00:00+00:00",
+  "completed_at": null
+}

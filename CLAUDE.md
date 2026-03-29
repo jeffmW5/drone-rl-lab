@@ -99,6 +99,21 @@ Rules:
 - Update heartbeat when task or status changes.
 - Pull before touching shared files.
 
+## Task system
+
+Tasks now have **two representations** that coexist:
+
+- **JSON artifacts** in `inbox/tasks/*.json` -- the source of truth for new
+  and active tasks. Use `scripts/task_store.py` to read/write them
+  programmatically.
+- **Markdown queue** in `inbox/INBOX.md` -- still works, still readable. Legacy
+  completed entries live here. Can be regenerated from JSON with
+  `python scripts/render_inbox.py --write`.
+
+Validate artifacts: `python scripts/validate_artifact.py --all`
+
+See `docs/typed_artifacts.md` for full reference.
+
 ## Queue rules
 
 - Actionable tasks are typically `[READY]`, `[IMPLEMENTED]`, and legacy

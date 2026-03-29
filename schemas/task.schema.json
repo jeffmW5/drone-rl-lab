@@ -49,7 +49,7 @@
       "description": "Limits on what this experiment proves"
     },
     "config": {
-      "type": "string",
+      "type": ["string", "null"],
       "description": "Path to YAML config file, e.g. configs/exp_066_asym_entropy_annealing.yaml"
     },
     "depends_on": {
