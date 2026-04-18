@@ -22,6 +22,70 @@ from pathlib import Path
 import numpy as np
 
 
+# =============================================================================
+# OBSERVATION NORMALIZATION (exp_071+)
+# =============================================================================
+
+class RunningObsNormalizer:
+    """Running mean/std observation normalizer (Welford's online algorithm).
+
+    Tracks per-dimension running mean and variance across all envs.
+    Normalizes: obs_norm = clip((obs - mean) / sqrt(var + eps), -clip_val, clip_val)
+
+    Compatible with checkpoint save/load: call state_dict() / load_state_dict().
+    """
+
+    def __init__(self, obs_dim: int, eps: float = 1e-8, clip_val: float = 10.0):
+        self.obs_dim = obs_dim
+        self.eps = eps
+        self.clip_val = clip_val
+        self.count = 0
+        self.mean = np.zeros(obs_dim, dtype=np.float64)
+        self.var = np.ones(obs_dim, dtype=np.float64)
+        self._M2 = np.zeros(obs_dim, dtype=np.float64)
+
+    def update(self, obs_batch: np.ndarray):
+        """Update running stats with a batch of observations. obs_batch: (N, obs_dim)."""
+        batch = obs_batch.reshape(-1, self.obs_dim).astype(np.float64)
+        batch_count = batch.shape[0]
+        batch_mean = batch.mean(axis=0)
+        batch_var = batch.var(axis=0)
+
+        # Parallel Welford merge
+        delta = batch_mean - self.mean
+        total_count = self.count + batch_count
+        new_mean = self.mean + delta * batch_count / max(total_count, 1)
+        m_a = self.var * self.count
+        m_b = batch_var * batch_count
+        self._M2 = m_a + m_b + delta ** 2 * self.count * batch_count / max(total_count, 1)
+        self.mean = new_mean
+        self.count = total_count
+        self.var = self._M2 / max(self.count, 1)
+
+    def normalize(self, obs):
+        """Normalize observation tensor (torch or numpy). Returns same type."""
+        import torch
+        if isinstance(obs, torch.Tensor):
+            mean = torch.tensor(self.mean, dtype=torch.float32, device=obs.device)
+            std = torch.sqrt(torch.tensor(self.var + self.eps, dtype=torch.float32, device=obs.device))
+            return torch.clamp((obs - mean) / std, -self.clip_val, self.clip_val)
+        else:
+            std = np.sqrt(self.var + self.eps).astype(np.float32)
+            return np.clip((obs - self.mean.astype(np.float32)) / std, -self.clip_val, self.clip_val)
+
+    def state_dict(self) -> dict:
+        return {
+            "obs_norm_mean": self.mean.copy(),
+            "obs_norm_var": self.var.copy(),
+            "obs_norm_count": self.count,
+        }
+
+    def load_state_dict(self, d: dict):
+        self.mean = d["obs_norm_mean"]
+        self.var = d["obs_norm_var"]
+        self.count = d["obs_norm_count"]
+
+
 def _to_np(x):
     """Convert JAX/torch/numpy arrays to numpy (handles GPU tensors)."""
     if hasattr(x, '__jax_array__') or type(x).__module__.startswith('jax'):
@@ -110,17 +174,19 @@ def build_args(racing_cfg: dict) -> Args:
 # EVALUATION
 # =============================================================================
 
-def evaluate_racing(agent: Agent, envs_fn, device, n_episodes: int = 10, jax_on_gpu: bool = False) -> dict:
+def evaluate_racing(agent: Agent, envs_fn, device, n_episodes: int = 10, jax_on_gpu: bool = False,
+                     obs_normalizer: RunningObsNormalizer = None) -> dict:
     """Run evaluation episodes and return stats."""
     eval_envs = envs_fn()
     rewards_all = []
     lengths_all = []
 
     obs, info = eval_envs.reset()
-    if isinstance(obs, np.ndarray):
-        obs_tensor = torch.Tensor(obs).to(device)
+    obs_np = _to_np(obs) if not isinstance(obs, np.ndarray) else obs
+    if obs_normalizer is not None:
+        obs_tensor = torch.Tensor(obs_normalizer.normalize(obs_np)).to(device)
     else:
-        obs_tensor = torch.Tensor(_to_np(obs)).to(device)
+        obs_tensor = torch.Tensor(obs_np).to(device)
 
     episode_rewards = np.zeros(eval_envs.num_envs)
     episode_lengths = np.zeros(eval_envs.num_envs)
@@ -131,7 +197,11 @@ def evaluate_racing(agent: Agent, envs_fn, device, n_episodes: int = 10, jax_on_
             action, _, _, _ = agent.get_action_and_value(obs_tensor, deterministic=True)
 
         obs, reward, terminated, truncated, info = eval_envs.step(_action_for_env(action, jax_on_gpu))
-        obs_tensor = torch.Tensor(_to_np(obs)).to(device)
+        obs_np = _to_np(obs)
+        if obs_normalizer is not None:
+            obs_tensor = torch.Tensor(obs_normalizer.normalize(obs_np)).to(device)
+        else:
+            obs_tensor = torch.Tensor(obs_np).to(device)
 
         reward_np = _to_np(reward)
         episode_rewards += reward_np
@@ -274,6 +344,15 @@ def run(config_path: str):
     print(f"[INFO] Action space:   {envs.single_action_space}\n")
     _startup_log(startup_start, "Environment construction complete")
 
+    # ── Observation normalization (exp_071+) ──────────────────────────────────
+    obs_normalize = racing_cfg.get("obs_normalize", False)
+    obs_normalizer = None
+    if obs_normalize:
+        obs_dim = int(np.prod(envs.single_observation_space.shape))
+        obs_norm_clip = racing_cfg.get("obs_norm_clip", 10.0)
+        obs_normalizer = RunningObsNormalizer(obs_dim, clip_val=obs_norm_clip)
+        print(f"[INFO] Observation normalization: ON (dim={obs_dim}, clip={obs_norm_clip})")
+
     # ── Create agent ──────────────────────────────────────────────────────────
     obs_shape = envs.single_observation_space.shape
     act_shape = envs.single_action_space.shape
@@ -374,7 +453,12 @@ def run(config_path: str):
     global_step = 0
     _startup_log(startup_start, "Resetting environments (may trigger initial JAX compile)")
     next_obs, _ = envs.reset()
-    next_obs = torch.Tensor(_to_np(next_obs)).to(device)
+    next_obs_np = _to_np(next_obs)
+    if obs_normalizer is not None:
+        obs_normalizer.update(next_obs_np)
+        next_obs = torch.Tensor(obs_normalizer.normalize(next_obs_np)).to(device)
+    else:
+        next_obs = torch.Tensor(next_obs_np).to(device)
     next_done = torch.zeros(args.num_envs).to(device)
     _startup_log(startup_start, "Environment reset complete")
 
@@ -418,7 +502,12 @@ def run(config_path: str):
             reward = torch.tensor(_to_np(reward), dtype=torch.float32).to(device)
             rewards_buf[step] = reward
             terminated_buf[step] = torch.Tensor(_to_np(terminated).astype(float)).to(device)
-            next_obs = torch.Tensor(_to_np(next_obs)).to(device)
+            next_obs_np = _to_np(next_obs)
+            if obs_normalizer is not None:
+                obs_normalizer.update(next_obs_np)
+                next_obs = torch.Tensor(obs_normalizer.normalize(next_obs_np)).to(device)
+            else:
+                next_obs = torch.Tensor(next_obs_np).to(device)
             next_done = torch.Tensor(
                 np.logical_or(_to_np(terminated), _to_np(truncated)).astype(float)
             ).to(device)
@@ -540,6 +629,7 @@ def run(config_path: str):
                 device,
                 n_episodes=det_eval_episodes,
                 jax_on_gpu=jax_on_gpu,
+                obs_normalizer=obs_normalizer,
             )
             det_eval_timesteps.append(global_step)
             det_eval_results.append(det_stats["mean_reward"])
@@ -555,7 +645,10 @@ def run(config_path: str):
                 best_det_eval = det_stats["mean_reward"]
                 best_det_iteration = iteration
                 best_det_global_step = global_step
-                torch.save(agent.state_dict(), best_det_ckpt_path)
+                best_ckpt_data = agent.state_dict()
+                if obs_normalizer is not None:
+                    best_ckpt_data.update(obs_normalizer.state_dict())
+                torch.save(best_ckpt_data, best_det_ckpt_path)
                 print(
                     f"  [DetEval] New best checkpoint: {best_det_ckpt_path} "
                     f"(reward={best_det_eval:.2f})"
@@ -570,7 +663,10 @@ def run(config_path: str):
 
     # ── Save model checkpoint ─────────────────────────────────────────────────
     ckpt_path = os.path.join(results_dir, "model.ckpt")
-    torch.save(agent.state_dict(), ckpt_path)
+    ckpt_data = agent.state_dict()
+    if obs_normalizer is not None:
+        ckpt_data.update(obs_normalizer.state_dict())
+    torch.save(ckpt_data, ckpt_path)
     print(f"[Saved] {ckpt_path}")
 
     if det_eval_enabled:
@@ -580,6 +676,7 @@ def run(config_path: str):
             device,
             n_episodes=det_eval_episodes,
             jax_on_gpu=jax_on_gpu,
+            obs_normalizer=obs_normalizer,
         )
         if not det_eval_timesteps or det_eval_timesteps[-1] != global_step:
             det_eval_timesteps.append(global_step)
@@ -590,7 +687,10 @@ def run(config_path: str):
             best_det_iteration = iteration
             best_det_global_step = global_step
             if det_eval_save_best:
-                torch.save(agent.state_dict(), best_det_ckpt_path)
+                final_ckpt_data = agent.state_dict()
+                if obs_normalizer is not None:
+                    final_ckpt_data.update(obs_normalizer.state_dict())
+                torch.save(final_ckpt_data, best_det_ckpt_path)
                 print(
                     f"[FinalDetEval] Updated best checkpoint: {best_det_ckpt_path} "
                     f"(reward={best_det_eval:.2f})"
