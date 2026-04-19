@@ -1,0 +1,102 @@
+# Crazyflie Real Flight Configuration
+# ====================================
+
+# -- Radio connection --
+radio:
+  uri: "radio://0/80/2M"  # Matches cfclient config
+  # For the deploy env's radio format: radio://0/100/2M/E7E7E7E70A
+  # (channel 100, drone id 10 from level2.toml)
+
+# -- Positioning system --
+# Options: "lighthouse", "flowdeck", "mocap"
+# lighthouse: Absolute 3D position via Lighthouse V2 base stations
+# flowdeck:   Relative position via Flow Deck V2 (limited range, no yaw)
+# mocap:      External motion capture (Vicon/OptiTrack) via cflib
+positioning: "lighthouse"
+
+# -- Firmware settings --
+firmware:
+  estimator: 2        # 1: complementary, 2: kalman (recommended)
+  controller: 2       # 1: PID, 2: Mellinger (required for attitude control)
+  tumble_check: true  # Set false for aggressive maneuvers
+
+# -- Safety limits --
+safety:
+  # Geofence — matches level2.toml safety_limits
+  geofence:
+    x_min: -2.5
+    x_max: 2.5
+    y_min: -1.5
+    y_max: 1.5
+    z_min: 0.0
+    z_max: 2.0
+
+  # Attitude limits (degrees) — clamp policy output before sending
+  max_roll: 30.0
+  max_pitch: 30.0
+  max_yaw_rate: 200.0
+
+  # Thrust limits (PWM units, 0-65535)
+  # cf21B_500: pwm_min=7000, pwm_max=65535
+  min_thrust: 20000
+  max_thrust: 50000
+
+  # Battery voltage cutoff
+  min_battery_voltage: 3.2
+
+  # Position variance threshold — refuse to fly if estimator is uncertain
+  max_position_variance: 0.001
+
+# -- Drone model (cf21B_500) --
+drone:
+  mass: 0.04338                 # kg
+  thrust_min_per_motor: 0.02136 # N
+  thrust_max_per_motor: 0.2     # N
+  thrust_min: 0.08545           # N total (4 motors)
+  thrust_max: 0.8               # N total (4 motors)
+  pwm_min: 7000
+  pwm_max: 65535
+
+# -- Control loop --
+control:
+  freq: 50              # Hz — matches env.freq from level2.toml
+  log_freq: 100         # Hz — state estimation logging rate from drone
+  hover_height: 0.5     # meters — default hover height
+  hover_duration: 5.0   # seconds — how long to hover before starting policy
+  landing_duration: 3.0 # seconds — gentle landing time
+  warmup_seconds: 2.0   # seconds — wait for estimator convergence after connect
+
+# -- Policy deployment --
+policy:
+  # Path to trained checkpoint (relative to drone-rl-lab root)
+  checkpoint: "results/exp_069_larger_network/model.ckpt"
+  hidden_size: 128       # Must match training config
+  n_obs: 2               # Observation stacking depth
+  obs_normalize: false   # Set true if checkpoint has obs_norm_* keys
+
+  # Level 2 track — gate positions from level2.toml (nominal, pre-randomization)
+  # rpy=[0,0,yaw] converted to yaw in degrees
+  gates:
+    - pos: [0.5, 0.25, 0.7]
+      yaw: -44.7       # rpy [0, 0, -0.78] rad = -44.7 deg
+    - pos: [1.05, 0.75, 1.2]
+      yaw: 134.6       # rpy [0, 0, 2.35] rad = 134.6 deg
+    - pos: [-1.0, -0.25, 0.7]
+      yaw: 180.0       # rpy [0, 0, 3.14] rad = 180 deg
+    - pos: [0.0, -0.75, 1.2]
+      yaw: 0.0         # rpy [0, 0, 0.0] rad = 0 deg
+
+  # Obstacles from level2.toml
+  obstacles:
+    - pos: [0.0, 0.75, 1.55]
+    - pos: [1.0, 0.25, 1.55]
+    - pos: [-1.5, -0.25, 1.55]
+    - pos: [-0.5, -0.75, 1.55]
+
+# -- Logging --
+logging:
+  enabled: true
+  output_dir: "real_flight/logs"
+  log_state: true        # Record pos/vel/quat/ang_vel at log_freq
+  log_actions: true      # Record policy outputs
+  log_observations: true # Record constructed observation vectors
