@@ -34,7 +34,7 @@ if [[ "${1:-}" == "--status" ]]; then
 fi
 
 git pull 2>/dev/null || true
-source /media/drones-venv/bin/activate 2>/dev/null || true
+source /home/jeff/drones-venv/bin/activate 2>/dev/null || source /media/drones-venv/bin/activate 2>/dev/null || true
 
 AGENT_ID=$(python3 scripts/agent_lock.py register)
 echo "Registered agent: $AGENT_ID"

@@ -62,3 +62,4 @@
 | 067 | racing | level2 | 29.99 | 1,540,096 | -- | -- | -- | Clean ablation from exp_060: remove only max_logstd=-1.0 ... |
 | 068 | racing | level2 | 42.84 | 3,235,840 | -- | -- | -- | exp_067 reached 32.01 reward and was still climbing steep... |
 | 069 | racing | level2 | 42.29 | 3,469,312 | -- | -- | -- | Swift (Nature 2023) uses 2x128 MLP; we use 2x64. The dete... |
+| 071 | racing | level2 | 45.63 | 4,628,480 | -- | -- | -- | Missing observation normalization causes poorly condition... |

@@ -64,7 +64,7 @@ while [ $TASKS_DONE -lt $MAX_TASKS ]; do
             "You are the executor in the drone-rl-lab loop. Read and follow CLAUDE.md exactly, then execute the next actionable task from inbox/INBOX.md. Commit and push before exiting."
     else
         echo "[3a] Training: python3 train.py configs/$CONFIG"
-        source /media/drones-venv/bin/activate 2>/dev/null || true
+        source /home/jeff/drones-venv/bin/activate 2>/dev/null || source /media/drones-venv/bin/activate 2>/dev/null || true
         python3 train.py "configs/$CONFIG"
 
         echo ""

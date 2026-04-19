@@ -5,7 +5,7 @@ Config-driven training script. Each experiment is defined by a YAML file
 in configs/ — no more editing this script between experiments.
 
 Usage:
-    source /media/drones-venv/bin/activate
+    source /home/jeff/drones-venv/bin/activate
     python train_rl.py configs/exp_006.yaml
 
 Linux Claude: create a new YAML config for each experiment.

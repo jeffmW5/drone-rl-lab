@@ -60,6 +60,73 @@ Read these files in order:
 14. `program.md`
 15. `README.md`
 
+## Fast Launch Reference
+
+Use this when the task is simply "start training" and you need the shortest
+working path without rediscovering the environment.
+
+### Local VM training
+
+Prefer the home-directory venv, not the VirtualBox shared-folder venv path:
+
+```bash
+source /home/jeff/drones-venv/bin/activate
+cd /media/drone-rl-lab
+python train.py configs/exp_NNN.yaml
+```
+
+Notes:
+- `/media/drone-rl-lab` is the canonical repo path.
+- `/home/jeff/drones-venv` is the canonical VM venv path.
+- Only fall back to `/media/drones-venv` if the home-directory venv is missing.
+
+### RunPod GPU training
+
+For `cuda: true` experiments, the repo's intended entry point is:
+
+```bash
+cd /media/drone-rl-lab
+bash scripts/manage_pod.sh
+```
+
+Current working assumptions for this VM:
+- `RUNPOD_API_KEY` comes from `~/.bashrc`
+- the SSH key should be readable from `/home/jeff/.ssh/id_ed25519_runpod` or
+  `/home/jeff/.ssh/id_ed25519`
+- the persisted pod id file should live at
+  `/home/jeff/.config/drone-rl-lab/runpod_pod_id`
+
+### Direct RunPod fallback
+
+If `manage_pod.sh` is not enough or the wrapper path is confounded, use the
+known-good direct GPU path from the pod:
+
+```bash
+cd /root/lsy_drone_racing
+export PYTHONPATH=/root/lsy_drone_racing:/root/drone-rl-lab
+export JAX_COMPILATION_CACHE_DIR=/root/.cache/jax/compilation_cache
+export JAX_PERSISTENT_CACHE_MIN_COMPILE_TIME_SECS=0
+/root/.pixi/bin/pixi run -e gpu python /root/drone-rl-lab/train.py /root/drone-rl-lab/configs/exp_NNN.yaml
+```
+
+This direct Pixi invocation is the fastest reliable fallback for racing runs on
+RunPod because it avoids wrapper assumptions about the working directory.
+
+### Live progress monitor
+
+While a run is active on RunPod, the quickest progress view is:
+
+```bash
+cd /media/drone-rl-lab
+python3 scripts/training_progress.py --remote --latest
+```
+
+For a specific experiment:
+
+```bash
+python3 scripts/training_progress.py --remote --experiment exp_NNN_name
+```
+
 Then inspect the current working context before making claims:
 
 - latest commits

@@ -18,13 +18,14 @@
 # Optional env vars:
 #   RUNPOD_GPU_COUNT — GPUs to resume with (default: 1)
 #   RUNPOD_CLOUD_TYPE — pod cloud type (default: SECURE)
+#   DRONE_RL_DEPLOY_KEY — SSH private key to inject into/run against pods
+#   DRONE_RL_RUNPOD_POD_ID_FILE — local file used to persist the current pod ID
 # =============================================================================
 
 set -euo pipefail
 
 # ── Config ────────────────────────────────────────────────────────────────────
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-DEPLOY_KEY="/media/id_ed25519_runpod"
 GPU_COUNT="${RUNPOD_GPU_COUNT:-1}"
 RUNPOD_CLOUD_TYPE="${RUNPOD_CLOUD_TYPE:-SECURE}"
 POLL_INTERVAL=10   # seconds between status checks
@@ -36,7 +37,24 @@ GPU_TYPES=(
     "NVIDIA GeForce RTX 3090"
 )
 PYTORCH_IMAGE="runpod/pytorch:2.1.0-py3.10-cuda11.8.0-devel-ubuntu22.04"
-POD_ID_FILE="/media/runpod_pod_id"  # persists new pod ID across sessions
+DEFAULT_POD_ID_FILE="${HOME}/.config/drone-rl-lab/runpod_pod_id"
+POD_ID_FILE="${DRONE_RL_RUNPOD_POD_ID_FILE:-$DEFAULT_POD_ID_FILE}"
+
+# Prefer a normal home-directory key. Fall back to older shared-folder paths only
+# if they are explicitly readable in this VM session.
+DEPLOY_KEY="${DRONE_RL_DEPLOY_KEY:-}"
+if [ -z "$DEPLOY_KEY" ]; then
+    for candidate in \
+        "${HOME}/.ssh/id_ed25519_runpod" \
+        "${HOME}/.ssh/id_ed25519" \
+        "/media/id_ed25519_runpod"
+    do
+        if [ -r "$candidate" ]; then
+            DEPLOY_KEY="$candidate"
+            break
+        fi
+    done
+fi
 
 # Colors
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
@@ -50,6 +68,13 @@ check_env() {
     if [ -z "${RUNPOD_API_KEY:-}" ]; then
         err "RUNPOD_API_KEY not set. Add to ~/.bashrc:"
         err "  export RUNPOD_API_KEY=\"your_key_here\""
+        exit 1
+    fi
+    if [ -z "$DEPLOY_KEY" ]; then
+        err "No readable SSH key found for RunPod access."
+        err "Set DRONE_RL_DEPLOY_KEY, or place a readable key at:"
+        err "  ${HOME}/.ssh/id_ed25519_runpod"
+        err "  ${HOME}/.ssh/id_ed25519"
         exit 1
     fi
     # Load persisted pod ID from file if env var not set
@@ -91,6 +116,7 @@ get_pod_status() {
 
 save_pod_id() {
     local pod_id="$1"
+    mkdir -p "$(dirname "$POD_ID_FILE")"
     echo "$pod_id" > "$POD_ID_FILE"
     warn "New pod ID saved to $POD_ID_FILE"
     warn "Update ~/.bashrc when convenient: export RUNPOD_POD_ID=\"$pod_id\""
@@ -287,7 +313,7 @@ copy_deploy_key() {
 
     if [ ! -f "$DEPLOY_KEY" ]; then
         err "Deploy key not found at $DEPLOY_KEY"
-        err "Expected: /media/id_ed25519_runpod (shared folder)"
+        err "Set DRONE_RL_DEPLOY_KEY to override the default key search path."
         exit 1
     fi
 

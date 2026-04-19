@@ -1,30 +1,28 @@
-# Status -- Last Updated 2026-03-28
+# Status -- Last Updated 2026-04-19
 
 ## Latest Result
 
-**exp_069 -- Larger Network (2×128)** completed 2026-03-28.
-- Training: **42.29 mean reward** (peak 52.39 — new all-time high)
-- Deterministic benchmark: **2/15 gates** (0.86s avg) — FIRST DETERMINISTIC GATES EVER
-- T=0.3: **5/15 gates** (33% passage rate) — best gate rate ever
-- **Key finding:** network capacity helps — 2×128 outperforms 2×64 on benchmark gates
+**exp_071 -- Observation Normalization** completed 2026-04-19.
+- Training: **45.63 mean reward** in **4.63M** steps over the full **7200s** budget
+- Benchmark: **not verified** — the current generic benchmark/controller path produced zero parsed runs for `exp_071`
+- **Key finding:** observation normalization improved training reward relative to `exp_069`, but no deployment conclusion should be drawn yet
 
-## The Progression (exp_067-069)
+## Current Read On exp_071
 
-| Exp | Hidden | Train Reward | Peak | Det. Gates | T=0.3 Gates | Total Gates |
-|-----|:---:|:---:|:---:|:---:|:---:|:---:|
-| 067 | 2×64 | 29.99 | 32.01 | 0/15 | — | 0/50 |
-| 068 | 2×64 | 42.84 | 44.53 | 0/15 | 2/15 | 3/45 |
-| 069 | 2×128 | 42.29 | 52.39 | 2/15 | 5/15 | 7/45 |
+- `exp_071` is a clean training-side positive on reward, not yet a racing benchmark result.
+- The right status is **mixed / unresolved**, not success or failure.
+- Until a parsed benchmark exists, `exp_069` remains the last benchmark-backed positive signal in this direct-racing line.
 
-Network capacity matters: same training reward level but better benchmark gates.
+## Throughput Finding (same pod / same config family)
 
-## Current Observations
+Measured after `exp_071` on the same RTX 3090 pod:
 
-- Removing logstd clamp improves benchmark stability without hurting training (exp_067).
-- Doubling training budget improves reward but not benchmark (exp_068 vs 067).
-- Larger network (128 vs 64) produces first deterministic gate passages and higher peak reward.
-- T=0.3 temperature is the most consistent gate passage mode.
-- The deployment gap persists but is narrowing with capacity.
+- `env_samples_per_s`: **803.54**
+- `rollout_samples_per_s`: **750.71**
+- `policy_samples_per_s`: **11549.66**
+- `ppo_update_samples_per_s`: **14443.32**
+
+Interpretation: env stepping still dominates. Low GPU utilization is expected under the current stack because rollout is env-bound, not optimizer-bound.
 
 ## Research: Deployment Gap Literature Review (2026-03-28)
 
@@ -39,9 +37,7 @@ See `research/deployment_gap_mean_policy.md` for full details.
 
 ## Next Steps
 
-1. **exp_070 — Longer training for 2×128** (IN PROGRESS) — 14400s budget to see if capacity + time closes gap.
-2. **exp_071 — Observation normalization** (READY) — single highest-priority intervention from literature.
-3. **exp_072 — Action smoothness penalty** (READY) — re-enable d_act penalties; directly forces mean coherence.
-4. **exp_073 — Entropy annealing** (READY) — anneal ent_coef 0.01→0.001 in last 30% to sharpen mean.
-5. **exp_074 — Combined obs norm + smoothness** (READY) — if both help independently, combine.
-6. **exp_065 — Periodic deterministic eval** (IN PROGRESS) — instrumentation for when gates emerge during training.
+1. Repair or replace the generic benchmark/controller path so `exp_071` can be evaluated with real parsed runs.
+2. Keep `exp_069` as the last benchmark-backed comparison point until `exp_071` is actually benchmarked.
+3. Continue with `exp_072` if queue momentum matters more than immediate evaluation repair, but keep `exp_071` explicitly unresolved.
+4. Use `docs/throughput_findings_2026_04_19.md` as the current reference for rollout bottleneck discussion.

@@ -10,6 +10,7 @@ import importlib
 import json
 import os
 import platform
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -17,6 +18,32 @@ from pathlib import Path
 
 LAB_DIR = Path(__file__).resolve().parent.parent
 RESULTS_DIR = LAB_DIR / "results"
+
+
+def _detect_lsy_dir() -> Path:
+    override = os.environ.get("DRONE_RL_LSY_DIR")
+    candidates = [
+        override,
+        "/root/lsy_drone_racing",
+        "/media/lsy_drone_racing",
+    ]
+    for candidate in candidates:
+        if candidate and Path(candidate).is_dir():
+            return Path(candidate)
+    return Path("/media/lsy_drone_racing")
+
+
+def _pixi_version() -> str:
+    override = os.environ.get("DRONE_RL_PIXI_BIN")
+    candidates = [
+        override,
+        shutil.which("pixi"),
+        "/root/.pixi/bin/pixi",
+    ]
+    for candidate in candidates:
+        if candidate and Path(candidate).is_file():
+            return _command_output([candidate, "--version"])
+    return ""
 
 
 def _command_output(cmd: list[str], cwd: Path | None = None) -> str:
@@ -87,13 +114,13 @@ def capture_provenance(experiment: str) -> dict:
         "experiment": experiment,
         "repo": _git_info(LAB_DIR),
         "external_repos": {
-            "lsy_drone_racing": _git_info(Path("/media/lsy_drone_racing")),
+            "lsy_drone_racing": _git_info(_detect_lsy_dir()),
         },
         "runtime": {
             "python": sys.version.split()[0],
             "platform": platform.platform(),
             "hostname": platform.node(),
-            "pixi_version": _command_output(["pixi", "--version"]),
+            "pixi_version": _pixi_version(),
             "module_versions": {
                 "numpy": _module_version("numpy"),
                 "torch": _module_version("torch"),
@@ -106,6 +133,8 @@ def capture_provenance(experiment: str) -> dict:
         "environment": {
             "runpod_pod_id": os.environ.get("RUNPOD_POD_ID"),
             "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"),
+            "drone_rl_lsy_dir": os.environ.get("DRONE_RL_LSY_DIR"),
+            "drone_rl_pixi_bin": os.environ.get("DRONE_RL_PIXI_BIN"),
         },
     }
 

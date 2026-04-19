@@ -81,7 +81,7 @@ reward definitions change.
 ## Quick start
 
 ```bash
-source /media/drones-venv/bin/activate
+source /home/jeff/drones-venv/bin/activate
 cd /media/drone-rl-lab
 
 # Run an experiment
@@ -102,6 +102,15 @@ python plot.py
 
 ### GPU training (RunPod)
 
+Keep mutable/private artifacts in the home directory, not the VirtualBox
+shared folder. In practice this means:
+- venv at `/home/jeff/drones-venv`
+- SSH key at `/home/jeff/.ssh/id_ed25519_runpod` or `/home/jeff/.ssh/id_ed25519`
+- persisted pod id at `/home/jeff/.config/drone-rl-lab/runpod_pod_id`
+
+The shared `/media` mount is fine for repo contents, but it has proven
+unreliable for private keys, virtualenvs, and small mutable state files.
+
 ```bash
 # On a fresh RunPod pod (RTX 3090, PyTorch template):
 bash scripts/setup_runpod.sh        # installs Pixi GPU env + RL extras, 4h auto-shutdown
@@ -109,6 +118,62 @@ drone-rl-gpu-python train.py configs/exp_NNN.yaml
 bash scripts/sync_results.sh "description"
 # STOP YOUR POD
 ```
+
+### Live training progress
+
+Use the lightweight monitor to watch a local or RunPod training log as it
+updates:
+
+```bash
+# Current RunPod pod, newest training log
+python3 scripts/training_progress.py --remote --latest
+
+# Current RunPod pod, specific experiment
+python3 scripts/training_progress.py --remote --experiment exp_071_obs_normalization
+
+# One-shot snapshot instead of a live loop
+python3 scripts/training_progress.py --remote --experiment exp_071_obs_normalization --once
+```
+
+The remote mode uses the same key and pod-id conventions as `manage_pod.sh`:
+- key from `DRONE_RL_DEPLOY_KEY`, `~/.ssh/id_ed25519_runpod`, or `~/.ssh/id_ed25519`
+- pod id from `RUNPOD_POD_ID` or `~/.config/drone-rl-lab/runpod_pod_id`
+
+### Racing throughput benchmark
+
+Use the benchmark helper before major trainer or env refactors. It measures:
+- env build + first reset time
+- rollout throughput
+- policy forward throughput
+- PPO update throughput
+
+It also supports an experimental `jax` rollout path that bypasses `JaxToTorch`
+for policy inference. The current measured result on an RTX 3090 is that this
+JAX-only rollout path is not faster than the existing Torch rollout path, so
+the remaining bottleneck is still env stepping rather than the framework bridge.
+
+```bash
+# Local VM or RunPod, from the lsy_drone_racing Pixi env
+cd /root/lsy_drone_racing
+export PYTHONPATH=/root/lsy_drone_racing:/root/drone-rl-lab
+/root/.pixi/bin/pixi run -e gpu python /root/drone-rl-lab/scripts/benchmark_racing_throughput.py \
+    /root/drone-rl-lab/configs/exp_070_larger_longer.yaml \
+    --num-envs 512 --rollout-steps 4 --update-epochs 1
+
+# Experimental JAX-only rollout comparison
+/root/.pixi/bin/pixi run -e gpu python /root/drone-rl-lab/scripts/benchmark_racing_throughput.py \
+    /root/drone-rl-lab/configs/exp_070_larger_longer.yaml \
+    --num-envs 512 --rollout-steps 4 --update-epochs 1 --rollout-backend jax
+```
+
+The benchmark now mirrors the optimized racing wrapper stack in
+`lsy_drone_racing/control/train_race.py`, including:
+- JIT-compiled reward/observation preprocessing
+- JAX-native action normalization
+- JAX-native random gate respawn logic
+
+Use `configs/exp_070_fasttrain.yaml` only as an experimental variant. It did
+not improve steady-state 512-env throughput in the current measurements.
 
 ### Autonomous operation
 

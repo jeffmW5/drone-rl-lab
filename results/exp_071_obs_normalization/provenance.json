@@ -1,0 +1,46 @@
+{
+  "captured_at": "2026-04-19T18:16:25+00:00",
+  "experiment": "exp_071_obs_normalization",
+  "repo": {
+    "path": "/root/drone-rl-lab",
+    "available": true,
+    "branch": "master",
+    "commit": "7fcd7ef4f264fd263ec735e84f613fb467a3b290",
+    "dirty": true
+  },
+  "external_repos": {
+    "lsy_drone_racing": {
+      "path": "/root/lsy_drone_racing",
+      "available": true,
+      "branch": "main",
+      "commit": "2059ff8e946467193b82c62fe1076a95e2499f53",
+      "dirty": false
+    }
+  },
+  "runtime": {
+    "python": "3.10.12",
+    "platform": "Linux-6.8.0-106-generic-x86_64-with-glibc2.35",
+    "hostname": "55292cb3368e",
+    "pixi_version": "pixi 0.67.0",
+    "module_versions": {
+      "numpy": "1.24.1",
+      "torch": "2.1.0+cu118",
+      "jax": null,
+      "stable_baselines3": null,
+      "yaml": "6.0.1"
+    },
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 3090",
+        "driver_version": "580.126.20",
+        "memory_mb": 24576
+      }
+    ]
+  },
+  "environment": {
+    "runpod_pod_id": null,
+    "cuda_visible_devices": null,
+    "drone_rl_lsy_dir": "/root/lsy_drone_racing",
+    "drone_rl_pixi_bin": "/root/.pixi/bin/pixi"
+  }
+}

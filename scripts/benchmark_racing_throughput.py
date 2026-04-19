@@ -9,6 +9,14 @@ Measures:
 
 This is intended to answer whether the main bottleneck is environment stepping,
 policy inference, or PPO optimization before attempting a trainer swap.
+
+Notes:
+- `--rollout-backend torch` measures the current production rollout path.
+- `--rollout-backend jax` is an experimental rollout-only comparison that
+  rebuilds the racing wrapper stack without `JaxToTorch` and uses a JAX MLP
+  actor matching the Torch policy shape.
+- Current RTX 3090 measurements show the JAX-only rollout path is not faster
+  than the existing Torch path, so env stepping remains the main bottleneck.
 """
 
 from __future__ import annotations

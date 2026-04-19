@@ -34,10 +34,17 @@ Before starting ANY experiment or task, read:
 ## How to run an experiment
 
 ```bash
-source /media/drones-venv/bin/activate
+source /home/jeff/drones-venv/bin/activate
 cd /media/drone-rl-lab
 python train.py configs/exp_NNN.yaml
 ```
+
+Operational note:
+- Treat `/media` as the repo/data mount, not the canonical home for private keys,
+  virtualenvs, or mutable local state.
+- Prefer `/home/jeff/drones-venv` for the VM venv.
+- Prefer `/home/jeff/.ssh/...` for RunPod/GitHub keys.
+- Prefer `/home/jeff/.config/drone-rl-lab/runpod_pod_id` for persisted pod ids.
 
 The dispatcher reads the `backend:` field from the config and routes to the
 correct trainer (`train_hover.py` or `train_racing.py`). Direct calls also work:
@@ -206,11 +213,41 @@ bash scripts/setup_runpod.sh        # installs Pixi GPU env + RL extras, starts 
 ### Training on GPU
 
 ```bash
-cd /root/drone-rl-lab
-drone-rl-gpu-python train.py configs/exp_NNN.yaml
+cd /root/lsy_drone_racing
+/root/.pixi/bin/pixi run -e gpu python /root/drone-rl-lab/train.py /root/drone-rl-lab/configs/exp_NNN.yaml
 ```
 
 GPU configs use `cuda: true` and `num_envs: 1024` for heavy parallelism.
+
+Important RunPod note:
+- `scripts/setup_runpod.sh` installs the correct Pixi GPU env, but the
+  generated `drone-rl-gpu-python` wrapper currently `cd`s into
+  `/root/drone-rl-lab` instead of `/root/lsy_drone_racing`.
+- For racing experiments and throughput benchmarks, prefer invoking Pixi
+  directly from `/root/lsy_drone_racing` until that wrapper is corrected.
+
+### Throughput diagnosis before refactors
+
+Before attempting trainer swaps or framework ports, run the racing throughput
+benchmark on the actual RunPod GPU shape you care about:
+
+```bash
+cd /root/lsy_drone_racing
+export PYTHONPATH=/root/lsy_drone_racing:/root/drone-rl-lab
+export JAX_COMPILATION_CACHE_DIR=/root/.cache/jax/compilation_cache
+export JAX_PERSISTENT_CACHE_MIN_COMPILE_TIME_SECS=0
+
+/root/.pixi/bin/pixi run -e gpu python /root/drone-rl-lab/scripts/benchmark_racing_throughput.py \
+    /root/drone-rl-lab/configs/exp_070_larger_longer.yaml \
+    --num-envs 512 --rollout-steps 4 --update-epochs 1
+```
+
+Interpretation of current measurements:
+- env stepping still dominates steady-state rollout time
+- PPO update is much smaller than env cost
+- a JAX-only policy rollout path did not outperform the existing Torch path
+- the next meaningful speedups must come from env/simulator cost reduction or
+  a larger fully-compiled training architecture, not a simple bridge removal
 
 ### After training
 

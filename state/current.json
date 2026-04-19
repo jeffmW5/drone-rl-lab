@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-03-29T04:03:50+00:00",
+  "generated_at": "2026-04-19T18:18:24+00:00",
   "repo": {
     "path": "/media/drone-rl-lab",
     "available": true,
     "branch": "master",
-    "commit": "791211c6782f61cf76703f09b45b704e64e57936",
+    "commit": "c59b696086576128ec9143ed49b2d7e10b9b26ce",
     "dirty": true
   },
   "external_repos": {
@@ -12,11 +12,18 @@
       "path": "/media/lsy_drone_racing",
       "available": true,
       "branch": "main",
-      "commit": "99ce3297a120b1ba9d8752e226f67f2180fcff69",
-      "dirty": false
+      "commit": "2059ff8e946467193b82c62fe1076a95e2499f53",
+      "dirty": true
     }
   },
-  "agents": [],
+  "agents": [
+    {
+      "id": "jeff-VirtualBox-6765-1776612627",
+      "status": "idle",
+      "task": null,
+      "heartbeat": "2026-04-19T15:30:27+00:00"
+    }
+  ],
   "queue": {
     "counts": {
       "done": 26,
