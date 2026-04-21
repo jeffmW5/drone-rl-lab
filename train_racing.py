@@ -807,7 +807,13 @@ def run(config_path: str):
             if "level2" not in levels and level != "level2" and bench_cfg.get("include_level2", True):
                 levels.append("level2")
             n_bench_runs = bench_cfg.get("n_runs", 5)
-            controller = bench_cfg.get("controller", "attitude_rl_generic.py")
+            controller = bench_cfg.get("controller")
+            if controller is None:
+                controller = (
+                    "attitude_rl_race.py"
+                    if racing_cfg.get("env_type") == "race"
+                    else "attitude_rl_generic.py"
+                )
 
             env = os.environ.copy()
             env["DRONE_RL_CKPT_PATH"] = ckpt_path
