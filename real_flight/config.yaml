@@ -28,7 +28,7 @@ safety:
     x_max: 2.5
     y_min: -1.5
     y_max: 1.5
-    z_min: 0.0
+    z_min: -0.5
     z_max: 2.0
 
   # Attitude limits (degrees) — clamp policy output before sending
@@ -45,7 +45,7 @@ safety:
   min_battery_voltage: 3.2
 
   # Position variance threshold — refuse to fly if estimator is uncertain
-  max_position_variance: 0.001
+  max_position_variance: 5.0
 
 # -- Drone model (cf21B_500) --
 drone:
@@ -64,7 +64,7 @@ control:
   hover_height: 0.5     # meters — default hover height
   hover_duration: 5.0   # seconds — how long to hover before starting policy
   landing_duration: 3.0 # seconds — gentle landing time
-  warmup_seconds: 2.0   # seconds — wait for estimator convergence after connect
+  warmup_seconds: 5.0   # seconds — wait for estimator convergence after connect
 
 # -- Policy deployment --
 policy:

@@ -34,8 +34,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from threading import Event, Lock
 
+import warnings
 import numpy as np
 import yaml
+
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="cflib")
+warnings.filterwarnings("ignore", category=UserWarning, module="cflib")
 
 logging.basicConfig(
     level=logging.INFO,
@@ -366,6 +370,10 @@ def connect_crazyflie(cfg: dict):
     cf = scf.cf
     cf.param.set_value("stabilizer.estimator", fw["estimator"])
     time.sleep(0.1)
+    cf.param.set_value("kalman.resetEstimation", "1")
+    time.sleep(0.1)
+    cf.param.set_value("kalman.resetEstimation", "0")
+    time.sleep(0.5)
     cf.param.set_value("stabilizer.controller", fw["controller"])
     cf.param.set_value("supervisor.tmblChckEn", 1 if fw["tumble_check"] else 0)
     cf.param.set_value("flightmode.stabModeRoll", 1)  # angle mode
@@ -387,13 +395,15 @@ def connect_crazyflie(cfg: dict):
     lg_state.add_variable("stateEstimate.vz", "float")
 
     lg_att = LogConfig(name="Attitude", period_in_ms=max(10, 1000 // log_freq))
-    lg_att.add_variable("stabilizer.qx", "float")
-    lg_att.add_variable("stabilizer.qy", "float")
-    lg_att.add_variable("stabilizer.qz", "float")
-    lg_att.add_variable("stabilizer.qw", "float")
-    lg_att.add_variable("gyro.x", "float")
-    lg_att.add_variable("gyro.y", "float")
-    lg_att.add_variable("gyro.z", "float")
+    lg_att.add_variable("stateEstimate.qx", "float")
+    lg_att.add_variable("stateEstimate.qy", "float")
+    lg_att.add_variable("stateEstimate.qz", "float")
+    lg_att.add_variable("stateEstimate.qw", "float")
+
+    lg_gyro = LogConfig(name="Gyro", period_in_ms=max(10, 1000 // log_freq))
+    lg_gyro.add_variable("gyro.x", "float")
+    lg_gyro.add_variable("gyro.y", "float")
+    lg_gyro.add_variable("gyro.z", "float")
 
     lg_sys = LogConfig(name="System", period_in_ms=500)
     lg_sys.add_variable("pm.vbat", "float")
@@ -407,7 +417,11 @@ def connect_crazyflie(cfg: dict):
 
     def _att_cb(timestamp, data, logconf):
         state.update(
-            quat=np.array([data["stabilizer.qx"], data["stabilizer.qy"], data["stabilizer.qz"], data["stabilizer.qw"]], dtype=np.float32),
+            quat=np.array([data["stateEstimate.qx"], data["stateEstimate.qy"], data["stateEstimate.qz"], data["stateEstimate.qw"]], dtype=np.float32),
+        )
+
+    def _gyro_cb(timestamp, data, logconf):
+        state.update(
             ang_vel=np.deg2rad(np.array([data["gyro.x"], data["gyro.y"], data["gyro.z"]], dtype=np.float32)),
         )
 
@@ -419,12 +433,15 @@ def connect_crazyflie(cfg: dict):
 
     cf.log.add_config(lg_state)
     cf.log.add_config(lg_att)
+    cf.log.add_config(lg_gyro)
     cf.log.add_config(lg_sys)
     lg_state.data_received_cb.add_callback(_state_cb)
     lg_att.data_received_cb.add_callback(_att_cb)
+    lg_gyro.data_received_cb.add_callback(_gyro_cb)
     lg_sys.data_received_cb.add_callback(_sys_cb)
     lg_state.start()
     lg_att.start()
+    lg_gyro.start()
     lg_sys.start()
 
     warmup = cfg["control"]["warmup_seconds"]
@@ -432,6 +449,16 @@ def connect_crazyflie(cfg: dict):
     time.sleep(warmup)
 
     return scf, state
+
+
+# ─── Arming ──────────────────────────────────────────────────────────────────
+
+def try_arm(cf):
+    """Arm the drone if firmware supports it. Older firmware doesn't need arming."""
+    try:
+        cf.platform.send_arming_request(True)
+    except Exception:
+        pass
 
 
 # ─── Emergency stop ───────────────────────────────────────────────────────────
@@ -487,7 +514,7 @@ def cmd_check(cfg: dict):
 
 
 def cmd_hover(cfg: dict):
-    """Basic PID hover test — no RL policy, uses high-level commander."""
+    """PID hover test using low-level attitude commands."""
     scf, state = connect_crazyflie(cfg)
     cf = scf.cf
     safety = SafetyMonitor(cfg)
@@ -495,6 +522,17 @@ def cmd_hover(cfg: dict):
 
     height = cfg["control"]["hover_height"]
     duration = cfg["control"]["hover_duration"]
+    freq = cfg["control"]["freq"]
+    dt = 1.0 / freq
+
+    drone = cfg.get("drone", {})
+    mass = drone.get("mass", 0.04338)
+    hover_thrust = mass * 9.81  # Newtons to counteract gravity
+    hover_pwm = thrust_to_pwm(hover_thrust, drone.get("thrust_max", 0.8))
+
+    # Simple P controller gains for position hold
+    kp_xy = 8.0    # roll/pitch response to XY error (deg per meter)
+    kp_z = 8000    # thrust PWM adjustment per meter of Z error
 
     # Kill switch
     abort = Event()
@@ -509,27 +547,86 @@ def cmd_hover(cfg: dict):
             log.error(f"Pre-flight safety check failed: {violation}")
             return
 
-        log.info(f"Hovering at {height}m for {duration}s...")
+        # Record starting XY position as hold target
+        target_x = snap["pos"][0]
+        target_y = snap["pos"][1]
+
+        log.info(f"Hover test: {height}m for {duration}s (low-level commands)")
         log.info("Press Ctrl+C to abort")
 
-        # Use high-level commander for hover (PID, no RL)
-        cf.param.set_value("commander.enHighLevel", "1")
-        cf.platform.send_arming_request(True)
-        cf.high_level_commander.takeoff(height, 2.0)
+        # Unlock thrust protection
+        cf.commander.send_setpoint(0, 0, 0, 0)
+        time.sleep(0.1)
 
-        t_start = time.time()
-        while (time.time() - t_start) < duration + 2.0 and not abort.is_set():
+        # Ramp up to hover thrust over 1.5s
+        log.info("Ramping up...")
+        ramp_time = 1.5
+        ramp_steps = int(ramp_time * freq)
+        for i in range(ramp_steps):
+            if abort.is_set():
+                break
+            frac = (i + 1) / ramp_steps
+            target_z = height * frac
             snap = state.snapshot()
+            z_err = target_z - snap["pos"][2]
+            pwm = int(hover_pwm * frac + kp_z * z_err)
+            pwm = max(0, min(pwm, safety.max_thrust_pwm))
+
+            x_err = target_x - snap["pos"][0]
+            y_err = target_y - snap["pos"][1]
+            pitch_cmd = np.clip(kp_xy * x_err, -15.0, 15.0)
+            roll_cmd = np.clip(-kp_xy * y_err, -15.0, 15.0)
+
+            cf.commander.send_setpoint(roll_cmd, pitch_cmd, 0, pwm)
+            flight_log.log(time.time(), snap)
+            time.sleep(dt)
+
+        # Hold hover
+        log.info(f"Holding at {height}m...")
+        t_start = time.time()
+        while (time.time() - t_start) < duration and not abort.is_set():
+            t_loop = time.time()
+            snap = state.snapshot()
+
             violation = safety.check_state(snap)
             if violation:
-                log.error(f"Safety violation during hover: {violation}")
+                log.error(f"Safety violation: {violation}")
                 break
-            flight_log.log(time.time() - t_start, snap)
-            time.sleep(0.05)
 
+            z_err = height - snap["pos"][2]
+            pwm = int(hover_pwm + kp_z * z_err)
+            pwm = max(0, min(pwm, safety.max_thrust_pwm))
+
+            x_err = target_x - snap["pos"][0]
+            y_err = target_y - snap["pos"][1]
+            pitch_cmd = np.clip(kp_xy * x_err, -15.0, 15.0)
+            roll_cmd = np.clip(-kp_xy * y_err, -15.0, 15.0)
+
+            cf.commander.send_setpoint(roll_cmd, pitch_cmd, 0, pwm)
+            flight_log.log(time.time() - t_start, snap)
+
+            elapsed = time.time() - t_loop
+            if dt - elapsed > 0:
+                time.sleep(dt - elapsed)
+
+        # Ramp down to land over 2s
         log.info("Landing...")
-        cf.high_level_commander.land(0.05, 3.0)
-        time.sleep(3.5)
+        land_time = 2.0
+        land_steps = int(land_time * freq)
+        snap = state.snapshot()
+        land_start_z = snap["pos"][2]
+        for i in range(land_steps):
+            frac = 1.0 - (i + 1) / land_steps
+            target_z = land_start_z * frac
+            snap = state.snapshot()
+            z_err = target_z - snap["pos"][2]
+            pwm = int(hover_pwm * frac + kp_z * z_err)
+            pwm = max(0, min(pwm, safety.max_thrust_pwm))
+            cf.commander.send_setpoint(0, 0, 0, pwm)
+            time.sleep(dt)
+
+        cf.commander.send_setpoint(0, 0, 0, 0)
+        time.sleep(0.5)
 
     except Exception as e:
         log.error(f"Error during hover: {e}")
@@ -587,7 +684,7 @@ def cmd_fly(cfg: dict, checkpoint: str | None = None, no_gates: bool = False):
 
         log.info(f"Phase 1: High-level takeoff to {hover_height}m...")
         cf.param.set_value("commander.enHighLevel", "1")
-        cf.platform.send_arming_request(True)
+        try_arm(cf)
         cf.high_level_commander.takeoff(hover_height, 2.0)
         time.sleep(2.5)
 
@@ -677,7 +774,7 @@ def cmd_fly(cfg: dict, checkpoint: str | None = None, no_gates: bool = False):
         cf.commander.send_stop_setpoint()
         cf.commander.send_notify_setpoint_stop()
         cf.param.set_value("commander.enHighLevel", "1")
-        cf.platform.send_arming_request(True)
+        try_arm(cf)
         cf.high_level_commander.land(0.05, cfg["control"]["landing_duration"])
         time.sleep(cfg["control"]["landing_duration"] + 0.5)
 
