@@ -71,12 +71,13 @@ Prefer the home-directory venv, not the VirtualBox shared-folder venv path:
 
 ```bash
 source /home/jeff/drones-venv/bin/activate
-cd /media/drone-rl-lab
+cd /home/jeff/drone-rl-lab
 python train.py configs/exp_NNN.yaml
 ```
 
 Notes:
-- `/media/drone-rl-lab` is the canonical repo path.
+- `/home/jeff/drone-rl-lab` is the canonical repo path (native filesystem).
+- `/media/drone-rl-lab` is a VirtualBox shared folder copy — do NOT use it for active work.
 - `/home/jeff/drones-venv` is the canonical VM venv path.
 - Only fall back to `/media/drones-venv` if the home-directory venv is missing.
 
@@ -85,7 +86,7 @@ Notes:
 For `cuda: true` experiments, the repo's intended entry point is:
 
 ```bash
-cd /media/drone-rl-lab
+cd /home/jeff/drone-rl-lab
 bash scripts/manage_pod.sh
 ```
 
@@ -117,7 +118,7 @@ RunPod because it avoids wrapper assumptions about the working directory.
 While a run is active on RunPod, the quickest progress view is:
 
 ```bash
-cd /media/drone-rl-lab
+cd /home/jeff/drone-rl-lab
 python3 scripts/training_progress.py --remote --latest
 ```
 
