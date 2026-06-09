@@ -1,0 +1,54 @@
+import math
+import unittest
+
+from ai_gp_rl.contract import (
+    ACTOR_OBS_DIM,
+    ActionCalibration,
+    LivePolicyFeatures,
+    build_actor_observation,
+)
+
+
+class AIGPContractTests(unittest.TestCase):
+    def test_actor_observation_has_stable_shape_and_finite_values(self) -> None:
+        observation = build_actor_observation(
+            LivePolicyFeatures(
+                body_velocity_mps=(4.0, -2.0, 1.0),
+                gravity_body=(0.0, 0.0, -1.0),
+                angular_rate_radps=(0.3, -0.6, 0.2),
+                gate_center_normalized=(0.25, -0.5),
+                gate_area_normalized=0.2,
+                gate_confidence=0.9,
+                gate_age_s=0.1,
+                previous_action=(0.1, -0.2, 0.3, -0.4),
+            )
+        )
+        self.assertEqual(len(observation), ACTOR_OBS_DIM)
+        self.assertTrue(all(math.isfinite(value) for value in observation))
+
+    def test_action_calibration_maps_normalized_action(self) -> None:
+        calibration = ActionCalibration(
+            hover_thrust=0.4,
+            thrust_span_up=0.2,
+            thrust_span_down=0.1,
+            max_roll_rate_radps=1.0,
+            max_pitch_rate_radps=1.5,
+            max_yaw_rate_radps=0.5,
+        )
+        command = calibration.map_action((0.5, 1.0, -1.0, 0.5))
+        self.assertAlmostEqual(command["thrust_normalized"], 0.5)
+        self.assertAlmostEqual(command["roll_rate_radps"], 1.0)
+        self.assertAlmostEqual(command["pitch_rate_radps"], -1.5)
+        self.assertAlmostEqual(command["yaw_rate_radps"], 0.25)
+
+    def test_action_calibration_rejects_unknown_hover_thrust(self) -> None:
+        with self.assertRaises(ValueError):
+            ActionCalibration(
+                hover_thrust=0.0,
+                thrust_span_up=0.1,
+                thrust_span_down=0.1,
+            )
+
+
+if __name__ == "__main__":
+    unittest.main()

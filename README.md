@@ -3,9 +3,15 @@
 An agentic loop for autonomously training and iterating on RL drone controllers,
 inspired by [Andrej Karpathy's autoresearch](https://github.com/karpathy/autoresearch).
 
-Two backends:
+Three backends:
 - **Hover** -- [gym-pybullet-drones](https://github.com/utiasDSL/gym-pybullet-drones) + [SB3 PPO](https://github.com/DLR-RM/stable-baselines3)
 - **Racing** -- [lsy_drone_racing](https://github.com/utiasDSL/lsy_drone_racing) + CleanRL PPO (JAX)
+- **AI-GP** -- self-contained Torch GPU surrogate + asymmetric PPO
+
+Local AI-GP simulator setup notes: [docs/ai_gp_simulator_setup.md](docs/ai_gp_simulator_setup.md)
+AI-GP RL philosophy and decision points: [docs/AI_GP_RL_STRATEGY.md](docs/AI_GP_RL_STRATEGY.md)
+AI-GP lightweight RunPod workflow: [docs/AI_GP_RUNPOD.md](docs/AI_GP_RUNPOD.md)
+AI-GP agent handoff: [docs/AI_GP_AGENT_HANDOFF.md](docs/AI_GP_AGENT_HANDOFF.md)
 
 ---
 
@@ -101,6 +107,19 @@ python plot.py
 ```
 
 ### GPU training (RunPod)
+
+For the lightweight AI-GP backend from Windows:
+
+```powershell
+.\scripts\runpod_ai_gp.ps1 Train -Config configs/ai_gp_002_swift_teacher_gpu_ppo.yaml
+.\scripts\runpod_ai_gp.ps1 Status -Config configs/ai_gp_002_swift_teacher_gpu_ppo.yaml -Experiment ai_gp_002_swift_teacher_gpu_ppo
+.\scripts\runpod_ai_gp.ps1 Logs -Config configs/ai_gp_002_swift_teacher_gpu_ppo.yaml -Experiment ai_gp_002_swift_teacher_gpu_ppo
+.\scripts\runpod_ai_gp.ps1 Pull -Config configs/ai_gp_002_swift_teacher_gpu_ppo.yaml -Experiment ai_gp_002_swift_teacher_gpu_ppo
+.\scripts\runpod_ai_gp.ps1 StopPod
+```
+
+This uploads only the AI-GP trainer, package, and selected config. It does not
+clone or install `lsy_drone_racing`.
 
 Keep mutable/private artifacts in the home directory, not the VirtualBox
 shared folder. In practice this means:

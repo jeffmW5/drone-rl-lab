@@ -1,0 +1,704 @@
+"""GPU-vectorized surrogate environment for AI Grand Prix gate flight."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from math import pi
+from typing import Any
+
+import torch
+
+from .contract import (
+    ACTION_DIM,
+    ACTOR_FEATURE_NAMES,
+    ACTOR_OBS_DIM,
+    DETECTION_AGE_SCALE_S,
+    RATE_SCALES_RADPS,
+    SWIFT_TEACHER_FEATURE_NAMES,
+    SWIFT_TEACHER_OBS_DIM,
+    VELOCITY_SCALE_MPS,
+)
+
+
+@dataclass
+class AIGPEnvConfig:
+    actor_observation_mode: str = "live_features"
+    num_envs: int = 4096
+    device: str = "cuda"
+    seed: int = 42
+    dt: float = 0.02
+    physics_substeps: int = 2
+    max_episode_steps: int = 500
+    randomization: bool = True
+
+    start_position_m: tuple[float, float, float] = (-2.0, 0.0, 0.03)
+    start_position_noise_m: tuple[float, float, float] = (0.15, 0.15, 0.01)
+    start_velocity_noise_mps: float = 0.15
+    align_spawn_heading_to_gate: bool = False
+    spawn_yaw_noise_rad: float = 0.20
+    spawn_tilt_noise_rad: float = 0.04
+    near_gate_spawn_ratio_start: float = 0.70
+    near_gate_spawn_ratio_end: float = 0.10
+    near_gate_distance_m: tuple[float, float] = (1.5, 3.5)
+    gate_jitter_m: tuple[float, float, float] = (0.0, 0.20, 0.15)
+
+    gate_positions_m: tuple[tuple[float, float, float], ...] = (
+        (4.0, 0.0, 1.25),
+        (9.0, 1.5, 1.60),
+        (14.0, -1.0, 1.20),
+        (19.0, 0.5, 1.50),
+    )
+    gate_half_width_m: float = 0.80
+    gate_half_height_m: float = 0.80
+
+    max_roll_rate_radps: float = RATE_SCALES_RADPS[0]
+    max_pitch_rate_radps: float = RATE_SCALES_RADPS[1]
+    max_yaw_rate_radps: float = RATE_SCALES_RADPS[2]
+    collective_range_g: float = 0.80
+    mass_scale_range: tuple[float, float] = (0.85, 1.15)
+    thrust_scale_range: tuple[float, float] = (0.85, 1.15)
+    linear_drag_range: tuple[float, float] = (0.05, 0.25)
+    rate_time_constant_s_range: tuple[float, float] = (0.06, 0.14)
+    action_response_range: tuple[float, float] = (0.45, 0.90)
+    wind_accel_mps2: float = 0.35
+
+    horizontal_fov_deg: float = 90.0
+    vertical_fov_deg: float = 70.0
+    vision_noise_std: float = 0.025
+    vision_dropout_probability: float = 0.08
+    detection_memory_s: float = DETECTION_AGE_SCALE_S
+
+    max_altitude_m: float = 4.0
+    max_lateral_m: float = 8.0
+    min_forward_m: float = -6.0
+    max_forward_m: float = 28.0
+    max_tilt_rad: float = 1.35
+    ground_impact_speed_mps: float = 1.5
+    soft_collision_fraction: float = 0.25
+
+    progress_reward: float = 12.0
+    gate_reward: float = 20.0
+    finish_reward: float = 40.0
+    forward_speed_reward: float = 0.10
+    visibility_reward: float = 0.02
+    camera_alignment_reward: float = 0.0
+    camera_alignment_exponent: float = 4.0
+    alive_reward: float = 0.002
+    angular_rate_penalty: float = 0.002
+    action_delta_penalty: float = 0.01
+    vertical_speed_penalty: float = 0.03
+    altitude_penalty: float = 2.0
+    collision_penalty: float = 8.0
+    out_of_bounds_penalty: float = 12.0
+
+
+class AIGPVectorEnv:
+    """A batched point-mass/body-rate quadrotor surrogate on one Torch device."""
+
+    actor_observation_dim = ACTOR_OBS_DIM
+    observation_dim = 32
+    action_dim = ACTION_DIM
+
+    def __init__(self, config: AIGPEnvConfig) -> None:
+        self.config = config
+        if config.actor_observation_mode == "live_features":
+            self.actor_observation_dim = ACTOR_OBS_DIM
+            self.actor_feature_names = ACTOR_FEATURE_NAMES
+        elif config.actor_observation_mode == "swift_teacher":
+            self.actor_observation_dim = SWIFT_TEACHER_OBS_DIM
+            self.actor_feature_names = SWIFT_TEACHER_FEATURE_NAMES
+        else:
+            raise ValueError(
+                "actor_observation_mode must be 'live_features' or 'swift_teacher'"
+            )
+        self.observation_dim = self.actor_observation_dim + 14
+        self.device = torch.device(config.device)
+        self.num_envs = config.num_envs
+        self.dtype = torch.float32
+        self.generator = torch.Generator(device=self.device)
+        self.generator.manual_seed(config.seed)
+        self.all_env_ids = torch.arange(self.num_envs, device=self.device)
+        self.rate_limits = torch.tensor(
+            (
+                config.max_roll_rate_radps,
+                config.max_pitch_rate_radps,
+                config.max_yaw_rate_radps,
+            ),
+            device=self.device,
+            dtype=self.dtype,
+        )
+        self.gravity_acceleration = torch.tensor(
+            (0.0, 0.0, -9.81), device=self.device, dtype=self.dtype
+        )
+        self.gravity_unit = torch.tensor(
+            (0.0, 0.0, -1.0), device=self.device, dtype=self.dtype
+        )
+        self.position_observation_scale = torch.tensor(
+            (20.0, 10.0, 5.0), device=self.device, dtype=self.dtype
+        )
+        self.tan_horizontal_half_fov = torch.tan(
+            torch.tensor(config.horizontal_fov_deg * pi / 360.0, device=self.device)
+        )
+        self.tan_vertical_half_fov = torch.tan(
+            torch.tensor(config.vertical_fov_deg * pi / 360.0, device=self.device)
+        )
+
+        self.base_gate_positions = torch.tensor(
+            config.gate_positions_m, device=self.device, dtype=self.dtype
+        )
+        if self.base_gate_positions.ndim != 2 or self.base_gate_positions.shape[1] != 3:
+            raise ValueError("gate_positions_m must have shape (gate_count, 3)")
+        self.gate_count = self.base_gate_positions.shape[0]
+        self.gate_normals = self._build_gate_normals(self.base_gate_positions)
+        self.gate_lateral, self.gate_vertical = self._build_gate_bases(self.gate_normals)
+
+        shape3 = (self.num_envs, 3)
+        self.position = torch.zeros(shape3, device=self.device)
+        self.velocity = torch.zeros(shape3, device=self.device)
+        self.attitude = torch.zeros(shape3, device=self.device)
+        self.angular_rate = torch.zeros(shape3, device=self.device)
+        self.previous_action = torch.zeros((self.num_envs, ACTION_DIM), device=self.device)
+        self.applied_action = torch.zeros_like(self.previous_action)
+        self.last_detection = torch.zeros((self.num_envs, 3), device=self.device)
+        self.detection_age = torch.full(
+            (self.num_envs,), config.detection_memory_s, device=self.device
+        )
+        self.has_taken_off = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        self.gate_index = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
+        self.gates_passed = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
+        self.steps = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
+        self.episode_return = torch.zeros(self.num_envs, device=self.device)
+        self.episode_progress = torch.zeros(self.num_envs, device=self.device)
+        self.episode_start_distance = torch.zeros(self.num_envs, device=self.device)
+
+        self.env_gate_positions = self.base_gate_positions.unsqueeze(0).repeat(
+            self.num_envs, 1, 1
+        )
+        self.mass_scale = torch.ones(self.num_envs, device=self.device)
+        self.thrust_scale = torch.ones(self.num_envs, device=self.device)
+        self.linear_drag = torch.full((self.num_envs,), 0.15, device=self.device)
+        self.rate_time_constant = torch.full((self.num_envs,), 0.10, device=self.device)
+        self.action_response = torch.full((self.num_envs,), 0.70, device=self.device)
+        self.wind_acceleration = torch.zeros(shape3, device=self.device)
+
+        self.curriculum_progress = 0.0
+        self.randomization_scale = 0.0
+        self.near_gate_spawn_ratio = config.near_gate_spawn_ratio_start
+        self.soft_collisions = config.soft_collision_fraction > 0.0
+        self.reset()
+
+    def set_curriculum(self, progress: float) -> None:
+        progress = min(max(float(progress), 0.0), 1.0)
+        self.curriculum_progress = progress
+        self.randomization_scale = progress if self.config.randomization else 0.0
+        start = self.config.near_gate_spawn_ratio_start
+        end = self.config.near_gate_spawn_ratio_end
+        self.near_gate_spawn_ratio = start + (end - start) * progress
+        self.soft_collisions = progress < self.config.soft_collision_fraction
+
+    def reset(self, env_ids: torch.Tensor | None = None) -> tuple[torch.Tensor, dict[str, Any]]:
+        if env_ids is None:
+            env_ids = self.all_env_ids
+        self._reset_envs(env_ids)
+        return self._observe(), {}
+
+    def _reset_envs(self, env_ids: torch.Tensor) -> None:
+        if env_ids.numel() == 0:
+            return
+
+        count = env_ids.numel()
+        self._randomize_track(env_ids)
+        self._randomize_dynamics(env_ids)
+
+        self.gate_index[env_ids] = 0
+        self.gates_passed[env_ids] = 0
+        self.steps[env_ids] = 0
+        self.episode_return[env_ids] = 0.0
+        self.episode_progress[env_ids] = 0.0
+        self.previous_action[env_ids] = 0.0
+        self.applied_action[env_ids] = 0.0
+        self.attitude[env_ids] = 0.0
+        self.angular_rate[env_ids] = 0.0
+        self.last_detection[env_ids] = 0.0
+        self.detection_age[env_ids] = self.config.detection_memory_s
+        self.has_taken_off[env_ids] = False
+
+        start = torch.tensor(
+            self.config.start_position_m, device=self.device, dtype=self.dtype
+        ).expand(count, -1)
+        noise_scale = torch.tensor(
+            self.config.start_position_noise_m, device=self.device, dtype=self.dtype
+        )
+        start_noise = self._rand_uniform((count, 3), -1.0, 1.0) * noise_scale
+        positions = start + start_noise
+        velocities = self._rand_uniform(
+            (count, 3),
+            -self.config.start_velocity_noise_mps,
+            self.config.start_velocity_noise_mps,
+        )
+
+        near_mask = self._rand_uniform((count,), 0.0, 1.0) < self.near_gate_spawn_ratio
+        if near_mask.any():
+            near_ids = env_ids[near_mask]
+            near_count = near_ids.numel()
+            random_gate = torch.randint(
+                0,
+                self.gate_count,
+                (near_count,),
+                generator=self.generator,
+                device=self.device,
+            )
+            self.gate_index[near_ids] = random_gate
+            gate_pos = self.env_gate_positions[near_ids, random_gate]
+            normal = self.gate_normals[random_gate]
+            lateral = self.gate_lateral[random_gate]
+            vertical = self.gate_vertical[random_gate]
+            distance = self._rand_uniform(
+                (near_count, 1),
+                self.config.near_gate_distance_m[0],
+                self.config.near_gate_distance_m[1],
+            )
+            lateral_offset = self._rand_uniform((near_count, 1), -0.45, 0.45)
+            vertical_offset = self._rand_uniform((near_count, 1), -0.35, 0.35)
+            positions[near_mask] = (
+                gate_pos
+                - normal * distance
+                + lateral * lateral_offset
+                + vertical * vertical_offset
+            )
+            velocities[near_mask] = self._rand_uniform((near_count, 3), -0.3, 0.3)
+            self.has_taken_off[near_ids] = True
+
+        positions[:, 2].clamp_(min=0.03)
+        self.position[env_ids] = positions
+        self.velocity[env_ids] = velocities
+        if self.config.align_spawn_heading_to_gate:
+            target = self.env_gate_positions[env_ids, self.gate_index[env_ids]]
+            direction = target - positions
+            self.attitude[env_ids, 0:2] = self._rand_uniform(
+                (count, 2),
+                -self.config.spawn_tilt_noise_rad,
+                self.config.spawn_tilt_noise_rad,
+            )
+            self.attitude[env_ids, 2] = (
+                torch.atan2(direction[:, 1], direction[:, 0])
+                + self._rand_uniform(
+                    (count,),
+                    -self.config.spawn_yaw_noise_rad,
+                    self.config.spawn_yaw_noise_rad,
+                )
+            )
+        self.episode_start_distance[env_ids] = self._distance_to_active_gate(env_ids)
+
+    def step(
+        self, raw_action: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, dict[str, torch.Tensor]]:
+        if raw_action.shape != (self.num_envs, ACTION_DIM):
+            raise ValueError(
+                f"expected action shape {(self.num_envs, ACTION_DIM)}, got {tuple(raw_action.shape)}"
+            )
+        action = torch.tanh(raw_action)
+        action_delta = action - self.previous_action
+        previous_position = self.position.clone()
+        previous_distance = self._distance_to_active_gate()
+        active_gate_before = self.gate_index.clone()
+
+        ground_contact = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        impact_speed = torch.zeros(self.num_envs, device=self.device)
+        sub_dt = self.config.dt / self.config.physics_substeps
+        for _ in range(self.config.physics_substeps):
+            response = self.action_response.unsqueeze(1)
+            self.applied_action += response * (action - self.applied_action)
+            desired_rate = self.applied_action[:, 1:] * self.rate_limits
+            rate_alpha = torch.clamp(
+                sub_dt / self.rate_time_constant, min=0.0, max=1.0
+            ).unsqueeze(1)
+            self.angular_rate += rate_alpha * (desired_rate - self.angular_rate)
+            self.attitude += self.angular_rate * sub_dt
+            self.attitude[:, 2] = torch.remainder(self.attitude[:, 2] + pi, 2 * pi) - pi
+
+            rotation = self._body_to_world_rotation(self.attitude)
+            thrust_direction = rotation[:, :, 2]
+            collective_acceleration = (
+                9.81
+                * (
+                    1.0
+                    + self.config.collective_range_g
+                    * self.applied_action[:, 0]
+                ).clamp(min=0.15)
+                * self.thrust_scale
+                / self.mass_scale
+            )
+            acceleration = (
+                thrust_direction * collective_acceleration.unsqueeze(1)
+                + self.gravity_acceleration
+                - self.linear_drag.unsqueeze(1) * self.velocity
+                + self.wind_acceleration
+            )
+            self.velocity += acceleration * sub_dt
+            self.position += self.velocity * sub_dt
+
+            contact_now = self.position[:, 2] < 0.0
+            impact_speed = torch.maximum(impact_speed, torch.where(
+                contact_now, (-self.velocity[:, 2]).clamp(min=0.0), torch.zeros_like(impact_speed)
+            ))
+            ground_contact |= contact_now
+            if contact_now.any():
+                self.position[contact_now, 2] = 0.0
+                self.velocity[contact_now, 2] = self.velocity[contact_now, 2].clamp(min=0.0)
+                self.velocity[contact_now, :2] *= 0.80
+
+        self.steps += 1
+        self.has_taken_off |= self.position[:, 2] > 0.15
+
+        gate_position = self.env_gate_positions[
+            self.all_env_ids, active_gate_before
+        ]
+        gate_normal = self.gate_normals[active_gate_before]
+        gate_lateral = self.gate_lateral[active_gate_before]
+        gate_vertical = self.gate_vertical[active_gate_before]
+        previous_plane = ((previous_position - gate_position) * gate_normal).sum(1)
+        current_plane = ((self.position - gate_position) * gate_normal).sum(1)
+        gate_offset = self.position - gate_position
+        inside_gate = (
+            ((gate_offset * gate_lateral).sum(1).abs() <= self.config.gate_half_width_m)
+            & ((gate_offset * gate_vertical).sum(1).abs() <= self.config.gate_half_height_m)
+        )
+        passed_gate = (previous_plane < 0.0) & (current_plane >= 0.0) & inside_gate
+        self.gates_passed += passed_gate.long()
+        self.gate_index = torch.minimum(
+            self.gate_index + passed_gate.long(),
+            torch.full_like(self.gate_index, self.gate_count - 1),
+        )
+        finished = passed_gate & (active_gate_before == self.gate_count - 1)
+
+        current_distance = torch.linalg.vector_norm(self.position - gate_position, dim=1)
+        progress = previous_distance - current_distance
+        self.episode_progress += progress
+        direction_to_gate = gate_position - previous_position
+        direction_to_gate /= torch.linalg.vector_norm(
+            direction_to_gate, dim=1, keepdim=True
+        ).clamp(min=1e-4)
+        forward_speed = (self.velocity * direction_to_gate).sum(1).clamp(min=0.0)
+
+        tilt = torch.linalg.vector_norm(self.attitude[:, :2], dim=1)
+        hard_ground_crash = ground_contact & (
+            self.has_taken_off
+            | (impact_speed > self.config.ground_impact_speed_mps)
+        ) & (self.steps > 5)
+        tilt_crash = (tilt > self.config.max_tilt_rad) & self.has_taken_off
+        collision = hard_ground_crash | tilt_crash
+        out_of_bounds = (
+            (self.position[:, 2] > self.config.max_altitude_m)
+            | (self.position[:, 1].abs() > self.config.max_lateral_m)
+            | (self.position[:, 0] < self.config.min_forward_m)
+            | (self.position[:, 0] > self.config.max_forward_m)
+        )
+
+        projected_gate, visible, confidence = self._project_gate(update_memory=False)
+        camera_alignment = torch.exp(
+            -self.config.camera_alignment_exponent
+            * projected_gate[:, :2].square().sum(1)
+        ) * visible.float()
+        reward = (
+            self.config.progress_reward * progress
+            + self.config.gate_reward * passed_gate.float()
+            + self.config.finish_reward * finished.float()
+            + self.config.forward_speed_reward * forward_speed
+            + self.config.visibility_reward * visible.float() * confidence
+            + self.config.camera_alignment_reward * camera_alignment
+            + self.config.alive_reward
+            - self.config.angular_rate_penalty
+            * self.angular_rate.square().sum(1)
+            - self.config.action_delta_penalty * action_delta.square().sum(1)
+            - self.config.vertical_speed_penalty
+            * torch.relu(self.velocity[:, 2].abs() - 2.0).square()
+            - self.config.altitude_penalty
+            * torch.relu(self.position[:, 2] - self.config.max_altitude_m).square()
+            - self.config.collision_penalty * collision.float()
+            - self.config.out_of_bounds_penalty * out_of_bounds.float()
+        )
+        self.episode_return += reward
+        self.previous_action.copy_(action)
+
+        if self.soft_collisions:
+            recover = collision & ~out_of_bounds & ~finished
+            if recover.any():
+                self.attitude[recover, :2].clamp_(-0.65, 0.65)
+                self.angular_rate[recover] *= 0.20
+                self.velocity[recover] *= 0.50
+                self.position[recover, 2].clamp_(min=0.05)
+            terminated = finished | out_of_bounds
+        else:
+            terminated = finished | out_of_bounds | collision
+        truncated = self.steps >= self.config.max_episode_steps
+        done = terminated | truncated
+        info = {
+            "done": done.clone(),
+            "success": finished.clone(),
+            "collision": collision.clone(),
+            "out_of_bounds": out_of_bounds.clone(),
+            "passed_gate": passed_gate.clone(),
+            "gates_passed": self.gates_passed.clone(),
+            "episode_return": self.episode_return.clone(),
+            "distance_reduction": self.episode_progress.clone(),
+            "position": self.position.clone(),
+            "velocity": self.velocity.clone(),
+            "applied_action": self.applied_action.clone(),
+        }
+        if done.any():
+            self._reset_envs(torch.where(done)[0])
+        observation = self._observe()
+        return observation, reward, terminated, truncated, info
+
+    def _observe(self) -> torch.Tensor:
+        rotation = self._body_to_world_rotation(self.attitude)
+        body_velocity = torch.bmm(
+            rotation.transpose(1, 2), self.velocity.unsqueeze(2)
+        ).squeeze(2)
+        gravity_world = self.gravity_unit.expand(
+            self.num_envs, -1
+        )
+        gravity_body = torch.bmm(
+            rotation.transpose(1, 2), gravity_world.unsqueeze(2)
+        ).squeeze(2)
+        detection, _, confidence = self._project_gate(update_memory=True)
+
+        if self.config.actor_observation_mode == "swift_teacher":
+            corners_world = self._active_gate_corners_world()
+            corners_body = torch.bmm(
+                rotation.transpose(1, 2),
+                (corners_world - self.position.unsqueeze(1)).transpose(1, 2),
+            ).transpose(1, 2)
+            actor_obs = torch.cat(
+                (
+                    self.position / self.position_observation_scale,
+                    self.velocity / VELOCITY_SCALE_MPS,
+                    rotation.reshape(self.num_envs, 9),
+                    (corners_body / 10.0).reshape(self.num_envs, 12),
+                    self.previous_action,
+                ),
+                dim=1,
+            )
+        else:
+            actor_obs = torch.cat(
+                (
+                    (body_velocity / VELOCITY_SCALE_MPS).clamp(-2.0, 2.0),
+                    gravity_body,
+                    self.angular_rate / self.rate_limits,
+                    detection[:, :2].clamp(-1.5, 1.5),
+                    detection[:, 2:3].clamp(0.0, 1.0),
+                    confidence.unsqueeze(1),
+                    (self.detection_age / self.config.detection_memory_s)
+                    .clamp(0.0, 1.0)
+                    .unsqueeze(1),
+                    self.previous_action,
+                ),
+                dim=1,
+            )
+
+        active_gate_position = self._active_gate_position()
+        gate_relative_world = active_gate_position - self.position
+        gate_relative_body = torch.bmm(
+            rotation.transpose(1, 2), gate_relative_world.unsqueeze(2)
+        ).squeeze(2)
+        distance = torch.linalg.vector_norm(gate_relative_world, dim=1, keepdim=True)
+        gate_fraction = (
+            self.gate_index.float() / max(self.gate_count - 1, 1)
+        ).unsqueeze(1)
+        privileged = torch.cat(
+            (
+                gate_relative_body / 10.0,
+                distance / 10.0,
+                self.position / self.position_observation_scale,
+                self.velocity / VELOCITY_SCALE_MPS,
+                self.attitude / pi,
+                gate_fraction,
+            ),
+            dim=1,
+        )
+        observation = torch.cat((actor_obs, privileged), dim=1)
+        if observation.shape[1] != self.observation_dim:
+            raise RuntimeError(
+                f"observation contract mismatch: expected {self.observation_dim}, "
+                f"got {observation.shape[1]}"
+            )
+        return observation
+
+    def _project_gate(
+        self, *, update_memory: bool
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        rotation = self._body_to_world_rotation(self.attitude)
+        relative_world = self._active_gate_position() - self.position
+        relative_body = torch.bmm(
+            rotation.transpose(1, 2), relative_world.unsqueeze(2)
+        ).squeeze(2)
+        depth = relative_body[:, 0]
+        tan_h = self.tan_horizontal_half_fov
+        tan_v = self.tan_vertical_half_fov
+        safe_depth = depth.clamp(min=0.05)
+        center_x = -relative_body[:, 1] / (safe_depth * tan_h)
+        center_y = -relative_body[:, 2] / (safe_depth * tan_v)
+        area = (
+            self.config.gate_half_width_m
+            * self.config.gate_half_height_m
+            / (safe_depth.square() * tan_h * tan_v)
+        ).clamp(0.0, 1.0)
+        visible = (
+            (depth > 0.05)
+            & (center_x.abs() <= 1.0)
+            & (center_y.abs() <= 1.0)
+        )
+        confidence = (
+            torch.exp(-0.35 * (center_x.square() + center_y.square()))
+            * visible.float()
+        )
+
+        if self.config.randomization and self.randomization_scale > 0.0:
+            noise_std = self.config.vision_noise_std * self.randomization_scale
+            center_x += self._rand_normal((self.num_envs,)) * noise_std
+            center_y += self._rand_normal((self.num_envs,)) * noise_std
+            area *= (
+                1.0 + self._rand_normal((self.num_envs,)) * noise_std
+            ).clamp(0.6, 1.4)
+            dropout = self._rand_uniform((self.num_envs,), 0.0, 1.0) < (
+                self.config.vision_dropout_probability * self.randomization_scale
+            )
+            visible &= ~dropout
+            confidence *= visible.float()
+
+        fresh_detection = torch.stack((center_x, center_y, area), dim=1)
+        if update_memory:
+            if visible.any():
+                self.last_detection[visible] = fresh_detection[visible]
+            self.detection_age = torch.where(
+                visible,
+                torch.zeros_like(self.detection_age),
+                (self.detection_age + self.config.dt).clamp(
+                    max=self.config.detection_memory_s
+                ),
+            )
+        age_decay = torch.exp(
+            -self.detection_age / max(self.config.detection_memory_s, 1e-3)
+        )
+        tracked_confidence = torch.where(visible, confidence, confidence * age_decay)
+        detection = torch.where(
+            visible.unsqueeze(1), fresh_detection, self.last_detection
+        )
+        return detection, visible, tracked_confidence
+
+    def _active_gate_position(self) -> torch.Tensor:
+        return self.env_gate_positions[
+            self.all_env_ids, self.gate_index
+        ]
+
+    def _active_gate_corners_world(self) -> torch.Tensor:
+        gate_index = self.gate_index
+        center = self._active_gate_position()
+        lateral = self.gate_lateral[gate_index] * self.config.gate_half_width_m
+        vertical = self.gate_vertical[gate_index] * self.config.gate_half_height_m
+        return torch.stack(
+            (
+                center - lateral + vertical,
+                center + lateral + vertical,
+                center + lateral - vertical,
+                center - lateral - vertical,
+            ),
+            dim=1,
+        )
+
+    def _distance_to_active_gate(self, env_ids: torch.Tensor | None = None) -> torch.Tensor:
+        if env_ids is None:
+            return torch.linalg.vector_norm(
+                self._active_gate_position() - self.position, dim=1
+            )
+        gate_position = self.env_gate_positions[env_ids, self.gate_index[env_ids]]
+        return torch.linalg.vector_norm(gate_position - self.position[env_ids], dim=1)
+
+    def _randomize_track(self, env_ids: torch.Tensor) -> None:
+        count = env_ids.numel()
+        jitter_scale = torch.tensor(
+            self.config.gate_jitter_m, device=self.device, dtype=self.dtype
+        )
+        jitter = self._rand_uniform((count, self.gate_count, 3), -1.0, 1.0)
+        jitter *= jitter_scale * self.randomization_scale
+        self.env_gate_positions[env_ids] = self.base_gate_positions.unsqueeze(0) + jitter
+
+    def _randomize_dynamics(self, env_ids: torch.Tensor) -> None:
+        count = env_ids.numel()
+        self.mass_scale[env_ids] = self._scaled_random_range(
+            count, self.config.mass_scale_range, 1.0
+        )
+        self.thrust_scale[env_ids] = self._scaled_random_range(
+            count, self.config.thrust_scale_range, 1.0
+        )
+        self.linear_drag[env_ids] = self._scaled_random_range(
+            count, self.config.linear_drag_range, 0.15
+        )
+        self.rate_time_constant[env_ids] = self._scaled_random_range(
+            count, self.config.rate_time_constant_s_range, 0.10
+        )
+        self.action_response[env_ids] = self._scaled_random_range(
+            count, self.config.action_response_range, 0.70
+        )
+        wind = self._rand_uniform((count, 3), -1.0, 1.0)
+        wind[:, 2] *= 0.35
+        self.wind_acceleration[env_ids] = (
+            wind * self.config.wind_accel_mps2 * self.randomization_scale
+        )
+
+    def _scaled_random_range(
+        self, count: int, limits: tuple[float, float], nominal: float
+    ) -> torch.Tensor:
+        sample = self._rand_uniform((count,), limits[0], limits[1])
+        return nominal + (sample - nominal) * self.randomization_scale
+
+    def _rand_uniform(
+        self, shape: tuple[int, ...], low: float, high: float
+    ) -> torch.Tensor:
+        return low + (high - low) * torch.rand(
+            shape, device=self.device, generator=self.generator
+        )
+
+    def _rand_normal(self, shape: tuple[int, ...]) -> torch.Tensor:
+        return torch.randn(shape, device=self.device, generator=self.generator)
+
+    @staticmethod
+    def _body_to_world_rotation(attitude: torch.Tensor) -> torch.Tensor:
+        roll = attitude[:, 0]
+        pitch = -attitude[:, 1]  # AI-GP convention: negative pitch rate is forward.
+        yaw = attitude[:, 2]
+        cr, sr = torch.cos(roll), torch.sin(roll)
+        cp, sp = torch.cos(pitch), torch.sin(pitch)
+        cy, sy = torch.cos(yaw), torch.sin(yaw)
+        return torch.stack(
+            (
+                cy * cp,
+                cy * sp * sr - sy * cr,
+                cy * sp * cr + sy * sr,
+                sy * cp,
+                sy * sp * sr + cy * cr,
+                sy * sp * cr - cy * sr,
+                -sp,
+                cp * sr,
+                cp * cr,
+            ),
+            dim=1,
+        ).reshape(-1, 3, 3)
+
+    @staticmethod
+    def _build_gate_normals(gates: torch.Tensor) -> torch.Tensor:
+        previous = torch.cat((gates[:1] - torch.tensor((4.0, 0.0, 0.0), device=gates.device), gates[:-1]))
+        normals = gates - previous
+        return normals / torch.linalg.vector_norm(normals, dim=1, keepdim=True).clamp(min=1e-6)
+
+    @staticmethod
+    def _build_gate_bases(normals: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        up = torch.tensor((0.0, 0.0, 1.0), device=normals.device).expand_as(normals)
+        lateral = torch.linalg.cross(up, normals, dim=1)
+        fallback = torch.tensor((0.0, 1.0, 0.0), device=normals.device).expand_as(normals)
+        lateral_norm = torch.linalg.vector_norm(lateral, dim=1, keepdim=True)
+        lateral = torch.where(lateral_norm > 1e-4, lateral / lateral_norm.clamp(min=1e-6), fallback)
+        vertical = torch.linalg.cross(normals, lateral, dim=1)
+        vertical /= torch.linalg.vector_norm(vertical, dim=1, keepdim=True).clamp(min=1e-6)
+        return lateral, vertical

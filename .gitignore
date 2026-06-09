@@ -40,3 +40,7 @@ ssh_key_runpod.pub
 Thumbs.db
 ssh_key_runpod
 ssh_key_runpod.pub
+
+# Local AI-GP captures, extracted references, and machine-specific agent state
+tmp/
+agents/*.json

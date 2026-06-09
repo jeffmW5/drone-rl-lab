@@ -1,0 +1,63 @@
+name: ai_gp_001_gpu_ppo
+backend: ai_gp
+hypothesis: >
+  A sensor-realistic actor with privileged critic state can learn immediate
+  forward launch and sequential gate passage in a randomized surrogate. The
+  policy uses body-rate and collective-offset actions so the learned controller
+  can later be mapped onto the AI-GP command contract after live calibration.
+budget_seconds: 7200
+
+ai_gp:
+  device: cuda
+  allow_cpu: false
+  seed: 42
+  total_timesteps: 100000000
+  curriculum_steps: 30000000
+  num_envs: 4096
+  num_steps: 32
+  learning_rate: 0.0003
+  anneal_lr: true
+  gamma: 0.99
+  gae_lambda: 0.95
+  update_epochs: 4
+  num_minibatches: 32
+  clip_coef: 0.2
+  ent_coef: 0.005
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  initial_logstd: -0.7
+  target_kl: 0.02
+  hidden_sizes: [128, 128]
+  eval_interval_iterations: 25
+  eval_episodes: 256
+  eval_num_envs: 256
+  eval_randomization: false
+
+  env:
+    dt: 0.02
+    physics_substeps: 2
+    max_episode_steps: 500
+    randomization: true
+
+    # Placeholder surrogate track. Replace from measured simulator track data.
+    start_position_m: [-2.0, 0.0, 0.03]
+    gate_positions_m:
+      - [4.0, 0.0, 1.25]
+      - [9.0, 1.5, 1.60]
+      - [14.0, -1.0, 1.20]
+      - [19.0, 0.5, 1.50]
+
+    near_gate_spawn_ratio_start: 0.70
+    near_gate_spawn_ratio_end: 0.10
+    soft_collision_fraction: 0.25
+    vision_noise_std: 0.025
+    vision_dropout_probability: 0.08
+
+    progress_reward: 12.0
+    gate_reward: 20.0
+    finish_reward: 40.0
+    forward_speed_reward: 0.10
+    visibility_reward: 0.02
+    alive_reward: 0.002
+    collision_penalty: 8.0
+    out_of_bounds_penalty: 12.0

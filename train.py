@@ -30,8 +30,10 @@ def main():
         from train_hover import run
     elif backend == "racing":
         from train_racing import run
+    elif backend == "ai_gp":
+        from train_ai_gp import run
     else:
-        print(f"ERROR: Unknown backend '{backend}'. Use 'hover' or 'racing'.")
+        print(f"ERROR: Unknown backend '{backend}'. Use 'hover', 'racing', or 'ai_gp'.")
         sys.exit(1)
 
     print(f"[Dispatcher] Backend: {backend}")
