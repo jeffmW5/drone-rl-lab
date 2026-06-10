@@ -38,6 +38,38 @@ class SwiftTeacherEnvTests(unittest.TestCase):
         observation, reward, _, _, _ = env.step(torch.zeros((8, 4)))
         self.assertTrue(torch.isfinite(observation).all())
         self.assertTrue(torch.isfinite(reward).all())
+        live_observation = env.live_actor_observation()
+        self.assertEqual(live_observation.shape, (8, 18))
+        self.assertTrue(torch.isfinite(live_observation).all())
+
+    def test_gate_crossing_info_contains_time_series_state(self) -> None:
+        env = AIGPVectorEnv(
+            AIGPEnvConfig(
+                actor_observation_mode="swift_teacher",
+                num_envs=1,
+                device="cpu",
+                randomization=False,
+            )
+        )
+        env.position[0] = torch.tensor((3.99, 0.0, 1.25))
+        env.velocity[0] = torch.tensor((2.0, 0.0, 0.0))
+        env.attitude[0] = 0.0
+        env.angular_rate[0] = 0.0
+        env.applied_action[0] = 0.0
+        env.previous_action[0] = 0.0
+        env.gate_index[0] = 0
+        env.gates_passed[0] = 0
+
+        _, _, _, _, info = env.step(torch.zeros((1, 4)))
+
+        self.assertTrue(bool(info["passed_gate"][0]))
+        self.assertEqual(int(info["active_gate_index"][0]), 0)
+        self.assertEqual(int(info["gates_passed"][0]), 1)
+        self.assertGreaterEqual(float(info["position"][0, 0]), 4.0)
+        self.assertLess(abs(float(info["gate_lateral_offset"][0])), 1e-5)
+        self.assertLess(abs(float(info["gate_vertical_offset"][0])), 0.01)
+        self.assertTrue(torch.isfinite(info["velocity"]).all())
+        self.assertTrue(torch.isfinite(info["attitude"]).all())
 
 
 if __name__ == "__main__":

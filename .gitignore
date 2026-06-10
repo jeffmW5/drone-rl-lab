@@ -10,6 +10,10 @@ results/**/*.zip
 # Per-step logs (can be large — regenerate by rerunning experiment)
 results/**/steps.csv
 
+# AI-GP checkpoints and time-series telemetry are pulled locally after RunPod runs.
+# Keep compact conclusions in docs rather than committing generated artifacts.
+results/ai_gp_*/
+
 # PyBullet temp files
 *.bullet
 

@@ -121,6 +121,11 @@ For the lightweight AI-GP backend from Windows:
 This uploads only the AI-GP trainer, package, and selected config. It does not
 clone or install `lsy_drone_racing`.
 
+The June 9, 2026 10M benchmark is documented in
+`docs/AI_GP_10M_BENCHMARK_2026_06_09.md`. The privileged teacher passed the GPU
+surrogate, but both attempted 18D student transfers failed. There is currently
+no policy approved for Windows simulator commands.
+
 Keep mutable/private artifacts in the home directory, not the VirtualBox
 shared folder. In practice this means:
 - venv at `/home/jeff/drones-venv`

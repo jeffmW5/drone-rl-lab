@@ -25,7 +25,7 @@
 set -euo pipefail
 
 # ── Config ────────────────────────────────────────────────────────────────────
-REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 GPU_COUNT="${RUNPOD_GPU_COUNT:-1}"
 RUNPOD_CLOUD_TYPE="${RUNPOD_CLOUD_TYPE:-SECURE}"
 POLL_INTERVAL=10   # seconds between status checks
@@ -77,10 +77,19 @@ check_env() {
         err "  ${HOME}/.ssh/id_ed25519"
         exit 1
     fi
-    # Load persisted pod ID from file if env var not set
+    # Load the persisted pod ID when the environment is empty or stale.
     if [ -z "${RUNPOD_POD_ID:-}" ] && [ -f "$POD_ID_FILE" ]; then
         RUNPOD_POD_ID=$(cat "$POD_ID_FILE")
-        warn "Loaded pod ID from $POD_ID_FILE: $RUNPOD_POD_ID"
+        warn "Loaded pod ID from $POD_ID_FILE: $RUNPOD_POD_ID" >&2
+    elif [ -n "${RUNPOD_POD_ID:-}" ] \
+        && ! pod_exists "$RUNPOD_POD_ID" \
+        && [ -s "$POD_ID_FILE" ]; then
+        local persisted_pod_id
+        persisted_pod_id=$(tr -d '\r\n' < "$POD_ID_FILE")
+        if [ -n "$persisted_pod_id" ] && pod_exists "$persisted_pod_id"; then
+            warn "Configured pod no longer exists; using $POD_ID_FILE" >&2
+            RUNPOD_POD_ID="$persisted_pod_id"
+        fi
     fi
     if [ -z "${RUNPOD_POD_ID:-}" ]; then
         err "RUNPOD_POD_ID not set. Add to ~/.bashrc:"
@@ -124,7 +133,7 @@ save_pod_id() {
 
 create_new_pod() {
     local gpu_type="$1"
-    log "Trying to create new pod with GPU: $gpu_type"
+    log "Trying to create new pod with GPU: $gpu_type" >&2
     local public_key
     public_key=$(ssh-keygen -y -f "$DEPLOY_KEY" 2>/dev/null | tr -d '\n')
     if [ -z "$public_key" ]; then
@@ -452,4 +461,6 @@ main() {
     log "Check outbox/STATUS.md for results."
 }
 
-main "$@"
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    main "$@"
+fi

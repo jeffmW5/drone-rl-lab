@@ -82,6 +82,13 @@ results/<experiment>/
 
 ## Current Limitation
 
-The workflow has been syntax-tested locally but not launched against a billable
-pod in this setup pass. The first remote run must verify installed PyTorch,
-actual GPU memory, environment throughput, and checkpoint creation.
+The workflow was exercised on an RTX 3090 on June 9, 2026. CUDA smoke,
+checkpoint creation, result pull, and deterministic telemetry evaluation all
+worked.
+
+The generic `manage_pod.sh` replacement-pod path was also fixed so progress
+logging cannot corrupt a captured and persisted pod ID.
+
+RunPod success does not promote a policy to Windows control. Only an exported
+18D student that passes Windows simulator shadow and bounded evaluation can be
+marked command-eligible.

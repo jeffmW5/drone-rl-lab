@@ -61,7 +61,23 @@ def _save_checkpoint(
     global_step: int,
     evaluation: dict[str, float] | None,
     actor_features: tuple[str, ...],
+    metadata_extra: dict[str, Any] | None = None,
 ) -> None:
+    metadata = {
+        "schema_version": 1,
+        "observation_dim": model.observation_dim,
+        "actor_observation_dim": model.actor_observation_dim,
+        "action_dim": model.action_dim,
+        "hidden_sizes": list(model.hidden_sizes),
+        "actor_features": list(actor_features),
+        "action_names": list(ACTION_NAMES),
+        "action_semantics": (
+            "tanh-normalized [collective offset, roll rate, pitch rate, yaw rate]; "
+            "negative pitch is forward"
+        ),
+    }
+    if metadata_extra:
+        metadata.update(metadata_extra)
     torch.save(
         {
             "model_state_dict": model.state_dict(),
@@ -69,19 +85,7 @@ def _save_checkpoint(
             "global_step": global_step,
             "evaluation": evaluation,
             "config": config,
-            "metadata": {
-                "schema_version": 1,
-                "observation_dim": model.observation_dim,
-                "actor_observation_dim": model.actor_observation_dim,
-                "action_dim": model.action_dim,
-                "hidden_sizes": list(model.hidden_sizes),
-                "actor_features": list(actor_features),
-                "action_names": list(ACTION_NAMES),
-                "action_semantics": (
-                    "tanh-normalized [collective offset, roll rate, pitch rate, yaw rate]; "
-                    "negative pitch is forward"
-                ),
-            },
+            "metadata": metadata,
         },
         path,
     )

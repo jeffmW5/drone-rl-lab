@@ -360,9 +360,11 @@ class AIGPVectorEnv:
         previous_plane = ((previous_position - gate_position) * gate_normal).sum(1)
         current_plane = ((self.position - gate_position) * gate_normal).sum(1)
         gate_offset = self.position - gate_position
+        gate_lateral_offset = (gate_offset * gate_lateral).sum(1)
+        gate_vertical_offset = (gate_offset * gate_vertical).sum(1)
         inside_gate = (
-            ((gate_offset * gate_lateral).sum(1).abs() <= self.config.gate_half_width_m)
-            & ((gate_offset * gate_vertical).sum(1).abs() <= self.config.gate_half_height_m)
+            (gate_lateral_offset.abs() <= self.config.gate_half_width_m)
+            & (gate_vertical_offset.abs() <= self.config.gate_half_height_m)
         )
         passed_gate = (previous_plane < 0.0) & (current_plane >= 0.0) & inside_gate
         self.gates_passed += passed_gate.long()
@@ -439,11 +441,17 @@ class AIGPVectorEnv:
             "collision": collision.clone(),
             "out_of_bounds": out_of_bounds.clone(),
             "passed_gate": passed_gate.clone(),
+            "active_gate_index": active_gate_before.clone(),
+            "gate_plane_offset": current_plane.clone(),
+            "gate_lateral_offset": gate_lateral_offset.clone(),
+            "gate_vertical_offset": gate_vertical_offset.clone(),
             "gates_passed": self.gates_passed.clone(),
             "episode_return": self.episode_return.clone(),
             "distance_reduction": self.episode_progress.clone(),
             "position": self.position.clone(),
             "velocity": self.velocity.clone(),
+            "attitude": self.attitude.clone(),
+            "angular_rate": self.angular_rate.clone(),
             "applied_action": self.applied_action.clone(),
         }
         if done.any():
@@ -481,20 +489,8 @@ class AIGPVectorEnv:
                 dim=1,
             )
         else:
-            actor_obs = torch.cat(
-                (
-                    (body_velocity / VELOCITY_SCALE_MPS).clamp(-2.0, 2.0),
-                    gravity_body,
-                    self.angular_rate / self.rate_limits,
-                    detection[:, :2].clamp(-1.5, 1.5),
-                    detection[:, 2:3].clamp(0.0, 1.0),
-                    confidence.unsqueeze(1),
-                    (self.detection_age / self.config.detection_memory_s)
-                    .clamp(0.0, 1.0)
-                    .unsqueeze(1),
-                    self.previous_action,
-                ),
-                dim=1,
+            actor_obs = self._build_live_actor_observation(
+                body_velocity, gravity_body, detection, confidence
             )
 
         active_gate_position = self._active_gate_position()
@@ -524,6 +520,52 @@ class AIGPVectorEnv:
                 f"got {observation.shape[1]}"
             )
         return observation
+
+    def live_actor_observation(self) -> torch.Tensor:
+        """Return the deployable 18D observation without advancing sensor memory."""
+
+        rotation = self._body_to_world_rotation(self.attitude)
+        body_velocity = torch.bmm(
+            rotation.transpose(1, 2), self.velocity.unsqueeze(2)
+        ).squeeze(2)
+        gravity_world = self.gravity_unit.expand(self.num_envs, -1)
+        gravity_body = torch.bmm(
+            rotation.transpose(1, 2), gravity_world.unsqueeze(2)
+        ).squeeze(2)
+        detection, _, confidence = self._project_gate(update_memory=False)
+        return self._build_live_actor_observation(
+            body_velocity, gravity_body, detection, confidence
+        )
+
+    def _build_live_actor_observation(
+        self,
+        body_velocity: torch.Tensor,
+        gravity_body: torch.Tensor,
+        detection: torch.Tensor,
+        confidence: torch.Tensor,
+    ) -> torch.Tensor:
+        actor_observation = torch.cat(
+            (
+                (body_velocity / VELOCITY_SCALE_MPS).clamp(-2.0, 2.0),
+                gravity_body,
+                self.angular_rate / self.rate_limits,
+                detection[:, :2].clamp(-1.5, 1.5),
+                detection[:, 2:3].clamp(0.0, 1.0),
+                confidence.unsqueeze(1),
+                (self.detection_age / self.config.detection_memory_s)
+                .clamp(0.0, 1.0)
+                .unsqueeze(1),
+                self.previous_action,
+            ),
+            dim=1,
+        )
+        if actor_observation.shape != (self.num_envs, ACTOR_OBS_DIM):
+            raise RuntimeError(
+                "live actor observation contract mismatch: "
+                f"expected {(self.num_envs, ACTOR_OBS_DIM)}, "
+                f"got {tuple(actor_observation.shape)}"
+            )
+        return actor_observation
 
     def _project_gate(
         self, *, update_memory: bool
