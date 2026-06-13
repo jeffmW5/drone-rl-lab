@@ -126,6 +126,11 @@ The June 9, 2026 10M benchmark is documented in
 surrogate, but both attempted 18D student transfers failed. There is currently
 no policy approved for Windows simulator commands.
 
+The June 13 temporal transfer benchmark is documented in
+`docs/AI_GP_TEMPORAL_STUDENT_BENCHMARK_2026_06_13.md`. A four-frame 80D student
+improved nominal gate progress but failed bounds and vertical telemetry; a
+full-rollout DAgger follow-up collapsed into collisions. Neither was exported.
+
 Keep mutable/private artifacts in the home directory, not the VirtualBox
 shared folder. In practice this means:
 - venv at `/home/jeff/drones-venv`

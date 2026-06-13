@@ -3,9 +3,13 @@ import unittest
 
 from ai_gp_rl.contract import (
     ACTOR_OBS_DIM,
+    TEMPORAL_BASE_OBS_DIM,
     ActionCalibration,
     LivePolicyFeatures,
+    TemporalLivePolicyFeatures,
     build_actor_observation,
+    build_temporal_base_observation,
+    temporal_feature_names,
 )
 
 
@@ -40,6 +44,24 @@ class AIGPContractTests(unittest.TestCase):
         self.assertAlmostEqual(command["roll_rate_radps"], 1.0)
         self.assertAlmostEqual(command["pitch_rate_radps"], -1.5)
         self.assertAlmostEqual(command["yaw_rate_radps"], 0.25)
+
+    def test_temporal_base_preserves_gate_shape(self) -> None:
+        observation = build_temporal_base_observation(
+            TemporalLivePolicyFeatures(
+                body_velocity_mps=(4.0, -2.0, 1.0),
+                gravity_body=(0.0, 0.0, -1.0),
+                angular_rate_radps=(0.3, -0.6, 0.2),
+                gate_center_normalized=(0.25, -0.5),
+                gate_size_normalized=(0.4, 0.2),
+                gate_area_normalized=0.08,
+                gate_confidence=0.9,
+                gate_age_s=0.1,
+                previous_action=(0.1, -0.2, 0.3, -0.4),
+            )
+        )
+        self.assertEqual(len(observation), TEMPORAL_BASE_OBS_DIM)
+        self.assertEqual(observation[11:14], [0.4, 0.2, 0.08])
+        self.assertEqual(len(temporal_feature_names(4)), 4 * TEMPORAL_BASE_OBS_DIM)
 
     def test_action_calibration_rejects_unknown_hover_thrust(self) -> None:
         with self.assertRaises(ValueError):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export a telemetry-validated 18D live policy as dependency-light JSON."""
+"""Export a telemetry-validated live policy as dependency-light JSON."""
 
 from __future__ import annotations
 
@@ -15,7 +15,12 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from ai_gp_rl.contract import ACTOR_FEATURE_NAMES, ACTION_NAMES
+from ai_gp_rl.contract import (
+    ACTION_NAMES,
+    ACTOR_FEATURE_NAMES,
+    TEMPORAL_BASE_FEATURE_NAMES,
+    temporal_feature_names,
+)
 from ai_gp_rl.model import ActorCritic
 
 
@@ -28,8 +33,29 @@ def export_policy(
     metadata = checkpoint["metadata"]
     if metadata.get("policy_role") != "distilled_live_student":
         raise ValueError("only distilled_live_student checkpoints may be exported")
-    if tuple(metadata.get("actor_features", ())) != ACTOR_FEATURE_NAMES:
-        raise ValueError("checkpoint does not use the 18D live actor contract")
+    actor_features = tuple(metadata.get("actor_features", ()))
+    observation_contract = metadata.get("observation_contract", "live_features_v1")
+    base_actor_features = tuple(
+        metadata.get("base_actor_features", ACTOR_FEATURE_NAMES)
+    )
+    history_length = int(metadata.get("history_length", 1))
+    if observation_contract == "live_features_v1":
+        if (
+            actor_features != ACTOR_FEATURE_NAMES
+            or base_actor_features != ACTOR_FEATURE_NAMES
+            or history_length != 1
+        ):
+            raise ValueError("checkpoint does not use the 18D live actor contract")
+    elif observation_contract == "temporal_live_v1":
+        if (
+            base_actor_features != TEMPORAL_BASE_FEATURE_NAMES
+            or actor_features != temporal_feature_names(history_length)
+        ):
+            raise ValueError("checkpoint temporal live contract does not match")
+    else:
+        raise ValueError(f"unsupported observation contract: {observation_contract}")
+    if int(metadata["actor_observation_dim"]) != len(actor_features):
+        raise ValueError("checkpoint actor feature count does not match model input")
     validation_report = json.loads(
         validation_report_path.read_text(encoding="utf-8")
     )
@@ -64,7 +90,7 @@ def export_policy(
             )
 
     generator = torch.Generator().manual_seed(20260609)
-    test_inputs = torch.rand((4, len(ACTOR_FEATURE_NAMES)), generator=generator) * 2 - 1
+    test_inputs = torch.rand((4, len(actor_features)), generator=generator) * 2 - 1
     with torch.no_grad():
         expected_actions = torch.tanh(model.actor_mean(test_inputs)).tolist()
     artifact = {
@@ -75,7 +101,10 @@ def export_policy(
         "source_checkpoint": checkpoint_path.name,
         "source_global_step": int(checkpoint.get("global_step", 0)),
         "source_teacher_checkpoint": metadata["source_teacher_checkpoint"],
-        "actor_features": list(ACTOR_FEATURE_NAMES),
+        "observation_contract": observation_contract,
+        "base_actor_features": list(base_actor_features),
+        "history_length": history_length,
+        "actor_features": list(actor_features),
         "action_names": list(ACTION_NAMES),
         "hidden_activation": {"name": "leaky_relu", "negative_slope": 0.2},
         "output_activation": "tanh",

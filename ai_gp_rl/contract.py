@@ -37,6 +37,44 @@ ACTOR_FEATURE_NAMES = (
 )
 ACTOR_OBS_DIM = len(ACTOR_FEATURE_NAMES)
 
+TEMPORAL_BASE_FEATURE_NAMES = (
+    "body_velocity_x",
+    "body_velocity_y",
+    "body_velocity_z",
+    "gravity_body_x",
+    "gravity_body_y",
+    "gravity_body_z",
+    "roll_rate",
+    "pitch_rate",
+    "yaw_rate",
+    "gate_center_x",
+    "gate_center_y",
+    "gate_width",
+    "gate_height",
+    "gate_area",
+    "gate_confidence",
+    "gate_age",
+    "previous_collective_offset",
+    "previous_roll_rate",
+    "previous_pitch_rate",
+    "previous_yaw_rate",
+)
+TEMPORAL_BASE_OBS_DIM = len(TEMPORAL_BASE_FEATURE_NAMES)
+TEMPORAL_HISTORY_LENGTH = 4
+
+
+def temporal_feature_names(
+    history_length: int = TEMPORAL_HISTORY_LENGTH,
+) -> tuple[str, ...]:
+    if history_length < 1:
+        raise ValueError("history_length must be positive")
+    return tuple(
+        f"t_minus_{history_length - frame_index - 1}.{feature_name}"
+        for frame_index in range(history_length)
+        for feature_name in TEMPORAL_BASE_FEATURE_NAMES
+    )
+
+
 SWIFT_TEACHER_FEATURE_NAMES = (
     "position_x",
     "position_y",
@@ -91,6 +129,21 @@ class LivePolicyFeatures:
     previous_action: tuple[float, float, float, float]
 
 
+@dataclass(frozen=True)
+class TemporalLivePolicyFeatures:
+    """One frame of the richer temporal live-policy input contract."""
+
+    body_velocity_mps: tuple[float, float, float]
+    gravity_body: tuple[float, float, float]
+    angular_rate_radps: tuple[float, float, float]
+    gate_center_normalized: tuple[float, float]
+    gate_size_normalized: tuple[float, float]
+    gate_area_normalized: float
+    gate_confidence: float
+    gate_age_s: float
+    previous_action: tuple[float, float, float, float]
+
+
 def build_actor_observation(features: LivePolicyFeatures) -> list[float]:
     """Build the exact 18D actor observation used during training."""
 
@@ -110,6 +163,34 @@ def build_actor_observation(features: LivePolicyFeatures) -> list[float]:
     ]
     if len(obs) != ACTOR_OBS_DIM or not all(isfinite(value) for value in obs):
         raise ValueError("invalid AI-GP actor observation")
+    return obs
+
+
+def build_temporal_base_observation(
+    features: TemporalLivePolicyFeatures,
+) -> list[float]:
+    """Build one 20D frame for a temporal live policy."""
+
+    obs = [
+        *(value / VELOCITY_SCALE_MPS for value in features.body_velocity_mps),
+        *features.gravity_body,
+        *(
+            value / scale
+            for value, scale in zip(features.angular_rate_radps, RATE_SCALES_RADPS)
+        ),
+        _clamp(features.gate_center_normalized[0], -1.5, 1.5),
+        _clamp(features.gate_center_normalized[1], -1.5, 1.5),
+        _clamp(features.gate_size_normalized[0], 0.0, 1.0),
+        _clamp(features.gate_size_normalized[1], 0.0, 1.0),
+        _clamp(features.gate_area_normalized, 0.0, 1.0),
+        _clamp(features.gate_confidence, 0.0, 1.0),
+        _clamp(features.gate_age_s / DETECTION_AGE_SCALE_S, 0.0, 1.0),
+        *(_clamp(value, -1.0, 1.0) for value in features.previous_action),
+    ]
+    if len(obs) != TEMPORAL_BASE_OBS_DIM or not all(
+        isfinite(value) for value in obs
+    ):
+        raise ValueError("invalid AI-GP temporal base observation")
     return obs
 
 

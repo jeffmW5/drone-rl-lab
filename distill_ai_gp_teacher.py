@@ -1,4 +1,4 @@
-"""Distill a privileged AI-GP teacher into the deployable 18D live policy."""
+"""Distill a privileged AI-GP teacher into a deployable live policy."""
 
 from __future__ import annotations
 
@@ -13,7 +13,6 @@ from typing import Any
 import torch
 import yaml
 
-from ai_gp_rl.contract import ACTOR_FEATURE_NAMES
 from ai_gp_rl.env import AIGPVectorEnv
 from ai_gp_rl.model import ActorCritic
 from train_ai_gp import _build_env_config, _save_checkpoint, evaluate, load_config
@@ -50,6 +49,13 @@ def run(config_path: Path, teacher_checkpoint_path: Path) -> None:
     teacher_section["env"]["randomization"] = bool(
         distillation.get("randomization", True)
     )
+    student_env_section = student_section.get("env", {})
+    teacher_section["env"]["live_observation_mode"] = student_env_section.get(
+        "actor_observation_mode", "live_features"
+    )
+    teacher_section["env"]["observation_history_length"] = int(
+        student_env_section.get("observation_history_length", 4)
+    )
     if distillation.get("race_start_only", True):
         teacher_section["env"]["near_gate_spawn_ratio_start"] = 0.0
         teacher_section["env"]["near_gate_spawn_ratio_end"] = 0.0
@@ -84,6 +90,15 @@ def run(config_path: Path, teacher_checkpoint_path: Path) -> None:
         student.actor_mean.parameters(),
         lr=float(distillation.get("learning_rate", 3e-4)),
     )
+    action_loss_weights = torch.tensor(
+        distillation.get("action_loss_weights", [1.0, 1.0, 1.0, 1.0]),
+        device=device,
+        dtype=torch.float32,
+    )
+    if action_loss_weights.shape != (env.action_dim,) or bool(
+        (action_loss_weights <= 0.0).any()
+    ):
+        raise ValueError("action_loss_weights must contain four positive values")
 
     root = Path(__file__).resolve().parent
     results_dir = root / "results" / config["name"]
@@ -108,7 +123,7 @@ def run(config_path: Path, teacher_checkpoint_path: Path) -> None:
     observation, _ = env.reset()
     history: list[dict[str, float]] = []
     best_evaluation: dict[str, float] | None = None
-    best_score = (-1.0, -1.0, float("-inf"))
+    best_score = (float("-inf"), -1.0, -1.0)
     wall_start = time.time()
 
     metadata_extra = {
@@ -116,6 +131,14 @@ def run(config_path: Path, teacher_checkpoint_path: Path) -> None:
         "deployable_live_contract": True,
         "source_teacher_checkpoint": teacher_checkpoint_path.name,
         "source_teacher_global_step": int(teacher_checkpoint.get("global_step", 0)),
+        "observation_contract": eval_env.live_observation_contract,
+        "base_actor_features": list(eval_env.live_base_feature_names),
+        "history_length": (
+            eval_env.config.observation_history_length
+            if eval_env.live_observation_mode == "live_features_temporal"
+            else 1
+        ),
+        "action_loss_weights": action_loss_weights.detach().cpu().tolist(),
     }
 
     for update in range(1, total_updates + 1):
@@ -127,7 +150,10 @@ def run(config_path: Path, teacher_checkpoint_path: Path) -> None:
             live_observation = env.live_actor_observation()
 
         predicted_action = torch.tanh(student.actor_mean(live_observation))
-        loss = torch.nn.functional.mse_loss(predicted_action, target_action)
+        squared_action_error = (predicted_action - target_action).square()
+        loss = (
+            squared_action_error * action_loss_weights
+        ).mean() / action_loss_weights.mean()
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
         optimizer.step()
@@ -161,6 +187,12 @@ def run(config_path: Path, teacher_checkpoint_path: Path) -> None:
                 "update": update,
                 "interactions": interactions,
                 "imitation_loss": float(loss),
+                "collective_mae": float(
+                    (predicted_action[:, 0] - target_action[:, 0]).abs().mean()
+                ),
+                "roll_mae": float(
+                    (predicted_action[:, 1] - target_action[:, 1]).abs().mean()
+                ),
                 "interactions_per_second": interactions / max(elapsed, 1e-6),
                 "student_rollout_ratio": student_rollout_ratio,
             }
@@ -169,6 +201,8 @@ def run(config_path: Path, teacher_checkpoint_path: Path) -> None:
                 f"update {update:>5}/{total_updates} | "
                 f"interactions {interactions:>11,} | "
                 f"loss {float(loss):.6f} | "
+                f"collective {record['collective_mae']:.4f} | "
+                f"roll {record['roll_mae']:.4f} | "
                 f"student {student_rollout_ratio:>5.1%} | "
                 f"IPS {record['interactions_per_second']:,.0f}"
             )
@@ -179,12 +213,20 @@ def run(config_path: Path, teacher_checkpoint_path: Path) -> None:
                 "  [StudentEval] "
                 f"success={evaluation['success_rate']:.1%} "
                 f"gates={evaluation['mean_gates']:.2f} "
-                f"collision={evaluation['collision_rate']:.1%}"
+                f"collision={evaluation['collision_rate']:.1%} "
+                f"oob={evaluation['out_of_bounds_rate']:.1%} "
+                f"vertical={evaluation['vertical_runaway_rate']:.1%}"
+            )
+            bounded_progress_score = (
+                evaluation["mean_gates"]
+                * (1.0 - evaluation["collision_rate"])
+                * (1.0 - evaluation["out_of_bounds_rate"])
+                * (1.0 - evaluation["vertical_runaway_rate"])
             )
             score = (
+                bounded_progress_score + evaluation["success_rate"],
                 evaluation["success_rate"],
                 evaluation["mean_gates"],
-                evaluation["mean_distance_reduction_m"],
             )
             if score > best_score:
                 best_score = score
@@ -196,7 +238,7 @@ def run(config_path: Path, teacher_checkpoint_path: Path) -> None:
                     config,
                     interactions,
                     evaluation,
-                    ACTOR_FEATURE_NAMES,
+                    eval_env.actor_feature_names,
                     metadata_extra,
                 )
 
@@ -208,7 +250,7 @@ def run(config_path: Path, teacher_checkpoint_path: Path) -> None:
         config,
         min(total_updates * num_envs, total_interactions),
         final_evaluation,
-        ACTOR_FEATURE_NAMES,
+        eval_env.actor_feature_names,
         metadata_extra,
     )
     metrics = {

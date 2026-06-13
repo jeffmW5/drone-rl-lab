@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from ai_gp_rl.contract import ACTOR_OBS_DIM
+from ai_gp_rl.contract import ACTOR_OBS_DIM, TEMPORAL_BASE_OBS_DIM
 from ai_gp_rl.session_dataset import export_session_dataset
 
 
@@ -69,6 +69,11 @@ class AIGPSessionDatasetTests(unittest.TestCase):
             self.assertAlmostEqual(observation[11], 0.08)
             self.assertAlmostEqual(observation[12], 0.9)
             self.assertAlmostEqual(observation[13], 0.0)
+            temporal = row["temporal_base_observation"]
+            self.assertEqual(len(temporal), TEMPORAL_BASE_OBS_DIM)
+            self.assertAlmostEqual(temporal[11], 0.4)
+            self.assertAlmostEqual(temporal[12], 0.2)
+            self.assertAlmostEqual(temporal[13], 0.08)
 
 
 if __name__ == "__main__":

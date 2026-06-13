@@ -2,7 +2,10 @@ import unittest
 
 import torch
 
-from ai_gp_rl.contract import SWIFT_TEACHER_OBS_DIM
+from ai_gp_rl.contract import (
+    SWIFT_TEACHER_OBS_DIM,
+    TEMPORAL_BASE_OBS_DIM,
+)
 from ai_gp_rl.env import AIGPEnvConfig, AIGPVectorEnv
 
 
@@ -70,6 +73,48 @@ class SwiftTeacherEnvTests(unittest.TestCase):
         self.assertLess(abs(float(info["gate_vertical_offset"][0])), 0.01)
         self.assertTrue(torch.isfinite(info["velocity"]).all())
         self.assertTrue(torch.isfinite(info["attitude"]).all())
+
+    def test_teacher_can_emit_temporal_student_observation(self) -> None:
+        env = AIGPVectorEnv(
+            AIGPEnvConfig(
+                actor_observation_mode="swift_teacher",
+                live_observation_mode="live_features_temporal",
+                observation_history_length=4,
+                num_envs=2,
+                device="cpu",
+                randomization=False,
+                align_spawn_heading_to_gate=True,
+            )
+        )
+        initial = env.live_actor_observation()
+        self.assertEqual(initial.shape, (2, 4 * TEMPORAL_BASE_OBS_DIM))
+        frames = initial.reshape(2, 4, TEMPORAL_BASE_OBS_DIM)
+        self.assertTrue(torch.allclose(frames[:, 0], frames[:, -1]))
+
+        env.step(torch.zeros((2, 4)))
+        advanced = env.live_actor_observation().reshape(
+            2, 4, TEMPORAL_BASE_OBS_DIM
+        )
+        self.assertTrue(torch.allclose(advanced[:, 0], frames[:, 1]))
+        self.assertTrue(torch.isfinite(advanced).all())
+
+    def test_temporal_actor_uses_flattened_history(self) -> None:
+        env = AIGPVectorEnv(
+            AIGPEnvConfig(
+                actor_observation_mode="live_features_temporal",
+                observation_history_length=4,
+                num_envs=2,
+                device="cpu",
+                randomization=False,
+                align_spawn_heading_to_gate=True,
+            )
+        )
+        observation, _ = env.reset()
+        self.assertEqual(env.actor_observation_dim, 4 * TEMPORAL_BASE_OBS_DIM)
+        self.assertEqual(
+            observation.shape, (2, 4 * TEMPORAL_BASE_OBS_DIM + 14)
+        )
+        self.assertTrue(torch.isfinite(observation).all())
 
 
 if __name__ == "__main__":

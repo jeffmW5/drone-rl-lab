@@ -13,7 +13,10 @@ from .contract import (
     ACTOR_FEATURE_NAMES,
     DETECTION_AGE_SCALE_S,
     LivePolicyFeatures,
+    TEMPORAL_BASE_FEATURE_NAMES,
+    TemporalLivePolicyFeatures,
     build_actor_observation,
+    build_temporal_base_observation,
 )
 
 
@@ -72,7 +75,7 @@ def export_session_dataset(
             last_detection_time = timestamp
             full_detection_rows += 1
 
-        gate_center, gate_area = _gate_features(last_detection)
+        gate_center, gate_size, gate_area = _gate_features(last_detection)
         gate_age = (
             DETECTION_AGE_SCALE_S
             if last_detection_time is None
@@ -100,6 +103,23 @@ def export_session_dataset(
             previous_action=(0.0, 0.0, 0.0, 0.0),
         )
         observation = build_actor_observation(features)
+        temporal_base_observation = build_temporal_base_observation(
+            TemporalLivePolicyFeatures(
+                body_velocity_mps=body_velocity,
+                gravity_body=gravity_body,
+                angular_rate_radps=(
+                    float(angular_rate["x"]),
+                    float(angular_rate["y"]),
+                    float(angular_rate["z"]),
+                ),
+                gate_center_normalized=gate_center,
+                gate_size_normalized=gate_size,
+                gate_area_normalized=gate_area,
+                gate_confidence=confidence,
+                gate_age_s=gate_age,
+                previous_action=(0.0, 0.0, 0.0, 0.0),
+            )
+        )
         rows.append(
             {
                 "frame_id": str(detection_record["frame_id"]),
@@ -109,6 +129,10 @@ def export_session_dataset(
                 "detection_count": int(detection_record.get("detection_count", len(candidates))),
                 "actor_features": dict(zip(ACTOR_FEATURE_NAMES, observation)),
                 "actor_observation": observation,
+                "temporal_base_features": dict(
+                    zip(TEMPORAL_BASE_FEATURE_NAMES, temporal_base_observation)
+                ),
+                "temporal_base_observation": temporal_base_observation,
                 "source": {
                     "telemetry": telemetry_record,
                     "detection": selected_detection,
@@ -153,17 +177,20 @@ def _has_policy_telemetry(record: dict[str, Any]) -> bool:
 
 def _gate_features(
     detection: dict[str, Any] | None,
-) -> tuple[tuple[float, float], float]:
+) -> tuple[tuple[float, float], tuple[float, float], float]:
     if detection is None:
-        return (0.0, 0.0), 0.0
+        return (0.0, 0.0), (0.0, 0.0), 0.0
     bbox = detection["bbox"]
     center = bbox["center"]
+    width = float(bbox["width"])
+    height = float(bbox["height"])
     return (
         (
             (float(center["x"]) - 0.5) * 2.0,
             (float(center["y"]) - 0.5) * 2.0,
         ),
-        float(bbox["width"]) * float(bbox["height"]),
+        (width, height),
+        width * height,
     )
 
 

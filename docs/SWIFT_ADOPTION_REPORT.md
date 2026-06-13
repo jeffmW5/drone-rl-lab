@@ -92,14 +92,21 @@ network training.
 
 ## Immediate Checklist
 
-- [ ] Add four-corner gate observations and a privileged teacher contract.
-- [ ] Add Swift-style camera-alignment reward and remove unnecessary alive
+- [x] Add a privileged teacher contract.
+- [ ] Add four-corner live gate observations or a reliable gate-pose estimate.
+- [x] Add Swift-style camera-alignment reward and remove unnecessary alive
       reward.
-- [ ] Add deterministic random-gate and race-start evaluation suites.
+- [x] Add deterministic random-gate and race-start evaluation suites.
 - [ ] Log every command with synchronized telemetry and visual detections.
 - [ ] Implement residual dynamics fitting and residual observation sampling.
-- [ ] Benchmark 10 million interactions on one RTX 4090 before reserving the
+- [x] Benchmark 10 million interactions on one RTX 3090 before reserving the
       full training budget.
+
+The June 13 temporal benchmark added separate box width/height plus four-frame
+history. It improved multi-gate progress but did not pass bounds or vertical
+criteria. Raising student-state DAgger to 100% caused collision collapse, so
+the next experiment must improve state estimation rather than only increasing
+student rollout exposure.
 
 The active implementation sequence is defined in
 `docs/AI_GP_SWIFT_EXECUTION_PLAN.md`.

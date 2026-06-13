@@ -16,13 +16,19 @@ from .contract import (
     RATE_SCALES_RADPS,
     SWIFT_TEACHER_FEATURE_NAMES,
     SWIFT_TEACHER_OBS_DIM,
+    TEMPORAL_BASE_FEATURE_NAMES,
+    TEMPORAL_BASE_OBS_DIM,
+    TEMPORAL_HISTORY_LENGTH,
     VELOCITY_SCALE_MPS,
+    temporal_feature_names,
 )
 
 
 @dataclass
 class AIGPEnvConfig:
     actor_observation_mode: str = "live_features"
+    live_observation_mode: str | None = None
+    observation_history_length: int = TEMPORAL_HISTORY_LENGTH
     num_envs: int = 4096
     device: str = "cuda"
     seed: int = 42
@@ -104,13 +110,52 @@ class AIGPVectorEnv:
         if config.actor_observation_mode == "live_features":
             self.actor_observation_dim = ACTOR_OBS_DIM
             self.actor_feature_names = ACTOR_FEATURE_NAMES
+        elif config.actor_observation_mode == "live_features_temporal":
+            self.actor_observation_dim = (
+                TEMPORAL_BASE_OBS_DIM * config.observation_history_length
+            )
+            self.actor_feature_names = temporal_feature_names(
+                config.observation_history_length
+            )
         elif config.actor_observation_mode == "swift_teacher":
             self.actor_observation_dim = SWIFT_TEACHER_OBS_DIM
             self.actor_feature_names = SWIFT_TEACHER_FEATURE_NAMES
         else:
             raise ValueError(
-                "actor_observation_mode must be 'live_features' or 'swift_teacher'"
+                "actor_observation_mode must be 'live_features', "
+                "'live_features_temporal', or 'swift_teacher'"
             )
+        if config.observation_history_length < 1:
+            raise ValueError("observation_history_length must be positive")
+        self.live_observation_mode = config.live_observation_mode
+        if self.live_observation_mode is None:
+            self.live_observation_mode = (
+                config.actor_observation_mode
+                if config.actor_observation_mode != "swift_teacher"
+                else "live_features"
+            )
+        if self.live_observation_mode not in (
+            "live_features",
+            "live_features_temporal",
+        ):
+            raise ValueError(
+                "live_observation_mode must be 'live_features' or "
+                "'live_features_temporal'"
+            )
+        if self.live_observation_mode == "live_features_temporal":
+            self.live_actor_observation_dim = (
+                TEMPORAL_BASE_OBS_DIM * config.observation_history_length
+            )
+            self.live_actor_feature_names = temporal_feature_names(
+                config.observation_history_length
+            )
+            self.live_base_feature_names = TEMPORAL_BASE_FEATURE_NAMES
+            self.live_observation_contract = "temporal_live_v1"
+        else:
+            self.live_actor_observation_dim = ACTOR_OBS_DIM
+            self.live_actor_feature_names = ACTOR_FEATURE_NAMES
+            self.live_base_feature_names = ACTOR_FEATURE_NAMES
+            self.live_observation_contract = "live_features_v1"
         self.observation_dim = self.actor_observation_dim + 14
         self.device = torch.device(config.device)
         self.num_envs = config.num_envs
@@ -159,9 +204,20 @@ class AIGPVectorEnv:
         self.angular_rate = torch.zeros(shape3, device=self.device)
         self.previous_action = torch.zeros((self.num_envs, ACTION_DIM), device=self.device)
         self.applied_action = torch.zeros_like(self.previous_action)
-        self.last_detection = torch.zeros((self.num_envs, 3), device=self.device)
+        self.last_detection = torch.zeros((self.num_envs, 5), device=self.device)
         self.detection_age = torch.full(
             (self.num_envs,), config.detection_memory_s, device=self.device
+        )
+        self.live_observation_history = torch.zeros(
+            (
+                self.num_envs,
+                config.observation_history_length,
+                TEMPORAL_BASE_OBS_DIM,
+            ),
+            device=self.device,
+        )
+        self.live_observation_history_initialized = torch.zeros(
+            self.num_envs, dtype=torch.bool, device=self.device
         )
         self.has_taken_off = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
         self.gate_index = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
@@ -221,6 +277,8 @@ class AIGPVectorEnv:
         self.angular_rate[env_ids] = 0.0
         self.last_detection[env_ids] = 0.0
         self.detection_age[env_ids] = self.config.detection_memory_s
+        self.live_observation_history[env_ids] = 0.0
+        self.live_observation_history_initialized[env_ids] = False
         self.has_taken_off[env_ids] = False
 
         start = torch.tensor(
@@ -471,6 +529,10 @@ class AIGPVectorEnv:
             rotation.transpose(1, 2), gravity_world.unsqueeze(2)
         ).squeeze(2)
         detection, _, confidence = self._project_gate(update_memory=True)
+        temporal_base_observation = self._build_temporal_base_observation(
+            body_velocity, gravity_body, detection, confidence
+        )
+        self._update_live_observation_history(temporal_base_observation)
 
         if self.config.actor_observation_mode == "swift_teacher":
             corners_world = self._active_gate_corners_world()
@@ -488,10 +550,12 @@ class AIGPVectorEnv:
                 ),
                 dim=1,
             )
-        else:
+        elif self.config.actor_observation_mode == "live_features":
             actor_obs = self._build_live_actor_observation(
                 body_velocity, gravity_body, detection, confidence
             )
+        else:
+            actor_obs = self.live_observation_history.flatten(start_dim=1)
 
         active_gate_position = self._active_gate_position()
         gate_relative_world = active_gate_position - self.position
@@ -522,7 +586,10 @@ class AIGPVectorEnv:
         return observation
 
     def live_actor_observation(self) -> torch.Tensor:
-        """Return the deployable 18D observation without advancing sensor memory."""
+        """Return the deployable observation without advancing sensor memory."""
+
+        if self.live_observation_mode == "live_features_temporal":
+            return self.live_observation_history.flatten(start_dim=1)
 
         rotation = self._body_to_world_rotation(self.attitude)
         body_velocity = torch.bmm(
@@ -550,7 +617,7 @@ class AIGPVectorEnv:
                 gravity_body,
                 self.angular_rate / self.rate_limits,
                 detection[:, :2].clamp(-1.5, 1.5),
-                detection[:, 2:3].clamp(0.0, 1.0),
+                detection[:, 4:5].clamp(0.0, 1.0),
                 confidence.unsqueeze(1),
                 (self.detection_age / self.config.detection_memory_s)
                 .clamp(0.0, 1.0)
@@ -567,6 +634,54 @@ class AIGPVectorEnv:
             )
         return actor_observation
 
+    def _build_temporal_base_observation(
+        self,
+        body_velocity: torch.Tensor,
+        gravity_body: torch.Tensor,
+        detection: torch.Tensor,
+        confidence: torch.Tensor,
+    ) -> torch.Tensor:
+        base_observation = torch.cat(
+            (
+                (body_velocity / VELOCITY_SCALE_MPS).clamp(-2.0, 2.0),
+                gravity_body,
+                self.angular_rate / self.rate_limits,
+                detection[:, :2].clamp(-1.5, 1.5),
+                detection[:, 2:5].clamp(0.0, 1.0),
+                confidence.unsqueeze(1),
+                (self.detection_age / self.config.detection_memory_s)
+                .clamp(0.0, 1.0)
+                .unsqueeze(1),
+                self.previous_action,
+            ),
+            dim=1,
+        )
+        if base_observation.shape != (self.num_envs, TEMPORAL_BASE_OBS_DIM):
+            raise RuntimeError(
+                "temporal base observation contract mismatch: "
+                f"expected {(self.num_envs, TEMPORAL_BASE_OBS_DIM)}, "
+                f"got {tuple(base_observation.shape)}"
+            )
+        return base_observation
+
+    def _update_live_observation_history(
+        self, current_observation: torch.Tensor
+    ) -> None:
+        initialized = self.live_observation_history_initialized
+        if initialized.any():
+            self.live_observation_history[initialized, :-1] = (
+                self.live_observation_history[initialized, 1:].clone()
+            )
+            self.live_observation_history[initialized, -1] = current_observation[
+                initialized
+            ]
+        uninitialized = ~initialized
+        if uninitialized.any():
+            self.live_observation_history[uninitialized] = current_observation[
+                uninitialized
+            ].unsqueeze(1)
+            self.live_observation_history_initialized[uninitialized] = True
+
     def _project_gate(
         self, *, update_memory: bool
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
@@ -581,11 +696,13 @@ class AIGPVectorEnv:
         safe_depth = depth.clamp(min=0.05)
         center_x = -relative_body[:, 1] / (safe_depth * tan_h)
         center_y = -relative_body[:, 2] / (safe_depth * tan_v)
-        area = (
-            self.config.gate_half_width_m
-            * self.config.gate_half_height_m
-            / (safe_depth.square() * tan_h * tan_v)
+        width = (
+            self.config.gate_half_width_m / (safe_depth * tan_h)
         ).clamp(0.0, 1.0)
+        height = (
+            self.config.gate_half_height_m / (safe_depth * tan_v)
+        ).clamp(0.0, 1.0)
+        area = (width * height).clamp(0.0, 1.0)
         visible = (
             (depth > 0.05)
             & (center_x.abs() <= 1.0)
@@ -600,16 +717,21 @@ class AIGPVectorEnv:
             noise_std = self.config.vision_noise_std * self.randomization_scale
             center_x += self._rand_normal((self.num_envs,)) * noise_std
             center_y += self._rand_normal((self.num_envs,)) * noise_std
-            area *= (
+            size_noise = (
                 1.0 + self._rand_normal((self.num_envs,)) * noise_std
             ).clamp(0.6, 1.4)
+            width = (width * size_noise).clamp(0.0, 1.0)
+            height = (height * size_noise).clamp(0.0, 1.0)
+            area = (width * height).clamp(0.0, 1.0)
             dropout = self._rand_uniform((self.num_envs,), 0.0, 1.0) < (
                 self.config.vision_dropout_probability * self.randomization_scale
             )
             visible &= ~dropout
             confidence *= visible.float()
 
-        fresh_detection = torch.stack((center_x, center_y, area), dim=1)
+        fresh_detection = torch.stack(
+            (center_x, center_y, width, height, area), dim=1
+        )
         if update_memory:
             if visible.any():
                 self.last_detection[visible] = fresh_detection[visible]

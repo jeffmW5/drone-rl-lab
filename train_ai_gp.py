@@ -102,13 +102,29 @@ def evaluate(
     gates: list[torch.Tensor] = []
     successes: list[torch.Tensor] = []
     collisions: list[torch.Tensor] = []
+    out_of_bounds: list[torch.Tensor] = []
+    vertical_runaways: list[torch.Tensor] = []
     distance_reduction: list[torch.Tensor] = []
+    max_altitude = env.position[:, 2].clone()
+    upward_run = torch.zeros(
+        env.num_envs, dtype=torch.long, device=env.device
+    )
+    longest_upward_run = torch.zeros_like(upward_run)
     completed = 0
     while completed < episode_count:
         action, _, _, _ = model.get_action_and_value(
             observation, deterministic=True
         )
         observation, _, _, _, info = env.step(action)
+        max_altitude = torch.maximum(max_altitude, info["position"][:, 2])
+        sustained_upward = (
+            (info["velocity"][:, 2] > 2.0)
+            & (info["position"][:, 2] > 1.5)
+        )
+        upward_run = torch.where(
+            sustained_upward, upward_run + 1, torch.zeros_like(upward_run)
+        )
+        longest_upward_run = torch.maximum(longest_upward_run, upward_run)
         done_ids = torch.where(info["done"])[0]
         if done_ids.numel() == 0:
             continue
@@ -118,16 +134,37 @@ def evaluate(
         gates.append(info["gates_passed"][done_ids].float().detach().cpu())
         successes.append(info["success"][done_ids].float().detach().cpu())
         collisions.append(info["collision"][done_ids].float().detach().cpu())
+        out_of_bounds.append(
+            info["out_of_bounds"][done_ids].float().detach().cpu()
+        )
+        vertical_runaways.append(
+            (
+                (max_altitude[done_ids] >= 0.95 * env.config.max_altitude_m)
+                | (
+                    longest_upward_run[done_ids].float() * env.config.dt
+                    >= 1.0
+                )
+            )
+            .float()
+            .detach()
+            .cpu()
+        )
         distance_reduction.append(
             info["distance_reduction"][done_ids].detach().cpu()
         )
         completed += done_ids.numel()
+        all_done_ids = torch.where(info["done"])[0]
+        max_altitude[all_done_ids] = env.position[all_done_ids, 2]
+        upward_run[all_done_ids] = 0
+        longest_upward_run[all_done_ids] = 0
 
     return {
         "mean_return": float(torch.cat(returns).mean()),
         "mean_gates": float(torch.cat(gates).mean()),
         "success_rate": float(torch.cat(successes).mean()),
         "collision_rate": float(torch.cat(collisions).mean()),
+        "out_of_bounds_rate": float(torch.cat(out_of_bounds).mean()),
+        "vertical_runaway_rate": float(torch.cat(vertical_runaways).mean()),
         "mean_distance_reduction_m": float(torch.cat(distance_reduction).mean()),
         "episodes": completed,
     }

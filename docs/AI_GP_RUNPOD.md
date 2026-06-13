@@ -82,13 +82,14 @@ results/<experiment>/
 
 ## Current Limitation
 
-The workflow was exercised on an RTX 3090 on June 9, 2026. CUDA smoke,
-checkpoint creation, result pull, and deterministic telemetry evaluation all
-worked.
+The workflow was exercised again on an RTX 3090 on June 13, 2026. The required
+teacher CUDA smoke produced `(256, 45)` observations, and the temporal student
+smoke produced `(256, 94)` observations. Checkpoint creation, result pull, and
+deterministic telemetry evaluation all worked.
 
 The generic `manage_pod.sh` replacement-pod path was also fixed so progress
 logging cannot corrupt a captured and persisted pod ID.
 
 RunPod success does not promote a policy to Windows control. Only an exported
-18D student that passes Windows simulator shadow and bounded evaluation can be
-marked command-eligible.
+live-contract student that passes Windows simulator shadow and bounded
+evaluation can be marked command-eligible.
