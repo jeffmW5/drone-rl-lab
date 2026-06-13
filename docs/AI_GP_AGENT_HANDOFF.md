@@ -69,19 +69,30 @@ See `docs/AI_GP_TEMPORAL_STUDENT_BENCHMARK_2026_06_13.md`.
   but had 31.2% out-of-bounds and 15.2% vertical-runaway rates.
 - The full-rollout temporal follow-up collapsed to 98.4-99.6% collisions.
 
-All of those claims are surrogate-only. No Windows simulator policy candidate
-currently exists.
+Those benchmark claims are surrogate-only. The governed `motion_live_v1`
+candidate was subsequently run under a bounded controller in the live Windows
+simulator. Run `bounded_policy_20260613_103101` passed gate 0 once with zero
+collisions and no safety abort. This is a single-run transfer result, not
+repeatability, multi-gate completion, or unrestricted command approval.
 
 ## Immediate Next Action
 
-1. Replace the four-frame box-only state with longer/recurrent memory or
-   measured gate-corner/pose features.
-2. Retrain the student without assuming more aggressive DAgger fixes the
-   remaining partial observability.
-3. Export only a `distilled_live_student` checkpoint with a passing
-   deterministic telemetry report.
-4. Run receive-only Windows shadow evaluation on a real simulator capture.
-5. Require explicit `windows_simulator_passed` status before command authority.
+1. Version and test the bounded Windows runner currently used for
+   `bounded_policy_20260613_103101`.
+2. Run at least 10 gate-0 repetitions and report outcome distributions.
+3. Validate controlled gate-1 continuation and gate-index target switching.
+4. Fit surrogate scaling and latency from command-aligned Windows trajectories.
+5. Require repeated multi-gate Windows evidence before unrestricted command
+   authority.
+
+The bounded runner is preserved at:
+
+```text
+scripts/run_ai_gp_bounded_windows.py
+```
+
+It uses `AI_GP_RUNTIME_ROOT` when the operational execution worktree is not at
+the default `tmp/ai-grand-prix-stack-remote` path.
 
 Export syntax after a future student passes:
 
@@ -110,7 +121,8 @@ python3 scripts/export_ai_gp_live_policy.py \
 - Reset and race-start synchronization require continued validation.
 - Four frames spanning 60 ms are insufficient for reliable closed-loop
   transfer under the tested box-only observation.
-- No student checkpoint is ready for Windows simulator shadow evaluation.
+- The governed student has one bounded Windows gate-0 passage but no
+  repeatability or multi-gate evidence.
 
 ## Promotion Criteria
 
