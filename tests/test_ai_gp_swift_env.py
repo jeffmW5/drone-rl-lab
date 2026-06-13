@@ -3,6 +3,8 @@ import unittest
 import torch
 
 from ai_gp_rl.contract import (
+    CORNER_BASE_OBS_DIM,
+    MOTION_OBS_DIM,
     SWIFT_TEACHER_OBS_DIM,
     TEMPORAL_BASE_OBS_DIM,
 )
@@ -115,6 +117,39 @@ class SwiftTeacherEnvTests(unittest.TestCase):
             observation.shape, (2, 4 * TEMPORAL_BASE_OBS_DIM + 14)
         )
         self.assertTrue(torch.isfinite(observation).all())
+
+    def test_long_history_corner_recurrent_and_motion_contracts(self) -> None:
+        cases = (
+            ("live_features_temporal", 16, 16 * TEMPORAL_BASE_OBS_DIM),
+            ("live_features_recurrent", 4, TEMPORAL_BASE_OBS_DIM),
+            (
+                "live_features_corners_temporal",
+                4,
+                4 * CORNER_BASE_OBS_DIM,
+            ),
+            (
+                "live_features_corners_recurrent",
+                4,
+                CORNER_BASE_OBS_DIM,
+            ),
+            ("live_features_motion", 4, MOTION_OBS_DIM),
+        )
+        for mode, history_length, actor_dim in cases:
+            with self.subTest(mode=mode):
+                env = AIGPVectorEnv(
+                    AIGPEnvConfig(
+                        actor_observation_mode=mode,
+                        observation_history_length=history_length,
+                        num_envs=2,
+                        device="cpu",
+                        randomization=False,
+                        align_spawn_heading_to_gate=True,
+                    )
+                )
+                observation, _ = env.reset()
+                self.assertEqual(env.actor_observation_dim, actor_dim)
+                self.assertEqual(observation.shape, (2, actor_dim + 14))
+                self.assertTrue(torch.isfinite(observation).all())
 
 
 if __name__ == "__main__":

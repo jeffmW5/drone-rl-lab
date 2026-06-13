@@ -3,7 +3,12 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from ai_gp_rl.contract import ACTOR_OBS_DIM, TEMPORAL_BASE_OBS_DIM
+from ai_gp_rl.contract import (
+    ACTOR_OBS_DIM,
+    CORNER_BASE_OBS_DIM,
+    MOTION_OBS_DIM,
+    TEMPORAL_BASE_OBS_DIM,
+)
 from ai_gp_rl.session_dataset import export_session_dataset
 
 
@@ -44,6 +49,12 @@ class AIGPSessionDatasetTests(unittest.TestCase):
                                     "width": 0.4,
                                     "height": 0.2,
                                 },
+                                "corners": [
+                                    {"x": 0.55, "y": 0.15},
+                                    {"x": 0.95, "y": 0.15},
+                                    {"x": 0.95, "y": 0.35},
+                                    {"x": 0.55, "y": 0.35},
+                                ],
                             }
                         ],
                     }
@@ -74,6 +85,12 @@ class AIGPSessionDatasetTests(unittest.TestCase):
             self.assertAlmostEqual(temporal[11], 0.4)
             self.assertAlmostEqual(temporal[12], 0.2)
             self.assertAlmostEqual(temporal[13], 0.08)
+            self.assertEqual(
+                len(row["corner_base_observation"]), CORNER_BASE_OBS_DIM
+            )
+            self.assertAlmostEqual(row["corner_base_observation"][14], 0.1)
+            self.assertEqual(row["corner_base_observation"][22], 1.0)
+            self.assertEqual(len(row["motion_observation"]), MOTION_OBS_DIM)
 
 
 if __name__ == "__main__":

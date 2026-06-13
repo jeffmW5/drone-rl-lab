@@ -1,0 +1,61 @@
+name: ai_gp_015_corner_temporal_mlp_10m
+backend: ai_gp_distillation
+hypothesis: >
+  Four frames of measured gate corners retain perspective and expansion cues
+  that box geometry loses, improving closed-loop alignment under the
+  established 10-million-interaction DAgger schedule.
+
+teacher_config: configs/ai_gp_002_swift_teacher_gpu_ppo_10m.yaml
+
+distillation:
+  device: cuda
+  seed: 55
+  num_envs: 4096
+  total_interactions: 10092544
+  learning_rate: 0.0003
+  hidden_sizes: [256, 256]
+  student_architecture: mlp
+  randomization: true
+  race_start_only: true
+  student_rollout_start_interactions: 1000000
+  student_rollout_end_interactions: 9000000
+  max_student_rollout_ratio: 0.5
+  eval_interval_updates: 250
+  eval_episodes: 256
+  eval_num_envs: 256
+
+ai_gp:
+  device: cuda
+  allow_cpu: false
+  seed: 55
+  eval_num_envs: 256
+  eval_randomization: false
+  env:
+    actor_observation_mode: live_features_corners_temporal
+    observation_history_length: 4
+    dt: 0.02
+    physics_substeps: 2
+    max_episode_steps: 750
+    randomization: false
+    align_spawn_heading_to_gate: true
+    start_position_m: [-2.0, 0.0, 0.03]
+    gate_positions_m:
+      - [4.0, 0.0, 1.25]
+      - [9.0, 1.5, 1.60]
+      - [14.0, -1.0, 1.20]
+      - [19.0, 0.5, 1.50]
+    near_gate_spawn_ratio_start: 0.0
+    near_gate_spawn_ratio_end: 0.0
+    soft_collision_fraction: 0.0
+    progress_reward: 12.0
+    gate_reward: 20.0
+    finish_reward: 40.0
+    camera_alignment_reward: 0.20
+    camera_alignment_exponent: 4.0
+    forward_speed_reward: 0.0
+    visibility_reward: 0.0
+    alive_reward: 0.0
+    angular_rate_penalty: 0.002
+    action_delta_penalty: 0.01
+    collision_penalty: 8.0
+    out_of_bounds_penalty: 12.0

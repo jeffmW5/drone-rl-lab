@@ -91,6 +91,35 @@ def _save_checkpoint(
     )
 
 
+def _load_initial_actor(
+    model: ActorCritic,
+    checkpoint_path: Path,
+    actor_features: tuple[str, ...],
+) -> dict[str, Any]:
+    checkpoint = torch.load(
+        checkpoint_path, map_location=next(model.parameters()).device, weights_only=False
+    )
+    metadata = checkpoint.get("metadata", {})
+    if metadata.get("policy_role") != "distilled_live_student":
+        raise ValueError("initial actor checkpoint must be a distilled live student")
+    if tuple(metadata.get("actor_features", ())) != actor_features:
+        raise ValueError("initial actor checkpoint feature contract does not match")
+    if str(metadata.get("policy_architecture", "mlp")) != "mlp":
+        raise ValueError("PPO fine-tuning currently requires an MLP student")
+
+    source_state = checkpoint["model_state_dict"]
+    actor_state = {
+        key.removeprefix("actor_mean."): value
+        for key, value in source_state.items()
+        if key.startswith("actor_mean.")
+    }
+    expected_keys = set(model.actor_mean.state_dict())
+    if set(actor_state) != expected_keys:
+        raise ValueError("initial actor checkpoint network shape does not match")
+    model.actor_mean.load_state_dict(actor_state)
+    return metadata
+
+
 @torch.no_grad()
 def evaluate(
     model: ActorCritic,
@@ -220,6 +249,16 @@ def run(config_path: str | Path) -> None:
         actor_observation_dim=env.actor_observation_dim,
         hidden_sizes=hidden_sizes,
     ).to(device)
+    initial_actor_checkpoint = section.get("initial_actor_checkpoint")
+    initial_actor_metadata: dict[str, Any] | None = None
+    if initial_actor_checkpoint:
+        checkpoint_path = Path(initial_actor_checkpoint)
+        if not checkpoint_path.is_absolute():
+            checkpoint_path = root / checkpoint_path
+        initial_actor_metadata = _load_initial_actor(
+            model, checkpoint_path, env.actor_feature_names
+        )
+        print(f"  INITIAL:    {checkpoint_path}")
     model.actor_logstd.data.fill_(float(section.get("initial_logstd", -0.5)))
     optimizer = torch.optim.Adam(
         model.parameters(),
@@ -264,7 +303,7 @@ def run(config_path: str | Path) -> None:
     next_done = torch.zeros(env.num_envs, device=device)
     global_step = 0
     wall_start = time.time()
-    best_score = (-1.0, -1.0, float("-inf"))
+    best_score = (float("-inf"), -1.0, -1.0, float("-inf"))
     best_evaluation: dict[str, float] | None = None
     history: list[dict[str, float]] = []
 
@@ -427,7 +466,14 @@ def run(config_path: str | Path) -> None:
 
         if iteration % eval_interval == 0:
             evaluation = evaluate(model, eval_env, eval_episodes)
+            bounded_progress = (
+                evaluation["mean_gates"]
+                * (1.0 - evaluation["collision_rate"])
+                * (1.0 - evaluation["out_of_bounds_rate"])
+                * (1.0 - evaluation["vertical_runaway_rate"])
+            )
             score = (
+                bounded_progress + evaluation["success_rate"],
                 evaluation["success_rate"],
                 evaluation["mean_gates"],
                 evaluation["mean_distance_reduction_m"],
@@ -450,6 +496,32 @@ def run(config_path: str | Path) -> None:
                     global_step,
                     evaluation,
                     env.actor_feature_names,
+                    {
+                        "policy_role": "distilled_live_student",
+                        "policy_architecture": "mlp",
+                        "observation_contract": (
+                            initial_actor_metadata or {}
+                        ).get("observation_contract"),
+                        "base_actor_features": (
+                            initial_actor_metadata or {}
+                        ).get("base_actor_features"),
+                        "history_length": (
+                            initial_actor_metadata or {}
+                        ).get("history_length", 1),
+                        "source_initial_actor_checkpoint": (
+                            str(initial_actor_checkpoint)
+                            if initial_actor_checkpoint
+                            else None
+                        ),
+                        "source_teacher_checkpoint": (
+                            initial_actor_metadata or {}
+                        ).get("source_teacher_checkpoint"),
+                        "source_teacher_global_step": (
+                            initial_actor_metadata or {}
+                        ).get("source_teacher_global_step"),
+                    }
+                    if initial_actor_checkpoint
+                    else None,
                 )
 
     final_evaluation = evaluate(model, eval_env, eval_episodes)
@@ -461,6 +533,28 @@ def run(config_path: str | Path) -> None:
         global_step,
         final_evaluation,
         env.actor_feature_names,
+        {
+            "policy_role": "distilled_live_student",
+            "policy_architecture": "mlp",
+            "observation_contract": (initial_actor_metadata or {}).get(
+                "observation_contract"
+            ),
+            "base_actor_features": (initial_actor_metadata or {}).get(
+                "base_actor_features"
+            ),
+            "history_length": (initial_actor_metadata or {}).get(
+                "history_length", 1
+            ),
+            "source_initial_actor_checkpoint": str(initial_actor_checkpoint),
+            "source_teacher_checkpoint": (initial_actor_metadata or {}).get(
+                "source_teacher_checkpoint"
+            ),
+            "source_teacher_global_step": (initial_actor_metadata or {}).get(
+                "source_teacher_global_step"
+            ),
+        }
+        if initial_actor_checkpoint
+        else None,
     )
     if best_evaluation is None:
         best_evaluation = final_evaluation
@@ -472,6 +566,30 @@ def run(config_path: str | Path) -> None:
             global_step,
             final_evaluation,
             env.actor_feature_names,
+            {
+                "policy_role": "distilled_live_student",
+                "policy_architecture": "mlp",
+                "observation_contract": (initial_actor_metadata or {}).get(
+                    "observation_contract"
+                ),
+                "base_actor_features": (initial_actor_metadata or {}).get(
+                    "base_actor_features"
+                ),
+                "history_length": (initial_actor_metadata or {}).get(
+                    "history_length", 1
+                ),
+                "source_initial_actor_checkpoint": str(
+                    initial_actor_checkpoint
+                ),
+                "source_teacher_checkpoint": (
+                    initial_actor_metadata or {}
+                ).get("source_teacher_checkpoint"),
+                "source_teacher_global_step": (
+                    initial_actor_metadata or {}
+                ).get("source_teacher_global_step"),
+            }
+            if initial_actor_checkpoint
+            else None,
         )
 
     elapsed = time.time() - wall_start

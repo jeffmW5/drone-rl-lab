@@ -131,6 +131,13 @@ The June 13 temporal transfer benchmark is documented in
 improved nominal gate progress but failed bounds and vertical telemetry; a
 full-rollout DAgger follow-up collapsed into collisions. Neither was exported.
 
+The June 13 state-estimation follow-up is documented in
+`docs/AI_GP_STATE_ESTIMATION_BENCHMARK_2026_06_13.md`. Longer history,
+recurrent students, measured corners, optical motion, safety PPO fine-tuning,
+and deployable action shaping were benchmarked. The governed optical-motion
+candidate passed nominal surrogate trajectory criteria and was exported with
+command eligibility still locked pending active Windows simulator evaluation.
+
 Keep mutable/private artifacts in the home directory, not the VirtualBox
 shared folder. In practice this means:
 - venv at `/home/jeff/drones-venv`

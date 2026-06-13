@@ -11,11 +11,15 @@ from typing import Any
 
 from .contract import (
     ACTOR_FEATURE_NAMES,
+    CORNER_BASE_FEATURE_NAMES,
     DETECTION_AGE_SCALE_S,
     LivePolicyFeatures,
+    MOTION_FEATURE_NAMES,
     TEMPORAL_BASE_FEATURE_NAMES,
     TemporalLivePolicyFeatures,
     build_actor_observation,
+    build_corner_base_observation,
+    build_motion_observation,
     build_temporal_base_observation,
 )
 
@@ -55,6 +59,7 @@ def export_session_dataset(
     telemetry_ages: list[float] = []
     last_detection: dict[str, Any] | None = None
     last_detection_time: float | None = None
+    previous_temporal_base_observation: list[float] | None = None
 
     for detection_record in detections:
         timestamp = float(detection_record["monotonic_time_s"])
@@ -120,6 +125,31 @@ def export_session_dataset(
                 previous_action=(0.0, 0.0, 0.0, 0.0),
             )
         )
+        gate_corners, corner_valid = _gate_corners(last_detection)
+        corner_base_observation = build_corner_base_observation(
+            TemporalLivePolicyFeatures(
+                body_velocity_mps=body_velocity,
+                gravity_body=gravity_body,
+                angular_rate_radps=(
+                    float(angular_rate["x"]),
+                    float(angular_rate["y"]),
+                    float(angular_rate["z"]),
+                ),
+                gate_center_normalized=gate_center,
+                gate_size_normalized=gate_size,
+                gate_area_normalized=gate_area,
+                gate_confidence=confidence,
+                gate_age_s=gate_age,
+                previous_action=(0.0, 0.0, 0.0, 0.0),
+            ),
+            gate_corners,
+            corner_valid=corner_valid,
+        )
+        motion_observation = build_motion_observation(
+            temporal_base_observation,
+            previous_temporal_base_observation or temporal_base_observation,
+        )
+        previous_temporal_base_observation = temporal_base_observation
         rows.append(
             {
                 "frame_id": str(detection_record["frame_id"]),
@@ -133,6 +163,14 @@ def export_session_dataset(
                     zip(TEMPORAL_BASE_FEATURE_NAMES, temporal_base_observation)
                 ),
                 "temporal_base_observation": temporal_base_observation,
+                "corner_base_features": dict(
+                    zip(CORNER_BASE_FEATURE_NAMES, corner_base_observation)
+                ),
+                "corner_base_observation": corner_base_observation,
+                "motion_features": dict(
+                    zip(MOTION_FEATURE_NAMES, motion_observation)
+                ),
+                "motion_observation": motion_observation,
                 "source": {
                     "telemetry": telemetry_record,
                     "detection": selected_detection,
@@ -192,6 +230,25 @@ def _gate_features(
         (width, height),
         width * height,
     )
+
+
+def _gate_corners(
+    detection: dict[str, Any] | None,
+) -> tuple[tuple[tuple[float, float], ...], bool]:
+    if detection is None:
+        return ((0.0, 0.0),) * 4, False
+    corners = detection.get("corners")
+    if corners:
+        normalized = tuple(
+            (
+                (float(corner["x"]) - 0.5) * 2.0,
+                (float(corner["y"]) - 0.5) * 2.0,
+            )
+            for corner in corners
+        )
+        if len(normalized) == 4:
+            return normalized, True
+    return ((0.0, 0.0),) * 4, False
 
 
 def _telemetry_body_features(

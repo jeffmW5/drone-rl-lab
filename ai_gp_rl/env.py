@@ -12,7 +12,11 @@ from .contract import (
     ACTION_DIM,
     ACTOR_FEATURE_NAMES,
     ACTOR_OBS_DIM,
+    CORNER_BASE_FEATURE_NAMES,
+    CORNER_BASE_OBS_DIM,
     DETECTION_AGE_SCALE_S,
+    MOTION_FEATURE_NAMES,
+    MOTION_OBS_DIM,
     RATE_SCALES_RADPS,
     SWIFT_TEACHER_FEATURE_NAMES,
     SWIFT_TEACHER_OBS_DIM,
@@ -20,6 +24,7 @@ from .contract import (
     TEMPORAL_BASE_OBS_DIM,
     TEMPORAL_HISTORY_LENGTH,
     VELOCITY_SCALE_MPS,
+    corner_temporal_feature_names,
     temporal_feature_names,
 )
 
@@ -94,6 +99,7 @@ class AIGPEnvConfig:
     action_delta_penalty: float = 0.01
     vertical_speed_penalty: float = 0.03
     altitude_penalty: float = 2.0
+    soft_altitude_limit_m: float | None = None
     collision_penalty: float = 8.0
     out_of_bounds_penalty: float = 12.0
 
@@ -117,13 +123,32 @@ class AIGPVectorEnv:
             self.actor_feature_names = temporal_feature_names(
                 config.observation_history_length
             )
+        elif config.actor_observation_mode == "live_features_recurrent":
+            self.actor_observation_dim = TEMPORAL_BASE_OBS_DIM
+            self.actor_feature_names = TEMPORAL_BASE_FEATURE_NAMES
+        elif config.actor_observation_mode == "live_features_corners_temporal":
+            self.actor_observation_dim = (
+                CORNER_BASE_OBS_DIM * config.observation_history_length
+            )
+            self.actor_feature_names = corner_temporal_feature_names(
+                config.observation_history_length
+            )
+        elif config.actor_observation_mode == "live_features_corners_recurrent":
+            self.actor_observation_dim = CORNER_BASE_OBS_DIM
+            self.actor_feature_names = CORNER_BASE_FEATURE_NAMES
+        elif config.actor_observation_mode == "live_features_motion":
+            self.actor_observation_dim = MOTION_OBS_DIM
+            self.actor_feature_names = MOTION_FEATURE_NAMES
         elif config.actor_observation_mode == "swift_teacher":
             self.actor_observation_dim = SWIFT_TEACHER_OBS_DIM
             self.actor_feature_names = SWIFT_TEACHER_FEATURE_NAMES
         else:
             raise ValueError(
                 "actor_observation_mode must be 'live_features', "
-                "'live_features_temporal', or 'swift_teacher'"
+                "'live_features_temporal', 'live_features_recurrent', "
+                "'live_features_corners_temporal', "
+                "'live_features_corners_recurrent', 'live_features_motion', "
+                "or 'swift_teacher'"
             )
         if config.observation_history_length < 1:
             raise ValueError("observation_history_length must be positive")
@@ -137,10 +162,13 @@ class AIGPVectorEnv:
         if self.live_observation_mode not in (
             "live_features",
             "live_features_temporal",
+            "live_features_recurrent",
+            "live_features_corners_temporal",
+            "live_features_corners_recurrent",
+            "live_features_motion",
         ):
             raise ValueError(
-                "live_observation_mode must be 'live_features' or "
-                "'live_features_temporal'"
+                "unsupported live_observation_mode"
             )
         if self.live_observation_mode == "live_features_temporal":
             self.live_actor_observation_dim = (
@@ -151,6 +179,30 @@ class AIGPVectorEnv:
             )
             self.live_base_feature_names = TEMPORAL_BASE_FEATURE_NAMES
             self.live_observation_contract = "temporal_live_v1"
+        elif self.live_observation_mode == "live_features_recurrent":
+            self.live_actor_observation_dim = TEMPORAL_BASE_OBS_DIM
+            self.live_actor_feature_names = TEMPORAL_BASE_FEATURE_NAMES
+            self.live_base_feature_names = TEMPORAL_BASE_FEATURE_NAMES
+            self.live_observation_contract = "recurrent_live_v1"
+        elif self.live_observation_mode == "live_features_corners_temporal":
+            self.live_actor_observation_dim = (
+                CORNER_BASE_OBS_DIM * config.observation_history_length
+            )
+            self.live_actor_feature_names = corner_temporal_feature_names(
+                config.observation_history_length
+            )
+            self.live_base_feature_names = CORNER_BASE_FEATURE_NAMES
+            self.live_observation_contract = "corner_temporal_live_v1"
+        elif self.live_observation_mode == "live_features_corners_recurrent":
+            self.live_actor_observation_dim = CORNER_BASE_OBS_DIM
+            self.live_actor_feature_names = CORNER_BASE_FEATURE_NAMES
+            self.live_base_feature_names = CORNER_BASE_FEATURE_NAMES
+            self.live_observation_contract = "corner_recurrent_live_v1"
+        elif self.live_observation_mode == "live_features_motion":
+            self.live_actor_observation_dim = MOTION_OBS_DIM
+            self.live_actor_feature_names = MOTION_FEATURE_NAMES
+            self.live_base_feature_names = MOTION_FEATURE_NAMES
+            self.live_observation_contract = "motion_live_v1"
         else:
             self.live_actor_observation_dim = ACTOR_OBS_DIM
             self.live_actor_feature_names = ACTOR_FEATURE_NAMES
@@ -205,6 +257,7 @@ class AIGPVectorEnv:
         self.previous_action = torch.zeros((self.num_envs, ACTION_DIM), device=self.device)
         self.applied_action = torch.zeros_like(self.previous_action)
         self.last_detection = torch.zeros((self.num_envs, 5), device=self.device)
+        self.last_gate_corners = torch.zeros((self.num_envs, 8), device=self.device)
         self.detection_age = torch.full(
             (self.num_envs,), config.detection_memory_s, device=self.device
         )
@@ -213,6 +266,14 @@ class AIGPVectorEnv:
                 self.num_envs,
                 config.observation_history_length,
                 TEMPORAL_BASE_OBS_DIM,
+            ),
+            device=self.device,
+        )
+        self.corner_observation_history = torch.zeros(
+            (
+                self.num_envs,
+                config.observation_history_length,
+                CORNER_BASE_OBS_DIM,
             ),
             device=self.device,
         )
@@ -276,8 +337,10 @@ class AIGPVectorEnv:
         self.attitude[env_ids] = 0.0
         self.angular_rate[env_ids] = 0.0
         self.last_detection[env_ids] = 0.0
+        self.last_gate_corners[env_ids] = 0.0
         self.detection_age[env_ids] = self.config.detection_memory_s
         self.live_observation_history[env_ids] = 0.0
+        self.corner_observation_history[env_ids] = 0.0
         self.live_observation_history_initialized[env_ids] = False
         self.has_taken_off[env_ids] = False
 
@@ -455,11 +518,18 @@ class AIGPVectorEnv:
             | (self.position[:, 0] > self.config.max_forward_m)
         )
 
-        projected_gate, visible, confidence = self._project_gate(update_memory=False)
+        projected_gate, _, visible, confidence = self._project_gate(
+            update_memory=False
+        )
         camera_alignment = torch.exp(
             -self.config.camera_alignment_exponent
             * projected_gate[:, :2].square().sum(1)
         ) * visible.float()
+        altitude_penalty_start = (
+            self.config.max_altitude_m
+            if self.config.soft_altitude_limit_m is None
+            else self.config.soft_altitude_limit_m
+        )
         reward = (
             self.config.progress_reward * progress
             + self.config.gate_reward * passed_gate.float()
@@ -474,7 +544,7 @@ class AIGPVectorEnv:
             - self.config.vertical_speed_penalty
             * torch.relu(self.velocity[:, 2].abs() - 2.0).square()
             - self.config.altitude_penalty
-            * torch.relu(self.position[:, 2] - self.config.max_altitude_m).square()
+            * torch.relu(self.position[:, 2] - altitude_penalty_start).square()
             - self.config.collision_penalty * collision.float()
             - self.config.out_of_bounds_penalty * out_of_bounds.float()
         )
@@ -528,11 +598,22 @@ class AIGPVectorEnv:
         gravity_body = torch.bmm(
             rotation.transpose(1, 2), gravity_world.unsqueeze(2)
         ).squeeze(2)
-        detection, _, confidence = self._project_gate(update_memory=True)
+        detection, gate_corners, _, confidence = self._project_gate(
+            update_memory=True
+        )
         temporal_base_observation = self._build_temporal_base_observation(
             body_velocity, gravity_body, detection, confidence
         )
-        self._update_live_observation_history(temporal_base_observation)
+        corner_base_observation = self._build_corner_base_observation(
+            body_velocity,
+            gravity_body,
+            detection,
+            gate_corners,
+            confidence,
+        )
+        self._update_live_observation_history(
+            temporal_base_observation, corner_base_observation
+        )
 
         if self.config.actor_observation_mode == "swift_teacher":
             corners_world = self._active_gate_corners_world()
@@ -554,8 +635,16 @@ class AIGPVectorEnv:
             actor_obs = self._build_live_actor_observation(
                 body_velocity, gravity_body, detection, confidence
             )
-        else:
+        elif self.config.actor_observation_mode == "live_features_temporal":
             actor_obs = self.live_observation_history.flatten(start_dim=1)
+        elif self.config.actor_observation_mode == "live_features_recurrent":
+            actor_obs = temporal_base_observation
+        elif self.config.actor_observation_mode == "live_features_corners_temporal":
+            actor_obs = self.corner_observation_history.flatten(start_dim=1)
+        elif self.config.actor_observation_mode == "live_features_corners_recurrent":
+            actor_obs = corner_base_observation
+        else:
+            actor_obs = self._build_motion_observation()
 
         active_gate_position = self._active_gate_position()
         gate_relative_world = active_gate_position - self.position
@@ -590,6 +679,14 @@ class AIGPVectorEnv:
 
         if self.live_observation_mode == "live_features_temporal":
             return self.live_observation_history.flatten(start_dim=1)
+        if self.live_observation_mode == "live_features_recurrent":
+            return self.live_observation_history[:, -1]
+        if self.live_observation_mode == "live_features_corners_temporal":
+            return self.corner_observation_history.flatten(start_dim=1)
+        if self.live_observation_mode == "live_features_corners_recurrent":
+            return self.corner_observation_history[:, -1]
+        if self.live_observation_mode == "live_features_motion":
+            return self._build_motion_observation()
 
         rotation = self._body_to_world_rotation(self.attitude)
         body_velocity = torch.bmm(
@@ -599,7 +696,7 @@ class AIGPVectorEnv:
         gravity_body = torch.bmm(
             rotation.transpose(1, 2), gravity_world.unsqueeze(2)
         ).squeeze(2)
-        detection, _, confidence = self._project_gate(update_memory=False)
+        detection, _, _, confidence = self._project_gate(update_memory=False)
         return self._build_live_actor_observation(
             body_velocity, gravity_body, detection, confidence
         )
@@ -664,8 +761,57 @@ class AIGPVectorEnv:
             )
         return base_observation
 
+    def _build_corner_base_observation(
+        self,
+        body_velocity: torch.Tensor,
+        gravity_body: torch.Tensor,
+        detection: torch.Tensor,
+        gate_corners: torch.Tensor,
+        confidence: torch.Tensor,
+    ) -> torch.Tensor:
+        base_observation = torch.cat(
+            (
+                (body_velocity / VELOCITY_SCALE_MPS).clamp(-2.0, 2.0),
+                gravity_body,
+                self.angular_rate / self.rate_limits,
+                detection[:, :5].clamp(-1.5, 1.5),
+                gate_corners.clamp(-1.5, 1.5),
+                (confidence > 0.0).float().unsqueeze(1),
+                confidence.unsqueeze(1),
+                (self.detection_age / self.config.detection_memory_s)
+                .clamp(0.0, 1.0)
+                .unsqueeze(1),
+                self.previous_action,
+            ),
+            dim=1,
+        )
+        if base_observation.shape != (self.num_envs, CORNER_BASE_OBS_DIM):
+            raise RuntimeError(
+                "corner base observation contract mismatch: "
+                f"expected {(self.num_envs, CORNER_BASE_OBS_DIM)}, "
+                f"got {tuple(base_observation.shape)}"
+            )
+        return base_observation
+
+    def _build_motion_observation(self) -> torch.Tensor:
+        current = self.live_observation_history[:, -1]
+        previous = self.live_observation_history[:, -2]
+        center_delta = ((current[:, 9:11] - previous[:, 9:11]) / 0.25).clamp(
+            -2.0, 2.0
+        )
+        size_delta = (
+            torch.log(current[:, 11:13].clamp(min=1e-4))
+            - torch.log(previous[:, 11:13].clamp(min=1e-4))
+        ).clamp(-2.0, 2.0)
+        observation = torch.cat((current, center_delta, size_delta), dim=1)
+        if observation.shape != (self.num_envs, MOTION_OBS_DIM):
+            raise RuntimeError("motion observation contract mismatch")
+        return observation
+
     def _update_live_observation_history(
-        self, current_observation: torch.Tensor
+        self,
+        current_observation: torch.Tensor,
+        current_corner_observation: torch.Tensor,
     ) -> None:
         initialized = self.live_observation_history_initialized
         if initialized.any():
@@ -675,16 +821,25 @@ class AIGPVectorEnv:
             self.live_observation_history[initialized, -1] = current_observation[
                 initialized
             ]
+            self.corner_observation_history[initialized, :-1] = (
+                self.corner_observation_history[initialized, 1:].clone()
+            )
+            self.corner_observation_history[initialized, -1] = (
+                current_corner_observation[initialized]
+            )
         uninitialized = ~initialized
         if uninitialized.any():
             self.live_observation_history[uninitialized] = current_observation[
                 uninitialized
             ].unsqueeze(1)
+            self.corner_observation_history[uninitialized] = (
+                current_corner_observation[uninitialized].unsqueeze(1)
+            )
             self.live_observation_history_initialized[uninitialized] = True
 
     def _project_gate(
         self, *, update_memory: bool
-    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         rotation = self._body_to_world_rotation(self.attitude)
         relative_world = self._active_gate_position() - self.position
         relative_body = torch.bmm(
@@ -712,11 +867,25 @@ class AIGPVectorEnv:
             torch.exp(-0.35 * (center_x.square() + center_y.square()))
             * visible.float()
         )
+        corners_world = self._active_gate_corners_world()
+        corners_body = torch.bmm(
+            rotation.transpose(1, 2),
+            (corners_world - self.position.unsqueeze(1)).transpose(1, 2),
+        ).transpose(1, 2)
+        corner_depth = corners_body[:, :, 0].clamp(min=0.05)
+        corner_x = -corners_body[:, :, 1] / (corner_depth * tan_h)
+        corner_y = -corners_body[:, :, 2] / (corner_depth * tan_v)
+        fresh_corners = torch.stack((corner_x, corner_y), dim=2).reshape(
+            self.num_envs, 8
+        )
 
         if self.config.randomization and self.randomization_scale > 0.0:
             noise_std = self.config.vision_noise_std * self.randomization_scale
             center_x += self._rand_normal((self.num_envs,)) * noise_std
             center_y += self._rand_normal((self.num_envs,)) * noise_std
+            fresh_corners += self._rand_normal(
+                (self.num_envs, 8)
+            ) * noise_std
             size_noise = (
                 1.0 + self._rand_normal((self.num_envs,)) * noise_std
             ).clamp(0.6, 1.4)
@@ -735,6 +904,7 @@ class AIGPVectorEnv:
         if update_memory:
             if visible.any():
                 self.last_detection[visible] = fresh_detection[visible]
+                self.last_gate_corners[visible] = fresh_corners[visible]
             self.detection_age = torch.where(
                 visible,
                 torch.zeros_like(self.detection_age),
@@ -749,7 +919,10 @@ class AIGPVectorEnv:
         detection = torch.where(
             visible.unsqueeze(1), fresh_detection, self.last_detection
         )
-        return detection, visible, tracked_confidence
+        gate_corners = torch.where(
+            visible.unsqueeze(1), fresh_corners, self.last_gate_corners
+        )
+        return detection, gate_corners, visible, tracked_confidence
 
     def _active_gate_position(self) -> torch.Tensor:
         return self.env_gate_positions[

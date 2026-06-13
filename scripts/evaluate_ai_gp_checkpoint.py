@@ -15,8 +15,9 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from ai_gp_rl.action_governor import ActionGovernorConfig, govern_action
 from ai_gp_rl.env import AIGPVectorEnv
-from ai_gp_rl.model import ActorCritic
+from ai_gp_rl.model import RecurrentStudentPolicy, build_policy_from_metadata
 from train_ai_gp import _build_env_config, load_config
 
 
@@ -56,21 +57,31 @@ def evaluate_checkpoint(
     checkpoint = torch.load(
         checkpoint_path, map_location=env.device, weights_only=False
     )
-    hidden_sizes = tuple(
-        checkpoint.get("metadata", {}).get(
-            "hidden_sizes", section.get("hidden_sizes", [128, 128])
-        )
-    )
-    model = ActorCritic(
-        observation_dim=env.observation_dim,
-        action_dim=env.action_dim,
-        actor_observation_dim=env.actor_observation_dim,
-        hidden_sizes=hidden_sizes,
-    ).to(env.device)
+    metadata = checkpoint.get("metadata", {})
+    model = build_policy_from_metadata(metadata, device=env.device)
     model.load_state_dict(checkpoint["model_state_dict"])
     model.eval()
+    governor_section = metadata.get("action_governor")
+    governor_config = (
+        ActionGovernorConfig(
+            slew_limits=tuple(
+                float(value) for value in governor_section["slew_limits"]
+            ),
+            upward_brake_start_mps=float(
+                governor_section["upward_brake_start_mps"]
+            ),
+            upward_brake_gain=float(governor_section["upward_brake_gain"]),
+        )
+        if governor_section
+        else None
+    )
 
     observation, _ = env.reset()
+    hidden_state = (
+        model.initial_state(env.num_envs, device=env.device)
+        if isinstance(model, RecurrentStudentPolicy)
+        else None
+    )
     max_altitude = env.position[:, 2].clone()
     min_altitude = env.position[:, 2].clone()
     max_abs_vertical_speed = env.velocity[:, 2].abs().clone()
@@ -91,10 +102,20 @@ def evaluate_checkpoint(
     }
 
     while len(episodes) < episode_count:
-        action, _, _, _ = model.get_action_and_value(
-            observation, deterministic=True
+        action, next_hidden_state = model.actor_step(
+            observation[:, : env.actor_observation_dim], hidden_state
         )
+        if governor_config is not None:
+            normalized_action, _ = govern_action(
+                torch.tanh(action),
+                env.previous_action,
+                env.live_observation_history[:, -1],
+                governor_config,
+            )
+            action = torch.atanh(normalized_action.clamp(-0.999, 0.999))
         observation, _, _, _, info = env.step(action)
+        if next_hidden_state is not None:
+            hidden_state = next_hidden_state * (~info["done"]).unsqueeze(1)
         episode_steps += 1
 
         position = info["position"]

@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
+from typing import Any
 
 import torch
 from torch import nn
@@ -74,3 +75,100 @@ class ActorCritic(nn.Module):
     @torch.no_grad()
     def deterministic_action(self, actor_observation: torch.Tensor) -> torch.Tensor:
         return torch.tanh(self.actor_mean(actor_observation[..., : self.actor_observation_dim]))
+
+    def actor_step(
+        self,
+        actor_observation: torch.Tensor,
+        hidden_state: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, None]:
+        del hidden_state
+        return self.actor_mean(
+            actor_observation[..., : self.actor_observation_dim]
+        ), None
+
+
+class RecurrentStudentPolicy(nn.Module):
+    """GRU student used only with deployable per-frame observations."""
+
+    def __init__(
+        self,
+        observation_dim: int,
+        action_dim: int,
+        actor_observation_dim: int,
+        hidden_sizes: Sequence[int] = (128, 128),
+    ) -> None:
+        super().__init__()
+        if not hidden_sizes:
+            raise ValueError("recurrent student requires at least one hidden size")
+        self.observation_dim = observation_dim
+        self.action_dim = action_dim
+        self.actor_observation_dim = actor_observation_dim
+        self.hidden_sizes = tuple(hidden_sizes)
+        recurrent_width = self.hidden_sizes[0]
+        self.input_encoder = nn.Sequential(
+            _layer_init(nn.Linear(actor_observation_dim, recurrent_width), 2**0.5),
+            nn.LeakyReLU(0.2),
+        )
+        self.recurrent = nn.GRUCell(recurrent_width, recurrent_width)
+        head_layers: list[nn.Module] = []
+        previous = recurrent_width
+        for width in self.hidden_sizes[1:]:
+            head_layers.extend(
+                (
+                    _layer_init(nn.Linear(previous, width), 2**0.5),
+                    nn.LeakyReLU(0.2),
+                )
+            )
+            previous = width
+        head_layers.append(_layer_init(nn.Linear(previous, action_dim), 0.01))
+        self.action_head = nn.Sequential(*head_layers)
+
+    def initial_state(
+        self, batch_size: int, *, device: torch.device | str
+    ) -> torch.Tensor:
+        return torch.zeros(
+            (batch_size, self.hidden_sizes[0]),
+            device=device,
+            dtype=next(self.parameters()).dtype,
+        )
+
+    def forward_step(
+        self,
+        actor_observation: torch.Tensor,
+        hidden_state: torch.Tensor,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        encoded = self.input_encoder(
+            actor_observation[..., : self.actor_observation_dim]
+        )
+        next_hidden = self.recurrent(encoded, hidden_state)
+        return self.action_head(next_hidden), next_hidden
+
+    def actor_step(
+        self,
+        actor_observation: torch.Tensor,
+        hidden_state: torch.Tensor | None,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        if hidden_state is None:
+            raise ValueError("recurrent student requires hidden state")
+        return self.forward_step(actor_observation, hidden_state)
+
+
+def build_policy_from_metadata(
+    metadata: Mapping[str, Any],
+    *,
+    device: torch.device | str,
+) -> ActorCritic | RecurrentStudentPolicy:
+    architecture = str(metadata.get("policy_architecture", "mlp"))
+    model_kwargs = {
+        "observation_dim": int(metadata["observation_dim"]),
+        "action_dim": int(metadata["action_dim"]),
+        "actor_observation_dim": int(metadata["actor_observation_dim"]),
+        "hidden_sizes": tuple(metadata["hidden_sizes"]),
+    }
+    if architecture == "mlp":
+        model: ActorCritic | RecurrentStudentPolicy = ActorCritic(**model_kwargs)
+    elif architecture == "gru":
+        model = RecurrentStudentPolicy(**model_kwargs)
+    else:
+        raise ValueError(f"unsupported policy architecture: {architecture}")
+    return model.to(device)
