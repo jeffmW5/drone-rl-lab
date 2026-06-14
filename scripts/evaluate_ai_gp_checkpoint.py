@@ -87,6 +87,9 @@ def evaluate_checkpoint(
     max_abs_vertical_speed = env.velocity[:, 2].abs().clone()
     upward_run = torch.zeros(env.num_envs, dtype=torch.long, device=env.device)
     longest_upward_run = torch.zeros_like(upward_run)
+    episode_missed_gate = torch.zeros(
+        env.num_envs, dtype=torch.bool, device=env.device
+    )
     episode_steps = torch.zeros_like(upward_run)
 
     episodes: list[dict[str, Any]] = []
@@ -114,6 +117,7 @@ def evaluate_checkpoint(
             )
             action = torch.atanh(normalized_action.clamp(-0.999, 0.999))
         observation, _, _, _, info = env.step(action)
+        episode_missed_gate |= info["missed_gate"]
         if next_hidden_state is not None:
             hidden_state = next_hidden_state * (~info["done"]).unsqueeze(1)
         episode_steps += 1
@@ -142,6 +146,7 @@ def evaluate_checkpoint(
                 "active_gate_index": int(info["active_gate_index"][env_id]),
                 "gates_passed": int(info["gates_passed"][env_id]),
                 "passed_gate": bool(info["passed_gate"][env_id]),
+                "missed_gate": bool(info["missed_gate"][env_id]),
                 "collision": bool(info["collision"][env_id]),
                 "out_of_bounds": bool(info["out_of_bounds"][env_id]),
                 "done": bool(info["done"][env_id]),
@@ -195,6 +200,7 @@ def evaluate_checkpoint(
                     "success": bool(info["success"][env_id]),
                     "collision": bool(info["collision"][env_id]),
                     "out_of_bounds": bool(info["out_of_bounds"][env_id]),
+                    "missed_gate": bool(episode_missed_gate[env_id]),
                     "distance_reduction_m": float(
                         info["distance_reduction"][env_id]
                     ),
@@ -221,6 +227,7 @@ def evaluate_checkpoint(
             max_abs_vertical_speed[reset_ids] = env.velocity[reset_ids, 2].abs()
             upward_run[reset_ids] = 0
             longest_upward_run[reset_ids] = 0
+            episode_missed_gate[reset_ids] = False
             episode_steps[reset_ids] = 0
 
     gate_counts = [episode["gates_passed"] for episode in episodes]
@@ -249,6 +256,10 @@ def evaluate_checkpoint(
             / len(episodes),
             "out_of_bounds_rate": sum(
                 episode["out_of_bounds"] for episode in episodes
+            )
+            / len(episodes),
+            "missed_gate_rate": sum(
+                episode["missed_gate"] for episode in episodes
             )
             / len(episodes),
             "vertical_runaway_rate": sum(

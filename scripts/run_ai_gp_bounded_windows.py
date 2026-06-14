@@ -42,6 +42,7 @@ from ai_gp_rl.contract import (
 )
 from ai_gp_rl.session_dataset import _telemetry_body_features
 from ai_gp_rl.session_dataset import _rotation_matrix, _transpose_matvec
+from ai_gp_rl.track import ai_gp_track_gates_ned_with_dimensions
 from calibration.run_thrust_sweep import _reset_simulator
 from perception.gates import GateObservation, NormalizedBox, NormalizedPoint
 if str(EXECUTION_ROOT) not in sys.path:
@@ -55,14 +56,7 @@ from policy.mlp_policy import (
 from replay.recording import SessionEvaluator, SessionRecorder
 
 
-KNOWN_TRACK_GATES_NED = {
-    0: (-23.2979679107666, -0.39990234375, -0.03195800632238388, 2.72, 2.72),
-    1: (-46.89374923706055, -2.499990224838257, 5.068041801452637, 2.72, 2.72),
-    2: (-74.59375, 1.2000097036361694, 13.668041229248047, 2.72, 2.72),
-    3: (-111.49374389648438, -5.099989891052246, 24.56804084777832, 2.72, 2.72),
-    4: (-135.49374389648438, -0.7999902367591858, 25.355653762817383, 2.72, 2.72),
-    5: (-159.19374084472656, -4.399990081787109, 25.968040466308594, 2.72, 2.72),
-}
+KNOWN_TRACK_GATES_NED = ai_gp_track_gates_ned_with_dimensions()
 MEASURED_ROLL_ACTION_SIGN = 1.0
 
 

@@ -12,6 +12,8 @@ trained policies with time-series telemetry.
 ## Current Implementation
 
 - `ai_gp_rl/env.py`: Torch-vectorized quadrotor and gate environment.
+- `ai_gp_rl/track.py`: canonical measured six-gate NED track and explicit
+  NED-to-surrogate transform.
 - `ai_gp_rl/model.py`: asymmetric PPO actor-critic with two 128-unit layers.
 - `ai_gp_rl/contract.py`: legacy 18D, temporal 80D, and Swift teacher 31D contracts.
 - `train_ai_gp.py`: PPO training, evaluation, metrics, and checkpoints.
@@ -23,6 +25,10 @@ trained policies with time-series telemetry.
 - `configs/ai_gp_004_dagger_live_student.yaml`: failed DAgger transfer.
 - `configs/ai_gp_005_temporal_dagger_live_student.yaml`: failed four-frame transfer.
 - `configs/ai_gp_006_temporal_full_dagger_student.yaml`: failed full-rollout follow-up.
+- `configs/ai_gp_018_real_track_teacher_10m.yaml`: failed first topology-correct
+  teacher benchmark.
+- `configs/ai_gp_019_real_track_teacher_reward_fix_10m.yaml`: failed one-shot
+  crossing/altitude reward correction.
 - `scripts/runpod_ai_gp.ps1`: deploy, smoke, train, monitor, and pull workflow.
 - `tmp/ai-grand-prix-stack-remote/`: local simulator-control worktree. It is
   intentionally ignored because it contains generated sessions and captures.
@@ -57,6 +63,7 @@ aliasing and collapsed into collisions.
 
 See `docs/AI_GP_10M_BENCHMARK_2026_06_09.md`.
 See `docs/AI_GP_TEMPORAL_STUDENT_BENCHMARK_2026_06_13.md`.
+See `docs/AI_GP_REAL_TRACK_TEACHER_BENCHMARK_2026_06_14.md`.
 
 - CUDA smoke passed on an RTX 3090.
 - The 10.09M teacher benchmark completed in about 70 seconds.
@@ -76,8 +83,8 @@ repeatability testing did not reproduce that result.
 June 14 Windows evidence:
 
 - symmetric live pulses proved the end-to-end roll mapping is identity
-- the AI-GP six-gate NED poses and `2.72 m` gate dimensions are recorded in
-  `scripts/run_ai_gp_bounded_windows.py`
+- the AI-GP six-gate NED centers and `2.72 m` gate dimensions are canonical in
+  `ai_gp_rl/track.py` and reused by `scripts/run_ai_gp_bounded_windows.py`
 - the current surrogate track turns the opposite direction after gate 0 from
   the AI-GP track, explaining the learned pre-turn failure
 - a smooth `2.0 s` launch plus `1.0 s` authority ramp removed the hard-switch
@@ -90,22 +97,38 @@ June 14 Windows evidence:
 
 The current policy is not approved for unrestricted control.
 
+June 14 Linux real-track benchmark:
+
+- the measured six-gate centers and `2.72 m` dimensions now have one canonical
+  training/live definition
+- NED maps to surrogate world as `(-north, east, altitude_offset - down)`
+- active-gate plane misses now terminate training episodes and are reported
+- the initial 10.09M teacher passed gate 0 in `0/256` nominal episodes
+- one evidence-based reward correction improved nominal gate-0 passage to
+  `29/256` (`11.3%`) but passed no gate 1
+- three randomized seeds averaged `1.4%` gate-0 passage, `37.4%`
+  out-of-bounds, and `39.1%` vertical-runaway rates
+
+The topology-correct teacher failed promotion. No new student or live policy was
+exported.
+
 ## Immediate Next Action
 
-Implement and train one structured-state PPO teacher on the measured AI-GP
-six-gate topology.
+Fit the topology-correct surrogate to measured AI-GP command response before
+another long PPO run.
 
-1. Add a tested conversion from the recorded NED track into the surrogate world
-   frame. Do not silently guess axis signs.
-2. Detect crossing an active gate plane outside its aperture. Apply a large
-   penalty and terminate the episode.
-3. Add a six-gate teacher config using the real topology and dimensions.
-4. Run CPU tests, CUDA smoke, then a 10-million-interaction benchmark.
-5. Report deterministic nominal and randomized gate completion, missed-gate,
-   collision, out-of-bounds, and vertical-runaway rates.
+1. Build a command-aligned dataset from synchronized Windows command and
+   telemetry time-series.
+2. Fit collective response, body-rate time constants, drag, latency, and
+   effective mass/thrust scaling.
+3. Obtain actual gate orientations if the simulator exposes them. Current gate
+   centers and dimensions are measured, but plane yaw is inferred from the
+   incoming course segment.
+4. Revalidate the fitted environment with held-out command trajectories.
+5. Retrain one structured-state teacher only after those checks pass.
 
-Do not start another live-student distillation or broad hyperparameter matrix
-until this topology-correct teacher has been evaluated.
+Do not start another live-student distillation, reward matrix, or authority
+matrix before dynamics fitting.
 
 The bounded runner is preserved at:
 
@@ -127,8 +150,10 @@ python3 scripts/export_ai_gp_live_policy.py \
 
 ## Validation Status
 
-- RunPod CUDA smoke, PPO benchmark, deterministic telemetry, and randomized
-  telemetry passed for the privileged teacher.
+- The earlier four-gate privileged teacher passed RunPod CUDA smoke, PPO,
+  deterministic telemetry, and randomized telemetry.
+- The topology-correct six-gate teacher passed execution validation but failed
+  policy promotion in nominal and randomized telemetry.
 - Training metrics alone were not used for acceptance.
 - Every student transfer failed at least one collision, out-of-bounds, or
   vertical-behavior criterion.
@@ -137,8 +162,8 @@ python3 scripts/export_ai_gp_live_policy.py \
 
 ## Known Unknowns
 
-- The NED-to-surrogate coordinate transform still needs an explicit tested
-  implementation.
+- Gate orientations are not present in the captured track payload; surrogate
+  plane yaw is inferred from the incoming horizontal course segment.
 - Surrogate thrust and rate dynamics are not fitted to clean live telemetry.
 - Live four-corner gate detection is not implemented.
 - Reset and race-start synchronization require continued validation.
@@ -147,6 +172,8 @@ python3 scripts/export_ai_gp_live_policy.py \
 - The governed student has no repeatable gate-0 or multi-gate evidence.
 - Lost-gate handling currently permits stale command holding when the
   diagnostic gate-plane abort is disabled.
+- The topology-correct teacher reached only `11.3%` nominal gate-0 passage and
+  no gate-1 passages after one evidence-based reward correction.
 
 ## Promotion Criteria
 
@@ -169,3 +196,4 @@ Surrogate passage must never be described as Windows simulator passage.
 - `docs/AI_GP_CONTROL_CALIBRATION.md`
 - `docs/AI_GP_RUNPOD.md`
 - `docs/AI_GP_LINUX_AGENT_PROMPT.md`
+- `docs/AI_GP_REAL_TRACK_TEACHER_BENCHMARK_2026_06_14.md`

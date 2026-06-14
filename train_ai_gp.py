@@ -132,6 +132,7 @@ def evaluate(
     successes: list[torch.Tensor] = []
     collisions: list[torch.Tensor] = []
     out_of_bounds: list[torch.Tensor] = []
+    missed_gates: list[torch.Tensor] = []
     vertical_runaways: list[torch.Tensor] = []
     distance_reduction: list[torch.Tensor] = []
     max_altitude = env.position[:, 2].clone()
@@ -139,12 +140,16 @@ def evaluate(
         env.num_envs, dtype=torch.long, device=env.device
     )
     longest_upward_run = torch.zeros_like(upward_run)
+    episode_missed_gate = torch.zeros(
+        env.num_envs, dtype=torch.bool, device=env.device
+    )
     completed = 0
     while completed < episode_count:
         action, _, _, _ = model.get_action_and_value(
             observation, deterministic=True
         )
         observation, _, _, _, info = env.step(action)
+        episode_missed_gate |= info["missed_gate"]
         max_altitude = torch.maximum(max_altitude, info["position"][:, 2])
         sustained_upward = (
             (info["velocity"][:, 2] > 2.0)
@@ -166,6 +171,9 @@ def evaluate(
         out_of_bounds.append(
             info["out_of_bounds"][done_ids].float().detach().cpu()
         )
+        missed_gates.append(
+            episode_missed_gate[done_ids].float().detach().cpu()
+        )
         vertical_runaways.append(
             (
                 (max_altitude[done_ids] >= 0.95 * env.config.max_altitude_m)
@@ -186,6 +194,7 @@ def evaluate(
         max_altitude[all_done_ids] = env.position[all_done_ids, 2]
         upward_run[all_done_ids] = 0
         longest_upward_run[all_done_ids] = 0
+        episode_missed_gate[all_done_ids] = False
 
     return {
         "mean_return": float(torch.cat(returns).mean()),
@@ -193,6 +202,7 @@ def evaluate(
         "success_rate": float(torch.cat(successes).mean()),
         "collision_rate": float(torch.cat(collisions).mean()),
         "out_of_bounds_rate": float(torch.cat(out_of_bounds).mean()),
+        "missed_gate_rate": float(torch.cat(missed_gates).mean()),
         "vertical_runaway_rate": float(torch.cat(vertical_runaways).mean()),
         "mean_distance_reduction_m": float(torch.cat(distance_reduction).mean()),
         "episodes": completed,
@@ -470,6 +480,7 @@ def run(config_path: str | Path) -> None:
                 evaluation["mean_gates"]
                 * (1.0 - evaluation["collision_rate"])
                 * (1.0 - evaluation["out_of_bounds_rate"])
+                * (1.0 - evaluation["missed_gate_rate"])
                 * (1.0 - evaluation["vertical_runaway_rate"])
             )
             score = (
@@ -483,6 +494,7 @@ def run(config_path: str | Path) -> None:
                 f"success={evaluation['success_rate']:.1%} "
                 f"gates={evaluation['mean_gates']:.2f} "
                 f"collision={evaluation['collision_rate']:.1%} "
+                f"missed={evaluation['missed_gate_rate']:.1%} "
                 f"progress={evaluation['mean_distance_reduction_m']:.2f}m"
             )
             if score > best_score:

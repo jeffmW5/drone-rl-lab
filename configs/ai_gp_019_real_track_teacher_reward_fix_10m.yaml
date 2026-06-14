@@ -1,0 +1,80 @@
+name: ai_gp_019_real_track_teacher_reward_fix_10m
+backend: ai_gp
+hypothesis: >
+  The first real-track teacher missed gate 0 high because approach progress
+  outweighed the terminal miss and no reward term penalized gate-relative
+  altitude error. Making crossing outcomes dominant and penalizing vertical
+  gate error should convert the learned approach into valid aperture crossings.
+budget_seconds: 7200
+
+ai_gp:
+  device: cuda
+  allow_cpu: false
+  seed: 59
+  total_timesteps: 10092544
+  curriculum_steps: 10092544
+  num_envs: 4096
+  num_steps: 32
+  learning_rate: 0.0003
+  anneal_lr: true
+  gamma: 0.99
+  gae_lambda: 0.95
+  update_epochs: 4
+  num_minibatches: 32
+  clip_coef: 0.2
+  ent_coef: 0.005
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  initial_logstd: -0.7
+  target_kl: 0.02
+  hidden_sizes: [128, 128]
+  eval_interval_iterations: 10
+  eval_episodes: 256
+  eval_num_envs: 256
+  eval_randomization: false
+
+  env:
+    actor_observation_mode: swift_teacher
+    track_name: ai_gp_six_gate
+    track_ground_clearance_m: 1.5
+    start_position_ned_m: [0.0, 0.0, 0.0]
+    position_observation_scale_m: [180.0, 20.0, 35.0]
+
+    dt: 0.02
+    physics_substeps: 2
+    max_episode_steps: 1500
+    randomization: true
+    align_spawn_heading_to_gate: true
+    start_position_noise_m: [0.20, 0.20, 0.05]
+    start_velocity_noise_mps: 0.15
+    spawn_yaw_noise_rad: 0.20
+    spawn_tilt_noise_rad: 0.04
+    gate_jitter_m: [0.20, 0.20, 0.15]
+
+    near_gate_spawn_ratio_start: 0.80
+    near_gate_spawn_ratio_end: 0.15
+    near_gate_distance_m: [1.5, 3.5]
+    soft_collision_fraction: 0.20
+
+    max_altitude_m: 35.0
+    max_lateral_m: 15.0
+    min_forward_m: -8.0
+    max_forward_m: 175.0
+
+    progress_reward: 12.0
+    gate_reward: 100.0
+    finish_reward: 200.0
+    camera_alignment_reward: 0.20
+    camera_alignment_exponent: 4.0
+    forward_speed_reward: 0.0
+    visibility_reward: 0.0
+    alive_reward: 0.0
+    angular_rate_penalty: 0.002
+    action_delta_penalty: 0.01
+    vertical_speed_penalty: 0.03
+    altitude_penalty: 2.0
+    gate_altitude_error_penalty: 0.20
+    collision_penalty: 20.0
+    out_of_bounds_penalty: 30.0
+    missed_gate_penalty: 300.0
+    terminate_on_missed_gate: true

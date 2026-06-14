@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-04-19T18:18:24+00:00",
+  "generated_at": "2026-06-14T20:41:06+00:00",
   "repo": {
-    "path": "/media/drone-rl-lab",
+    "path": "/home/jeff/drone-rl-lab",
     "available": true,
     "branch": "master",
-    "commit": "c59b696086576128ec9143ed49b2d7e10b9b26ce",
+    "commit": "aba2ca3f32453f4272db62074d8401c3019ba31f",
     "dirty": true
   },
   "external_repos": {
@@ -16,14 +16,7 @@
       "dirty": true
     }
   },
-  "agents": [
-    {
-      "id": "jeff-VirtualBox-6765-1776612627",
-      "status": "idle",
-      "task": null,
-      "heartbeat": "2026-04-19T15:30:27+00:00"
-    }
-  ],
+  "agents": [],
   "queue": {
     "counts": {
       "done": 26,
@@ -115,7 +108,7 @@
     "training_reward_note": "Training reward is secondary and only comparable within similar reward definitions."
   },
   "experiments": {
-    "total_results": 57,
+    "total_results": 64,
     "highest_recorded_mean_reward": {
       "experiment": "exp_051_longer_rollout",
       "mean_reward": 175.604,
@@ -131,10 +124,10 @@
       "avg_finish_time": null
     },
     "latest_result": {
-      "experiment": "exp_069_larger_network",
-      "timestamp": "2026-03-28T13:20:30.146379",
-      "mean_reward": 42.291,
-      "timesteps_trained": 3469312
+      "experiment": "ai_gp_019_real_track_teacher_reward_fix_10m",
+      "timestamp": "2026-06-14T20:36:53.519471",
+      "mean_reward": null,
+      "timesteps_trained": null
     }
   }
 }

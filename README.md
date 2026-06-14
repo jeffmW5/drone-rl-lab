@@ -138,6 +138,13 @@ and deployable action shaping were benchmarked. The governed optical-motion
 candidate passed nominal surrogate trajectory criteria and was exported with
 command eligibility still locked pending active Windows simulator evaluation.
 
+The June 14 real-track teacher benchmark is documented in
+`docs/AI_GP_REAL_TRACK_TEACHER_BENCHMARK_2026_06_14.md`. The measured six-gate
+topology and missed-gate termination are implemented, but the best corrected
+teacher reached only `11.3%` nominal gate-0 passage and failed randomized
+robustness. The surrogate remains dynamics-unfitted and no new live policy was
+exported.
+
 Keep mutable/private artifacts in the home directory, not the VirtualBox
 shared folder. In practice this means:
 - venv at `/home/jeff/drones-venv`

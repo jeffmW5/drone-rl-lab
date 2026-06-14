@@ -27,6 +27,14 @@ from .contract import (
     corner_temporal_feature_names,
     temporal_feature_names,
 )
+from .track import (
+    AI_GP_GATE_SIZE_M,
+    AI_GP_TRACK_GROUND_CLEARANCE_M,
+    AI_GP_TRACK_NAME,
+    ai_gp_track_altitude_offset_m,
+    ai_gp_track_surrogate_positions,
+    ned_position_to_surrogate,
+)
 
 
 @dataclass
@@ -42,7 +50,10 @@ class AIGPEnvConfig:
     max_episode_steps: int = 500
     randomization: bool = True
 
+    track_name: str | None = None
+    track_ground_clearance_m: float = AI_GP_TRACK_GROUND_CLEARANCE_M
     start_position_m: tuple[float, float, float] = (-2.0, 0.0, 0.03)
+    start_position_ned_m: tuple[float, float, float] | None = None
     start_position_noise_m: tuple[float, float, float] = (0.15, 0.15, 0.01)
     start_velocity_noise_mps: float = 0.15
     align_spawn_heading_to_gate: bool = False
@@ -61,6 +72,8 @@ class AIGPEnvConfig:
     )
     gate_half_width_m: float = 0.80
     gate_half_height_m: float = 0.80
+    upright_gate_normals: bool = False
+    position_observation_scale_m: tuple[float, float, float] = (20.0, 10.0, 5.0)
 
     max_roll_rate_radps: float = RATE_SCALES_RADPS[0]
     max_pitch_rate_radps: float = RATE_SCALES_RADPS[1]
@@ -99,9 +112,36 @@ class AIGPEnvConfig:
     action_delta_penalty: float = 0.01
     vertical_speed_penalty: float = 0.03
     altitude_penalty: float = 2.0
+    gate_altitude_error_penalty: float = 0.0
     soft_altitude_limit_m: float | None = None
     collision_penalty: float = 8.0
     out_of_bounds_penalty: float = 12.0
+    missed_gate_penalty: float = 0.0
+    terminate_on_missed_gate: bool = False
+
+    def __post_init__(self) -> None:
+        if self.track_name is None:
+            if self.start_position_ned_m is not None:
+                raise ValueError(
+                    "start_position_ned_m requires a named NED track"
+                )
+            return
+        if self.track_name != AI_GP_TRACK_NAME:
+            raise ValueError(f"unsupported AI-GP track: {self.track_name}")
+
+        self.gate_positions_m = ai_gp_track_surrogate_positions(
+            self.track_ground_clearance_m
+        )
+        self.gate_half_width_m = AI_GP_GATE_SIZE_M / 2.0
+        self.gate_half_height_m = AI_GP_GATE_SIZE_M / 2.0
+        self.upright_gate_normals = True
+        if self.start_position_ned_m is not None:
+            self.start_position_m = ned_position_to_surrogate(
+                self.start_position_ned_m,
+                altitude_offset_m=ai_gp_track_altitude_offset_m(
+                    self.track_ground_clearance_m
+                ),
+            )
 
 
 class AIGPVectorEnv:
@@ -231,7 +271,9 @@ class AIGPVectorEnv:
             (0.0, 0.0, -1.0), device=self.device, dtype=self.dtype
         )
         self.position_observation_scale = torch.tensor(
-            (20.0, 10.0, 5.0), device=self.device, dtype=self.dtype
+            config.position_observation_scale_m,
+            device=self.device,
+            dtype=self.dtype,
         )
         self.tan_horizontal_half_fov = torch.tan(
             torch.tensor(config.horizontal_fov_deg * pi / 360.0, device=self.device)
@@ -246,7 +288,10 @@ class AIGPVectorEnv:
         if self.base_gate_positions.ndim != 2 or self.base_gate_positions.shape[1] != 3:
             raise ValueError("gate_positions_m must have shape (gate_count, 3)")
         self.gate_count = self.base_gate_positions.shape[0]
-        self.gate_normals = self._build_gate_normals(self.base_gate_positions)
+        self.gate_normals = self._build_gate_normals(
+            self.base_gate_positions,
+            upright=config.upright_gate_normals,
+        )
         self.gate_lateral, self.gate_vertical = self._build_gate_bases(self.gate_normals)
 
         shape3 = (self.num_envs, 3)
@@ -480,14 +525,30 @@ class AIGPVectorEnv:
         gate_vertical = self.gate_vertical[active_gate_before]
         previous_plane = ((previous_position - gate_position) * gate_normal).sum(1)
         current_plane = ((self.position - gate_position) * gate_normal).sum(1)
-        gate_offset = self.position - gate_position
+        crossed_gate_plane = (previous_plane < 0.0) & (current_plane >= 0.0)
+        plane_delta = current_plane - previous_plane
+        crossing_fraction = torch.where(
+            plane_delta.abs() > 1e-6,
+            -previous_plane / plane_delta,
+            torch.zeros_like(plane_delta),
+        ).clamp(0.0, 1.0)
+        crossing_position = previous_position + crossing_fraction.unsqueeze(1) * (
+            self.position - previous_position
+        )
+        gate_sample_position = torch.where(
+            crossed_gate_plane.unsqueeze(1),
+            crossing_position,
+            self.position,
+        )
+        gate_offset = gate_sample_position - gate_position
         gate_lateral_offset = (gate_offset * gate_lateral).sum(1)
         gate_vertical_offset = (gate_offset * gate_vertical).sum(1)
         inside_gate = (
             (gate_lateral_offset.abs() <= self.config.gate_half_width_m)
             & (gate_vertical_offset.abs() <= self.config.gate_half_height_m)
         )
-        passed_gate = (previous_plane < 0.0) & (current_plane >= 0.0) & inside_gate
+        passed_gate = crossed_gate_plane & inside_gate
+        missed_gate = crossed_gate_plane & ~inside_gate
         self.gates_passed += passed_gate.long()
         self.gate_index = torch.minimum(
             self.gate_index + passed_gate.long(),
@@ -545,14 +606,19 @@ class AIGPVectorEnv:
             * torch.relu(self.velocity[:, 2].abs() - 2.0).square()
             - self.config.altitude_penalty
             * torch.relu(self.position[:, 2] - altitude_penalty_start).square()
+            - self.config.gate_altitude_error_penalty
+            * gate_vertical_offset.square()
             - self.config.collision_penalty * collision.float()
             - self.config.out_of_bounds_penalty * out_of_bounds.float()
+            - self.config.missed_gate_penalty * missed_gate.float()
         )
         self.episode_return += reward
         self.previous_action.copy_(action)
 
         if self.soft_collisions:
             recover = collision & ~out_of_bounds & ~finished
+            if self.config.terminate_on_missed_gate:
+                recover &= ~missed_gate
             if recover.any():
                 self.attitude[recover, :2].clamp_(-0.65, 0.65)
                 self.angular_rate[recover] *= 0.20
@@ -561,6 +627,8 @@ class AIGPVectorEnv:
             terminated = finished | out_of_bounds
         else:
             terminated = finished | out_of_bounds | collision
+        if self.config.terminate_on_missed_gate:
+            terminated |= missed_gate
         truncated = self.steps >= self.config.max_episode_steps
         done = terminated | truncated
         info = {
@@ -569,6 +637,7 @@ class AIGPVectorEnv:
             "collision": collision.clone(),
             "out_of_bounds": out_of_bounds.clone(),
             "passed_gate": passed_gate.clone(),
+            "missed_gate": missed_gate.clone(),
             "active_gate_index": active_gate_before.clone(),
             "gate_plane_offset": current_plane.clone(),
             "gate_lateral_offset": gate_lateral_offset.clone(),
@@ -1024,9 +1093,21 @@ class AIGPVectorEnv:
         ).reshape(-1, 3, 3)
 
     @staticmethod
-    def _build_gate_normals(gates: torch.Tensor) -> torch.Tensor:
-        previous = torch.cat((gates[:1] - torch.tensor((4.0, 0.0, 0.0), device=gates.device), gates[:-1]))
+    def _build_gate_normals(
+        gates: torch.Tensor,
+        *,
+        upright: bool = False,
+    ) -> torch.Tensor:
+        previous = torch.cat(
+            (
+                gates[:1]
+                - torch.tensor((4.0, 0.0, 0.0), device=gates.device),
+                gates[:-1],
+            )
+        )
         normals = gates - previous
+        if upright:
+            normals[:, 2] = 0.0
         return normals / torch.linalg.vector_norm(normals, dim=1, keepdim=True).clamp(min=1e-6)
 
     @staticmethod

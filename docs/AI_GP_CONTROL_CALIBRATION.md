@@ -207,7 +207,11 @@ attitude feedback.
 
 ## Next Work
 
-Stop increasing live command authority on the current policy. Train the
-structured-state teacher on the measured AI-GP six-gate topology with explicit
-missed-gate termination, then reevaluate through the bounded runner. Fit
-surrogate dynamics only from synchronized command and telemetry time-series.
+The six-gate topology and missed-gate termination are now implemented. The
+first topology-correct teacher and one reward-corrected rerun both failed
+promotion; the better checkpoint reached `11.3%` nominal gate-0 passage and no
+gate-1 passages.
+
+Stop increasing live command authority or tuning the current surrogate reward.
+Fit surrogate dynamics only from synchronized command and telemetry time-series,
+then retrain the structured-state teacher.
