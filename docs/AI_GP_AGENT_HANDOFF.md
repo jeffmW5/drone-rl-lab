@@ -70,20 +70,42 @@ See `docs/AI_GP_TEMPORAL_STUDENT_BENCHMARK_2026_06_13.md`.
 - The full-rollout temporal follow-up collapsed to 98.4-99.6% collisions.
 
 Those benchmark claims are surrogate-only. The governed `motion_live_v1`
-candidate was subsequently run under a bounded controller in the live Windows
-simulator. Run `bounded_policy_20260613_103101` passed gate 0 once with zero
-collisions and no safety abort. This is a single-run transfer result, not
-repeatability, multi-gate completion, or unrestricted command approval.
+candidate passed gate 0 once in run `bounded_policy_20260613_103101`, but later
+repeatability testing did not reproduce that result.
+
+June 14 Windows evidence:
+
+- symmetric live pulses proved the end-to-end roll mapping is identity
+- the AI-GP six-gate NED poses and `2.72 m` gate dimensions are recorded in
+  `scripts/run_ai_gp_bounded_windows.py`
+- the current surrogate track turns the opposite direction after gate 0 from
+  the AI-GP track, explaining the learned pre-turn failure
+- a smooth `2.0 s` launch plus `1.0 s` authority ramp removed the hard-switch
+  command discontinuity but still missed gate 0
+- 18 authority-release attempts and nine thrust-gain attempts produced zero
+  gate-0 passes
+- allowing three missed-gate runs to continue exposed stale command holding:
+  policy observations stopped and the last command remained active for
+  `2.7-4.1 s` until altitude abort
+
+The current policy is not approved for unrestricted control.
 
 ## Immediate Next Action
 
-1. Version and test the bounded Windows runner currently used for
-   `bounded_policy_20260613_103101`.
-2. Run at least 10 gate-0 repetitions and report outcome distributions.
-3. Validate controlled gate-1 continuation and gate-index target switching.
-4. Fit surrogate scaling and latency from command-aligned Windows trajectories.
-5. Require repeated multi-gate Windows evidence before unrestricted command
-   authority.
+Implement and train one structured-state PPO teacher on the measured AI-GP
+six-gate topology.
+
+1. Add a tested conversion from the recorded NED track into the surrogate world
+   frame. Do not silently guess axis signs.
+2. Detect crossing an active gate plane outside its aperture. Apply a large
+   penalty and terminate the episode.
+3. Add a six-gate teacher config using the real topology and dimensions.
+4. Run CPU tests, CUDA smoke, then a 10-million-interaction benchmark.
+5. Report deterministic nominal and randomized gate completion, missed-gate,
+   collision, out-of-bounds, and vertical-runaway rates.
+
+Do not start another live-student distillation or broad hyperparameter matrix
+until this topology-correct teacher has been evaluated.
 
 The bounded runner is preserved at:
 
@@ -115,14 +137,16 @@ python3 scripts/export_ai_gp_live_policy.py \
 
 ## Known Unknowns
 
-- Placeholder gate positions do not yet match the AI-GP track.
+- The NED-to-surrogate coordinate transform still needs an explicit tested
+  implementation.
 - Surrogate thrust and rate dynamics are not fitted to clean live telemetry.
 - Live four-corner gate detection is not implemented.
 - Reset and race-start synchronization require continued validation.
 - Four frames spanning 60 ms are insufficient for reliable closed-loop
   transfer under the tested box-only observation.
-- The governed student has one bounded Windows gate-0 passage but no
-  repeatability or multi-gate evidence.
+- The governed student has no repeatable gate-0 or multi-gate evidence.
+- Lost-gate handling currently permits stale command holding when the
+  diagnostic gate-plane abort is disabled.
 
 ## Promotion Criteria
 
@@ -144,3 +168,4 @@ Surrogate passage must never be described as Windows simulator passage.
 - `docs/AI_GP_RL_STRATEGY.md`
 - `docs/AI_GP_CONTROL_CALIBRATION.md`
 - `docs/AI_GP_RUNPOD.md`
+- `docs/AI_GP_LINUX_AGENT_PROMPT.md`
