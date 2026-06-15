@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from math import pi
+from math import ceil, pi
 from typing import Any
 
 import torch
@@ -18,6 +18,8 @@ from .contract import (
     MOTION_FEATURE_NAMES,
     MOTION_OBS_DIM,
     RATE_SCALES_RADPS,
+    STRUCTURED_TEACHER_FEATURE_NAMES,
+    STRUCTURED_TEACHER_OBS_DIM,
     SWIFT_TEACHER_FEATURE_NAMES,
     SWIFT_TEACHER_OBS_DIM,
     TEMPORAL_BASE_FEATURE_NAMES,
@@ -61,7 +63,17 @@ class AIGPEnvConfig:
     spawn_tilt_noise_rad: float = 0.04
     near_gate_spawn_ratio_start: float = 0.70
     near_gate_spawn_ratio_end: float = 0.10
+    near_gate_indices: tuple[int, ...] | None = None
     near_gate_distance_m: tuple[float, float] = (1.5, 3.5)
+    near_gate_lateral_offset_m: tuple[float, float] = (-0.45, 0.45)
+    near_gate_vertical_offset_m: tuple[float, float] = (-0.35, 0.35)
+    near_gate_forward_speed_mps: tuple[float, float] = (0.0, 0.0)
+    near_gate_lateral_speed_mps: tuple[float, float] = (-0.3, 0.3)
+    near_gate_vertical_speed_mps: tuple[float, float] = (-0.3, 0.3)
+    near_gate_roll_rad: tuple[float, float] | None = None
+    near_gate_pitch_rad: tuple[float, float] | None = None
+    near_gate_yaw_offset_rad: tuple[float, float] | None = None
+    near_gate_previous_action: tuple[float, float, float, float] | None = None
     gate_jitter_m: tuple[float, float, float] = (0.0, 0.20, 0.15)
 
     gate_positions_m: tuple[tuple[float, float, float], ...] = (
@@ -78,11 +90,27 @@ class AIGPEnvConfig:
     max_roll_rate_radps: float = RATE_SCALES_RADPS[0]
     max_pitch_rate_radps: float = RATE_SCALES_RADPS[1]
     max_yaw_rate_radps: float = RATE_SCALES_RADPS[2]
+    dynamics_model: str = "legacy_collective"
     collective_range_g: float = 0.80
+    thrust_command_center: float = 0.295
+    thrust_command_span_up: float = 0.105
+    thrust_command_span_down: float = 0.095
+    thrust_acceleration_bias_mps2: float = 0.0
+    thrust_acceleration_gain_mps2: float = 0.0
+    base_pitch_offset_rad: float = 0.0
+    linear_drag_xyz: tuple[float, float, float] = (0.15, 0.15, 0.15)
+    quadratic_drag_xyz: tuple[float, float, float] = (0.0, 0.0, 0.0)
+    drag_scale_range: tuple[float, float] = (1.0, 1.0)
+    rate_response_gain: tuple[float, float, float] = (1.0, 1.0, 1.0)
+    rate_response_gain_scale_range: tuple[float, float] = (1.0, 1.0)
+    command_latency_s: float = 0.0
+    command_latency_s_range: tuple[float, float] = (0.0, 0.0)
     mass_scale_range: tuple[float, float] = (0.85, 1.15)
     thrust_scale_range: tuple[float, float] = (0.85, 1.15)
     linear_drag_range: tuple[float, float] = (0.05, 0.25)
+    rate_time_constant_s: float = 0.10
     rate_time_constant_s_range: tuple[float, float] = (0.06, 0.14)
+    action_response: float = 0.70
     action_response_range: tuple[float, float] = (0.45, 0.90)
     wind_accel_mps2: float = 0.35
 
@@ -98,6 +126,7 @@ class AIGPEnvConfig:
     max_forward_m: float = 28.0
     max_tilt_rad: float = 1.35
     ground_impact_speed_mps: float = 1.5
+    vertical_runaway_speed_mps: float = 6.0
     soft_collision_fraction: float = 0.25
 
     progress_reward: float = 12.0
@@ -110,9 +139,11 @@ class AIGPEnvConfig:
     alive_reward: float = 0.002
     angular_rate_penalty: float = 0.002
     action_delta_penalty: float = 0.01
+    thrust_saturation_penalty: float = 0.0
     vertical_speed_penalty: float = 0.03
     altitude_penalty: float = 2.0
     gate_altitude_error_penalty: float = 0.0
+    gate_lateral_error_penalty: float = 0.0
     soft_altitude_limit_m: float | None = None
     collision_penalty: float = 8.0
     out_of_bounds_penalty: float = 12.0
@@ -120,6 +151,62 @@ class AIGPEnvConfig:
     terminate_on_missed_gate: bool = False
 
     def __post_init__(self) -> None:
+        if self.dynamics_model not in {"legacy_collective", "measured_ai_gp_v1"}:
+            raise ValueError(
+                "dynamics_model must be 'legacy_collective' or "
+                "'measured_ai_gp_v1'"
+            )
+        if self.physics_substeps < 1:
+            raise ValueError("physics_substeps must be positive")
+        if self.dt <= 0.0:
+            raise ValueError("dt must be positive")
+        if self.command_latency_s < 0.0:
+            raise ValueError("command_latency_s cannot be negative")
+        if self.command_latency_s_range[0] < 0.0:
+            raise ValueError("command_latency_s_range cannot be negative")
+        if self.command_latency_s_range[0] > self.command_latency_s_range[1]:
+            raise ValueError("command_latency_s_range must be ordered")
+        for name, limits in (
+            ("near_gate_distance_m", self.near_gate_distance_m),
+            ("near_gate_lateral_offset_m", self.near_gate_lateral_offset_m),
+            ("near_gate_vertical_offset_m", self.near_gate_vertical_offset_m),
+            ("near_gate_forward_speed_mps", self.near_gate_forward_speed_mps),
+            ("near_gate_lateral_speed_mps", self.near_gate_lateral_speed_mps),
+            ("near_gate_vertical_speed_mps", self.near_gate_vertical_speed_mps),
+        ):
+            if limits[0] > limits[1]:
+                raise ValueError(f"{name} must be ordered")
+        for name, limits in (
+            ("near_gate_roll_rad", self.near_gate_roll_rad),
+            ("near_gate_pitch_rad", self.near_gate_pitch_rad),
+            ("near_gate_yaw_offset_rad", self.near_gate_yaw_offset_rad),
+        ):
+            if limits is not None and limits[0] > limits[1]:
+                raise ValueError(f"{name} must be ordered")
+        if self.near_gate_previous_action is not None and any(
+            value < -1.0 or value > 1.0
+            for value in self.near_gate_previous_action
+        ):
+            raise ValueError("near_gate_previous_action must be normalized")
+        if self.dynamics_model == "measured_ai_gp_v1":
+            if not 0.0 < self.thrust_command_center < 1.0:
+                raise ValueError("thrust_command_center must be inside (0, 1)")
+            if (
+                self.thrust_command_span_up <= 0.0
+                or self.thrust_command_span_down <= 0.0
+            ):
+                raise ValueError("thrust command spans must be positive")
+            if self.thrust_command_center + self.thrust_command_span_up > 1.0:
+                raise ValueError("upward thrust command span exceeds 1.0")
+            if self.thrust_command_center - self.thrust_command_span_down < 0.0:
+                raise ValueError("downward thrust command span is below 0.0")
+            if self.thrust_acceleration_gain_mps2 <= 0.0:
+                raise ValueError(
+                    "measured dynamics require positive thrust acceleration gain"
+                )
+            if any(value <= 0.0 for value in self.rate_response_gain):
+                raise ValueError("rate_response_gain values must be positive")
+
         if self.track_name is None:
             if self.start_position_ned_m is not None:
                 raise ValueError(
@@ -182,13 +269,16 @@ class AIGPVectorEnv:
         elif config.actor_observation_mode == "swift_teacher":
             self.actor_observation_dim = SWIFT_TEACHER_OBS_DIM
             self.actor_feature_names = SWIFT_TEACHER_FEATURE_NAMES
+        elif config.actor_observation_mode == "structured_teacher_v2":
+            self.actor_observation_dim = STRUCTURED_TEACHER_OBS_DIM
+            self.actor_feature_names = STRUCTURED_TEACHER_FEATURE_NAMES
         else:
             raise ValueError(
                 "actor_observation_mode must be 'live_features', "
                 "'live_features_temporal', 'live_features_recurrent', "
                 "'live_features_corners_temporal', "
                 "'live_features_corners_recurrent', 'live_features_motion', "
-                "or 'swift_teacher'"
+                "'swift_teacher', or 'structured_teacher_v2'"
             )
         if config.observation_history_length < 1:
             raise ValueError("observation_history_length must be positive")
@@ -196,7 +286,8 @@ class AIGPVectorEnv:
         if self.live_observation_mode is None:
             self.live_observation_mode = (
                 config.actor_observation_mode
-                if config.actor_observation_mode != "swift_teacher"
+                if config.actor_observation_mode
+                not in {"swift_teacher", "structured_teacher_v2"}
                 else "live_features"
             )
         if self.live_observation_mode not in (
@@ -255,12 +346,18 @@ class AIGPVectorEnv:
         self.generator = torch.Generator(device=self.device)
         self.generator.manual_seed(config.seed)
         self.all_env_ids = torch.arange(self.num_envs, device=self.device)
-        self.rate_limits = torch.tensor(
+        self.command_rate_limits = torch.tensor(
             (
                 config.max_roll_rate_radps,
                 config.max_pitch_rate_radps,
                 config.max_yaw_rate_radps,
             ),
+            device=self.device,
+            dtype=self.dtype,
+        )
+        self.rate_limits = self.command_rate_limits
+        self.observation_rate_scales = torch.tensor(
+            RATE_SCALES_RADPS,
             device=self.device,
             dtype=self.dtype,
         )
@@ -288,6 +385,21 @@ class AIGPVectorEnv:
         if self.base_gate_positions.ndim != 2 or self.base_gate_positions.shape[1] != 3:
             raise ValueError("gate_positions_m must have shape (gate_count, 3)")
         self.gate_count = self.base_gate_positions.shape[0]
+        if config.near_gate_indices is not None:
+            if not config.near_gate_indices:
+                raise ValueError("near_gate_indices cannot be empty")
+            if any(
+                index < 0 or index >= self.gate_count
+                for index in config.near_gate_indices
+            ):
+                raise ValueError("near_gate_indices contains an invalid gate")
+            self.near_gate_indices = torch.tensor(
+                config.near_gate_indices,
+                device=self.device,
+                dtype=torch.long,
+            )
+        else:
+            self.near_gate_indices = None
         self.gate_normals = self._build_gate_normals(
             self.base_gate_positions,
             upright=config.upright_gate_normals,
@@ -301,6 +413,15 @@ class AIGPVectorEnv:
         self.angular_rate = torch.zeros(shape3, device=self.device)
         self.previous_action = torch.zeros((self.num_envs, ACTION_DIM), device=self.device)
         self.applied_action = torch.zeros_like(self.previous_action)
+        max_command_latency_s = max(
+            config.command_latency_s,
+            config.command_latency_s_range[1],
+        )
+        self.action_history_length = ceil(max_command_latency_s / config.dt) + 2
+        self.action_history = torch.zeros(
+            (self.num_envs, self.action_history_length, ACTION_DIM),
+            device=self.device,
+        )
         self.last_detection = torch.zeros((self.num_envs, 5), device=self.device)
         self.last_gate_corners = torch.zeros((self.num_envs, 8), device=self.device)
         self.detection_age = torch.full(
@@ -338,9 +459,28 @@ class AIGPVectorEnv:
         )
         self.mass_scale = torch.ones(self.num_envs, device=self.device)
         self.thrust_scale = torch.ones(self.num_envs, device=self.device)
-        self.linear_drag = torch.full((self.num_envs,), 0.15, device=self.device)
-        self.rate_time_constant = torch.full((self.num_envs,), 0.10, device=self.device)
-        self.action_response = torch.full((self.num_envs,), 0.70, device=self.device)
+        self.linear_drag = torch.full(shape3, 0.15, device=self.device)
+        self.quadratic_drag = torch.zeros(shape3, device=self.device)
+        self.rate_response_gain = torch.ones(shape3, device=self.device)
+        self.command_latency = torch.zeros(self.num_envs, device=self.device)
+        self.thrust_command = torch.full(
+            (self.num_envs,),
+            config.thrust_command_center,
+            device=self.device,
+            dtype=self.dtype,
+        )
+        self.rate_time_constant = torch.full(
+            (self.num_envs,),
+            config.rate_time_constant_s,
+            device=self.device,
+            dtype=self.dtype,
+        )
+        self.action_response = torch.full(
+            (self.num_envs,),
+            config.action_response,
+            device=self.device,
+            dtype=self.dtype,
+        )
         self.wind_acceleration = torch.zeros(shape3, device=self.device)
 
         self.curriculum_progress = 0.0
@@ -379,6 +519,7 @@ class AIGPVectorEnv:
         self.episode_progress[env_ids] = 0.0
         self.previous_action[env_ids] = 0.0
         self.applied_action[env_ids] = 0.0
+        self.action_history[env_ids] = 0.0
         self.attitude[env_ids] = 0.0
         self.angular_rate[env_ids] = 0.0
         self.last_detection[env_ids] = 0.0
@@ -404,17 +545,29 @@ class AIGPVectorEnv:
         )
 
         near_mask = self._rand_uniform((count,), 0.0, 1.0) < self.near_gate_spawn_ratio
+        near_ids = env_ids[:0]
         if near_mask.any():
             near_ids = env_ids[near_mask]
             near_count = near_ids.numel()
-            random_gate = torch.randint(
-                0,
-                self.gate_count,
-                (near_count,),
-                generator=self.generator,
-                device=self.device,
-            )
+            if self.near_gate_indices is None:
+                random_gate = torch.randint(
+                    0,
+                    self.gate_count,
+                    (near_count,),
+                    generator=self.generator,
+                    device=self.device,
+                )
+            else:
+                gate_choice = torch.randint(
+                    0,
+                    self.near_gate_indices.numel(),
+                    (near_count,),
+                    generator=self.generator,
+                    device=self.device,
+                )
+                random_gate = self.near_gate_indices[gate_choice]
             self.gate_index[near_ids] = random_gate
+            self.gates_passed[near_ids] = random_gate
             gate_pos = self.env_gate_positions[near_ids, random_gate]
             normal = self.gate_normals[random_gate]
             lateral = self.gate_lateral[random_gate]
@@ -424,15 +577,42 @@ class AIGPVectorEnv:
                 self.config.near_gate_distance_m[0],
                 self.config.near_gate_distance_m[1],
             )
-            lateral_offset = self._rand_uniform((near_count, 1), -0.45, 0.45)
-            vertical_offset = self._rand_uniform((near_count, 1), -0.35, 0.35)
+            lateral_offset = self._rand_uniform(
+                (near_count, 1),
+                self.config.near_gate_lateral_offset_m[0],
+                self.config.near_gate_lateral_offset_m[1],
+            )
+            vertical_offset = self._rand_uniform(
+                (near_count, 1),
+                self.config.near_gate_vertical_offset_m[0],
+                self.config.near_gate_vertical_offset_m[1],
+            )
             positions[near_mask] = (
                 gate_pos
                 - normal * distance
                 + lateral * lateral_offset
                 + vertical * vertical_offset
             )
-            velocities[near_mask] = self._rand_uniform((near_count, 3), -0.3, 0.3)
+            forward_speed = self._rand_uniform(
+                (near_count, 1),
+                self.config.near_gate_forward_speed_mps[0],
+                self.config.near_gate_forward_speed_mps[1],
+            )
+            lateral_speed = self._rand_uniform(
+                (near_count, 1),
+                self.config.near_gate_lateral_speed_mps[0],
+                self.config.near_gate_lateral_speed_mps[1],
+            )
+            vertical_speed = self._rand_uniform(
+                (near_count, 1),
+                self.config.near_gate_vertical_speed_mps[0],
+                self.config.near_gate_vertical_speed_mps[1],
+            )
+            velocities[near_mask] = (
+                normal * forward_speed
+                + lateral * lateral_speed
+                + vertical * vertical_speed
+            )
             self.has_taken_off[near_ids] = True
 
         positions[:, 2].clamp_(min=0.03)
@@ -454,6 +634,39 @@ class AIGPVectorEnv:
                     self.config.spawn_yaw_noise_rad,
                 )
             )
+        if near_ids.numel() > 0:
+            if self.config.near_gate_roll_rad is not None:
+                self.attitude[near_ids, 0] = self._rand_uniform(
+                    (near_ids.numel(),),
+                    self.config.near_gate_roll_rad[0],
+                    self.config.near_gate_roll_rad[1],
+                )
+            if self.config.near_gate_pitch_rad is not None:
+                self.attitude[near_ids, 1] = self._rand_uniform(
+                    (near_ids.numel(),),
+                    self.config.near_gate_pitch_rad[0],
+                    self.config.near_gate_pitch_rad[1],
+                )
+            if self.config.near_gate_yaw_offset_rad is not None:
+                self.attitude[near_ids, 2] += self._rand_uniform(
+                    (near_ids.numel(),),
+                    self.config.near_gate_yaw_offset_rad[0],
+                    self.config.near_gate_yaw_offset_rad[1],
+                )
+            if self.config.near_gate_previous_action is not None:
+                previous_action = torch.tensor(
+                    self.config.near_gate_previous_action,
+                    device=self.device,
+                    dtype=self.dtype,
+                )
+                self.previous_action[near_ids] = previous_action
+                self.applied_action[near_ids] = previous_action
+                self.action_history[near_ids] = previous_action
+                self.angular_rate[near_ids] = (
+                    previous_action[1:]
+                    * self.command_rate_limits
+                    * self.rate_response_gain[near_ids]
+                )
         self.episode_start_distance[env_ids] = self._distance_to_active_gate(env_ids)
 
     def step(
@@ -468,14 +681,23 @@ class AIGPVectorEnv:
         previous_position = self.position.clone()
         previous_distance = self._distance_to_active_gate()
         active_gate_before = self.gate_index.clone()
+        self.action_history[:, :-1] = self.action_history[:, 1:].clone()
+        self.action_history[:, -1] = action
+        delayed_action = self._delayed_action()
 
         ground_contact = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
         impact_speed = torch.zeros(self.num_envs, device=self.device)
         sub_dt = self.config.dt / self.config.physics_substeps
         for _ in range(self.config.physics_substeps):
             response = self.action_response.unsqueeze(1)
-            self.applied_action += response * (action - self.applied_action)
-            desired_rate = self.applied_action[:, 1:] * self.rate_limits
+            self.applied_action += response * (
+                delayed_action - self.applied_action
+            )
+            desired_rate = (
+                self.applied_action[:, 1:]
+                * self.command_rate_limits
+                * self.rate_response_gain
+            )
             rate_alpha = torch.clamp(
                 sub_dt / self.rate_time_constant, min=0.0, max=1.0
             ).unsqueeze(1)
@@ -483,22 +705,50 @@ class AIGPVectorEnv:
             self.attitude += self.angular_rate * sub_dt
             self.attitude[:, 2] = torch.remainder(self.attitude[:, 2] + pi, 2 * pi) - pi
 
-            rotation = self._body_to_world_rotation(self.attitude)
+            physics_attitude = self.attitude
+            if self.config.dynamics_model == "measured_ai_gp_v1":
+                physics_attitude = self.attitude.clone()
+                physics_attitude[:, 1] -= self.config.base_pitch_offset_rad
+            rotation = self._body_to_world_rotation(physics_attitude)
             thrust_direction = rotation[:, :, 2]
-            collective_acceleration = (
-                9.81
-                * (
-                    1.0
-                    + self.config.collective_range_g
-                    * self.applied_action[:, 0]
-                ).clamp(min=0.15)
-                * self.thrust_scale
-                / self.mass_scale
+            if self.config.dynamics_model == "measured_ai_gp_v1":
+                thrust_span = torch.where(
+                    self.applied_action[:, 0] >= 0.0,
+                    self.config.thrust_command_span_up,
+                    self.config.thrust_command_span_down,
+                )
+                self.thrust_command = (
+                    self.config.thrust_command_center
+                    + self.applied_action[:, 0] * thrust_span
+                )
+                collective_acceleration = (
+                    self.config.thrust_acceleration_bias_mps2
+                    + self.config.thrust_acceleration_gain_mps2
+                    * self.thrust_command
+                ).clamp(min=0.0)
+                collective_acceleration *= self.thrust_scale / self.mass_scale
+            else:
+                self.thrust_command = self.applied_action[:, 0]
+                collective_acceleration = (
+                    9.81
+                    * (
+                        1.0
+                        + self.config.collective_range_g
+                        * self.applied_action[:, 0]
+                    ).clamp(min=0.15)
+                    * self.thrust_scale
+                    / self.mass_scale
+                )
+            drag_acceleration = (
+                self.linear_drag * self.velocity
+                + self.quadratic_drag
+                * self.velocity.abs()
+                * self.velocity
             )
             acceleration = (
                 thrust_direction * collective_acceleration.unsqueeze(1)
                 + self.gravity_acceleration
-                - self.linear_drag.unsqueeze(1) * self.velocity
+                - drag_acceleration
                 + self.wind_acceleration
             )
             self.velocity += acceleration * sub_dt
@@ -602,12 +852,16 @@ class AIGPVectorEnv:
             - self.config.angular_rate_penalty
             * self.angular_rate.square().sum(1)
             - self.config.action_delta_penalty * action_delta.square().sum(1)
+            - self.config.thrust_saturation_penalty
+            * torch.relu(self.applied_action[:, 0].abs() - 0.90).square()
             - self.config.vertical_speed_penalty
             * torch.relu(self.velocity[:, 2].abs() - 2.0).square()
             - self.config.altitude_penalty
             * torch.relu(self.position[:, 2] - altitude_penalty_start).square()
             - self.config.gate_altitude_error_penalty
             * gate_vertical_offset.square()
+            - self.config.gate_lateral_error_penalty
+            * gate_lateral_offset.square()
             - self.config.collision_penalty * collision.float()
             - self.config.out_of_bounds_penalty * out_of_bounds.float()
             - self.config.missed_gate_penalty * missed_gate.float()
@@ -650,6 +904,7 @@ class AIGPVectorEnv:
             "attitude": self.attitude.clone(),
             "angular_rate": self.angular_rate.clone(),
             "applied_action": self.applied_action.clone(),
+            "thrust_command": self.thrust_command.clone(),
         }
         if done.any():
             self._reset_envs(torch.where(done)[0])
@@ -684,6 +939,11 @@ class AIGPVectorEnv:
             temporal_base_observation, corner_base_observation
         )
 
+        active_gate_position = self._active_gate_position()
+        gate_relative_world = active_gate_position - self.position
+        gate_relative_body = torch.bmm(
+            rotation.transpose(1, 2), gate_relative_world.unsqueeze(2)
+        ).squeeze(2)
         if self.config.actor_observation_mode == "swift_teacher":
             corners_world = self._active_gate_corners_world()
             corners_body = torch.bmm(
@@ -697,6 +957,43 @@ class AIGPVectorEnv:
                     rotation.reshape(self.num_envs, 9),
                     (corners_body / 10.0).reshape(self.num_envs, 12),
                     self.previous_action,
+                ),
+                dim=1,
+            )
+        elif self.config.actor_observation_mode == "structured_teacher_v2":
+            next_gate_index = torch.minimum(
+                self.gate_index + 1,
+                torch.full_like(self.gate_index, self.gate_count - 1),
+            )
+            next_gate_position = self.env_gate_positions[
+                self.all_env_ids, next_gate_index
+            ]
+            next_gate_relative_body = torch.bmm(
+                rotation.transpose(1, 2),
+                (next_gate_position - self.position).unsqueeze(2),
+            ).squeeze(2)
+            active_gate_normal_body = torch.bmm(
+                rotation.transpose(1, 2),
+                self.gate_normals[self.gate_index].unsqueeze(2),
+            ).squeeze(2)
+            next_gate_normal_body = torch.bmm(
+                rotation.transpose(1, 2),
+                self.gate_normals[next_gate_index].unsqueeze(2),
+            ).squeeze(2)
+            gate_fraction = (
+                self.gate_index.float() / max(self.gate_count - 1, 1)
+            ).unsqueeze(1)
+            actor_obs = torch.cat(
+                (
+                    gate_relative_body / 30.0,
+                    active_gate_normal_body,
+                    next_gate_relative_body / 30.0,
+                    next_gate_normal_body,
+                    body_velocity / VELOCITY_SCALE_MPS,
+                    gravity_body,
+                    self.angular_rate / self.observation_rate_scales,
+                    self.previous_action,
+                    gate_fraction,
                 ),
                 dim=1,
             )
@@ -715,11 +1012,6 @@ class AIGPVectorEnv:
         else:
             actor_obs = self._build_motion_observation()
 
-        active_gate_position = self._active_gate_position()
-        gate_relative_world = active_gate_position - self.position
-        gate_relative_body = torch.bmm(
-            rotation.transpose(1, 2), gate_relative_world.unsqueeze(2)
-        ).squeeze(2)
         distance = torch.linalg.vector_norm(gate_relative_world, dim=1, keepdim=True)
         gate_fraction = (
             self.gate_index.float() / max(self.gate_count - 1, 1)
@@ -781,7 +1073,7 @@ class AIGPVectorEnv:
             (
                 (body_velocity / VELOCITY_SCALE_MPS).clamp(-2.0, 2.0),
                 gravity_body,
-                self.angular_rate / self.rate_limits,
+                self.angular_rate / self.observation_rate_scales,
                 detection[:, :2].clamp(-1.5, 1.5),
                 detection[:, 4:5].clamp(0.0, 1.0),
                 confidence.unsqueeze(1),
@@ -811,7 +1103,7 @@ class AIGPVectorEnv:
             (
                 (body_velocity / VELOCITY_SCALE_MPS).clamp(-2.0, 2.0),
                 gravity_body,
-                self.angular_rate / self.rate_limits,
+                self.angular_rate / self.observation_rate_scales,
                 detection[:, :2].clamp(-1.5, 1.5),
                 detection[:, 2:5].clamp(0.0, 1.0),
                 confidence.unsqueeze(1),
@@ -842,7 +1134,7 @@ class AIGPVectorEnv:
             (
                 (body_velocity / VELOCITY_SCALE_MPS).clamp(-2.0, 2.0),
                 gravity_body,
-                self.angular_rate / self.rate_limits,
+                self.angular_rate / self.observation_rate_scales,
                 detection[:, :5].clamp(-1.5, 1.5),
                 gate_corners.clamp(-1.5, 1.5),
                 (confidence > 0.0).float().unsqueeze(1),
@@ -1038,20 +1330,76 @@ class AIGPVectorEnv:
         self.thrust_scale[env_ids] = self._scaled_random_range(
             count, self.config.thrust_scale_range, 1.0
         )
-        self.linear_drag[env_ids] = self._scaled_random_range(
-            count, self.config.linear_drag_range, 0.15
-        )
+        if self.config.dynamics_model == "measured_ai_gp_v1":
+            drag_scale = self._scaled_random_range(
+                count, self.config.drag_scale_range, 1.0
+            ).unsqueeze(1)
+            base_linear_drag = torch.tensor(
+                self.config.linear_drag_xyz,
+                device=self.device,
+                dtype=self.dtype,
+            )
+            base_quadratic_drag = torch.tensor(
+                self.config.quadratic_drag_xyz,
+                device=self.device,
+                dtype=self.dtype,
+            )
+            self.linear_drag[env_ids] = drag_scale * base_linear_drag
+            self.quadratic_drag[env_ids] = drag_scale * base_quadratic_drag
+            rate_gain_scale = self._scaled_random_range(
+                count,
+                self.config.rate_response_gain_scale_range,
+                1.0,
+            ).unsqueeze(1)
+            base_rate_gain = torch.tensor(
+                self.config.rate_response_gain,
+                device=self.device,
+                dtype=self.dtype,
+            )
+            self.rate_response_gain[env_ids] = (
+                rate_gain_scale * base_rate_gain
+            )
+            self.command_latency[env_ids] = self._scaled_random_range(
+                count,
+                self.config.command_latency_s_range,
+                self.config.command_latency_s,
+            )
+        else:
+            scalar_drag = self._scaled_random_range(
+                count, self.config.linear_drag_range, 0.15
+            )
+            self.linear_drag[env_ids] = scalar_drag.unsqueeze(1)
+            self.quadratic_drag[env_ids] = 0.0
+            self.rate_response_gain[env_ids] = 1.0
+            self.command_latency[env_ids] = 0.0
         self.rate_time_constant[env_ids] = self._scaled_random_range(
-            count, self.config.rate_time_constant_s_range, 0.10
+            count,
+            self.config.rate_time_constant_s_range,
+            self.config.rate_time_constant_s,
         )
         self.action_response[env_ids] = self._scaled_random_range(
-            count, self.config.action_response_range, 0.70
+            count,
+            self.config.action_response_range,
+            self.config.action_response,
         )
         wind = self._rand_uniform((count, 3), -1.0, 1.0)
         wind[:, 2] *= 0.35
         self.wind_acceleration[env_ids] = (
             wind * self.config.wind_accel_mps2 * self.randomization_scale
         )
+
+    def _delayed_action(self) -> torch.Tensor:
+        delay_steps = self.command_latency / self.config.dt
+        recent_steps = torch.floor(delay_steps).long()
+        fraction = delay_steps - recent_steps.float()
+        recent_index = (
+            self.action_history_length - 1 - recent_steps
+        ).clamp(min=0)
+        older_index = (recent_index - 1).clamp(min=0)
+        row_index = self.all_env_ids
+        recent = self.action_history[row_index, recent_index]
+        older = self.action_history[row_index, older_index]
+        return recent + fraction.unsqueeze(1) * (older - recent)
 
     def _scaled_random_range(
         self, count: int, limits: tuple[float, float], nominal: float

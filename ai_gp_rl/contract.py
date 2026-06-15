@@ -164,6 +164,36 @@ SWIFT_TEACHER_FEATURE_NAMES = (
 )
 SWIFT_TEACHER_OBS_DIM = len(SWIFT_TEACHER_FEATURE_NAMES)
 
+STRUCTURED_TEACHER_FEATURE_NAMES = (
+    "active_gate_position_body_x",
+    "active_gate_position_body_y",
+    "active_gate_position_body_z",
+    "active_gate_normal_body_x",
+    "active_gate_normal_body_y",
+    "active_gate_normal_body_z",
+    "next_gate_position_body_x",
+    "next_gate_position_body_y",
+    "next_gate_position_body_z",
+    "next_gate_normal_body_x",
+    "next_gate_normal_body_y",
+    "next_gate_normal_body_z",
+    "body_velocity_x",
+    "body_velocity_y",
+    "body_velocity_z",
+    "gravity_body_x",
+    "gravity_body_y",
+    "gravity_body_z",
+    "roll_rate",
+    "pitch_rate",
+    "yaw_rate",
+    "previous_collective_offset",
+    "previous_roll_rate",
+    "previous_pitch_rate",
+    "previous_yaw_rate",
+    "gate_index",
+)
+STRUCTURED_TEACHER_OBS_DIM = len(STRUCTURED_TEACHER_FEATURE_NAMES)
+
 VELOCITY_SCALE_MPS = 8.0
 RATE_SCALES_RADPS = (3.0, 3.0, 2.0)
 DETECTION_AGE_SCALE_S = 0.5

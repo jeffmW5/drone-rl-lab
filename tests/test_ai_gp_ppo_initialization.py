@@ -57,6 +57,38 @@ class AIGPPPOInitializationTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "feature contract"):
                 _load_initial_actor(model, checkpoint, ("feature_0", "feature_1"))
 
+    def test_allows_matching_teacher_when_explicitly_enabled(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            checkpoint = Path(temp_dir) / "teacher.pt"
+            features = ("feature_0", "feature_1")
+            source = ActorCritic(16, 4, 2, (8, 8))
+            target = ActorCritic(16, 4, 2, (8, 8))
+            torch.save(
+                {
+                    "global_step": 123,
+                    "model_state_dict": source.state_dict(),
+                    "metadata": {
+                        "actor_observation_dim": 2,
+                        "actor_features": list(features),
+                    },
+                },
+                checkpoint,
+            )
+
+            metadata = _load_initial_actor(
+                target,
+                checkpoint,
+                features,
+                allow_teacher=True,
+            )
+
+            self.assertEqual(metadata["_source_policy_role"], "teacher")
+            self.assertEqual(metadata["_source_global_step"], 123)
+            for key, value in source.actor_mean.state_dict().items():
+                torch.testing.assert_close(
+                    target.actor_mean.state_dict()[key], value
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -210,6 +210,7 @@ def evaluate_checkpoint(
                     "longest_sustained_upward_s": longest_upward_s,
                     "vertical_runaway": bool(
                         max_z >= 0.95 * env_config.max_altitude_m
+                        or max_vz >= env_config.vertical_runaway_speed_mps
                         or longest_upward_s >= 1.0
                     ),
                     "final_position_m": _as_list(position[env_id]),
