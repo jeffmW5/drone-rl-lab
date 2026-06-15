@@ -74,6 +74,12 @@ class AIGPEnvConfig:
     near_gate_pitch_rad: tuple[float, float] | None = None
     near_gate_yaw_offset_rad: tuple[float, float] | None = None
     near_gate_previous_action: tuple[float, float, float, float] | None = None
+    near_gate_previous_action_range: tuple[
+        tuple[float, float],
+        tuple[float, float],
+        tuple[float, float],
+        tuple[float, float],
+    ] | None = None
     gate_jitter_m: tuple[float, float, float] = (0.0, 0.20, 0.15)
 
     gate_positions_m: tuple[tuple[float, float, float], ...] = (
@@ -188,6 +194,26 @@ class AIGPEnvConfig:
             for value in self.near_gate_previous_action
         ):
             raise ValueError("near_gate_previous_action must be normalized")
+        if (
+            self.near_gate_previous_action is not None
+            and self.near_gate_previous_action_range is not None
+        ):
+            raise ValueError(
+                "near_gate_previous_action and "
+                "near_gate_previous_action_range are mutually exclusive"
+            )
+        if self.near_gate_previous_action_range is not None:
+            if len(self.near_gate_previous_action_range) != ACTION_DIM:
+                raise ValueError(
+                    "near_gate_previous_action_range must have one range per action"
+                )
+            for limits in self.near_gate_previous_action_range:
+                if limits[0] > limits[1]:
+                    raise ValueError("near_gate_previous_action_range must be ordered")
+                if limits[0] < -1.0 or limits[1] > 1.0:
+                    raise ValueError(
+                        "near_gate_previous_action_range must be normalized"
+                    )
         if self.dynamics_model == "measured_ai_gp_v1":
             if not 0.0 < self.thrust_command_center < 1.0:
                 raise ValueError("thrust_command_center must be inside (0, 1)")
@@ -664,6 +690,29 @@ class AIGPVectorEnv:
                 self.action_history[near_ids] = previous_action
                 self.angular_rate[near_ids] = (
                     previous_action[1:]
+                    * self.command_rate_limits
+                    * self.rate_response_gain[near_ids]
+                )
+            elif self.config.near_gate_previous_action_range is not None:
+                limits = torch.tensor(
+                    self.config.near_gate_previous_action_range,
+                    device=self.device,
+                    dtype=self.dtype,
+                )
+                previous_action = self._rand_uniform(
+                    (near_ids.numel(), ACTION_DIM),
+                    0.0,
+                    1.0,
+                )
+                previous_action = (
+                    limits[:, 0]
+                    + previous_action * (limits[:, 1] - limits[:, 0])
+                )
+                self.previous_action[near_ids] = previous_action
+                self.applied_action[near_ids] = previous_action
+                self.action_history[near_ids] = previous_action.unsqueeze(1)
+                self.angular_rate[near_ids] = (
+                    previous_action[:, 1:]
                     * self.command_rate_limits
                     * self.rate_response_gain[near_ids]
                 )

@@ -1,0 +1,123 @@
+name: ai_gp_028_any_gate_recovery_finetune_100m
+backend: ai_gp
+hypothesis: >
+  A deployable AI-GP controller must recover to the active gate from any course
+  segment, not memorize a single gate transition. Fine-tune from the best
+  measured-dynamics checkpoint with randomized active-gate replay across all six
+  gates, randomized approach states, and randomized actuator history while
+  retaining normal race-start evaluation as the selection metric.
+budget_seconds: 7200
+
+ai_gp:
+  device: cuda
+  allow_cpu: false
+  seed: 103
+  total_timesteps: 100139008
+  curriculum_steps: 5000000
+  num_envs: 4096
+  num_steps: 64
+  learning_rate: 0.0002
+  anneal_lr: true
+  gamma: 0.995
+  gae_lambda: 0.95
+  update_epochs: 4
+  num_minibatches: 32
+  clip_coef: 0.20
+  ent_coef: 0.010
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  initial_logstd: -0.2
+  target_kl: 0.03
+  hidden_sizes: [128, 128]
+  eval_interval_iterations: 10
+  eval_episodes: 512
+  eval_num_envs: 512
+  eval_randomization: false
+  initial_actor_checkpoint: results/ai_gp_026_gate1_actuator_state_finetune_10m/best_policy.pt
+  allow_teacher_initialization: true
+
+  env:
+    actor_observation_mode: structured_teacher_v2
+    track_name: ai_gp_six_gate
+    track_ground_clearance_m: 1.5
+    start_position_ned_m: [0.0, 0.0, 0.0]
+    position_observation_scale_m: [180.0, 20.0, 35.0]
+
+    dt: 0.02
+    physics_substeps: 2
+    max_episode_steps: 1500
+    randomization: true
+    align_spawn_heading_to_gate: true
+    start_position_noise_m: [0.15, 0.15, 0.04]
+    start_velocity_noise_mps: 0.10
+    spawn_yaw_noise_rad: 0.12
+    spawn_tilt_noise_rad: 0.03
+    gate_jitter_m: [0.12, 0.12, 0.10]
+
+    near_gate_spawn_ratio_start: 0.95
+    near_gate_spawn_ratio_end: 0.60
+    near_gate_distance_m: [3.0, 24.0]
+    near_gate_lateral_offset_m: [-1.2, 1.2]
+    near_gate_vertical_offset_m: [-2.0, 5.5]
+    near_gate_forward_speed_mps: [4.0, 16.0]
+    near_gate_lateral_speed_mps: [-3.0, 3.0]
+    near_gate_vertical_speed_mps: [-5.0, 2.0]
+    near_gate_roll_rad: [-0.25, 0.25]
+    near_gate_pitch_rad: [-0.90, 0.20]
+    near_gate_yaw_offset_rad: [-0.55, 0.55]
+    near_gate_previous_action_range:
+      - [-0.70, 0.70]
+      - [-1.00, 1.00]
+      - [-1.00, 1.00]
+      - [-0.70, 0.70]
+    soft_collision_fraction: 0.0
+
+    dynamics_model: measured_ai_gp_v1
+    max_roll_rate_radps: 0.30
+    max_pitch_rate_radps: 0.20
+    max_yaw_rate_radps: 0.15
+    thrust_command_center: 0.295
+    thrust_command_span_up: 0.105
+    thrust_command_span_down: 0.095
+    thrust_acceleration_bias_mps2: -5.6171800889
+    thrust_acceleration_gain_mps2: 57.2914093237
+    base_pitch_offset_rad: 0.3106907308
+    linear_drag_xyz: [0.1417047358, 0.1417047358, 0.3905510548]
+    quadratic_drag_xyz: [0.0222959629, 0.0222959629, 0.0117516223]
+    rate_response_gain: [2.6503460081, 2.5121130023, 2.5812295052]
+    command_latency_s: 0.046
+    command_latency_s_range: [0.035, 0.060]
+    rate_time_constant_s: 0.005
+    rate_time_constant_s_range: [0.005, 0.012]
+    action_response: 1.0
+    action_response_range: [0.92, 1.0]
+    mass_scale_range: [0.97, 1.03]
+    thrust_scale_range: [0.95, 1.05]
+    drag_scale_range: [0.90, 1.10]
+    rate_response_gain_scale_range: [0.93, 1.07]
+    wind_accel_mps2: 0.12
+
+    max_altitude_m: 35.0
+    max_lateral_m: 18.0
+    min_forward_m: -8.0
+    max_forward_m: 175.0
+
+    progress_reward: 8.0
+    gate_reward: 140.0
+    finish_reward: 240.0
+    camera_alignment_reward: 0.10
+    camera_alignment_exponent: 4.0
+    forward_speed_reward: 0.0
+    visibility_reward: 0.0
+    alive_reward: 0.0
+    angular_rate_penalty: 0.001
+    action_delta_penalty: 0.010
+    thrust_saturation_penalty: 0.08
+    vertical_speed_penalty: 0.25
+    altitude_penalty: 2.0
+    gate_altitude_error_penalty: 0.60
+    gate_lateral_error_penalty: 0.80
+    collision_penalty: 20.0
+    out_of_bounds_penalty: 30.0
+    missed_gate_penalty: 360.0
+    terminate_on_missed_gate: true

@@ -280,6 +280,47 @@ class SwiftTeacherEnvTests(unittest.TestCase):
         )
         self.assertTrue(torch.all(env.angular_rate[:, 1] < -0.15))
 
+    def test_near_gate_spawn_can_randomize_actuator_state(self) -> None:
+        env = AIGPVectorEnv(
+            AIGPEnvConfig(
+                actor_observation_mode="structured_teacher_v2",
+                num_envs=32,
+                device="cpu",
+                randomization=False,
+                near_gate_spawn_ratio_start=1.0,
+                near_gate_spawn_ratio_end=1.0,
+                near_gate_previous_action_range=(
+                    (-0.5, 0.5),
+                    (-0.7, 0.7),
+                    (-0.9, 0.9),
+                    (-0.4, 0.4),
+                ),
+                dynamics_model="measured_ai_gp_v1",
+                max_roll_rate_radps=0.3,
+                max_pitch_rate_radps=0.2,
+                max_yaw_rate_radps=0.15,
+                thrust_acceleration_bias_mps2=-5.61718,
+                thrust_acceleration_gain_mps2=57.29141,
+                command_latency_s=0.046,
+                command_latency_s_range=(0.046, 0.046),
+                rate_response_gain=(2.65, 2.51, 2.58),
+            )
+        )
+
+        env.reset()
+
+        self.assertGreater(float(env.previous_action.std()), 0.05)
+        self.assertTrue(torch.all(env.previous_action[:, 0].abs() <= 0.5))
+        self.assertTrue(torch.all(env.previous_action[:, 1].abs() <= 0.7))
+        self.assertTrue(torch.all(env.previous_action[:, 2].abs() <= 0.9))
+        self.assertTrue(torch.all(env.previous_action[:, 3].abs() <= 0.4))
+        expected_rate = (
+            env.previous_action[:, 1:]
+            * env.command_rate_limits
+            * env.rate_response_gain
+        )
+        torch.testing.assert_close(env.angular_rate, expected_rate)
+
     @staticmethod
     def _measured_env(*, command_latency_s: float) -> AIGPVectorEnv:
         return AIGPVectorEnv(
