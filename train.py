@@ -7,8 +7,10 @@ Usage:
     python train.py configs/exp_NNN.yaml
 
 Backends:
-    hover   — gym-pybullet-drones HoverAviary + SB3 PPO (default)
-    racing  — lsy_drone_racing + CleanRL PPO
+    hover             — gym-pybullet-drones HoverAviary + SB3 PPO (default)
+    racing            — lsy_drone_racing + CleanRL PPO
+    ai_gp             — AI-GP Torch vector-env PPO
+    ai_gp_swift_bc    — AI-GP Swift-style full-course behavior cloning
 """
 
 import sys
@@ -32,8 +34,13 @@ def main():
         from train_racing import run
     elif backend == "ai_gp":
         from train_ai_gp import run
+    elif backend == "ai_gp_swift_bc":
+        from train_ai_gp_swift_bc import run
     else:
-        print(f"ERROR: Unknown backend '{backend}'. Use 'hover', 'racing', or 'ai_gp'.")
+        print(
+            f"ERROR: Unknown backend '{backend}'. Use 'hover', 'racing', "
+            "'ai_gp', or 'ai_gp_swift_bc'."
+        )
         sys.exit(1)
 
     print(f"[Dispatcher] Backend: {backend}")
