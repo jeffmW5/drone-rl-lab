@@ -175,18 +175,39 @@ function Invoke-Ssh {
 function Deploy-Code {
     param([string]$ResolvedConfig)
     $relativeConfig = $ResolvedConfig.Substring($RepoRoot.Length).TrimStart("\", "/").Replace("\", "/")
+    $extraArchiveEntries = @()
+    $initialCheckpointLine = Get-Content -LiteralPath $ResolvedConfig |
+        Where-Object { $_ -match "^\s*initial_actor_checkpoint:\s*(.+?)\s*$" } |
+        Select-Object -First 1
+    if ($initialCheckpointLine) {
+        $checkpointValue = ([regex]::Match($initialCheckpointLine, "^\s*initial_actor_checkpoint:\s*(.+?)\s*$")).Groups[1].Value.Trim("'`" ")
+        if (-not [IO.Path]::IsPathRooted($checkpointValue)) {
+            $checkpointPath = Join-Path $RepoRoot $checkpointValue
+            if (Test-Path -LiteralPath $checkpointPath -PathType Leaf) {
+                $extraArchiveEntries += $checkpointValue.Replace("\", "/")
+            } else {
+                Write-Warning "Initial actor checkpoint not found locally and will not be uploaded: $checkpointValue"
+            }
+        } else {
+            Write-Warning "Absolute initial actor checkpoint paths are not included in the deployment archive: $checkpointValue"
+        }
+    }
     $archive = Join-Path ([IO.Path]::GetTempPath()) "drone-rl-ai-gp-$([guid]::NewGuid().ToString('N')).tar.gz"
     try {
         Push-Location $RepoRoot
+        $archiveEntries = @(
+            "ai_gp_rl",
+            "train.py",
+            "train_ai_gp.py",
+            "train_ai_gp_swift_bc.py",
+            "scripts/smoke_ai_gp.py",
+            "scripts/runpod_ai_gp_remote.sh",
+            $relativeConfig
+        ) + $extraArchiveEntries
         & tar.exe -czf $archive `
             "--exclude=__pycache__" `
             "--exclude=*.pyc" `
-            "ai_gp_rl" `
-            "train.py" `
-            "train_ai_gp.py" `
-            "scripts/smoke_ai_gp.py" `
-            "scripts/runpod_ai_gp_remote.sh" `
-            $relativeConfig
+            @archiveEntries
         if ($LASTEXITCODE -ne 0) {
             throw "Failed to build deployment archive."
         }
