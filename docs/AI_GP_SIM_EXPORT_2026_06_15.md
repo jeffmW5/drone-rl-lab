@@ -2,44 +2,57 @@
 
 ## Current Artifact
 
-The first usable full-course AI-GP policy is the structured-state MLP from:
+The best current full-course AI-GP policy is the structured-state MLP from:
 
 ```text
-results/ai_gp_030_swift_full_course_bc_50m/best_policy.pt
+results/ai_gp_031_randomized_full_course_ppo_120m/best_policy.pt
 ```
 
 Export it for the AI-GP simulator with:
 
 ```bash
 /home/jeff/drones-venv/bin/python scripts/export_ai_gp_structured_policy.py \
-  results/ai_gp_030_swift_full_course_bc_50m/best_policy.pt \
-  results/ai_gp_030_swift_full_course_bc_50m/nominal_telemetry.json \
-  results/ai_gp_030_swift_full_course_bc_50m/ai_gp_structured_policy.json \
-  --randomized-validation-report results/ai_gp_030_swift_full_course_bc_50m/random_1001.json \
-  --randomized-validation-report results/ai_gp_030_swift_full_course_bc_50m/random_1002.json \
-  --randomized-validation-report results/ai_gp_030_swift_full_course_bc_50m/random_1003.json
+  results/ai_gp_031_randomized_full_course_ppo_120m/best_policy.pt \
+  results/ai_gp_031_randomized_full_course_ppo_120m/evals/nominal.json \
+  results/ai_gp_031_randomized_full_course_ppo_120m/ai_gp_structured_policy.json \
+  --randomized-validation-report results/ai_gp_031_randomized_full_course_ppo_120m/evals/random_1001.json \
+  --randomized-validation-report results/ai_gp_031_randomized_full_course_ppo_120m/evals/random_1002.json \
+  --randomized-validation-report results/ai_gp_031_randomized_full_course_ppo_120m/evals/random_1003.json
 ```
 
-Use `best_policy.pt`, not `final_policy.pt`. The final checkpoint regressed
-after the best evaluation.
+Keep the original BC artifact at
+`results/ai_gp_030_swift_full_course_bc_50m/ai_gp_structured_policy.json` for
+comparison. Use `best_policy.pt`, not `final_policy.pt`, for both runs.
 
 ## Validation
 
-Best nominal evaluation over 512 episodes:
+Best `031` nominal evaluation over 512 episodes:
 
 - mean gates: `6.0`
 - success rate: `1.0`
 - collision, out-of-bounds, missed-gate, vertical-runaway rates: `0.0`
-- gate crossing minimum margin: `0.1647 m`
+- gate crossing minimum margin: `0.6200 m`
 
-Randomized evaluations are not yet Swift-level robust:
+Best `031` randomized evaluations are improved but not yet Swift-level robust:
 
-- seed `1001`: `56.64%` success, `4.73` mean gates
-- seed `1002`: `56.45%` success, `4.75` mean gates
-- seed `1003`: `56.25%` success, `4.71` mean gates
+- seed `1001`: `59.77%` success, `4.89` mean gates
+- seed `1002`: `61.33%` success, `4.95` mean gates
+- seed `1003`: `60.55%` success, `4.81` mean gates
 
 This is a structured-state simulator pilot and a strong starting point. It is
 not a fully generalized vision/live policy.
+
+## Follow-Up Training
+
+`ai_gp_031_randomized_full_course_ppo_120m` fine-tuned from the nominal BC
+policy and briefly improved randomized success. It was stopped early because
+unanchored PPO then collapsed to `0%` randomized success. The saved best
+checkpoint is still useful and is the current export target.
+
+`ai_gp_032_anchored_randomized_ppo_30m` added an actor-anchor penalty to prevent
+that collapse. It stayed near the starting policy but did not beat `031`; its
+best embedded eval was `55.27%` success with `5.04` mean gates. Do not promote
+`032` over `031`.
 
 ## Sim Runtime Contract
 

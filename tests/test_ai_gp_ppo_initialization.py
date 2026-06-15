@@ -5,10 +5,16 @@ from pathlib import Path
 import torch
 
 from ai_gp_rl.model import ActorCritic
-from train_ai_gp import _load_initial_actor
+from train_ai_gp import _actor_anchor_coefficient, _load_initial_actor
 
 
 class AIGPPPOInitializationTests(unittest.TestCase):
+    def test_actor_anchor_coefficient_can_decay(self) -> None:
+        self.assertEqual(_actor_anchor_coefficient(0.0, 10, 100), 0.0)
+        self.assertEqual(_actor_anchor_coefficient(2.0, 10, 0), 2.0)
+        self.assertAlmostEqual(_actor_anchor_coefficient(2.0, 25, 100), 1.5)
+        self.assertEqual(_actor_anchor_coefficient(2.0, 125, 100), 0.0)
+
     def test_loads_only_matching_distilled_actor_weights(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

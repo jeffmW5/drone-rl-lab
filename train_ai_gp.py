@@ -192,6 +192,19 @@ def _initial_actor_metadata_extra(
     return extra
 
 
+def _actor_anchor_coefficient(
+    base_coefficient: float,
+    global_step: int,
+    decay_steps: int,
+) -> float:
+    if base_coefficient <= 0.0:
+        return 0.0
+    if decay_steps <= 0:
+        return base_coefficient
+    remaining = max(0.0, 1.0 - float(global_step) / float(decay_steps))
+    return base_coefficient * remaining
+
+
 @torch.no_grad()
 def evaluate(
     model: ActorCritic,
@@ -358,6 +371,17 @@ def run(config_path: str | Path) -> None:
     initial_metadata_extra = _initial_actor_metadata_extra(
         initial_actor_checkpoint, initial_actor_metadata
     )
+    actor_anchor_base_coef = float(section.get("actor_anchor_coef", 0.0))
+    actor_anchor_decay_steps = int(section.get("actor_anchor_decay_steps", 0))
+    actor_anchor = None
+    if actor_anchor_base_coef > 0.0:
+        actor_anchor = copy.deepcopy(model.actor_mean).eval()
+        actor_anchor.requires_grad_(False)
+        print(
+            "  ACTOR ANCHOR: "
+            f"coef={actor_anchor_base_coef:g} "
+            f"decay_steps={actor_anchor_decay_steps:,}"
+        )
     model.actor_logstd.data.fill_(float(section.get("initial_logstd", -0.5)))
     optimizer = torch.optim.Adam(
         model.parameters(),
@@ -474,6 +498,12 @@ def run(config_path: str | Path) -> None:
 
         clip_fractions: list[float] = []
         approx_kl = torch.tensor(0.0, device=device)
+        actor_anchor_loss = torch.tensor(0.0, device=device)
+        current_actor_anchor_coef = _actor_anchor_coefficient(
+            actor_anchor_base_coef,
+            global_step,
+            actor_anchor_decay_steps,
+        )
         for _ in range(update_epochs):
             permutation = torch.randperm(batch_size, device=device)
             for start in range(0, batch_size, minibatch_size):
@@ -510,6 +540,17 @@ def run(config_path: str | Path) -> None:
                 ).mean()
                 entropy_loss = entropy.mean()
                 loss = policy_loss - ent_coef * entropy_loss + vf_coef * value_loss
+                if actor_anchor is not None and current_actor_anchor_coef > 0.0:
+                    actor_observation = batch_observations[
+                        indices, : env.actor_observation_dim
+                    ]
+                    current_action = torch.tanh(model.actor_mean(actor_observation))
+                    with torch.no_grad():
+                        anchor_action = torch.tanh(actor_anchor(actor_observation))
+                    actor_anchor_loss = (
+                        current_action - anchor_action
+                    ).square().mean()
+                    loss = loss + current_actor_anchor_coef * actor_anchor_loss
 
                 optimizer.zero_grad(set_to_none=True)
                 loss.backward()
@@ -546,6 +587,8 @@ def run(config_path: str | Path) -> None:
             "policy_loss": float(policy_loss),
             "value_loss": float(value_loss),
             "entropy": float(entropy_loss),
+            "actor_anchor_loss": float(actor_anchor_loss),
+            "actor_anchor_coef": current_actor_anchor_coef,
             "approx_kl": float(approx_kl),
             "clip_fraction": sum(clip_fractions) / max(len(clip_fractions), 1),
             "curriculum_progress": curriculum_progress,
