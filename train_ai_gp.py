@@ -205,6 +205,22 @@ def _actor_anchor_coefficient(
     return base_coefficient * remaining
 
 
+def _evaluation_score(evaluation: dict[str, float]) -> tuple[float, float, float, float]:
+    bounded_progress = (
+        evaluation["mean_gates"]
+        * (1.0 - evaluation["collision_rate"])
+        * (1.0 - evaluation["out_of_bounds_rate"])
+        * (1.0 - evaluation["missed_gate_rate"])
+        * (1.0 - evaluation["vertical_runaway_rate"])
+    )
+    return (
+        bounded_progress + evaluation["success_rate"],
+        evaluation["success_rate"],
+        evaluation["mean_gates"],
+        evaluation["mean_distance_reduction_m"],
+    )
+
+
 @torch.no_grad()
 def evaluate(
     model: ActorCritic,
@@ -430,6 +446,32 @@ def run(config_path: str | Path) -> None:
     best_evaluation: dict[str, float] | None = None
     history: list[dict[str, float]] = []
 
+    save_initial_actor_as_best = bool(
+        section.get("save_initial_actor_as_best", bool(initial_actor_checkpoint))
+    )
+    if save_initial_actor_as_best:
+        initial_evaluation = evaluate(model, eval_env, eval_episodes)
+        best_score = _evaluation_score(initial_evaluation)
+        best_evaluation = initial_evaluation
+        _save_checkpoint(
+            results_dir / "best_policy.pt",
+            model,
+            optimizer,
+            config,
+            global_step,
+            initial_evaluation,
+            env.actor_feature_names,
+            initial_metadata_extra,
+        )
+        print(
+            "  [Initial Eval] "
+            f"success={initial_evaluation['success_rate']:.1%} "
+            f"gates={initial_evaluation['mean_gates']:.2f} "
+            f"collision={initial_evaluation['collision_rate']:.1%} "
+            f"missed={initial_evaluation['missed_gate_rate']:.1%} "
+            f"progress={initial_evaluation['mean_distance_reduction_m']:.2f}m"
+        )
+
     for iteration in range(1, total_iterations + 1):
         elapsed = time.time() - wall_start
         if elapsed >= budget_seconds:
@@ -608,19 +650,7 @@ def run(config_path: str | Path) -> None:
 
         if iteration % eval_interval == 0:
             evaluation = evaluate(model, eval_env, eval_episodes)
-            bounded_progress = (
-                evaluation["mean_gates"]
-                * (1.0 - evaluation["collision_rate"])
-                * (1.0 - evaluation["out_of_bounds_rate"])
-                * (1.0 - evaluation["missed_gate_rate"])
-                * (1.0 - evaluation["vertical_runaway_rate"])
-            )
-            score = (
-                bounded_progress + evaluation["success_rate"],
-                evaluation["success_rate"],
-                evaluation["mean_gates"],
-                evaluation["mean_distance_reduction_m"],
-            )
+            score = _evaluation_score(evaluation)
             print(
                 "  [Eval] "
                 f"success={evaluation['success_rate']:.1%} "

@@ -5,7 +5,11 @@ from pathlib import Path
 import torch
 
 from ai_gp_rl.model import ActorCritic
-from train_ai_gp import _actor_anchor_coefficient, _load_initial_actor
+from train_ai_gp import (
+    _actor_anchor_coefficient,
+    _evaluation_score,
+    _load_initial_actor,
+)
 
 
 class AIGPPPOInitializationTests(unittest.TestCase):
@@ -14,6 +18,26 @@ class AIGPPPOInitializationTests(unittest.TestCase):
         self.assertEqual(_actor_anchor_coefficient(2.0, 10, 0), 2.0)
         self.assertAlmostEqual(_actor_anchor_coefficient(2.0, 25, 100), 1.5)
         self.assertEqual(_actor_anchor_coefficient(2.0, 125, 100), 0.0)
+
+    def test_evaluation_score_prioritizes_robust_course_completion(self) -> None:
+        baseline = {
+            "mean_gates": 5.0,
+            "success_rate": 0.60,
+            "collision_rate": 0.01,
+            "out_of_bounds_rate": 0.0,
+            "missed_gate_rate": 0.39,
+            "vertical_runaway_rate": 0.0,
+            "mean_distance_reduction_m": 140.0,
+        }
+        safer = {
+            **baseline,
+            "mean_gates": 5.1,
+            "success_rate": 0.62,
+            "collision_rate": 0.0,
+            "missed_gate_rate": 0.35,
+        }
+
+        self.assertGreater(_evaluation_score(safer), _evaluation_score(baseline))
 
     def test_loads_only_matching_distilled_actor_weights(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

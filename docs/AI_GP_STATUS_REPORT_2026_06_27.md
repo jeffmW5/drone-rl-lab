@@ -77,14 +77,40 @@ Running it on the existing `031` randomized evals found:
 The existing telemetry only tracks a small subset of episodes, so the next GPU
 diagnostic should record many more trajectories before the next training run.
 
+That dense diagnostic has now been run for seed `1001` with `512` episodes and
+`128` tracked trajectories. It reproduced the same aggregate eval result:
+`59.77%` success, `4.89` mean gates, `38.87%` missed gates. The denser tracked
+subset contained `47 / 128` failed trajectories:
+
+- missed gate: `46`
+- collision: `1`
+- final active-gate failures: gate `5` = `17`, gate `4` = `11`, gate `1` = `8`,
+  gates `2` and `3` = `4` each, gate `0` = `3`
+
+The final `0.25 s` pre-failure window shows a centering problem, not an
+authority problem. Gates `0-1` are mostly low at the plane, while later gates
+are high or mixed with larger lateral misses.
+
+## Current Training Run Prepared
+
+`configs/ai_gp_035_hard_case_final_approach_ppo_20m.yaml` is the next PPO run.
+It starts from `031`, saves the initial actor as `best_policy.pt` before PPO
+updates, uses a stronger actor anchor, and focuses near-gate replay on the last
+`0.5-10 m` before the gate plane with wider vertical/lateral offsets derived
+from the dense hard cases.
+
+Linux RunPod helpers were added:
+
+- `scripts/runpod_ai_gp_eval.sh`
+- `scripts/runpod_ai_gp_train.sh`
+
 ## Next Engineering Steps
 
-1. Run a dense GPU evaluation of `031` with `128-512` tracked trajectories per
-   seed.
-2. Extract hard cases and convert them into targeted reset distributions or
-   DAgger samples.
-3. Improve the teacher/controller on those states first, then train the neural
-   actor with anchoring that preserves the solved nominal course.
+1. Train `035` on RunPod and compare its best checkpoint against `031`.
+2. Re-run dense telemetry on any promoted candidate to prove failures moved in
+   the right direction.
+3. Improve the teacher/controller on remaining hard states, then train the
+   neural actor with anchoring that preserves the solved nominal course.
 4. Promote only if multi-seed randomized validation reaches the Swift-level
    thresholds above.
 5. Prepare AI-GP sim usage as shadow/integration testing until the policy clears
