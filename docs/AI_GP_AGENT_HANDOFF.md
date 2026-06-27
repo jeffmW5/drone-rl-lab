@@ -9,6 +9,34 @@ Do not return to one-off manual thrust pulses as the primary workstream.
 Simulator runs are for measuring the real control contract and validating
 trained policies with time-series telemetry.
 
+## Current June 27 Status
+
+The current structured-state export candidate is still:
+
+```text
+results/ai_gp_036_weighted_final_approach_ppo_20m/best_policy.pt
+results/ai_gp_036_weighted_final_approach_ppo_20m/ai_gp_structured_policy.json
+```
+
+`036` solves nominal six-gate evaluation but is only about `68.75%` average
+full-course success across randomized seeds `1001`, `1002`, and `1003`.
+
+`038` is not promoted. Its soft-floor penalty reduced average collisions from
+`2.28%` to `1.37%`, but mean gates fell from `5.05` to `4.89` and early gate-1
+and gate-3 misses increased. It is evidence for the next run, not the export
+target.
+
+The next prepared RunPod config is:
+
+```text
+configs/ai_gp_039_all_gate_soft_floor_ppo_30m.yaml
+```
+
+It starts from `036`, keeps the soft-floor reward, and trains randomized
+near-gate starts across all six active gate indices. Promote it only if
+multi-seed randomized validation beats `036` on full-course success and mean
+gates without increasing missed gates or collisions.
+
 ## Current Implementation
 
 - `ai_gp_rl/env.py`: Torch-vectorized quadrotor and gate environment.

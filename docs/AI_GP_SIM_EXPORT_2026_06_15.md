@@ -80,6 +80,15 @@ and is the current structured export target.
 improved mean gates and missed-gate rate, but reduced average success to
 `67.84%` and increased average collision rate to `3.71%`.
 
+`ai_gp_038_soft_floor_final_gate_ppo_20m` is also not promoted. It added a
+soft-floor altitude penalty and reduced average collision rate to `1.37%`, but
+mean gates fell from `5.05` to `4.89` and missed gates did not improve. Keep
+`036` as the export target until a later run beats it cleanly.
+
+`ai_gp_039_all_gate_soft_floor_ppo_30m` is the next prepared training config. It
+starts from `036`, keeps the soft-floor penalty, and randomizes near-gate starts
+over all six active gate indices to train general active-gate behavior.
+
 ## Sim Runtime Contract
 
 The JSON export has `policy_role=structured_state_sim_teacher` and

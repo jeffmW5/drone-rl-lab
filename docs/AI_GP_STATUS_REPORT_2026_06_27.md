@@ -183,6 +183,25 @@ This means the next useful step is not simply more gate-1/gate-5 replay. The
 next change should reduce collision while preserving the missed-gate reduction,
 or use a better teacher/controller target for the final-approach states.
 
+`ai_gp_038_soft_floor_final_gate_ppo_20m` added a soft-floor altitude penalty
+and moderate gate-1/gate-5 replay from `036`. It is not promoted over `036`.
+The embedded best eval reached `75.98%` success, but three held-out randomized
+seeds showed a mixed and small result:
+
+- average success: `68.75% -> 69.47%`
+- average mean gates: `5.05 -> 4.89`
+- average missed-gate rate: `29.04% -> 29.17%`
+- average collision rate: `2.28% -> 1.37%`
+
+Failure distribution explains the tradeoff. `038` reduced gate-5 collision and
+late misses, but increased early gate-1 and gate-3 misses. That makes it useful
+evidence, not a clear export candidate.
+
+`configs/ai_gp_039_all_gate_soft_floor_ppo_30m.yaml` is prepared as the next
+RunPod training run. It starts from `036`, keeps the soft-floor penalty from
+`038`, and trains near-gate starts across all six active gate indices. The goal
+is general active-gate competence, not a hand-tuned gate-5 recovery policy.
+
 Linux RunPod helpers were added:
 
 - `scripts/runpod_ai_gp_eval.sh`
@@ -190,11 +209,12 @@ Linux RunPod helpers were added:
 
 ## Next Engineering Steps
 
-1. Use dense `036` and failed `037` telemetry to build a collision-aware
-   final-approach target instead of increasing replay weights again.
-2. Improve the teacher/controller on remaining hard states, then train the
-   neural actor with anchoring that preserves the solved nominal course.
-3. Promote to Swift-level only if multi-seed randomized validation reaches the
+1. Train `039` on RunPod and evaluate seeds `1001`, `1002`, and `1003`.
+2. Promote only if it improves full-course success and mean gates without
+   increasing missed gates or collisions versus `036`.
+3. If `039` does not promote, the next step is a better teacher/controller
+   target for hard states, not more narrow gate-specific replay.
+4. Promote to Swift-level only if multi-seed randomized validation reaches the
    Swift-level thresholds above.
-4. Prepare AI-GP sim usage as shadow/integration testing until the policy clears
+5. Prepare AI-GP sim usage as shadow/integration testing until the policy clears
    those thresholds.
