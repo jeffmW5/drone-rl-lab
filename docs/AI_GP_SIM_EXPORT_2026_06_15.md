@@ -42,6 +42,9 @@ Best `031` randomized evaluations are improved but not yet Swift-level robust:
 This is a structured-state simulator pilot and a strong starting point. It is
 not a fully generalized vision/live policy.
 
+For the current June 27 status, target metrics, and bottlenecks, see
+`docs/AI_GP_STATUS_REPORT_2026_06_27.md`.
+
 ## Follow-Up Training
 
 `ai_gp_031_randomized_full_course_ppo_120m` fine-tuned from the nominal BC
