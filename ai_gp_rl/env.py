@@ -149,6 +149,8 @@ class AIGPEnvConfig:
     thrust_saturation_penalty: float = 0.0
     vertical_speed_penalty: float = 0.03
     altitude_penalty: float = 2.0
+    low_altitude_penalty: float = 0.0
+    soft_floor_altitude_m: float = 0.0
     gate_altitude_error_penalty: float = 0.0
     gate_lateral_error_penalty: float = 0.0
     soft_altitude_limit_m: float | None = None
@@ -206,6 +208,10 @@ class AIGPEnvConfig:
             raise ValueError("physics_substeps must be positive")
         if self.dt <= 0.0:
             raise ValueError("dt must be positive")
+        if self.low_altitude_penalty < 0.0:
+            raise ValueError("low_altitude_penalty cannot be negative")
+        if self.soft_floor_altitude_m < 0.0:
+            raise ValueError("soft_floor_altitude_m cannot be negative")
         if self.command_latency_s < 0.0:
             raise ValueError("command_latency_s cannot be negative")
         if self.command_latency_s_range[0] < 0.0:
@@ -978,6 +984,8 @@ class AIGPVectorEnv:
             * torch.relu(self.velocity[:, 2].abs() - 2.0).square()
             - self.config.altitude_penalty
             * torch.relu(self.position[:, 2] - altitude_penalty_start).square()
+            - self.config.low_altitude_penalty
+            * torch.relu(self.config.soft_floor_altitude_m - self.position[:, 2]).square()
             - self.config.gate_altitude_error_penalty
             * gate_vertical_offset.square()
             - self.config.gate_lateral_error_penalty

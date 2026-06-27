@@ -49,6 +49,24 @@ class SwiftTeacherEnvTests(unittest.TestCase):
         self.assertEqual(live_observation.shape, (8, 18))
         self.assertTrue(torch.isfinite(live_observation).all())
 
+    def test_soft_floor_penalty_discourages_low_altitude(self) -> None:
+        low_env = self._zero_reward_env(
+            start_position_m=(0.0, 0.0, 0.2),
+            low_altitude_penalty=10.0,
+            soft_floor_altitude_m=1.0,
+        )
+        high_env = self._zero_reward_env(
+            start_position_m=(0.0, 0.0, 1.2),
+            low_altitude_penalty=10.0,
+            soft_floor_altitude_m=1.0,
+        )
+
+        _, low_reward, _, _, _ = low_env.step(torch.zeros((1, 4)))
+        _, high_reward, _, _, _ = high_env.step(torch.zeros((1, 4)))
+
+        self.assertLess(float(low_reward[0]), -6.0)
+        self.assertAlmostEqual(float(high_reward[0]), 0.0, places=5)
+
     def test_gate_crossing_info_contains_time_series_state(self) -> None:
         env = AIGPVectorEnv(
             AIGPEnvConfig(
@@ -385,6 +403,46 @@ class SwiftTeacherEnvTests(unittest.TestCase):
                 wind_accel_mps2=0.0,
                 max_altitude_m=100.0,
                 max_forward_m=100.0,
+            )
+        )
+
+    @staticmethod
+    def _zero_reward_env(
+        *,
+        start_position_m: tuple[float, float, float],
+        low_altitude_penalty: float,
+        soft_floor_altitude_m: float,
+    ) -> AIGPVectorEnv:
+        return AIGPVectorEnv(
+            AIGPEnvConfig(
+                actor_observation_mode="structured_teacher_v2",
+                num_envs=1,
+                device="cpu",
+                randomization=False,
+                start_position_m=start_position_m,
+                start_position_noise_m=(0.0, 0.0, 0.0),
+                start_velocity_noise_mps=0.0,
+                near_gate_spawn_ratio_start=0.0,
+                near_gate_spawn_ratio_end=0.0,
+                progress_reward=0.0,
+                gate_reward=0.0,
+                finish_reward=0.0,
+                forward_speed_reward=0.0,
+                visibility_reward=0.0,
+                camera_alignment_reward=0.0,
+                alive_reward=0.0,
+                angular_rate_penalty=0.0,
+                action_delta_penalty=0.0,
+                thrust_saturation_penalty=0.0,
+                vertical_speed_penalty=0.0,
+                altitude_penalty=0.0,
+                low_altitude_penalty=low_altitude_penalty,
+                soft_floor_altitude_m=soft_floor_altitude_m,
+                gate_altitude_error_penalty=0.0,
+                gate_lateral_error_penalty=0.0,
+                collision_penalty=0.0,
+                out_of_bounds_penalty=0.0,
+                missed_gate_penalty=0.0,
             )
         )
 
