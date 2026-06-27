@@ -5,35 +5,43 @@
 The best current full-course AI-GP policy is the structured-state MLP from:
 
 ```text
-results/ai_gp_031_randomized_full_course_ppo_120m/best_policy.pt
+results/ai_gp_035_hard_case_final_approach_ppo_20m/best_policy.pt
 ```
 
 Export it for the AI-GP simulator with:
 
 ```bash
 /home/jeff/drones-venv/bin/python scripts/export_ai_gp_structured_policy.py \
-  results/ai_gp_031_randomized_full_course_ppo_120m/best_policy.pt \
-  results/ai_gp_031_randomized_full_course_ppo_120m/evals/nominal.json \
-  results/ai_gp_031_randomized_full_course_ppo_120m/ai_gp_structured_policy.json \
-  --randomized-validation-report results/ai_gp_031_randomized_full_course_ppo_120m/evals/random_1001.json \
-  --randomized-validation-report results/ai_gp_031_randomized_full_course_ppo_120m/evals/random_1002.json \
-  --randomized-validation-report results/ai_gp_031_randomized_full_course_ppo_120m/evals/random_1003.json
+  results/ai_gp_035_hard_case_final_approach_ppo_20m/best_policy.pt \
+  results/ai_gp_035_hard_case_final_approach_ppo_20m/evals/nominal.json \
+  results/ai_gp_035_hard_case_final_approach_ppo_20m/ai_gp_structured_policy.json \
+  --randomized-validation-report results/ai_gp_035_hard_case_final_approach_ppo_20m/evals/random_1001.json \
+  --randomized-validation-report results/ai_gp_035_hard_case_final_approach_ppo_20m/evals/random_1002.json \
+  --randomized-validation-report results/ai_gp_035_hard_case_final_approach_ppo_20m/evals/random_1003.json
 ```
 
 Keep the original BC artifact at
 `results/ai_gp_030_swift_full_course_bc_50m/ai_gp_structured_policy.json` for
-comparison. Use `best_policy.pt`, not `final_policy.pt`, for both runs.
+comparison. Keep `031` as the previous best baseline. Use `best_policy.pt`, not
+`final_policy.pt`, for these runs.
 
 ## Validation
 
-Best `031` nominal evaluation over 512 episodes:
+Best `035` nominal evaluation over 512 episodes:
 
 - mean gates: `6.0`
 - success rate: `1.0`
 - collision, out-of-bounds, missed-gate, vertical-runaway rates: `0.0`
-- gate crossing minimum margin: `0.6200 m`
+- gate crossing minimum margin: `0.7254 m`
 
-Best `031` randomized evaluations are improved but not yet Swift-level robust:
+Best `035` randomized evaluations are improved over `031` but still not
+Swift-level robust:
+
+- seed `1001`: `69.34%` success, `5.05` mean gates
+- seed `1002`: `65.82%` success, `5.00` mean gates
+- seed `1003`: `66.41%` success, `4.88` mean gates
+
+Previous `031` randomized baseline:
 
 - seed `1001`: `59.77%` success, `4.89` mean gates
 - seed `1002`: `61.33%` success, `4.95` mean gates
@@ -50,12 +58,18 @@ For the current June 27 status, target metrics, and bottlenecks, see
 `ai_gp_031_randomized_full_course_ppo_120m` fine-tuned from the nominal BC
 policy and briefly improved randomized success. It was stopped early because
 unanchored PPO then collapsed to `0%` randomized success. The saved best
-checkpoint is still useful and is the current export target.
+checkpoint is still useful as the previous baseline, but `035` is now the
+current export target.
 
 `ai_gp_032_anchored_randomized_ppo_30m` added an actor-anchor penalty to prevent
 that collapse. It stayed near the starting policy but did not beat `031`; its
 best embedded eval was `55.27%` success with `5.04` mean gates. Do not promote
 `032` over `031`.
+
+`ai_gp_035_hard_case_final_approach_ppo_20m` used dense failure telemetry from
+`031`, preserved the initial actor as the saved baseline, and focused anchored
+PPO on final-approach hard cases. It improves three-seed randomized average
+success from `60.55%` to `67.19%` and is the current structured export target.
 
 ## Sim Runtime Contract
 

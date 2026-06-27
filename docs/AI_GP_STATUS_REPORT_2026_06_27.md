@@ -3,11 +3,11 @@
 ## Short Answer
 
 We are not "passing 66% of gates." The best current structured-state policy is
-roughly `60-66%` full-course success under randomized surrogate evaluation,
-depending on seed and eval settings. That means it finishes all six gates in
-about that fraction of episodes. Its mean gate count is about `4.8-5.1 / 6`.
+roughly `66-69%` full-course success under randomized surrogate evaluation,
+depending on seed. That means it finishes all six gates in about that fraction
+of episodes. Its mean gate count is about `4.9-5.1 / 6`.
 
-Nominal, non-randomized evaluation is already solved by `031`: `100%` success
+Nominal, non-randomized evaluation is already solved by `035`: `100%` success
 over 512 episodes. The remaining problem is robustness and transfer, not basic
 gate sequencing.
 
@@ -17,11 +17,25 @@ Use this as the current integration/shadow-test candidate, not as a finished
 Swift-level pilot:
 
 ```text
+results/ai_gp_035_hard_case_final_approach_ppo_20m/best_policy.pt
+results/ai_gp_035_hard_case_final_approach_ppo_20m/ai_gp_structured_policy.json
+```
+
+`035` is now the current best structured-state candidate. `031` remains the
+previous baseline:
+
+```text
 results/ai_gp_031_randomized_full_course_ppo_120m/best_policy.pt
 results/ai_gp_031_randomized_full_course_ppo_120m/ai_gp_structured_policy.json
 ```
 
-Randomized validation for `031`:
+Randomized validation for `035`:
+
+- seed `1001`: `69.34%` success, `5.05` mean gates, `28.13%` missed gates
+- seed `1002`: `65.82%` success, `5.00` mean gates, `32.42%` missed gates
+- seed `1003`: `66.41%` success, `4.88` mean gates, `32.23%` missed gates
+
+Previous randomized validation for `031`:
 
 - seed `1001`: `59.77%` success, `4.89` mean gates, `38.87%` missed gates
 - seed `1002`: `61.33%` success, `4.95` mean gates, `36.91%` missed gates
@@ -91,13 +105,34 @@ The final `0.25 s` pre-failure window shows a centering problem, not an
 authority problem. Gates `0-1` are mostly low at the plane, while later gates
 are high or mixed with larger lateral misses.
 
-## Current Training Run Prepared
+## Current Training Result
 
-`configs/ai_gp_035_hard_case_final_approach_ppo_20m.yaml` is the next PPO run.
-It starts from `031`, saves the initial actor as `best_policy.pt` before PPO
-updates, uses a stronger actor anchor, and focuses near-gate replay on the last
+`configs/ai_gp_035_hard_case_final_approach_ppo_20m.yaml` completed on RunPod.
+It started from `031`, saved the initial actor as `best_policy.pt` before PPO
+updates, used a stronger actor anchor, and focused near-gate replay on the last
 `0.5-10 m` before the gate plane with wider vertical/lateral offsets derived
 from the dense hard cases.
+
+Embedded `035` best eval:
+
+- success: `69.14%`
+- mean gates: `5.15 / 6`
+- missed gate: `27.15%`
+- collision: `3.71%`
+
+Held-out comparison against the same three randomized seeds used for `031`:
+
+- average success improved from `60.55%` to `67.19%`
+- average mean gates improved from `4.89` to `4.98`
+- average missed-gate rate improved from `37.57%` to `30.92%`
+
+Nominal `035` validation over 512 episodes remains clean: `100%` success, `6.0`
+mean gates, zero failures, and `0.725 m` minimum crossing margin. The structured
+policy export was written to:
+
+```text
+results/ai_gp_035_hard_case_final_approach_ppo_20m/ai_gp_structured_policy.json
+```
 
 Linux RunPod helpers were added:
 
@@ -106,12 +141,11 @@ Linux RunPod helpers were added:
 
 ## Next Engineering Steps
 
-1. Train `035` on RunPod and compare its best checkpoint against `031`.
-2. Re-run dense telemetry on any promoted candidate to prove failures moved in
-   the right direction.
-3. Improve the teacher/controller on remaining hard states, then train the
+1. Run dense telemetry on `035` to prove the remaining failure distribution and
+   target the next hard-case set.
+2. Improve the teacher/controller on remaining hard states, then train the
    neural actor with anchoring that preserves the solved nominal course.
-4. Promote only if multi-seed randomized validation reaches the Swift-level
-   thresholds above.
-5. Prepare AI-GP sim usage as shadow/integration testing until the policy clears
+3. Promote to Swift-level only if multi-seed randomized validation reaches the
+   Swift-level thresholds above.
+4. Prepare AI-GP sim usage as shadow/integration testing until the policy clears
    those thresholds.
