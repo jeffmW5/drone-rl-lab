@@ -3,11 +3,11 @@
 ## Short Answer
 
 We are not "passing 66% of gates." The best current structured-state policy is
-roughly `66-69%` full-course success under randomized surrogate evaluation,
+roughly `66-71%` full-course success under randomized surrogate evaluation,
 depending on seed. That means it finishes all six gates in about that fraction
 of episodes. Its mean gate count is about `4.9-5.1 / 6`.
 
-Nominal, non-randomized evaluation is already solved by `035`: `100%` success
+Nominal, non-randomized evaluation is already solved by `036`: `100%` success
 over 512 episodes. The remaining problem is robustness and transfer, not basic
 gate sequencing.
 
@@ -17,19 +17,27 @@ Use this as the current integration/shadow-test candidate, not as a finished
 Swift-level pilot:
 
 ```text
-results/ai_gp_035_hard_case_final_approach_ppo_20m/best_policy.pt
-results/ai_gp_035_hard_case_final_approach_ppo_20m/ai_gp_structured_policy.json
+results/ai_gp_036_weighted_final_approach_ppo_20m/best_policy.pt
+results/ai_gp_036_weighted_final_approach_ppo_20m/ai_gp_structured_policy.json
 ```
 
-`035` is now the current best structured-state candidate. `031` remains the
-previous baseline:
+`036` is now the current best structured-state candidate. `035` and `031`
+remain previous baselines:
 
 ```text
+results/ai_gp_035_hard_case_final_approach_ppo_20m/best_policy.pt
+results/ai_gp_035_hard_case_final_approach_ppo_20m/ai_gp_structured_policy.json
 results/ai_gp_031_randomized_full_course_ppo_120m/best_policy.pt
 results/ai_gp_031_randomized_full_course_ppo_120m/ai_gp_structured_policy.json
 ```
 
-Randomized validation for `035`:
+Randomized validation for `036`:
+
+- seed `1001`: `71.29%` success, `5.11` mean gates, `26.37%` missed gates
+- seed `1002`: `68.55%` success, `5.08` mean gates, `28.91%` missed gates
+- seed `1003`: `66.41%` success, `4.96` mean gates, `31.84%` missed gates
+
+Previous randomized validation for `035`:
 
 - seed `1001`: `69.34%` success, `5.05` mean gates, `28.13%` missed gates
 - seed `1002`: `65.82%` success, `5.00` mean gates, `32.42%` missed gates
@@ -134,6 +142,33 @@ policy export was written to:
 results/ai_gp_035_hard_case_final_approach_ppo_20m/ai_gp_structured_policy.json
 ```
 
+Dense `035` telemetry then showed remaining final failures across gates 1-5:
+gate `1` = `10`, gate `5` = `7`, gates `2-4` = `6` each in the tracked failed
+set. `ai_gp_036_weighted_final_approach_ppo_20m` added weighted replay for those
+active gates and completed on RunPod.
+
+Embedded `036` best eval:
+
+- success: `73.83%`
+- mean gates: `5.23 / 6`
+- missed gate: `23.05%`
+- collision: `3.13%`
+
+Held-out comparison against the same three randomized seeds:
+
+- average success improved from `67.19%` to `68.75%`
+- average mean gates improved from `4.98` to `5.05`
+- average missed-gate rate improved from `30.92%` to `29.04%`
+- average collision rate increased from `1.89%` to `2.28%`
+
+Nominal `036` validation over 512 episodes remains clean: `100%` success, `6.0`
+mean gates, zero failures, and `0.702 m` minimum crossing margin. The structured
+policy export was written to:
+
+```text
+results/ai_gp_036_weighted_final_approach_ppo_20m/ai_gp_structured_policy.json
+```
+
 Linux RunPod helpers were added:
 
 - `scripts/runpod_ai_gp_eval.sh`
@@ -141,7 +176,7 @@ Linux RunPod helpers were added:
 
 ## Next Engineering Steps
 
-1. Run dense telemetry on `035` to prove the remaining failure distribution and
+1. Run dense telemetry on `036` to prove the remaining failure distribution and
    target the next hard-case set.
 2. Improve the teacher/controller on remaining hard states, then train the
    neural actor with anchoring that preserves the solved nominal course.
