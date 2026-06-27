@@ -15,6 +15,7 @@ from typing import Any
 import torch
 
 from ai_gp_rl.env import AIGPVectorEnv
+from ai_gp_rl.hybrid_teacher import parse_gate_indices, teacher_takeover_mask
 from ai_gp_rl.model import ActorCritic
 from ai_gp_rl.swift_expert import geometric_gate_teacher_action
 from train_ai_gp import (
@@ -115,6 +116,22 @@ def run(config_path: str | Path) -> None:
     if actor_anchor_base_coef > 0.0:
         actor_anchor = copy.deepcopy(model.actor_mean).eval()
         actor_anchor.requires_grad_(False)
+    teacher_target_mode = str(bc_section.get("teacher_target_mode", "teacher"))
+    takeover_distance_m = float(bc_section.get("takeover_distance_m", 10.0))
+    lateral_threshold_m = float(bc_section.get("lateral_threshold_m", 0.40))
+    vertical_threshold_m = float(bc_section.get("vertical_threshold_m", 0.40))
+    teacher_gate_indices = parse_gate_indices(
+        str(bc_section.get("gate_indices", "all"))
+    )
+    non_takeover_loss_weight = float(
+        bc_section.get("non_takeover_loss_weight", 1.0)
+    )
+    if non_takeover_loss_weight < 0.0:
+        raise ValueError("non_takeover_loss_weight cannot be negative")
+    target_policy_actor = None
+    if teacher_target_mode != "teacher":
+        target_policy_actor = copy.deepcopy(model.actor_mean).eval()
+        target_policy_actor.requires_grad_(False)
 
     total_interactions = int(bc_section.get("total_interactions", 20_000_000))
     total_updates = max((total_interactions + env.num_envs - 1) // env.num_envs, 1)
@@ -144,6 +161,12 @@ def run(config_path: str | Path) -> None:
             f"coef={actor_anchor_base_coef:g} "
             f"decay_steps={actor_anchor_decay_steps:,}"
         )
+    print(
+        "  TARGET:     "
+        f"mode={teacher_target_mode} "
+        f"takeover_distance={takeover_distance_m:g}m "
+        f"non_takeover_weight={non_takeover_loss_weight:g}"
+    )
     print(f"{'=' * 68}\n")
 
     observation, _ = env.reset()
@@ -152,6 +175,9 @@ def run(config_path: str | Path) -> None:
     metadata_extra = {
         "training_method": "swift_geometric_full_course_bc",
         "expert": "geometric_gate_teacher_v1",
+        "teacher_target_mode": teacher_target_mode,
+        "takeover_distance_m": takeover_distance_m,
+        "non_takeover_loss_weight": non_takeover_loss_weight,
         "policy_architecture": "mlp",
         "source_initial_actor_checkpoint": str(initial_actor_checkpoint)
         if initial_actor_checkpoint
@@ -186,14 +212,46 @@ def run(config_path: str | Path) -> None:
         interactions = update * env.num_envs
         actor_observation = observation[:, : env.actor_observation_dim].detach()
         with torch.no_grad():
-            target_action = geometric_gate_teacher_action(env)
+            teacher_action = geometric_gate_teacher_action(env)
+            if teacher_target_mode == "teacher":
+                teacher_mask = torch.ones(
+                    env.num_envs, dtype=torch.bool, device=device
+                )
+                target_action = teacher_action
+            else:
+                if target_policy_actor is None:
+                    raise RuntimeError("missing target policy actor")
+                teacher_mask, _ = teacher_takeover_mask(
+                    env,
+                    mode=teacher_target_mode,
+                    takeover_distance_m=takeover_distance_m,
+                    lateral_threshold_m=lateral_threshold_m,
+                    vertical_threshold_m=vertical_threshold_m,
+                    gate_indices=teacher_gate_indices,
+                )
+                policy_target_action = torch.tanh(
+                    target_policy_actor(actor_observation)
+                )
+                target_action = torch.where(
+                    teacher_mask.unsqueeze(1),
+                    teacher_action,
+                    policy_target_action,
+                )
 
         predicted_action = torch.tanh(model.actor_mean(actor_observation))
         squared_error = (predicted_action - target_action).square()
-        imitation_loss = (
-            (squared_error * action_loss_weights).mean()
-            / action_loss_weights.mean()
+        per_sample_loss = (
+            (squared_error * action_loss_weights).sum(1)
+            / action_loss_weights.sum().clamp(min=1e-6)
         )
+        sample_weights = torch.where(
+            teacher_mask,
+            torch.ones_like(per_sample_loss),
+            torch.full_like(per_sample_loss, non_takeover_loss_weight),
+        )
+        imitation_loss = (
+            per_sample_loss * sample_weights
+        ).sum() / sample_weights.sum().clamp(min=1e-6)
         current_actor_anchor_coef = _actor_anchor_coefficient(
             actor_anchor_base_coef,
             interactions,
@@ -256,6 +314,7 @@ def run(config_path: str | Path) -> None:
                 "yaw_mae": float(
                     (predicted_action[:, 3] - target_action[:, 3]).abs().mean()
                 ),
+                "teacher_target_fraction": float(teacher_mask.float().mean()),
                 "student_rollout_ratio": student_rollout_ratio,
                 "interactions_per_second": interactions / max(elapsed, 1e-6),
             }
@@ -268,6 +327,7 @@ def run(config_path: str | Path) -> None:
                 f"{record['roll_mae']:.3f}/"
                 f"{record['pitch_mae']:.3f}/"
                 f"{record['yaw_mae']:.3f} | "
+                f"teacher {record['teacher_target_fraction']:>5.1%} | "
                 f"student {student_rollout_ratio:>5.1%} | "
                 f"IPS {record['interactions_per_second']:,.0f}"
             )
