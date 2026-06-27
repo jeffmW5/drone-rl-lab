@@ -169,6 +169,20 @@ policy export was written to:
 results/ai_gp_036_weighted_final_approach_ppo_20m/ai_gp_structured_policy.json
 ```
 
+`ai_gp_037_gate1_gate5_final_approach_ppo_20m` tested a heavier gate-1/gate-5
+replay continuation from `036`. It is not promoted. Embedded training eval
+briefly matched `036` at `73.83%` success and `5.25` mean gates, but held-out
+validation traded missed gates for collisions:
+
+- average success: `68.75% -> 67.84%`
+- average mean gates: `5.05 -> 5.06`
+- average missed-gate rate: `29.04% -> 28.52%`
+- average collision rate: `2.28% -> 3.71%`
+
+This means the next useful step is not simply more gate-1/gate-5 replay. The
+next change should reduce collision while preserving the missed-gate reduction,
+or use a better teacher/controller target for the final-approach states.
+
 Linux RunPod helpers were added:
 
 - `scripts/runpod_ai_gp_eval.sh`
@@ -176,8 +190,8 @@ Linux RunPod helpers were added:
 
 ## Next Engineering Steps
 
-1. Run dense telemetry on `036` to prove the remaining failure distribution and
-   target the next hard-case set.
+1. Use dense `036` and failed `037` telemetry to build a collision-aware
+   final-approach target instead of increasing replay weights again.
 2. Improve the teacher/controller on remaining hard states, then train the
    neural actor with anchoring that preserves the solved nominal course.
 3. Promote to Swift-level only if multi-seed randomized validation reaches the

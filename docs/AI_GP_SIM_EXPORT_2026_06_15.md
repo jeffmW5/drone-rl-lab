@@ -76,6 +76,10 @@ near-gate replay over gates 1-5. It improves three-seed randomized average
 success from `67.19%` to `68.75%`, improves mean gates from `4.98` to `5.05`,
 and is the current structured export target.
 
+`ai_gp_037_gate1_gate5_final_approach_ppo_20m` is not promoted. It slightly
+improved mean gates and missed-gate rate, but reduced average success to
+`67.84%` and increased average collision rate to `3.71%`.
+
 ## Sim Runtime Contract
 
 The JSON export has `policy_role=structured_state_sim_teacher` and
