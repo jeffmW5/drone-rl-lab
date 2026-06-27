@@ -14,13 +14,14 @@ trained policies with time-series telemetry.
 The current structured-state export candidate is:
 
 ```text
-results/ai_gp_039_all_gate_soft_floor_ppo_30m/best_policy.pt
-results/ai_gp_039_all_gate_soft_floor_ppo_30m/ai_gp_structured_policy.json
+results/ai_gp_040_near_gate_teacher_bc_30m/best_policy.pt
+results/ai_gp_040_near_gate_teacher_bc_30m/ai_gp_structured_policy.json
 ```
 
-`039` solves nominal six-gate evaluation but is only about `69.60%` average
-full-course success across randomized seeds `1001`, `1002`, and `1003`. It is
-a small promotion over `036`, not a Swift-level pilot.
+`040` solves nominal six-gate evaluation and clears the structured-state
+Swift-level surrogate threshold: `99.22%` average full-course success across
+randomized seeds `1001`, `1002`, and `1003`, `5.99 / 6` mean gates, and zero
+collisions.
 
 `038` is not promoted. Its soft-floor penalty reduced average collisions from
 `2.28%` to `1.37%`, but mean gates fell from `5.05` to `4.89` and early gate-1
@@ -38,10 +39,24 @@ missed:     29.04% -> 28.26%
 collision:  2.28%  -> 2.15%
 ```
 
-The next learning step should be a better teacher/controller target for hard
-randomized states, not more narrow gate-specific replay. Promote to Swift-level
-only after held-out randomized full-course success reaches the project threshold
-of at least `95%`.
+The previous blocker was the lack of a better teacher/controller target for hard
+randomized states. That learning step was `040`: hybrid evaluation proved the
+geometric teacher
+solved near-gate corrections inside `10 m` of the active gate plane, while the
+`039` actor remained useful outside that envelope. `040` behavior-cloned that
+hybrid target into a pure actor:
+
+```text
+success:    69.60% -> 99.22%
+mean gates: 5.057  -> 5.990
+missed:     28.26% -> 0.78%
+collision:  2.15%  -> 0.00%
+```
+
+The next step is AI-GP simulator integration/shadow testing with time-series
+comparison against surrogate gate crossings. Do not start camera-only/live
+vision transfer until the structured-state `040` controller has been verified
+in the simulator runtime.
 
 ## Current Implementation
 

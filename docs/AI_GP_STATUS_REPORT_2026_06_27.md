@@ -3,28 +3,29 @@
 ## Short Answer
 
 We are not "passing 66% of gates." The best current structured-state policy is
-roughly `67-71%` full-course success under randomized surrogate evaluation,
+roughly `98.8-99.4%` full-course success under randomized surrogate evaluation,
 depending on seed. That means it finishes all six gates in about that fraction
-of episodes. Its mean gate count is about `4.9-5.1 / 6`.
+of episodes. Its mean gate count is about `5.98-5.99 / 6`.
 
-Nominal, non-randomized evaluation is already solved by `039`: `100%` success
+Nominal, non-randomized evaluation is solved by `040`: `100%` success
 over 512 episodes. The remaining problem is robustness and transfer, not basic
 gate sequencing.
 
 ## Current Best Artifact
 
-Use this as the current integration/shadow-test candidate, not as a finished
-Swift-level pilot:
+Use this as the current structured-state AI-GP sim/shadow-test candidate:
+
+```text
+results/ai_gp_040_near_gate_teacher_bc_30m/best_policy.pt
+results/ai_gp_040_near_gate_teacher_bc_30m/ai_gp_structured_policy.json
+```
+
+`040` is now the current best structured-state candidate. `039`, `036`, `035`,
+and `031` remain previous baselines:
 
 ```text
 results/ai_gp_039_all_gate_soft_floor_ppo_30m/best_policy.pt
 results/ai_gp_039_all_gate_soft_floor_ppo_30m/ai_gp_structured_policy.json
-```
-
-`039` is now the current best structured-state candidate, but only by a small
-margin. `036`, `035`, and `031` remain previous baselines:
-
-```text
 results/ai_gp_036_weighted_final_approach_ppo_20m/best_policy.pt
 results/ai_gp_036_weighted_final_approach_ppo_20m/ai_gp_structured_policy.json
 results/ai_gp_035_hard_case_final_approach_ppo_20m/best_policy.pt
@@ -33,7 +34,13 @@ results/ai_gp_031_randomized_full_course_ppo_120m/best_policy.pt
 results/ai_gp_031_randomized_full_course_ppo_120m/ai_gp_structured_policy.json
 ```
 
-Randomized validation for `039`:
+Randomized validation for `040`:
+
+- seed `1001`: `98.83%` success, `5.98` mean gates, `1.17%` missed gates
+- seed `1002`: `99.41%` success, `5.99` mean gates, `0.59%` missed gates
+- seed `1003`: `99.41%` success, `5.99` mean gates, `0.59%` missed gates
+
+Previous randomized validation for `039`:
 
 - seed `1001`: `71.29%` success, `5.12` mean gates, `27.15%` missed gates
 - seed `1002`: `70.31%` success, `5.10` mean gates, `26.76%` missed gates
@@ -223,6 +230,28 @@ policy export was written to:
 results/ai_gp_039_all_gate_soft_floor_ppo_30m/ai_gp_structured_policy.json
 ```
 
+Hybrid validation then found the missing lever: using the geometric teacher only
+inside `10 m` of the active gate plane produced `100%` success and zero failures
+on randomized seeds `1001`, `1002`, and `1003`. `040` behavior-cloned that
+hybrid target from `039`: teacher actions in the near-gate envelope and frozen
+`039` actor actions elsewhere.
+
+`ai_gp_040_near_gate_teacher_bc_30m` is promoted. Three-seed randomized
+validation versus `039`:
+
+- average success: `69.60% -> 99.22%`
+- average mean gates: `5.057 -> 5.990`
+- average missed-gate rate: `28.26% -> 0.78%`
+- average collision rate: `2.15% -> 0.00%`
+
+Nominal `040` validation over 512 episodes is clean: `100%` success, `6.0`
+mean gates, zero failures, and `0.836 m` minimum crossing margin. The structured
+policy export was written to:
+
+```text
+results/ai_gp_040_near_gate_teacher_bc_30m/ai_gp_structured_policy.json
+```
+
 Linux RunPod helpers were added:
 
 - `scripts/runpod_ai_gp_eval.sh`
@@ -230,11 +259,9 @@ Linux RunPod helpers were added:
 
 ## Next Engineering Steps
 
-1. Treat `039` as the current AI-GP sim/shadow-test candidate, not a final
-   controller.
-2. The next learning step should be a better teacher/controller target for hard
-   randomized states, not more narrow gate-specific replay.
-3. Promote to Swift-level only if multi-seed randomized validation reaches the
-   Swift-level thresholds above.
-4. Prepare AI-GP sim usage as shadow/integration testing until the policy clears
-   those thresholds.
+1. Treat `040` as the current structured-state AI-GP sim/shadow-test candidate.
+2. Run the exported `040` policy in the actual AI-GP simulator integration path
+   and compare time-series gate crossings to surrogate telemetry.
+3. Keep `039` and the hybrid-teacher reports as fallback/diagnostic baselines.
+4. Do not move to camera-only/live vision until the structured-state `040`
+   behavior is verified in the AI-GP simulator runtime.

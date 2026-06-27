@@ -5,20 +5,19 @@
 The current best AI-GP structured-state pilot is:
 
 ```text
-results/ai_gp_039_all_gate_soft_floor_ppo_30m/best_policy.pt
-results/ai_gp_039_all_gate_soft_floor_ppo_30m/ai_gp_structured_policy.json
+results/ai_gp_040_near_gate_teacher_bc_30m/best_policy.pt
+results/ai_gp_040_near_gate_teacher_bc_30m/ai_gp_structured_policy.json
 ```
 
-This is a simulator/shadow-test candidate, not a finished Swift-level pilot.
-Nominal evaluation is solved at `100%` success over 512 episodes, but randomized
-evaluation is only about `67-71%` full-course success across held-out seeds.
+This is the first structured-state candidate that clears the Swift-level
+surrogate threshold. Nominal evaluation is solved at `100%` success over 512
+episodes, and randomized held-out evaluation is `98.8-99.4%` full-course
+success across seeds `1001-1003`.
 
 ## What The Numbers Mean
 
 The policy is not passing only `66%` of individual gates. It completes all six
-gates in roughly `69%` of randomized episodes. Mean gates are about `5 / 6`,
-which means most failures happen late enough to pass several gates first, but
-the controller is still not robust enough for a Swift-level claim.
+gates in roughly `99%` of randomized episodes. Mean gates are about `5.99 / 6`.
 
 Swift-level for this project means at least `95%` randomized full-course
 success, `5.8-6.0 / 6` mean gates, near-zero collisions, and stable gate-plane
@@ -49,11 +48,23 @@ candidate, but the gain is small:
 - missed gates: `29.04% -> 28.26%`
 - collisions: `2.28% -> 2.15%`
 
+Hybrid evaluation then found the real lever: keeping the `039` actor except
+inside `10 m` of the active gate plane, where the geometric teacher takes over,
+completed all three randomized validation seeds at `100%` with zero failures.
+Run `040` behavior-cloned that hybrid target into a pure actor.
+
+`040` randomized held-out validation:
+
+- success: `69.60% -> 99.22%`
+- mean gates: `5.057 -> 5.990`
+- missed gates: `28.26% -> 0.78%`
+- collisions: `2.15% -> 0.00%`
+
 ## Current Bottleneck
 
-The bottleneck is randomized robustness and transfer, not raw thrust authority
-or CPU training time. CPU tests are useful for syntax, unit tests, and small
-diagnostics. Real policy learning belongs on RunPod/GPU.
+The immediate bottleneck has moved from surrogate learning to transfer
+verification. CPU tests are useful for syntax, unit tests, and small
+diagnostics. Real policy learning and validation belong on RunPod/GPU.
 
 The controller must learn the active-gate task generally: given any active gate,
 relative gate pose, vehicle state, previous action, and dynamics variation, pass
@@ -62,12 +73,12 @@ can improve that segment while damaging other gates.
 
 ## Work In Progress
 
-Run `039` is exported in:
+Run `040` is exported in:
 
 ```text
-results/ai_gp_039_all_gate_soft_floor_ppo_30m/ai_gp_structured_policy.json
+results/ai_gp_040_near_gate_teacher_bc_30m/ai_gp_structured_policy.json
 ```
 
-The next learning step should improve the teacher/controller target for hard
-randomized states. More narrow replay on one gate is unlikely to produce the
-`95%+` randomized success needed for Swift-level behavior.
+The next engineering step is AI-GP simulator integration/shadow testing with
+time-series comparison against surrogate gate crossings. Do not move to
+camera-only/live vision until this structured-state controller transfers.

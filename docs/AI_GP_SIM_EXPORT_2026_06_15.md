@@ -5,47 +5,47 @@
 The best current full-course AI-GP policy is the structured-state MLP from:
 
 ```text
-results/ai_gp_039_all_gate_soft_floor_ppo_30m/best_policy.pt
+results/ai_gp_040_near_gate_teacher_bc_30m/best_policy.pt
 ```
 
 Export it for the AI-GP simulator with:
 
 ```bash
 /home/jeff/drones-venv/bin/python scripts/export_ai_gp_structured_policy.py \
-  results/ai_gp_039_all_gate_soft_floor_ppo_30m/best_policy.pt \
-  results/ai_gp_039_all_gate_soft_floor_ppo_30m/evals/nominal.json \
-  results/ai_gp_039_all_gate_soft_floor_ppo_30m/ai_gp_structured_policy.json \
-  --randomized-validation-report results/ai_gp_039_all_gate_soft_floor_ppo_30m/evals/random_1001.json \
-  --randomized-validation-report results/ai_gp_039_all_gate_soft_floor_ppo_30m/evals/random_1002.json \
-  --randomized-validation-report results/ai_gp_039_all_gate_soft_floor_ppo_30m/evals/random_1003.json
+  results/ai_gp_040_near_gate_teacher_bc_30m/best_policy.pt \
+  results/ai_gp_040_near_gate_teacher_bc_30m/evals/nominal.json \
+  results/ai_gp_040_near_gate_teacher_bc_30m/ai_gp_structured_policy.json \
+  --randomized-validation-report results/ai_gp_040_near_gate_teacher_bc_30m/evals/random_1001.json \
+  --randomized-validation-report results/ai_gp_040_near_gate_teacher_bc_30m/evals/random_1002.json \
+  --randomized-validation-report results/ai_gp_040_near_gate_teacher_bc_30m/evals/random_1003.json
 ```
 
 Keep the original BC artifact at
 `results/ai_gp_030_swift_full_course_bc_50m/ai_gp_structured_policy.json` for
-comparison. Keep `036`, `035`, and `031` as previous baselines. Use
+comparison. Keep `039`, `036`, `035`, and `031` as previous baselines. Use
 `best_policy.pt`, not `final_policy.pt`, for these runs.
 
 ## Validation
 
-Best `039` nominal evaluation over 512 episodes:
+Best `040` nominal evaluation over 512 episodes:
 
 - mean gates: `6.0`
 - success rate: `1.0`
 - collision, out-of-bounds, missed-gate, vertical-runaway rates: `0.0`
-- gate crossing minimum margin: `0.7054 m`
+- gate crossing minimum margin: `0.8362 m`
 
-Best `039` randomized evaluations are improved over `036` but still not
-Swift-level robust:
+Best `040` randomized evaluations clear the structured-state Swift-level
+surrogate threshold:
+
+- seed `1001`: `98.83%` success, `5.98` mean gates
+- seed `1002`: `99.41%` success, `5.99` mean gates
+- seed `1003`: `99.41%` success, `5.99` mean gates
+
+Previous `039` randomized baseline:
 
 - seed `1001`: `71.29%` success, `5.11` mean gates
 - seed `1002`: `70.31%` success, `5.10` mean gates
 - seed `1003`: `67.19%` success, `4.96` mean gates
-
-Previous `036` randomized baseline:
-
-- seed `1001`: `71.29%` success, `5.11` mean gates
-- seed `1002`: `68.55%` success, `5.08` mean gates
-- seed `1003`: `66.41%` success, `4.96` mean gates
 
 This is a structured-state simulator pilot and a strong starting point. It is
 not a fully generalized vision/live policy.
@@ -59,7 +59,7 @@ For the current June 27 status, target metrics, and bottlenecks, see
 policy and briefly improved randomized success. It was stopped early because
 unanchored PPO then collapsed to `0%` randomized success. The saved best
 checkpoint is still useful as a previous baseline, but later anchored runs have
-superseded it. `039` is now the current export target.
+superseded it. `040` is now the current export target.
 
 `ai_gp_032_anchored_randomized_ppo_30m` added an actor-anchor penalty to prevent
 that collapse. It stayed near the starting policy but did not beat `031`; its
@@ -84,12 +84,20 @@ improved mean gates and missed-gate rate, but reduced average success to
 soft-floor altitude penalty and reduced average collision rate to `1.37%`, but
 mean gates fell from `5.05` to `4.89` and missed gates did not improve.
 
-`ai_gp_039_all_gate_soft_floor_ppo_30m` is the current structured export target.
-It starts from `036`, keeps the soft-floor penalty, and randomizes near-gate
-starts over all six active gate indices. It improves three-seed randomized
+`ai_gp_039_all_gate_soft_floor_ppo_30m` was the previous structured export
+target. It starts from `036`, keeps the soft-floor penalty, and randomizes
+near-gate starts over all six active gate indices. It improves three-seed randomized
 average success from `68.75%` to `69.60%`, mean gates from `5.053` to `5.057`,
 missed-gate rate from `29.04%` to `28.26%`, and collision rate from `2.28%` to
 `2.15%`. This is a small improvement, not Swift-level robustness.
+
+`ai_gp_040_near_gate_teacher_bc_30m` is the current structured export target.
+Hybrid eval showed that the geometric teacher was excellent inside `10 m` of
+the active gate plane while the `039` actor was good outside that envelope.
+`040` behavior-cloned that hybrid target into a pure actor. It improves
+three-seed randomized average success from `69.60%` to `99.22%`, mean gates
+from `5.057` to `5.990`, missed-gate rate from `28.26%` to `0.78%`, and
+collision rate from `2.15%` to `0.00%`.
 
 ## Sim Runtime Contract
 
