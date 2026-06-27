@@ -1,0 +1,128 @@
+name: ai_gp_036_weighted_final_approach_ppo_20m
+backend: ai_gp
+hypothesis: >
+  Dense telemetry from ai_gp_035 seed 1001 removed gate-0 misses but still
+  failed by final-approach centering on gates 1-5. This run continues from 035
+  with weighted near-gate replay matching the remaining failure distribution,
+  tighter 0.25-8 m final-approach starts, stronger centering penalties, and a
+  stronger actor anchor to preserve the validated nominal full-course behavior.
+budget_seconds: 1200
+
+ai_gp:
+  device: cuda
+  allow_cpu: false
+  seed: 197
+  total_timesteps: 30146560
+  curriculum_steps: 4000000
+  num_envs: 4096
+  num_steps: 64
+  learning_rate: 0.000004
+  anneal_lr: true
+  gamma: 0.997
+  gae_lambda: 0.95
+  update_epochs: 2
+  num_minibatches: 32
+  clip_coef: 0.035
+  ent_coef: 0.0
+  vf_coef: 0.5
+  max_grad_norm: 0.35
+  initial_logstd: -2.35
+  target_kl: 0.0015
+  actor_anchor_coef: 10.0
+  actor_anchor_decay_steps: 0
+  save_initial_actor_as_best: true
+  hidden_sizes: [256, 256]
+  eval_interval_iterations: 2
+  eval_episodes: 512
+  eval_num_envs: 512
+  eval_randomization: true
+  initial_actor_checkpoint: results/ai_gp_035_hard_case_final_approach_ppo_20m/best_policy.pt
+  allow_teacher_initialization: true
+
+  env:
+    actor_observation_mode: structured_teacher_v2
+    track_name: ai_gp_six_gate
+    track_ground_clearance_m: 1.5
+    start_position_ned_m: [0.0, 0.0, 0.0]
+    position_observation_scale_m: [180.0, 20.0, 35.0]
+
+    dt: 0.02
+    physics_substeps: 2
+    max_episode_steps: 1500
+    randomization: true
+    align_spawn_heading_to_gate: true
+    start_position_noise_m: [0.25, 0.25, 0.08]
+    start_velocity_noise_mps: 0.20
+    spawn_yaw_noise_rad: 0.22
+    spawn_tilt_noise_rad: 0.05
+    gate_jitter_m: [0.16, 0.16, 0.14]
+
+    near_gate_spawn_ratio_start: 0.70
+    near_gate_spawn_ratio_end: 0.50
+    near_gate_indices: [1, 2, 3, 4, 5]
+    near_gate_index_weights: [10.0, 6.0, 6.0, 6.0, 7.0]
+    near_gate_distance_m: [0.25, 8.0]
+    near_gate_lateral_offset_m: [-2.35, 2.35]
+    near_gate_vertical_offset_m: [-2.35, 2.85]
+    near_gate_forward_speed_mps: [2.5, 8.0]
+    near_gate_lateral_speed_mps: [-4.6, 4.6]
+    near_gate_vertical_speed_mps: [-1.2, 1.2]
+    near_gate_roll_rad: [-0.22, 0.22]
+    near_gate_pitch_rad: [-0.65, 0.25]
+    near_gate_yaw_offset_rad: [-0.50, 0.50]
+    near_gate_previous_action_range:
+      - [-0.55, 0.55]
+      - [-1.00, 1.00]
+      - [-1.00, 1.00]
+      - [-0.60, 0.60]
+    soft_collision_fraction: 0.0
+
+    dynamics_model: measured_ai_gp_v1
+    max_roll_rate_radps: 0.30
+    max_pitch_rate_radps: 0.20
+    max_yaw_rate_radps: 0.15
+    thrust_command_center: 0.295
+    thrust_command_span_up: 0.105
+    thrust_command_span_down: 0.095
+    thrust_acceleration_bias_mps2: -5.6171800889
+    thrust_acceleration_gain_mps2: 57.2914093237
+    base_pitch_offset_rad: 0.3106907308
+    linear_drag_xyz: [0.1417047358, 0.1417047358, 0.3905510548]
+    quadratic_drag_xyz: [0.0222959629, 0.0222959629, 0.0117516223]
+    rate_response_gain: [2.6503460081, 2.5121130023, 2.5812295052]
+    command_latency_s: 0.046
+    command_latency_s_range: [0.035, 0.065]
+    rate_time_constant_s: 0.005
+    rate_time_constant_s_range: [0.005, 0.014]
+    action_response: 1.0
+    action_response_range: [0.90, 1.0]
+    mass_scale_range: [0.96, 1.04]
+    thrust_scale_range: [0.93, 1.07]
+    drag_scale_range: [0.88, 1.12]
+    rate_response_gain_scale_range: [0.92, 1.08]
+    wind_accel_mps2: 0.16
+
+    max_altitude_m: 35.0
+    max_lateral_m: 22.0
+    min_forward_m: -8.0
+    max_forward_m: 182.0
+
+    progress_reward: 8.0
+    gate_reward: 150.0
+    finish_reward: 300.0
+    camera_alignment_reward: 0.12
+    camera_alignment_exponent: 4.0
+    forward_speed_reward: 0.0
+    visibility_reward: 0.0
+    alive_reward: 0.0
+    angular_rate_penalty: 0.001
+    action_delta_penalty: 0.018
+    thrust_saturation_penalty: 0.12
+    vertical_speed_penalty: 0.28
+    altitude_penalty: 2.2
+    gate_altitude_error_penalty: 1.35
+    gate_lateral_error_penalty: 1.35
+    collision_penalty: 35.0
+    out_of_bounds_penalty: 35.0
+    missed_gate_penalty: 560.0
+    terminate_on_missed_gate: true

@@ -64,6 +64,7 @@ class AIGPEnvConfig:
     near_gate_spawn_ratio_start: float = 0.70
     near_gate_spawn_ratio_end: float = 0.10
     near_gate_indices: tuple[int, ...] | None = None
+    near_gate_index_weights: tuple[float, ...] | None = None
     near_gate_distance_m: tuple[float, float] = (1.5, 3.5)
     near_gate_lateral_offset_m: tuple[float, float] = (-0.45, 0.45)
     near_gate_vertical_offset_m: tuple[float, float] = (-0.35, 0.35)
@@ -253,6 +254,19 @@ class AIGPEnvConfig:
                     raise ValueError(
                         "near_gate_previous_action_range must be normalized"
                     )
+        if self.near_gate_index_weights is not None:
+            if self.near_gate_indices is None:
+                raise ValueError(
+                    "near_gate_index_weights requires near_gate_indices"
+                )
+            if len(self.near_gate_index_weights) != len(self.near_gate_indices):
+                raise ValueError(
+                    "near_gate_index_weights must match near_gate_indices length"
+                )
+            if any(value < 0.0 for value in self.near_gate_index_weights):
+                raise ValueError("near_gate_index_weights cannot be negative")
+            if sum(self.near_gate_index_weights) <= 0.0:
+                raise ValueError("near_gate_index_weights must have positive sum")
         if self.dynamics_model == "measured_ai_gp_v1":
             if not 0.0 < self.thrust_command_center < 1.0:
                 raise ValueError("thrust_command_center must be inside (0, 1)")
@@ -463,8 +477,18 @@ class AIGPVectorEnv:
                 device=self.device,
                 dtype=torch.long,
             )
+            if config.near_gate_index_weights is None:
+                self.near_gate_index_weights = None
+            else:
+                weights = torch.tensor(
+                    config.near_gate_index_weights,
+                    device=self.device,
+                    dtype=self.dtype,
+                )
+                self.near_gate_index_weights = weights / weights.sum()
         else:
             self.near_gate_indices = None
+            self.near_gate_index_weights = None
         self.gate_normals = self._build_gate_normals(
             self.base_gate_positions,
             upright=config.upright_gate_normals,
@@ -623,13 +647,21 @@ class AIGPVectorEnv:
                     device=self.device,
                 )
             else:
-                gate_choice = torch.randint(
-                    0,
-                    self.near_gate_indices.numel(),
-                    (near_count,),
-                    generator=self.generator,
-                    device=self.device,
-                )
+                if self.near_gate_index_weights is None:
+                    gate_choice = torch.randint(
+                        0,
+                        self.near_gate_indices.numel(),
+                        (near_count,),
+                        generator=self.generator,
+                        device=self.device,
+                    )
+                else:
+                    gate_choice = torch.multinomial(
+                        self.near_gate_index_weights,
+                        near_count,
+                        replacement=True,
+                        generator=self.generator,
+                    )
                 random_gate = self.near_gate_indices[gate_choice]
             self.gate_index[near_ids] = random_gate
             self.gates_passed[near_ids] = random_gate

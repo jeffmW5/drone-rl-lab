@@ -321,6 +321,32 @@ class SwiftTeacherEnvTests(unittest.TestCase):
         )
         torch.testing.assert_close(env.angular_rate, expected_rate)
 
+    def test_near_gate_spawn_can_weight_replayed_gates(self) -> None:
+        env = AIGPVectorEnv(
+            AIGPEnvConfig(
+                actor_observation_mode="structured_teacher_v2",
+                num_envs=64,
+                device="cpu",
+                randomization=False,
+                near_gate_spawn_ratio_start=1.0,
+                near_gate_spawn_ratio_end=1.0,
+                near_gate_indices=(1, 2),
+                near_gate_index_weights=(0.0, 1.0),
+            )
+        )
+
+        env.reset()
+
+        self.assertTrue(torch.all(env.gate_index == 2))
+        self.assertTrue(torch.all(env.gates_passed == 2))
+
+    def test_near_gate_weights_must_match_replayed_gates(self) -> None:
+        with self.assertRaisesRegex(ValueError, "near_gate_index_weights"):
+            AIGPEnvConfig(
+                near_gate_indices=(1, 2),
+                near_gate_index_weights=(1.0,),
+            )
+
     @staticmethod
     def _measured_env(*, command_latency_s: float) -> AIGPVectorEnv:
         return AIGPVectorEnv(
