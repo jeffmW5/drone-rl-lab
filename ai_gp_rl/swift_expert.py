@@ -58,15 +58,58 @@ def geometric_gate_teacher_action(env: SwiftTeacherEnv) -> torch.Tensor:
 
     distance_to_plane = (-plane_offset).clamp(0.0, 28.0)
     cross_track_error = lateral_offset.abs() + vertical_offset.abs()
-    speed_scale = (1.0 / (1.0 + 0.16 * cross_track_error)).clamp(0.45, 1.0)
-    target_forward_speed = (4.0 + 0.50 * distance_to_plane).clamp(3.5, 13.5)
+    speed_scale = (
+        1.0
+        / (
+            1.0
+            + float(getattr(env.config, "swift_teacher_cross_track_speed_gain", 0.16))
+            * cross_track_error
+        )
+    ).clamp(float(getattr(env.config, "swift_teacher_min_speed_scale", 0.45)), 1.0)
+    target_forward_speed = (
+        float(getattr(env.config, "swift_teacher_speed_base_mps", 4.0))
+        + float(getattr(env.config, "swift_teacher_speed_distance_gain", 0.50))
+        * distance_to_plane
+    ).clamp(
+        float(getattr(env.config, "swift_teacher_min_forward_speed_mps", 3.5)),
+        float(getattr(env.config, "swift_teacher_max_forward_speed_mps", 13.5)),
+    )
     target_forward_speed = target_forward_speed * speed_scale
-    target_lateral_speed = (-1.8 * lateral_offset).clamp(-4.5, 4.5)
-    target_vertical_speed = (-1.6 * vertical_offset).clamp(-4.0, 4.0)
+    lateral_speed_limit = float(
+        getattr(env.config, "swift_teacher_target_lateral_speed_limit_mps", 4.5)
+    )
+    vertical_speed_limit = float(
+        getattr(env.config, "swift_teacher_target_vertical_speed_limit_mps", 4.0)
+    )
+    target_lateral_speed = (
+        -float(getattr(env.config, "swift_teacher_lateral_position_gain", 1.8))
+        * lateral_offset
+    ).clamp(-lateral_speed_limit, lateral_speed_limit)
+    target_vertical_speed = (
+        -float(getattr(env.config, "swift_teacher_vertical_position_gain", 1.6))
+        * vertical_offset
+    ).clamp(-vertical_speed_limit, vertical_speed_limit)
 
-    forward_accel = (target_forward_speed - forward_speed).clamp(-7.0, 7.0)
-    lateral_accel = (2.0 * (target_lateral_speed - lateral_speed)).clamp(-8.0, 8.0)
-    vertical_accel = (2.2 * (target_vertical_speed - vertical_speed)).clamp(-8.0, 8.0)
+    forward_limit = float(
+        getattr(env.config, "swift_teacher_forward_accel_limit_mps2", 7.0)
+    )
+    lateral_limit = float(
+        getattr(env.config, "swift_teacher_lateral_accel_limit_mps2", 8.0)
+    )
+    vertical_limit = float(
+        getattr(env.config, "swift_teacher_vertical_accel_limit_mps2", 8.0)
+    )
+    forward_accel = (target_forward_speed - forward_speed).clamp(
+        -forward_limit, forward_limit
+    )
+    lateral_accel = (
+        float(getattr(env.config, "swift_teacher_lateral_speed_gain", 2.0))
+        * (target_lateral_speed - lateral_speed)
+    ).clamp(-lateral_limit, lateral_limit)
+    vertical_accel = (
+        float(getattr(env.config, "swift_teacher_vertical_speed_gain", 2.2))
+        * (target_vertical_speed - vertical_speed)
+    ).clamp(-vertical_limit, vertical_limit)
     support_accel = (9.81 + vertical_accel).clamp(4.0, 19.0)
 
     base_pitch = torch.as_tensor(

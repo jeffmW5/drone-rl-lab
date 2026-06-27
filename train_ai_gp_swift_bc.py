@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import shutil
 import sys
@@ -17,12 +18,29 @@ from ai_gp_rl.env import AIGPVectorEnv
 from ai_gp_rl.model import ActorCritic
 from ai_gp_rl.swift_expert import geometric_gate_teacher_action
 from train_ai_gp import (
+    _actor_anchor_coefficient,
     _build_env_config,
     _load_initial_actor,
     _save_checkpoint,
     evaluate,
     load_config,
 )
+
+
+def _score_evaluation(evaluation: dict[str, float]) -> tuple[float, float, float, float]:
+    bounded_progress = (
+        evaluation["mean_gates"]
+        * (1.0 - evaluation["collision_rate"])
+        * (1.0 - evaluation["out_of_bounds_rate"])
+        * (1.0 - evaluation["missed_gate_rate"])
+        * (1.0 - evaluation["vertical_runaway_rate"])
+    )
+    return (
+        bounded_progress + evaluation["success_rate"],
+        evaluation["success_rate"],
+        evaluation["mean_gates"],
+        evaluation["mean_distance_reduction_m"],
+    )
 
 
 def run(config_path: str | Path) -> None:
@@ -91,6 +109,12 @@ def run(config_path: str | Path) -> None:
     )
     if action_loss_weights.shape != (env.action_dim,):
         raise ValueError("action_loss_weights must contain four values")
+    actor_anchor_base_coef = float(bc_section.get("actor_anchor_coef", 0.0))
+    actor_anchor_decay_steps = int(bc_section.get("actor_anchor_decay_steps", 0))
+    actor_anchor = None
+    if actor_anchor_base_coef > 0.0:
+        actor_anchor = copy.deepcopy(model.actor_mean).eval()
+        actor_anchor.requires_grad_(False)
 
     total_interactions = int(bc_section.get("total_interactions", 20_000_000))
     total_updates = max((total_interactions + env.num_envs - 1) // env.num_envs, 1)
@@ -114,13 +138,17 @@ def run(config_path: str | Path) -> None:
     print(f"  UPDATES:    {total_updates:,}")
     print(f"  BUDGET:     {budget_seconds}s")
     print(f"  OUTPUT:     {results_dir}")
+    if actor_anchor is not None:
+        print(
+            "  ACTOR ANCHOR: "
+            f"coef={actor_anchor_base_coef:g} "
+            f"decay_steps={actor_anchor_decay_steps:,}"
+        )
     print(f"{'=' * 68}\n")
 
     observation, _ = env.reset()
     wall_start = time.time()
     history: list[dict[str, float]] = []
-    best_evaluation: dict[str, float] | None = None
-    best_score = (float("-inf"), -1.0, -1.0, float("-inf"))
     metadata_extra = {
         "training_method": "swift_geometric_full_course_bc",
         "expert": "geometric_gate_teacher_v1",
@@ -129,6 +157,26 @@ def run(config_path: str | Path) -> None:
         if initial_actor_checkpoint
         else None,
     }
+    best_evaluation = evaluate(model, eval_env, eval_episodes)
+    best_score = _score_evaluation(best_evaluation)
+    print(
+        "  [Initial Eval] "
+        f"success={best_evaluation['success_rate']:.1%} "
+        f"gates={best_evaluation['mean_gates']:.2f} "
+        f"collision={best_evaluation['collision_rate']:.1%} "
+        f"missed={best_evaluation['missed_gate_rate']:.1%} "
+        f"vertical={best_evaluation['vertical_runaway_rate']:.1%}"
+    )
+    _save_checkpoint(
+        results_dir / "best_policy.pt",
+        model,
+        optimizer,
+        config,
+        0,
+        best_evaluation,
+        env.actor_feature_names,
+        metadata_extra,
+    )
 
     for update in range(1, total_updates + 1):
         elapsed = time.time() - wall_start
@@ -142,7 +190,22 @@ def run(config_path: str | Path) -> None:
 
         predicted_action = torch.tanh(model.actor_mean(actor_observation))
         squared_error = (predicted_action - target_action).square()
-        loss = (squared_error * action_loss_weights).mean() / action_loss_weights.mean()
+        imitation_loss = (
+            (squared_error * action_loss_weights).mean()
+            / action_loss_weights.mean()
+        )
+        current_actor_anchor_coef = _actor_anchor_coefficient(
+            actor_anchor_base_coef,
+            interactions,
+            actor_anchor_decay_steps,
+        )
+        anchor_loss = torch.tensor(0.0, device=device)
+        loss = imitation_loss
+        if actor_anchor is not None and current_actor_anchor_coef > 0.0:
+            with torch.no_grad():
+                anchor_action = torch.tanh(actor_anchor(actor_observation))
+            anchor_loss = (predicted_action - anchor_action).square().mean()
+            loss = loss + current_actor_anchor_coef * anchor_loss
 
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
@@ -178,7 +241,9 @@ def run(config_path: str | Path) -> None:
             record = {
                 "update": update,
                 "interactions": interactions,
-                "imitation_loss": float(loss.detach()),
+                "imitation_loss": float(imitation_loss.detach()),
+                "actor_anchor_loss": float(anchor_loss.detach()),
+                "actor_anchor_coef": current_actor_anchor_coef,
                 "collective_mae": float(
                     (predicted_action[:, 0] - target_action[:, 0]).abs().mean()
                 ),
@@ -198,7 +263,7 @@ def run(config_path: str | Path) -> None:
             print(
                 f"update {update:>5}/{total_updates} | "
                 f"interactions {interactions:>11,} | "
-                f"loss {float(loss.detach()):.6f} | "
+                f"loss {float(imitation_loss.detach()):.6f} | "
                 f"act_mae {record['collective_mae']:.3f}/"
                 f"{record['roll_mae']:.3f}/"
                 f"{record['pitch_mae']:.3f}/"
@@ -217,19 +282,7 @@ def run(config_path: str | Path) -> None:
                 f"missed={evaluation['missed_gate_rate']:.1%} "
                 f"vertical={evaluation['vertical_runaway_rate']:.1%}"
             )
-            bounded_progress = (
-                evaluation["mean_gates"]
-                * (1.0 - evaluation["collision_rate"])
-                * (1.0 - evaluation["out_of_bounds_rate"])
-                * (1.0 - evaluation["missed_gate_rate"])
-                * (1.0 - evaluation["vertical_runaway_rate"])
-            )
-            score = (
-                bounded_progress + evaluation["success_rate"],
-                evaluation["success_rate"],
-                evaluation["mean_gates"],
-                evaluation["mean_distance_reduction_m"],
-            )
+            score = _score_evaluation(evaluation)
             if score > best_score:
                 best_score = score
                 best_evaluation = evaluation
@@ -256,18 +309,6 @@ def run(config_path: str | Path) -> None:
         env.actor_feature_names,
         metadata_extra,
     )
-    if best_evaluation is None:
-        best_evaluation = final_evaluation
-        _save_checkpoint(
-            results_dir / "best_policy.pt",
-            model,
-            optimizer,
-            config,
-            final_interactions,
-            final_evaluation,
-            env.actor_feature_names,
-            metadata_extra,
-        )
 
     metrics = {
         "experiment": config["name"],

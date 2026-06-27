@@ -156,12 +156,51 @@ class AIGPEnvConfig:
     missed_gate_penalty: float = 0.0
     terminate_on_missed_gate: bool = False
 
+    swift_teacher_speed_base_mps: float = 4.0
+    swift_teacher_speed_distance_gain: float = 0.50
+    swift_teacher_min_forward_speed_mps: float = 3.5
+    swift_teacher_max_forward_speed_mps: float = 13.5
+    swift_teacher_cross_track_speed_gain: float = 0.16
+    swift_teacher_min_speed_scale: float = 0.45
+    swift_teacher_lateral_position_gain: float = 1.8
+    swift_teacher_vertical_position_gain: float = 1.6
+    swift_teacher_lateral_speed_gain: float = 2.0
+    swift_teacher_vertical_speed_gain: float = 2.2
+    swift_teacher_target_lateral_speed_limit_mps: float = 4.5
+    swift_teacher_target_vertical_speed_limit_mps: float = 4.0
+    swift_teacher_forward_accel_limit_mps2: float = 7.0
+    swift_teacher_lateral_accel_limit_mps2: float = 8.0
+    swift_teacher_vertical_accel_limit_mps2: float = 8.0
+
     def __post_init__(self) -> None:
         if self.dynamics_model not in {"legacy_collective", "measured_ai_gp_v1"}:
             raise ValueError(
                 "dynamics_model must be 'legacy_collective' or "
                 "'measured_ai_gp_v1'"
             )
+        for name in (
+            "swift_teacher_speed_base_mps",
+            "swift_teacher_speed_distance_gain",
+            "swift_teacher_min_forward_speed_mps",
+            "swift_teacher_max_forward_speed_mps",
+            "swift_teacher_cross_track_speed_gain",
+            "swift_teacher_min_speed_scale",
+            "swift_teacher_lateral_position_gain",
+            "swift_teacher_vertical_position_gain",
+            "swift_teacher_lateral_speed_gain",
+            "swift_teacher_vertical_speed_gain",
+            "swift_teacher_target_lateral_speed_limit_mps",
+            "swift_teacher_target_vertical_speed_limit_mps",
+            "swift_teacher_forward_accel_limit_mps2",
+            "swift_teacher_lateral_accel_limit_mps2",
+            "swift_teacher_vertical_accel_limit_mps2",
+        ):
+            if getattr(self, name) <= 0.0:
+                raise ValueError(f"{name} must be positive")
+        if self.swift_teacher_min_forward_speed_mps > self.swift_teacher_max_forward_speed_mps:
+            raise ValueError("swift teacher forward speed limits must be ordered")
+        if self.swift_teacher_min_speed_scale > 1.0:
+            raise ValueError("swift_teacher_min_speed_scale cannot exceed 1.0")
         if self.physics_substeps < 1:
             raise ValueError("physics_substeps must be positive")
         if self.dt <= 0.0:
