@@ -2,16 +2,16 @@
 
 ## Current State
 
-The current best AI-GP structured-state pilot remains:
+The current best AI-GP structured-state pilot is:
 
 ```text
-results/ai_gp_036_weighted_final_approach_ppo_20m/best_policy.pt
-results/ai_gp_036_weighted_final_approach_ppo_20m/ai_gp_structured_policy.json
+results/ai_gp_039_all_gate_soft_floor_ppo_30m/best_policy.pt
+results/ai_gp_039_all_gate_soft_floor_ppo_30m/ai_gp_structured_policy.json
 ```
 
 This is a simulator/shadow-test candidate, not a finished Swift-level pilot.
 Nominal evaluation is solved at `100%` success over 512 episodes, but randomized
-evaluation is only about `66-71%` full-course success across held-out seeds.
+evaluation is only about `67-71%` full-course success across held-out seeds.
 
 ## What The Numbers Mean
 
@@ -40,6 +40,15 @@ The failure distribution moved from late/final-gate collisions into earlier
 gate-1 and gate-3 misses. That is useful evidence, but not a reliable
 improvement.
 
+Run `039` then started from `036`, kept the soft-floor penalty, and trained
+randomized near-gate starts across all six active gate indices. It is the new
+candidate, but the gain is small:
+
+- success: `68.75% -> 69.60%`
+- mean gates: `5.053 -> 5.057`
+- missed gates: `29.04% -> 28.26%`
+- collisions: `2.28% -> 2.15%`
+
 ## Current Bottleneck
 
 The bottleneck is randomized robustness and transfer, not raw thrust authority
@@ -53,15 +62,12 @@ can improve that segment while damaging other gates.
 
 ## Work In Progress
 
-Run `039` is prepared in:
+Run `039` is exported in:
 
 ```text
-configs/ai_gp_039_all_gate_soft_floor_ppo_30m.yaml
+results/ai_gp_039_all_gate_soft_floor_ppo_30m/ai_gp_structured_policy.json
 ```
 
-It starts from `036`, keeps the useful soft-floor penalty from `038`, and trains
-randomized near-gate starts across all six active gate indices. The goal is
-general active-gate competence, not a hand-tuned gate-5 recovery behavior.
-
-Promotion requires multi-seed randomized evaluation beating `036` on full-course
-success and mean gates without increasing missed gates or collisions.
+The next learning step should improve the teacher/controller target for hard
+randomized states. More narrow replay on one gate is unlikely to produce the
+`95%+` randomized success needed for Swift-level behavior.

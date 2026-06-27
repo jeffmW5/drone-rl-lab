@@ -11,31 +11,37 @@ trained policies with time-series telemetry.
 
 ## Current June 27 Status
 
-The current structured-state export candidate is still:
+The current structured-state export candidate is:
 
 ```text
-results/ai_gp_036_weighted_final_approach_ppo_20m/best_policy.pt
-results/ai_gp_036_weighted_final_approach_ppo_20m/ai_gp_structured_policy.json
+results/ai_gp_039_all_gate_soft_floor_ppo_30m/best_policy.pt
+results/ai_gp_039_all_gate_soft_floor_ppo_30m/ai_gp_structured_policy.json
 ```
 
-`036` solves nominal six-gate evaluation but is only about `68.75%` average
-full-course success across randomized seeds `1001`, `1002`, and `1003`.
+`039` solves nominal six-gate evaluation but is only about `69.60%` average
+full-course success across randomized seeds `1001`, `1002`, and `1003`. It is
+a small promotion over `036`, not a Swift-level pilot.
 
 `038` is not promoted. Its soft-floor penalty reduced average collisions from
 `2.28%` to `1.37%`, but mean gates fell from `5.05` to `4.89` and early gate-1
 and gate-3 misses increased. It is evidence for the next run, not the export
 target.
 
-The next prepared RunPod config is:
+`039` started from `036`, kept the soft-floor reward, and trained randomized
+near-gate starts across all six active gate indices. It slightly improves the
+three-seed average:
 
 ```text
-configs/ai_gp_039_all_gate_soft_floor_ppo_30m.yaml
+success:    68.75% -> 69.60%
+mean gates: 5.053  -> 5.057
+missed:     29.04% -> 28.26%
+collision:  2.28%  -> 2.15%
 ```
 
-It starts from `036`, keeps the soft-floor reward, and trains randomized
-near-gate starts across all six active gate indices. Promote it only if
-multi-seed randomized validation beats `036` on full-course success and mean
-gates without increasing missed gates or collisions.
+The next learning step should be a better teacher/controller target for hard
+randomized states, not more narrow gate-specific replay. Promote to Swift-level
+only after held-out randomized full-course success reaches the project threshold
+of at least `95%`.
 
 ## Current Implementation
 
