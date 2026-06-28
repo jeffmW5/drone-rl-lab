@@ -70,6 +70,19 @@ It is not a clean surrogate promotion over `040`: nominal evaluation is
 for `040`, with zero collisions for both. Only promote `041` if Windows
 simulator testing shows it clears farther than active gate index 2.
 
+Use the dedicated Windows A/B runner for that decision:
+
+```powershell
+python -B scripts\run_ai_gp_policy_ab_windows.py `
+  --attempts-per-policy 5 `
+  --duration 30 `
+  --thrust-multiplier 1.12 `
+  --roll-rate-multiplier 2.00 `
+  --pitch-rate-multiplier 1.00 `
+  --yaw-rate-multiplier 2.00 `
+  --run-id structured_ab_040_041_YYYYMMDD_HHMMSS
+```
+
 Do not start camera-only/live vision transfer until the structured-state
 teacher can reliably clear more of the Windows simulator course.
 

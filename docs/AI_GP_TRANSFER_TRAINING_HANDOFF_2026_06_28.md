@@ -118,6 +118,19 @@ Windows retest target:
 - mean max active gate index `> 2.0`
 - best active gate index `>= 3`
 
+Preferred A/B retest command:
+
+```powershell
+& 'C:\Users\JefferyWhitmire\Desktop\Shared\AI-GP-Simulator-v1.0.3364\PyAIPilotExample\.venv\Scripts\python.exe' -B scripts\run_ai_gp_policy_ab_windows.py `
+  --attempts-per-policy 5 `
+  --duration 30 `
+  --thrust-multiplier 1.12 `
+  --roll-rate-multiplier 2.00 `
+  --pitch-rate-multiplier 1.00 `
+  --yaw-rate-multiplier 2.00 `
+  --run-id structured_ab_040_041_YYYYMMDD_HHMMSS
+```
+
 Retest command baseline:
 
 ```powershell
