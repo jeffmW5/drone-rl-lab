@@ -121,6 +121,12 @@ class PolicyABWindowsTests(unittest.TestCase):
 
         self.assertEqual(len(contexts), 1)
         self.assertEqual(contexts[0]["policy_label"], "041")
+        self.assertEqual(contexts[0]["observation"], [0.1, 0.2, 0.3])
+        self.assertEqual(
+            contexts[0]["observation_features"]["active_gate_position_body_x"],
+            0.1,
+        )
+        self.assertEqual(contexts[0]["normalized_action"]["collective_offset"], -0.1)
 
 
 def _row(
@@ -138,6 +144,9 @@ def _row(
         "collision_count": 1 if collision else 0,
         "gate0_passed": gate0,
         "policy_steps": policy_steps,
+        "observation": [0.1, 0.2, 0.3],
+        "observation_features": {"active_gate_position_body_x": 0.1},
+        "normalized_action": {"collective_offset": -0.1},
     }
 
 

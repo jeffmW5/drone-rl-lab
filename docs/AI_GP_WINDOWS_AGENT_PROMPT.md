@@ -213,6 +213,11 @@ mean_max_gate > 2.0
 best_max_gate >= 3
 ```
 
+The hard-case entries include the 26-value structured observation,
+`observation_features`, normalized policy action, mapped command, gate-plane
+offsets, and collision context. Preserve that summary; it is the input for the
+next transfer-training loop if neither policy passes.
+
 The structured runner does not use camera imagery, camera intrinsics, or a
 camera tilt/extrinsic model. Vision is disabled. It does subtract the initial
 telemetry pitch as a body-frame reference, but that is not the same as modeling

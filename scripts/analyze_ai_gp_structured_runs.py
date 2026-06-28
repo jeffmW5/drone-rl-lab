@@ -24,6 +24,7 @@ def analyze_session(session_dir: Path) -> dict[str, Any]:
     race_before = _race_before(events, collision_time)
     gate_plane = last_policy.get("gate_plane") if last_policy else None
     command = last_policy.get("mapped_command") if last_policy else None
+    raw_command = last_policy.get("raw_mapped_command") if last_policy else None
     position = last_policy.get("position_m") if last_policy else None
     velocity = last_policy.get("velocity_mps") if last_policy else None
 
@@ -59,10 +60,20 @@ def analyze_session(session_dir: Path) -> dict[str, Any]:
         "roll_rate_radps": _round(_nested(command, "roll_rate_radps")),
         "pitch_rate_radps": _round(_nested(command, "pitch_rate_radps")),
         "yaw_rate_radps": _round(_nested(command, "yaw_rate_radps")),
+        "raw_thrust_normalized": _round(_nested(raw_command, "thrust_normalized")),
+        "raw_roll_rate_radps": _round(_nested(raw_command, "roll_rate_radps")),
+        "raw_pitch_rate_radps": _round(_nested(raw_command, "pitch_rate_radps")),
+        "raw_yaw_rate_radps": _round(_nested(raw_command, "yaw_rate_radps")),
         "position_x": _round(_nested(position, "x")),
         "position_y": _round(_nested(position, "y")),
         "position_z": _round(_nested(position, "z")),
         "speed_mps": _round(_speed(velocity)),
+        "observation": _float_list(last_policy.get("observation") if last_policy else None),
+        "observation_features": last_policy.get("observation_features") if last_policy else None,
+        "normalized_action": last_policy.get("normalized_action") if last_policy else None,
+        "policy_log_time_s": _round(
+            last_policy.get("monotonic_time_s") if last_policy else None
+        ),
     }
 
 
@@ -164,6 +175,12 @@ def _round(value: Any) -> float | None:
     if value is None:
         return None
     return round(float(value), 4)
+
+
+def _float_list(value: Any) -> list[float] | None:
+    if not isinstance(value, list):
+        return None
+    return [float(item) for item in value]
 
 
 def main() -> None:

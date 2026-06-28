@@ -55,8 +55,26 @@ class StructuredRunAnalysisTests(unittest.TestCase):
                             "pitch_rate_radps": -0.1,
                             "yaw_rate_radps": 0.05,
                         },
+                        "raw_mapped_command": {
+                            "thrust_normalized": 0.25,
+                            "roll_rate_radps": 0.1,
+                            "pitch_rate_radps": -0.05,
+                            "yaw_rate_radps": 0.025,
+                        },
                         "position_m": {"x": 1, "y": 2, "z": 3},
                         "velocity_mps": {"x": 3, "y": 4, "z": 0},
+                        "observation": [0.1, 0.2, 0.3],
+                        "observation_features": {
+                            "active_gate_position_body_x": 0.1,
+                            "active_gate_position_body_y": 0.2,
+                            "active_gate_position_body_z": 0.3,
+                        },
+                        "normalized_action": {
+                            "collective_offset": -0.1,
+                            "roll_rate": 0.2,
+                            "pitch_rate": -0.3,
+                            "yaw_rate": 0.4,
+                        },
                     }
                 ],
             )
@@ -68,6 +86,13 @@ class StructuredRunAnalysisTests(unittest.TestCase):
         self.assertEqual(row["collision_impact"], 3.5)
         self.assertEqual(row["speed_mps"], 5.0)
         self.assertEqual(row["rectangular_margin_m"], 0.8)
+        self.assertEqual(row["raw_thrust_normalized"], 0.25)
+        self.assertEqual(row["observation"], [0.1, 0.2, 0.3])
+        self.assertEqual(
+            row["observation_features"]["active_gate_position_body_y"],
+            0.2,
+        )
+        self.assertEqual(row["normalized_action"]["pitch_rate"], -0.3)
 
     def test_ranks_and_summarizes(self) -> None:
         rows = [

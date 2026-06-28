@@ -146,11 +146,19 @@ def _collision_context(row: dict[str, Any]) -> dict[str, Any]:
         "roll_rate_radps",
         "pitch_rate_radps",
         "yaw_rate_radps",
+        "raw_thrust_normalized",
+        "raw_roll_rate_radps",
+        "raw_pitch_rate_radps",
+        "raw_yaw_rate_radps",
         "thrust_multiplier",
         "roll_rate_multiplier",
         "pitch_rate_multiplier",
         "yaw_rate_multiplier",
         "policy_steps",
+        "policy_log_time_s",
+        "observation",
+        "observation_features",
+        "normalized_action",
     )
     return {key: row.get(key) for key in keys if key in row}
 
