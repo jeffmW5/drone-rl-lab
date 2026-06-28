@@ -55,10 +55,20 @@ collision:  2.15%  -> 0.00%
 
 Windows simulator integration showed that `040` does not transfer far enough.
 Manual tuning and a 12-config runtime sweep reached active gate index 2 at best,
-then failed around gate 1 or gate 2. The next training run is
-`ai_gp_041_windows_transfer_gate2_hardcase_30m`, starting from `040` and using
-the Windows hard-case handoff in
+then failed around gate 1 or gate 2. `041` trained from `040` using the Windows
+hard-case handoff in
 `exports/ai_gp/ai_gp_windows_transfer_handoff_2026_06_28.json`.
+
+`041` is exported for Windows A/B testing at:
+
+```text
+exports/ai_gp/ai_gp_041_windows_transfer_gate2_hardcase_structured_policy.json
+```
+
+It is not a clean surrogate promotion over `040`: nominal evaluation is
+`100%`, but randomized three-seed average success is `98.83%` versus `99.22%`
+for `040`, with zero collisions for both. Only promote `041` if Windows
+simulator testing shows it clears farther than active gate index 2.
 
 Do not start camera-only/live vision transfer until the structured-state
 teacher can reliably clear more of the Windows simulator course.

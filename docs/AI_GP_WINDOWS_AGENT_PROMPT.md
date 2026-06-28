@@ -40,6 +40,26 @@ nominal:   100.00% success, 6.00 / 6 gates, 0.00% collision
 This is a structured-state simulator policy, not a camera-only/live-vision
 policy.
 
+## 041 Windows A/B Candidate
+
+Also test the tracked `041` export against `040`:
+
+```text
+exports/ai_gp/ai_gp_041_windows_transfer_gate2_hardcase_structured_policy.json
+```
+
+SHA-256:
+
+```text
+583762c48fa7e24a7a5ea69dfa1269104a54481b61f3282143e9eaabb4f42ca7
+```
+
+`041` was trained from `040` on the Windows gate-1/gate-2 hard-case envelope.
+It is not a clean surrogate promotion over `040`: randomized surrogate average
+success is `98.83%` for `041` versus `99.22%` for `040`, with zero collisions
+for both. Use `041` only as a Windows simulator A/B candidate. Promote it only
+if Windows testing shows it clears farther than active gate index `2`.
+
 ## Runtime Contract
 
 Load the JSON artifact and implement `observation_contract =
@@ -149,7 +169,25 @@ June 28 tuning/sweep result: tuning is not the answer for `040`. The best
 `2.00`, reached active gate index `2`, and still failed before clearing gate 2.
 Use the Linux handoff in
 `docs/AI_GP_TRANSFER_TRAINING_HANDOFF_2026_06_28.md` for the next `041`
-training run.
+training run and result.
+
+June 28 `041` result: the RunPod hard-case training completed and exported a
+Windows A/B JSON. Use the same full-run command pattern, changing `--policy` to
+the `041` export path and keeping the best sweep baseline multipliers:
+
+```powershell
+& 'C:\Users\JefferyWhitmire\Desktop\Shared\AI-GP-Simulator-v1.0.3364\PyAIPilotExample\.venv\Scripts\python.exe' -B scripts\run_ai_gp_structured_windows.py `
+  --policy exports\ai_gp\ai_gp_041_windows_transfer_gate2_hardcase_structured_policy.json `
+  --continuous `
+  --duration 30 `
+  --target-gates 0 `
+  --allow-gate-plane-miss `
+  --thrust-multiplier 1.12 `
+  --roll-rate-multiplier 2.00 `
+  --pitch-rate-multiplier 1.00 `
+  --yaw-rate-multiplier 2.00 `
+  --run-id watch_structured_041_YYYYMMDD_HHMMSS
+```
 
 The structured runner does not use camera imagery, camera intrinsics, or a
 camera tilt/extrinsic model. Vision is disabled. It does subtract the initial

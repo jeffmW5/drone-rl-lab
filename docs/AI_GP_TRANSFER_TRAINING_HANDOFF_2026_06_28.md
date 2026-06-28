@@ -3,7 +3,9 @@
 ## Current State
 
 `040` is a strong structured-state surrogate policy, but Windows transfer is
-not solved. Runtime multiplier tuning is not enough.
+not solved. Runtime multiplier tuning is not enough. `041` has now been trained
+from the Windows gate-1/gate-2 hard-case handoff and exported as a Windows A/B
+candidate, but it is not a clean surrogate replacement for `040`.
 
 Tracked Windows handoff:
 
@@ -22,6 +24,13 @@ Policy export:
 ```text
 exports/ai_gp/ai_gp_040_near_gate_teacher_structured_policy.json
 1581cc4cb0a0753eb7ba87ae1e34a09dd8d7badbd048b1fce823a28775d9da60
+```
+
+Windows A/B candidate export:
+
+```text
+exports/ai_gp/ai_gp_041_windows_transfer_gate2_hardcase_structured_policy.json
+583762c48fa7e24a7a5ea69dfa1269104a54481b61f3282143e9eaabb4f42ca7
 ```
 
 ## Windows Findings
@@ -66,6 +75,34 @@ Recommended approach:
 - Preserve nominal/full-course surrogate performance.
 - Keep pitch multiplier assumptions at `1.00`.
 - Do not start vision training in this run.
+
+## 041 Training Result
+
+`ai_gp_041_windows_transfer_gate2_hardcase_30m` trained on RunPod RTX 3090 for
+`30,146,560` steps in `984 s`. It started from `040`, used anchored PPO, and
+focused near-gate starts on active gates 1 and 2.
+
+Training artifacts:
+
+```text
+results/ai_gp_041_windows_transfer_gate2_hardcase_30m/best_policy.pt
+results/ai_gp_041_windows_transfer_gate2_hardcase_30m/ai_gp_structured_policy.json
+```
+
+Dense surrogate validation:
+
+```text
+nominal:   100.00% success, 6.00 / 6 gates, 0.00% collision
+seed 1001: 98.24% success, 5.97 / 6 gates, 0.00% collision
+seed 1002: 99.02% success, 5.99 / 6 gates, 0.00% collision
+seed 1003: 99.22% success, 5.99 / 6 gates, 0.00% collision
+average:   98.83% success, 5.99 / 6 gates, 0.00% collision
+```
+
+Compared with `040`, this is a small randomized surrogate regression
+(`99.22%` -> `98.83%` average success), but it preserves nominal completion and
+zero collisions. Use it for Windows simulator A/B testing against `040`; do not
+call it promoted until the Windows sim shows it clears farther than gate 2.
 
 ## Acceptance
 
