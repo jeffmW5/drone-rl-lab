@@ -44,6 +44,12 @@ Train:
 ai_gp_041_windows_transfer_gate2_hardcase_30m
 ```
 
+Tracked config:
+
+```text
+configs/ai_gp_041_windows_transfer_gate2_hardcase_30m.yaml
+```
+
 Start from:
 
 ```text
