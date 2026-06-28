@@ -20,22 +20,26 @@ STACK_ROOT = Path(
         LAB_ROOT / "tmp" / "ai-grand-prix-stack-remote",
     )
 ).expanduser().resolve()
-if not (STACK_ROOT / "adapter" / "dcl_runtime.py").exists():
-    raise RuntimeError(
-        "AI-GP operational runtime not found. Set AI_GP_RUNTIME_ROOT to the "
-        "Windows execution worktree."
-    )
 for path in (LAB_ROOT, STACK_ROOT):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from adapter.commands import CommandSource, ControlCommand, RuntimeAction
-from adapter.dcl_runtime import DclRuntime
-from adapter.runtime import AdapterConfig, RuntimeEvent
-from adapter.telemetry import TelemetrySample
 from ai_gp_rl.session_dataset import _rotation_matrix, _transpose_matvec
-from calibration.run_thrust_sweep import _reset_simulator
-from replay.recording import SessionEvaluator, SessionRecorder
+
+_RUNTIME_IMPORT_ERROR: Exception | None = None
+try:
+    from adapter.commands import CommandSource, ControlCommand, RuntimeAction
+    from adapter.dcl_runtime import DclRuntime
+    from adapter.runtime import AdapterConfig, RuntimeEvent
+    from adapter.telemetry import TelemetrySample
+    from calibration.run_thrust_sweep import _reset_simulator
+    from replay.recording import SessionEvaluator, SessionRecorder
+except Exception as exc:  # pragma: no cover - exercised on non-Windows CI/Linux.
+    CommandSource = ControlCommand = RuntimeAction = None  # type: ignore[assignment]
+    DclRuntime = AdapterConfig = RuntimeEvent = None  # type: ignore[assignment]
+    TelemetrySample = None  # type: ignore[assignment]
+    _reset_simulator = SessionEvaluator = SessionRecorder = None  # type: ignore[assignment]
+    _RUNTIME_IMPORT_ERROR = exc
 
 
 ACTION_NAMES = (
@@ -224,6 +228,7 @@ def run(
     use_sim_gate_normals: bool,
     sim_gate_normal_axis: str,
 ) -> dict[str, object]:
+    _require_runtime()
     if duration_s <= 0.0:
         raise ValueError("duration_s must be positive")
     if control_rate_hz <= 0.0 or control_rate_hz >= 90.0:
@@ -578,6 +583,14 @@ def run(
     )
     recorder.write_summary(summary)
     return summary
+
+
+def _require_runtime() -> None:
+    if _RUNTIME_IMPORT_ERROR is not None:
+        raise RuntimeError(
+            "AI-GP operational runtime not found. Set AI_GP_RUNTIME_ROOT to the "
+            "Windows execution worktree."
+        ) from _RUNTIME_IMPORT_ERROR
 
 
 def build_structured_observation(

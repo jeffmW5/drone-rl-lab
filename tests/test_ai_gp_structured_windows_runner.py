@@ -1,5 +1,6 @@
 import math
 import unittest
+from dataclasses import dataclass
 from pathlib import Path
 
 from scripts.run_ai_gp_structured_windows import (
@@ -7,7 +8,33 @@ from scripts.run_ai_gp_structured_windows import (
     build_structured_observation,
     gate_plane_metrics,
 )
-from adapter.telemetry import AttitudeSample, TelemetrySample, Vector3
+
+
+@dataclass(frozen=True)
+class AttitudeSample:
+    roll_rad: float
+    pitch_rad: float
+    yaw_rad: float
+
+
+@dataclass(frozen=True)
+class Vector3:
+    x: float
+    y: float
+    z: float
+
+
+@dataclass(frozen=True)
+class TelemetrySample:
+    monotonic_time_s: float
+    mission_time_s: float
+    position_m: Vector3 | None
+    velocity_mps: Vector3 | None
+    attitude_rad: AttitudeSample | None
+    angular_rate_radps: Vector3 | None
+    battery_voltage_v: float | None
+    is_armed: bool
+    mode: str | None
 
 
 POLICY_PATH = (
