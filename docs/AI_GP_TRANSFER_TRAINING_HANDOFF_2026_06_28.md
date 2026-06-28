@@ -14,7 +14,7 @@ exports/ai_gp/ai_gp_windows_transfer_handoff_2026_06_28.json
 Handoff SHA-256:
 
 ```text
-0F0E5E3073EF2D82D9C87357BA1C84B8D9723B6CEFCA6397FC294983EB1B72F2
+ec359ac473a851d5058ad9fea3b58f68db33e0bc63a17dc518635c61ba52592e
 ```
 
 Policy export:
