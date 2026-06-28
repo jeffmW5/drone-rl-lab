@@ -8,6 +8,22 @@ The best current full-course AI-GP policy is the structured-state MLP from:
 results/ai_gp_040_near_gate_teacher_bc_30m/best_policy.pt
 ```
 
+For a Windows-side agent working from a Git checkout, use the committed JSON
+export:
+
+```text
+exports/ai_gp/ai_gp_040_near_gate_teacher_structured_policy.json
+```
+
+SHA-256:
+
+```text
+1581cc4cb0a0753eb7ba87ae1e34a09dd8d7badbd048b1fce823a28775d9da60
+```
+
+The generated `results/ai_gp_*` directories remain ignored by design; they hold
+large local training outputs and checkpoints.
+
 Export it for the AI-GP simulator with:
 
 ```bash
