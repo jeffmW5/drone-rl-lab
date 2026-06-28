@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
 import time
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Sequence
 
@@ -22,6 +23,11 @@ DEFAULT_POLICIES = (
     "040=exports/ai_gp/ai_gp_040_near_gate_teacher_structured_policy.json",
     "041=exports/ai_gp/ai_gp_041_windows_transfer_gate2_hardcase_structured_policy.json",
 )
+WINDOWS_RETEST_TARGET = {
+    "gate0_pass_rate": ">= 0.90",
+    "mean_max_gate": "> 2.0",
+    "best_max_gate": ">= 3",
+}
 
 
 @dataclass(frozen=True)
@@ -122,6 +128,7 @@ def summarize_policy_rows(policy: PolicySpec, rows: list[dict]) -> dict:
         {
             "policy_label": policy.label,
             "policy_path": str(policy.path),
+            "policy_export": policy_export_metadata(policy),
             "gate0_pass_rate": summary["gate0_pass_count"] / max(run_count, 1),
             "collision_run_rate": summary["collision_run_count"] / max(run_count, 1),
             "passes_windows_retest_target": (
@@ -129,6 +136,7 @@ def summarize_policy_rows(policy: PolicySpec, rows: list[dict]) -> dict:
                 and float(summary["mean_max_gate"]) > 2.0
                 and int(summary["best_max_gate"]) >= 3
             ),
+            "hard_cases": collision_contexts(rows, max_cases=10),
         }
     )
     return summary
@@ -147,6 +155,77 @@ def rank_policy_summaries(summaries: list[dict]) -> list[dict]:
         ),
         reverse=True,
     )
+
+
+def policy_export_metadata(policy: PolicySpec) -> dict:
+    metadata = {
+        "label": policy.label,
+        "path": _repo_relative(policy.path),
+        "sha256": _sha256(policy.path),
+    }
+    try:
+        artifact = json.loads(policy.path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return metadata
+    validation = artifact.get("validation", {})
+    randomized = validation.get("randomized", [])
+    metadata.update(
+        {
+            "policy_role": artifact.get("policy_role"),
+            "observation_contract": artifact.get("observation_contract"),
+            "source_checkpoint": artifact.get("source_checkpoint"),
+            "source_global_step": artifact.get("source_global_step"),
+            "nominal_success_rate": _nested(
+                validation,
+                "nominal",
+                "summary",
+                "success_rate",
+            ),
+            "randomized_success_rates": [
+                _nested(report, "summary", "success_rate")
+                for report in randomized
+                if _nested(report, "summary", "success_rate") is not None
+            ],
+        }
+    )
+    rates = metadata["randomized_success_rates"]
+    if rates:
+        metadata["randomized_average_success_rate"] = sum(rates) / len(rates)
+    return metadata
+
+
+def collision_contexts(rows: list[dict], *, max_cases: int) -> list[dict]:
+    return [
+        _collision_context(row)
+        for row in rank_sessions(rows)
+        if int(row.get("collision_count", 0)) > 0
+    ][:max_cases]
+
+
+def follow_up_recommendation(ranked_policies: list[dict]) -> dict:
+    if not ranked_policies:
+        return {
+            "status": "no_result",
+            "message": "No policy sessions were analyzed; rerun the Windows A/B test.",
+        }
+    winner = ranked_policies[0]
+    if bool(winner.get("passes_windows_retest_target")):
+        return {
+            "status": "candidate_passed_windows_target",
+            "policy_label": winner["policy_label"],
+            "message": (
+                "Promote only after reviewing trajectories and confirming the "
+                "result is repeatable."
+            ),
+        }
+    return {
+        "status": "needs_more_transfer_work",
+        "policy_label": winner["policy_label"],
+        "message": (
+            "No policy satisfied the Windows retest target; use the hard_cases "
+            "from this summary for the next focused transfer run."
+        ),
+    }
 
 
 def main() -> None:
@@ -273,7 +352,11 @@ def main() -> None:
 
     ranked_policies = rank_policy_summaries(policy_summaries)
     output = {
+        "schema_version": 1,
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "source": "windows_ai_gp_policy_ab_runtime",
         "run_id": run_id,
+        "source_sessions_glob": str(SESSION_ROOT / f"{run_id}_p*"),
         "runtime": {
             "attempts_per_policy": runtime.attempts,
             "duration_s": runtime.duration_s,
@@ -284,13 +367,12 @@ def main() -> None:
             "yaw_rate_multiplier": runtime.yaw_rate_multiplier,
         },
         "winner": ranked_policies[0]["policy_label"] if ranked_policies else None,
+        "recommendation": follow_up_recommendation(ranked_policies),
         "policies": ranked_policies,
+        "policy_exports": [policy_export_metadata(policy) for policy in policies],
         "best_sessions": rank_sessions(all_rows)[:10] if all_rows else [],
-        "windows_retest_target": {
-            "gate0_pass_rate": ">= 0.90",
-            "mean_max_gate": "> 2.0",
-            "best_max_gate": ">= 3",
-        },
+        "hard_cases": collision_contexts(all_rows, max_cases=40),
+        "windows_retest_target": WINDOWS_RETEST_TARGET,
     }
     out_path = LAB_ROOT / "tmp" / f"{run_id}_summary.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -301,6 +383,58 @@ def main() -> None:
 
 def _tag(value: float) -> str:
     return f"{value:.3f}".replace(".", "")
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _repo_relative(path: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(LAB_ROOT))
+    except ValueError:
+        return str(path)
+
+
+def _nested(payload: object, *keys: str) -> object | None:
+    value = payload
+    for key in keys:
+        if not isinstance(value, dict) or key not in value:
+            return None
+        value = value[key]
+    return value
+
+
+def _collision_context(row: dict) -> dict:
+    keys = (
+        "session",
+        "config",
+        "policy_label",
+        "policy_path",
+        "abort_reason",
+        "max_gate",
+        "active_gate_at_collision",
+        "collision_count",
+        "collision_impact",
+        "signed_distance_m",
+        "lateral_offset_m",
+        "vertical_offset_m",
+        "rectangular_margin_m",
+        "speed_mps",
+        "position_x",
+        "position_y",
+        "position_z",
+        "thrust_normalized",
+        "roll_rate_radps",
+        "pitch_rate_radps",
+        "yaw_rate_radps",
+        "thrust_multiplier",
+        "roll_rate_multiplier",
+        "pitch_rate_multiplier",
+        "yaw_rate_multiplier",
+        "policy_steps",
+    )
+    return {key: row.get(key) for key in keys if key in row}
 
 
 if __name__ == "__main__":

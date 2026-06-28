@@ -191,7 +191,8 @@ the `041` export path and keeping the best sweep baseline multipliers:
 
 For the actual promotion decision, prefer the dedicated A/B runner. It runs
 `040` and `041` under identical conditions, writes a ranked JSON summary under
-`tmp/`, and applies the Windows retest target:
+`tmp/`, includes policy SHA-256 values and collision hard cases, and applies
+the Windows retest target:
 
 ```powershell
 & 'C:\Users\JefferyWhitmire\Desktop\Shared\AI-GP-Simulator-v1.0.3364\PyAIPilotExample\.venv\Scripts\python.exe' -B scripts\run_ai_gp_policy_ab_windows.py `

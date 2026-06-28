@@ -83,6 +83,11 @@ python -B scripts\run_ai_gp_policy_ab_windows.py `
   --run-id structured_ab_040_041_YYYYMMDD_HHMMSS
 ```
 
+The A/B summary includes policy export hashes, ranked policy metrics, best
+sessions, and collision hard cases. If neither policy satisfies the Windows
+target, use that summary as the next transfer-training handoff instead of
+manually reading replay folders.
+
 Do not start camera-only/live vision transfer until the structured-state
 teacher can reliably clear more of the Windows simulator course.
 
