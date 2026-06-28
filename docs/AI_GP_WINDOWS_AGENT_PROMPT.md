@@ -89,3 +89,71 @@ Compare those logs against the surrogate expectation:
 
 Do not move to camera-only/live vision until this structured-state controller
 transfers in the Windows simulator runtime.
+
+## Windows Watch Loop
+
+Use the simulator venv Python and the structured runner for repeated visible
+attempts:
+
+```powershell
+& 'C:\Users\JefferyWhitmire\Desktop\Shared\AI-GP-Simulator-v1.0.3364\PyAIPilotExample\.venv\Scripts\python.exe' -B scripts\run_ai_gp_structured_windows.py `
+  --continuous `
+  --duration 30 `
+  --target-gates 0 `
+  --allow-gate-plane-miss `
+  --thrust-multiplier 1.10 `
+  --roll-rate-multiplier 2.00 `
+  --pitch-rate-multiplier 1.00 `
+  --yaw-rate-multiplier 2.00 `
+  --run-id watch_structured_040_YYYYMMDD_HHMMSS
+```
+
+Each attempt resets the simulator and writes a separate replay session under:
+
+```text
+tmp/ai-grand-prix-stack-remote/replay/sessions/
+```
+
+Use `--target-gates 0` for watching beyond gate 0. `--target-gates 1` is only a
+gate-0 smoke test and intentionally resets immediately after the simulator
+advances to gate 1.
+
+With full-run watching enabled, aborts after gate 0 are collision-driven, not
+target-gate stops. In the first full-run samples with `1.10` thrust, `2.00`
+roll-rate, and `2.00` yaw-rate, most collisions occurred while the simulator's
+active gate was still `1`; several were then credited as gate-1 passes within
+roughly `0.02-0.15 s`. Treat this as clipping/hitting gate 1 during the crossing
+unless `active_gate_index` was already `2` before the collision.
+
+June 28 Windows sim status: the structured runner loads and commands the `040`
+policy, but early active attempts did not pass gate 0. One run missed the gate
+plane; a later run collided near gate 0 before the simulator advanced the active
+gate index. The simulator event log reported gate quaternions equivalent to
+90-degree yaw for all gates, while the JSON export uses inferred segment
+normals, so gate orientation/normal mismatch is the first transfer issue to
+check.
+
+For live watching, runtime overrides can offset visibly sluggish transfer
+behavior. Current watch settings are `1.10` thrust, `2.00` roll/yaw rate, and
+`1.00` pitch-rate. These are Windows runtime test overrides, not training-side
+policy changes.
+
+`--use-sim-gate-normals` is a reversible runtime A/B flag. It uses simulator
+`track.gate` quaternions for gate normals instead of the normals embedded in the
+JSON export. It does not retrain or modify the policy artifact. The June 28
+y-axis sim-normal A/B run was worse than exported normals, so do not use it as
+the default watch setting.
+
+June 28 tuning/sweep result: tuning is not the answer for `040`. The best
+12-config sweep result used thrust `1.12`, roll `2.00`, pitch `1.00`, yaw
+`2.00`, reached active gate index `2`, and still failed before clearing gate 2.
+Use the Linux handoff in
+`docs/AI_GP_TRANSFER_TRAINING_HANDOFF_2026_06_28.md` for the next `041`
+training run.
+
+The structured runner does not use camera imagery, camera intrinsics, or a
+camera tilt/extrinsic model. Vision is disabled. It does subtract the initial
+telemetry pitch as a body-frame reference, but that is not the same as modeling
+the simulator camera's upward tilt. Any camera-only/live-vision runner must
+explicitly account for the simulator camera tilt in its projection or detector
+feature contract.

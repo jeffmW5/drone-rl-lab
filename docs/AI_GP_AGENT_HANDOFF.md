@@ -9,7 +9,7 @@ Do not return to one-off manual thrust pulses as the primary workstream.
 Simulator runs are for measuring the real control contract and validating
 trained policies with time-series telemetry.
 
-## Current June 27 Status
+## Current June 28 Status
 
 The current structured-state export candidate is:
 
@@ -53,10 +53,15 @@ missed:     28.26% -> 0.78%
 collision:  2.15%  -> 0.00%
 ```
 
-The next step is AI-GP simulator integration/shadow testing with time-series
-comparison against surrogate gate crossings. Do not start camera-only/live
-vision transfer until the structured-state `040` controller has been verified
-in the simulator runtime.
+Windows simulator integration showed that `040` does not transfer far enough.
+Manual tuning and a 12-config runtime sweep reached active gate index 2 at best,
+then failed around gate 1 or gate 2. The next training run is
+`ai_gp_041_windows_transfer_gate2_hardcase_30m`, starting from `040` and using
+the Windows hard-case handoff in
+`exports/ai_gp/ai_gp_windows_transfer_handoff_2026_06_28.json`.
+
+Do not start camera-only/live vision transfer until the structured-state
+teacher can reliably clear more of the Windows simulator course.
 
 ## Current Implementation
 
@@ -245,4 +250,6 @@ Surrogate passage must never be described as Windows simulator passage.
 - `docs/AI_GP_CONTROL_CALIBRATION.md`
 - `docs/AI_GP_RUNPOD.md`
 - `docs/AI_GP_LINUX_AGENT_PROMPT.md`
+- `docs/AI_GP_TRANSFER_TRAINING_HANDOFF_2026_06_28.md`
+- `docs/AI_GP_VISION_TRANSITION_PLAN.md`
 - `docs/AI_GP_REAL_TRACK_TEACHER_BENCHMARK_2026_06_14.md`
