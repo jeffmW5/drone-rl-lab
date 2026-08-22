@@ -1,0 +1,148 @@
+{
+  "created_at": "2026-05-16T08:54:47",
+  "run_dir": "/home/jeff/drone-rl-lab/real_flight/aideck_logs/reconnect_test_20260516_085408",
+  "target": {
+    "ip": "192.168.4.1",
+    "port": 5000
+  },
+  "env": {
+    "hostname_I": {
+      "returncode": 0,
+      "stdout": "192.168.4.3 172.17.0.1",
+      "stderr": ""
+    },
+    "ip_addr": {
+      "returncode": 0,
+      "stdout": "lo               UNKNOWN        127.0.0.1/8 ::1/128 \nenp0s3           UP             192.168.4.3/24 fe80::3e7a:a480:4289:394f/64 \ndocker0          DOWN           172.17.0.1/16",
+      "stderr": ""
+    },
+    "ip_route": {
+      "returncode": 0,
+      "stdout": "default via 192.168.4.1 dev enp0s3 proto dhcp metric 20100 \n169.254.0.0/16 dev enp0s3 scope link metric 1000 \n172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown \n192.168.4.0/24 dev enp0s3 proto kernel scope link src 192.168.4.3 metric 100",
+      "stderr": ""
+    }
+  },
+  "results": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "width": 324,
+      "height": 244,
+      "encoding": "JPEG",
+      "size": 4446,
+      "elapsed_s": 1.448393,
+      "packet_count": 8,
+      "frame_path": "attempt_01.jpg",
+      "packets": [
+        {
+          "length": 13,
+          "payload_len": 11,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "bc4401f40001015e110000",
+          "t_rel_s": 0.219091
+        },
+        {
+          "length": 308,
+          "payload_len": 306,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ffd8ffdb0043000805060d070607090c",
+          "frame_bytes": 306,
+          "t_rel_s": 1.294848
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "f084156145380a5a653d56acd90f98d6",
+          "frame_bytes": 1326,
+          "t_rel_s": 1.294882
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "0fff002fdff6e5ff00b715c05bd4cf51",
+          "frame_bytes": 2346,
+          "t_rel_s": 1.380861
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "de76aad4eed4a2979a43c55bd24ffa5c",
+          "frame_bytes": 3366,
+          "t_rel_s": 1.448354
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "69435473b7154f3509ff005bff0001ae",
+          "frame_bytes": 4386,
+          "t_rel_s": 1.448384
+        },
+        {
+          "length": 60,
+          "payload_len": 58,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "f845bfe9b7e949ff0008a7fd36fd29bf",
+          "frame_bytes": 4444,
+          "t_rel_s": 1.448387
+        },
+        {
+          "length": 4,
+          "payload_len": 2,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ffd9",
+          "frame_bytes": 4446,
+          "t_rel_s": 1.44839
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "error": "TimeoutError('timed out')"
+    },
+    {
+      "attempt": 3,
+      "ok": false,
+      "error": "TimeoutError('timed out')"
+    },
+    {
+      "attempt": 4,
+      "ok": false,
+      "error": "TimeoutError('timed out')"
+    },
+    {
+      "attempt": 5,
+      "ok": false,
+      "error": "TimeoutError('timed out')"
+    },
+    {
+      "attempt": 6,
+      "ok": false,
+      "error": "TimeoutError('timed out')"
+    },
+    {
+      "attempt": 7,
+      "ok": false,
+      "error": "TimeoutError('timed out')"
+    },
+    {
+      "attempt": 8,
+      "ok": false,
+      "error": "TimeoutError('timed out')"
+    }
+  ],
+  "ok_count": 1
+}

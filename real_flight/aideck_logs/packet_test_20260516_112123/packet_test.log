@@ -1,0 +1,50 @@
+2026-05-16 11:21:23,315 [INFO] AI Deck packet test
+2026-05-16 11:21:23,315 [INFO] Run directory: /home/jeff/drone-rl-lab/real_flight/aideck_logs/packet_test_20260516_112123
+2026-05-16 11:21:23,315 [INFO] Candidates: 192.168.4.1, 192.168.7.201
+2026-05-16 11:21:23,315 [INFO] Duration per connected candidate: 45.0s
+2026-05-16 11:21:23,333 [INFO] 
+2026-05-16 11:21:23,333 [INFO] $ hostname -I
+2026-05-16 11:21:23,333 [INFO] 192.168.4.2 172.17.0.1
+2026-05-16 11:21:23,336 [INFO] 
+2026-05-16 11:21:23,336 [INFO] $ ip -br addr
+2026-05-16 11:21:23,336 [INFO] lo               UNKNOWN        127.0.0.1/8 ::1/128 
+enp0s3           UP             192.168.4.2/24 fe80::3e7a:a480:4289:394f/64 
+docker0          DOWN           172.17.0.1/16 fe80::e89d:ecff:fec8:b9c5/64
+2026-05-16 11:21:23,342 [INFO] 
+2026-05-16 11:21:23,343 [INFO] $ ip route
+2026-05-16 11:21:23,343 [INFO] default via 192.168.4.1 dev enp0s3 proto dhcp metric 20100 
+169.254.0.0/16 dev enp0s3 scope link metric 1000 
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown 
+192.168.4.0/24 dev enp0s3 proto kernel scope link src 192.168.4.2 metric 100
+2026-05-16 11:21:23,343 [INFO] 
+2026-05-16 11:21:23,343 [INFO] === Candidate 192.168.4.1:5000 ===
+2026-05-16 11:21:24,463 [INFO] Ping return code: 0
+2026-05-16 11:21:24,463 [INFO] PING 192.168.4.1 (192.168.4.1) 56(84) bytes of data.
+64 bytes from 192.168.4.1: icmp_seq=1 ttl=255 time=10.5 ms
+64 bytes from 192.168.4.1: icmp_seq=2 ttl=255 time=105 ms
+
+--- 192.168.4.1 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1003ms
+rtt min/avg/max/mdev = 10.505/57.748/104.991/47.243 ms
+2026-05-16 11:21:24,463 [INFO] Connecting TCP 192.168.4.1:5000 ...
+2026-05-16 11:21:24,550 [INFO] TCP connected.
+2026-05-16 11:21:24,692 [INFO] Image header: 324x244 JPEG 4363 bytes at packet 1
+2026-05-16 11:21:24,692 [INFO] Packet 0001: len=13 payload=11 route=0x63 func=0x05 gap=0.142s first=bc4401f40001010b110000
+2026-05-16 11:21:24,694 [INFO] Packet 0002: len=308 payload=306 route=0x63 func=0x05 gap=0.002s first=ffd8ffdb0043000805060d070607090c
+2026-05-16 11:21:24,694 [INFO] Packet 0003: len=1022 payload=1020 route=0x63 func=0x05 gap=0.000s first=f0ca6835206ad4d34657f1ad28d6aca2
+2026-05-16 11:21:24,695 [INFO] Packet 0004: len=1022 payload=1020 route=0x63 func=0x05 gap=0.001s first=69927dd3f4aa66534df30d373455fd1b
+2026-05-16 11:21:24,698 [INFO] Packet 0005: len=1022 payload=1020 route=0x63 func=0x05 gap=0.003s first=a4b7d65998023bd4b6daa33ceca7a026
+2026-05-16 11:21:24,720 [INFO] Packet 0006: len=997 payload=995 route=0x63 func=0x05 gap=0.021s first=28ab8a7f754f84f14fcd2e78a6e69335
+2026-05-16 11:21:24,720 [INFO] Frame complete: 4363 bytes saved to frame_001.jpg
+2026-05-16 11:21:24,720 [INFO] Packet 0007: len=4 payload=2 route=0x63 func=0x05 gap=0.000s first=ffd9
+2026-05-16 11:21:24,818 [INFO] Image header: 324x244 JPEG 4365 bytes at packet 8
+2026-05-16 11:21:24,818 [INFO] Packet 0008: len=13 payload=11 route=0x63 func=0x05 gap=0.098s first=bc4401f40001010d110000
+2026-05-16 11:21:30,819 [INFO] 
+2026-05-16 11:21:30,819 [INFO] STALL: timed out waiting for the next CPX packet header.
+2026-05-16 11:21:30,821 [INFO] Partial frame saved: 0/4365 bytes to partial_frame_payload.bin
+2026-05-16 11:21:30,822 [INFO] 
+2026-05-16 11:21:30,822 [INFO] === Summary ===
+2026-05-16 11:21:30,823 [INFO] 192.168.4.1: connected=True packets=8 bytes=4417 headers=2 frames=1 stall=True error=None
+2026-05-16 11:21:30,823 [INFO] 
+2026-05-16 11:21:30,823 [INFO] Saved logs in: /home/jeff/drone-rl-lab/real_flight/aideck_logs/packet_test_20260516_112123
+2026-05-16 11:21:30,823 [INFO] When you reconnect to normal WiFi, tell Codex the test is done.

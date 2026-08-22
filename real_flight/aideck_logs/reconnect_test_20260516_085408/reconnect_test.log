@@ -1,0 +1,50 @@
+2026-05-16 08:54:08,139 [INFO] AI Deck reconnect test
+2026-05-16 08:54:08,139 [INFO] Run directory: /home/jeff/drone-rl-lab/real_flight/aideck_logs/reconnect_test_20260516_085408
+2026-05-16 08:54:08,139 [INFO] Target: 192.168.4.1:5000
+2026-05-16 08:54:08,139 [INFO] Attempts: 8, delay=1.0s
+2026-05-16 08:54:08,141 [INFO] 
+2026-05-16 08:54:08,141 [INFO] $ hostname -I
+2026-05-16 08:54:08,141 [INFO] 192.168.4.3 172.17.0.1
+2026-05-16 08:54:08,147 [INFO] 
+2026-05-16 08:54:08,147 [INFO] $ ip -br addr
+2026-05-16 08:54:08,148 [INFO] lo               UNKNOWN        127.0.0.1/8 ::1/128 
+enp0s3           UP             192.168.4.3/24 fe80::3e7a:a480:4289:394f/64 
+docker0          DOWN           172.17.0.1/16
+2026-05-16 08:54:08,152 [INFO] 
+2026-05-16 08:54:08,152 [INFO] $ ip route
+2026-05-16 08:54:08,152 [INFO] default via 192.168.4.1 dev enp0s3 proto dhcp metric 20100 
+169.254.0.0/16 dev enp0s3 scope link metric 1000 
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown 
+192.168.4.0/24 dev enp0s3 proto kernel scope link src 192.168.4.3 metric 100
+2026-05-16 08:54:08,152 [INFO] 
+2026-05-16 08:54:08,152 [INFO] Attempt 1/8: connecting...
+2026-05-16 08:54:08,158 [INFO]   connected; reading one complete frame...
+2026-05-16 08:54:09,606 [INFO]   OK: 324x244 JPEG 4446 bytes in 8 packets, 1.448s
+2026-05-16 08:54:10,608 [INFO] 
+2026-05-16 08:54:10,608 [INFO] Attempt 2/8: connecting...
+2026-05-16 08:54:11,018 [INFO]   connected; reading one complete frame...
+2026-05-16 08:54:15,971 [INFO]   FAIL: timed out
+2026-05-16 08:54:16,974 [INFO] 
+2026-05-16 08:54:16,975 [INFO] Attempt 3/8: connecting...
+2026-05-16 08:54:20,981 [INFO]   FAIL: timed out
+2026-05-16 08:54:21,983 [INFO] 
+2026-05-16 08:54:21,983 [INFO] Attempt 4/8: connecting...
+2026-05-16 08:54:23,489 [INFO]   connected; reading one complete frame...
+2026-05-16 08:54:27,495 [INFO]   FAIL: timed out
+2026-05-16 08:54:28,498 [INFO] 
+2026-05-16 08:54:28,498 [INFO] Attempt 5/8: connecting...
+2026-05-16 08:54:32,503 [INFO]   FAIL: timed out
+2026-05-16 08:54:33,504 [INFO] 
+2026-05-16 08:54:33,504 [INFO] Attempt 6/8: connecting...
+2026-05-16 08:54:37,510 [INFO]   FAIL: timed out
+2026-05-16 08:54:38,510 [INFO] 
+2026-05-16 08:54:38,510 [INFO] Attempt 7/8: connecting...
+2026-05-16 08:54:42,512 [INFO]   FAIL: timed out
+2026-05-16 08:54:43,513 [INFO] 
+2026-05-16 08:54:43,513 [INFO] Attempt 8/8: connecting...
+2026-05-16 08:54:47,518 [INFO]   FAIL: timed out
+2026-05-16 08:54:47,519 [INFO] 
+2026-05-16 08:54:47,519 [INFO] === Summary ===
+2026-05-16 08:54:47,519 [INFO] Successful one-frame connections: 1/8
+2026-05-16 08:54:47,519 [INFO] Saved logs in: /home/jeff/drone-rl-lab/real_flight/aideck_logs/reconnect_test_20260516_085408
+2026-05-16 08:54:47,519 [INFO] When you reconnect to normal WiFi, tell Codex the reconnect test is done.

@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-05-16T08:47:18",
+  "run_dir": "/home/jeff/drone-rl-lab/real_flight/aideck_logs/packet_test_20260516_084711",
+  "env": {
+    "hostname_I": {
+      "returncode": 0,
+      "stdout": "192.168.4.3 172.17.0.1",
+      "stderr": ""
+    },
+    "ip_addr": {
+      "returncode": 0,
+      "stdout": "lo               UNKNOWN        127.0.0.1/8 ::1/128 \nenp0s3           UP             192.168.4.3/24 fe80::3e7a:a480:4289:394f/64 \ndocker0          DOWN           172.17.0.1/16",
+      "stderr": ""
+    },
+    "ip_route": {
+      "returncode": 0,
+      "stdout": "default via 192.168.4.1 dev enp0s3 proto dhcp metric 20100 \n169.254.0.0/16 dev enp0s3 scope link metric 1000 \n172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown \n192.168.4.0/24 dev enp0s3 proto kernel scope link src 192.168.4.3 metric 100",
+      "stderr": ""
+    }
+  },
+  "results": [
+    {
+      "ip": "192.168.4.1",
+      "port": 5000,
+      "connected": true,
+      "packets": 9,
+      "bytes_total": 4505,
+      "image_headers": [
+        {
+          "magic": 188,
+          "width": 324,
+          "height": 244,
+          "depth": 1,
+          "type": 1,
+          "encoding": "JPEG",
+          "size": 4447,
+          "packet_index": 1,
+          "t_rel_s": 0.144
+        },
+        {
+          "magic": 188,
+          "width": 324,
+          "height": 244,
+          "depth": 1,
+          "type": 1,
+          "encoding": "JPEG",
+          "size": 4449,
+          "packet_index": 9,
+          "t_rel_s": 0.275
+        }
+      ],
+      "completed_frames": 1,
+      "stall": {
+        "reason": "timeout waiting for next CPX packet header",
+        "waited_s": 6.008,
+        "after_packets": 9,
+        "active_frame_expected_bytes": 4449,
+        "active_frame_received_bytes": 0
+      },
+      "error": null,
+      "ping_returncode": 0,
+      "ping_stdout": "PING 192.168.4.1 (192.168.4.1) 56(84) bytes of data.\n64 bytes from 192.168.4.1: icmp_seq=1 ttl=255 time=123 ms\n64 bytes from 192.168.4.1: icmp_seq=2 ttl=255 time=4.14 ms\n\n--- 192.168.4.1 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 4.141/63.673/123.205/59.532 ms",
+      "ping_stderr": "",
+      "partial_frame": {
+        "expected_bytes": 4449,
+        "received_bytes": 0,
+        "elapsed_s": 6.01,
+        "path": "partial_frame_payload.bin"
+      }
+    }
+  ]
+}
