@@ -11,11 +11,23 @@ image.
 
 ## Running it
 
-```
-run_testbed.bat
-```
+Double-click `run_testbed.bat`. The app walks through four steps and there is
+nothing to configure to get a valid run:
 
-Console form:
+1. **Connect** — join the deck's WiFi, or pick *Practice run* to start a
+   simulated deck on this PC and learn the tool without hardware.
+2. **Find deck** — locates the deck and confirms it answers.
+3. **Run tests** — packet, reconnect and throughput back to back, with a live
+   frame preview and running FPS.
+4. **Result** — a plain-language verdict and the folder holding the evidence.
+
+Everything is logged automatically. One session folder per run holds each
+test's own folder, a `REPORT.md` with the verdict, and a matching `.zip`.
+
+Advanced settings (IP, port, throughput length, reconnect attempts) are behind
+a collapsed panel on step 2 and only exist to override the defaults.
+
+Console form, for headless or scripted use:
 
 ```
 py -3 testbed_cli.py link
@@ -46,7 +58,7 @@ Each run writes `real_flight/aideck_logs/<test>_<timestamp>/` plus a matching
 
 - `aideck_core.py` — CPX/image protocol, Windows shell helpers, run folders
 - `aideck_tests.py` — the four tests
-- `testbed_gui.py` — Tkinter front end, live log, frame preview
+- `testbed_gui.py` — guided 4-step Tkinter front end, live log, frame preview
 - `testbed_cli.py` — console front end
 - `mock_deck.py` — test fixture; a fake deck for validating the test bed
 - `run_testbed.bat` — launcher
@@ -90,19 +102,24 @@ accept a second connection. Restart it between runs.
 
 ### Verified on 2026-08-23 (localhost, mock deck — not hardware)
 
-Re-run end to end after the `run_testbed.bat` launcher was corrected:
+The guided GUI was driven end to end through all four steps, twice:
 
-- Packet test, healthy mock: 3/3 frames, 18 packets, `stall=False`. All three
-  saved frames decode as 324x244 grayscale JPEG.
-- Throughput, healthy mock at 20 fps: 198 frames in 10.007s = 19.787 fps,
-  86.61 KiB/s, frame interval median 0.0506s, `stalled=False`.
-- Reconnect: 3/3 attempts each delivered one complete 4447-byte frame.
-- Stall detection, `--stall-after 2`: `stalled=True` after 2 frames.
-- Mid-frame stall, `--stall-mid-frame 2`: frame 1 complete, second image header
-  parsed, then 2044/4447 bytes and timeout, partial frame written. This is the
-  same signature as the real May 16 logs.
-- Link check against a dead port: ping replies, TCP correctly reported refused.
-- Zip output and the Tkinter GUI both build and render.
+- **Healthy deck** (mock at 20 fps): found the deck, packet test 3/3 frames,
+  reconnect 2/2, throughput 119 frames at 19.70 fps, verdict *"Stream held up.
+  No stall."* Session folder, `REPORT.md` and `.zip` all written.
+- **Failing deck** (`--stall-after 2`): packet test got 2 frames then stalled,
+  reconnect 0/2, and the mock then refused further connections. Verdict *"The
+  stream breaks."* naming the wedge and pointing at TXQ16.
+
+The second case caught a real defect: the verdict originally read only the
+throughput result, so a deck that wedged before throughput could start was
+reported as inconclusive. It now weighs all three tests, and treats reconnect
+failures as evidence — on 2026-05-16 the real deck recovered only 1 of 8 fresh
+connections, which is the same fault.
+
+Earlier console-level verification of the engine, still current: mid-frame
+stall reproduces the May 16 signature exactly — frame 1 complete, second image
+header, 2044/4447 bytes, timeout, partial frame saved.
 
 Mock runs were deleted afterwards so `aideck_logs/` holds only real captures.
 
