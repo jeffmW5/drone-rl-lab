@@ -1,7 +1,9 @@
 # Prompt: AI Deck Windows Test Bed
 
 Date written: 2026-08-22
-Status: spec only, nothing built yet.
+Status: **built 2026-08-23** in `real_flight/windows_testbed/`. See that
+folder's `README.md`. Verified against a mock deck on localhost only; `not
+verified` against real AI Deck hardware.
 
 ## Goal
 
@@ -77,16 +79,25 @@ Protocol constants to preserve exactly:
   `192.168.7.201` (appears in `stream_viewer.py`, suggests a prior station-mode
   run).
 
-## Open decisions
+## Open decisions -- resolved 2026-08-23
 
-- Whether Python is installed on the Windows machine. Drives whether this ships
-  as a folder plus `.bat` launcher or needs a PyInstaller `.exe`. A Windows
-  `.exe` cannot be reliably cross-compiled from this Linux VM.
-- Tkinter GUI vs console menu. Tkinter ships with the standard Windows Python
-  installer; JPEG preview would need Pillow, so preview must degrade to
-  "frame saved" when Pillow is absent.
-- How run folders come back to the VM: git push from Windows, VirtualBox shared
-  folder (only if the Windows box is the VM host), or manual copy.
+Checked on the Windows dev machine (`py -0p`): Python 3.14, 3.13 and 3.11 are
+installed, tkinter 8.6 is present, and Pillow 12.1.1 is already installed.
+
+- **Python installed?** Yes. Ships as a folder plus `run_testbed.bat`. No
+  PyInstaller `.exe` needed, so the cross-compile problem does not arise.
+- **Tkinter vs console?** Both. `testbed_gui.py` is the Tkinter front end with a
+  live JPEG preview; `testbed_cli.py` is the console form for headless use. The
+  preview still degrades to "frame saved" text if Pillow is absent elsewhere.
+- **How runs come back?** The repo checkout lives at
+  `C:\Users\JefferyWhitmire\Desktop\Shared\drone-rl-lab`, so this Windows box is
+  the VM host and the shared folder is available. Runs default to
+  `real_flight/aideck_logs/` and are also zipped. Output folder is selectable in
+  the GUI and via `--out-dir`.
+
+Still open: whether the test bed should live on this dev machine or a second
+Windows box. Running it here still means taking this machine off the internet to
+join `aideck-stream`, which is one of the two problems the spec set out to fix.
 
 ## Related
 
