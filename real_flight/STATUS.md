@@ -88,7 +88,21 @@ print(obs.shape, envs.single_observation_space)
 
 ## AI Deck WiFi Camera Stream
 
-### Status: Stalled — known Bitcraze bug
+### Status: WORKING natively on Windows (2026-08-28)
+
+Resolved. The stall was **VirtualBox slirp**, not the deck and not the ESP
+firmware. A native Windows client on `aideck-stream` ran 120s of sustained
+throughput with **881 frames, 7.342 fps, zero stalls**, and **6/6 clean
+reconnects**, on the same clean official `58f15fa` ESP image that stalls after
+one frame inside the VM.
+
+- Evidence: `aideck_logs/session_20260828_211353/`
+- Tool: `real_flight/windows_testbed/run_testbed.bat`
+- **Do not flash TXQ16.** See `AIDECK_WIFI_CHECKPOINT.md`.
+
+Capture the drone's camera data from a native host, never from the VM.
+
+### Historical: the VM-era diagnosis (superseded)
 
 **Firmware flashed:**
 - ESP32: 2025.02 via JTAG (`esp32-solo-1.cfg`)
@@ -143,7 +157,7 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
 - [ ] Fix obs format mismatch (get `train_race.py` from RunPod or print obs space)
 - [ ] Complete progressive flight testing (hover stable -> fly --no-gates -> fly)
 - [ ] Measure real gate positions and update config.yaml (currently nominal level2.toml)
-- [ ] Unblock AI Deck camera stream (Bitcraze bug #150)
+- [x] Unblock AI Deck camera stream — was slirp, works natively on Windows (2026-08-28)
 - [ ] Sim-to-real tuning (thrust scaling, attitude response lag, position drift)
 - [ ] Wait for exp_071+ results (obs normalization, action smoothness) for better checkpoints
 

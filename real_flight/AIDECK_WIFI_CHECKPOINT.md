@@ -2,6 +2,30 @@
 
 Date: 2026-05-16
 
+## RESOLVED 2026-08-28 — it was slirp, not the deck
+
+Superseding everything below. A native Windows client on `aideck-stream`, with
+no VirtualBox NAT in the path, streamed **881 frames over 120s with zero
+stalls** and reconnected **6/6** — on the same clean official `58f15fa` ESP
+image that stalls after one frame in the VM.
+
+- Evidence: `aideck_logs/session_20260828_211353/`
+- VM baseline it contradicts: `aideck_logs/packet_test_20260516_112123`
+  (one frame then stall) and `reconnect_test_20260516_085408` (1/8)
+
+**Do not flash the TXQ16 image.** `WIFI_HOST_QUEUE_LENGTH (2)` was never the
+problem. The image stays archived in
+`firmware/esp_official_58f15fa_txq16_20260516/` but the "Next Resume Step"
+below is withdrawn, and the GAP8 patches suggested under "If TXQ16 Still Fails"
+are not justified by any current evidence.
+
+Bitcraze issue #150 is not implicated on this hardware. What was actually
+observed was a VirtualBox slirp receive stall.
+
+The sections below are kept as the record of how this was diagnosed. Treat
+their conclusions as superseded.
+
+
 ## Current Flashed State
 
 The AI Deck ESP32 currently has clean official Bitcraze ESP firmware flashed:

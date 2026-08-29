@@ -171,3 +171,21 @@
 - **Confidence:** medium (directional signal is clear, exact rates may be noisy)
 - **Last reviewed:** 2026-03-28
 - **Next falsification test:** Run 50+ benchmark runs to confirm statistical significance of gate passage improvement.
+
+## FACT-018
+- **Statement:** The AI Deck WiFi stream does NOT stall when the client runs natively on Windows joined to `aideck-stream`. A 120s sustained throughput test delivered 881 frames, 8890 packets, 6.20 MB, `stall=null`, `over_stall_gap=0`. Reconnect was 6/6 clean. The ESP firmware was the clean official `58f15fa` image — the same image that stalled after one frame under VirtualBox slirp.
+- **Type:** fact
+- **Scope:** AI Deck ESP32/GAP8 stream, real hardware, 192.168.4.1:5000, native Windows host DESKTOP-CP5V6TB
+- **Supported by:** `real_flight/aideck_logs/session_20260828_211353/` (REPORT.md and all four `summary.json`)
+- **Counterevidence:** none. Direct contradiction of the prior VM baseline `packet_test_20260516_112123` (one frame then stall) and `reconnect_test_20260516_085408` (1/8 recovery).
+- **Confidence:** high
+- **Next falsification test:** repeat on a second Windows host, and repeat in the VM to confirm the stall still reproduces there.
+
+## FACT-019
+- **Statement:** Sustained AI Deck frame delivery measured 7.342 fps over 120s: mean inter-frame interval 136ms, median 140ms, min 47ms, max 406ms. Payload rate was 50.5 KiB/s at 324x244 JPEG, ~7.0 KB per frame.
+- **Type:** fact
+- **Scope:** Same session as FACT-018. End-to-end deck-to-PC rate, not an isolated onboard measurement.
+- **Supported by:** `real_flight/aideck_logs/session_20260828_211353/throughput_test_20260828_211428/summary.json`
+- **Counterevidence:** none
+- **Confidence:** high for the end-to-end number; the attribution of that 136ms to onboard capture+encode is inference, not measurement — see HYP.
+- **Next falsification test:** measure capture and encode time on the GAP8 directly and confirm they sum to ~131ms.

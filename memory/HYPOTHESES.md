@@ -61,3 +61,12 @@
 - **Confidence:** medium-high (supported by exp_069 but not fully resolved)
 - **Last reviewed:** 2026-03-28
 - **Next falsification test:** Even larger network (2×256) or longer training (14400s with 2×128) to see if the capacity trend continues. If 2×256 shows no further improvement, capacity alone is insufficient.
+
+## HYP-AIDECK-RATE
+- **Statement:** The 136ms mean inter-frame interval measured in `session_20260828_211353` is set by onboard GAP8 capture + JPEG encode, not by the WiFi link or the ESP32.
+- **Type:** hypothesis
+- **Supporting evidence:** `real_flight/STATUS.md` documents GAP8 console timings of 73ms capture + 58ms encode = 131ms, which is within 4% of the measured 136ms mean interval. Measured payload rate was 50.5 KiB/s, far below any plausible WiFi ceiling, so the link is not saturated.
+- **Why it is not a fact:** the 73/58 split is read from prior documentation, not measured in this session, and the 136ms figure is end-to-end deck-to-PC — it includes CPX framing, WiFi, and host receive. The agreement is convergent, not conclusive.
+- **Confidence:** medium-high
+- **Falsification test:** instrument the GAP8 to timestamp capture start, encode end, and CPX send, and compare against the host-side interval.
+- **Why it matters:** if true, disabling JPEG encode for onboard inference frees ~58ms, giving a ~73ms floor (~13.7 fps ceiling) before any network inference cost. That budget determines the model size for the onboard vision hover work.
