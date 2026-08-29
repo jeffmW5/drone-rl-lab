@@ -190,6 +190,13 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
       See `GAP8_PERF_RESULT.md`.
 - [ ] **Phase 1 hover — 30s held, no wall contact.** Best so far 7.0s via
       `fly.py takeoff`. Independent of the GAP8 work; runs in parallel.
+- [ ] **Vision-hover first task narrowed** 2026-08-29: rise-to-level +
+      distance-hold on a plain 1"x1" marker (not full 6DOF pose). Marker
+      detector written and self-tested on synthetic frames
+      (`real_flight/marker_detector.py`) — never seen a real camera frame yet.
+      Next: `real_flight/WINDOWS_MARKER_WIZARDS_PROMPT.md` (distance
+      calibration + capture, Windows-only, queued in INBOX as
+      `marker-wizards`). See `VISION_HOVER_PLAN.md` "Simplified first task".
 - [x] **Track B — can the GAP8 run a net at all?** DONE 2026-08-29. Yes.
       DroNet (DORY's own `PULP.GAP8` stock example) runs end-to-end on the
       physical AI Deck: 359.9ms/inference (≈2.78 fps) single-core, final

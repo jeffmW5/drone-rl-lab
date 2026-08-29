@@ -213,6 +213,13 @@
 - **Not an experiment.** Hardware measurement, deliberately outside the `exp_` namespace.
 - **Out of scope:** designing or training the vision model, dataset capture (Windows only, FACT-018), flight testing.
 
+### [READY] marker-wizards -- distance calibration + capture wizards
+- **Host:** Windows (native) only. Two wizards: (1) distance calibration -- apparent marker size to real distance, (2) capture -- frames for auto-labeling. Depends on `real_flight/marker_detector.py` (done, self-tested, never seen a real frame).
+- **Prompt:** `real_flight/WINDOWS_MARKER_WIZARDS_PROMPT.md` -- read it before starting.
+- **Why now:** vision-hover first task narrowed to two numbers (vertical offset, apparent size), both from the marker detector. Need real distance calibration and real captured frames before any labeling or training can start.
+- **Check first:** `windows_testbed/flight_watch_gui.py` may already cover the capture wizard's job -- confirm before building something new.
+- **Out of scope:** training the CNN (depends on this), flight control changes, GAP8/DORY deployment (Linux VM's job, already proven).
+
 ### [READY] phase-1-hover -- 30s stable hover, no wall contact
 - **Host:** wherever the radio is. Flow deck + `fly.py`, not the AI Deck. Independent of all GAP8 work -- runs in parallel.
 - **Status:** best so far is 7.0s airborne via `fly.py takeoff` (0.374m, 4.4cm drift). Exit criterion is 30s held, no wall contact.
