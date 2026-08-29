@@ -179,10 +179,15 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
 - [x] Unblock AI Deck camera stream — was slirp, works natively on Windows (2026-08-28)
 - [ ] Sim-to-real tuning (thrust scaling, attitude response lag, position drift)
 - [ ] Wait for exp_071+ results (obs normalization, action smoothness) for better checkpoints
-- [ ] **GAP8 performance envelope** — DroNet at 8 cores, highest
-      verified-correct clock, and on-chip camera capture cost. The deployable
-      rate is unknown by ~10x and gates the model design.
-      Prompt: `GAP8_PERF_PROMPT.md`. Linux VM only.
+- [x] **GAP8 performance envelope.** DONE 2026-08-29. 8 cores: 63.82ms/inference
+      (15.67 fps, 5.64× over 1 core), checksum OK. Clock: 150MHz hangs
+      reproducibly (3/3 attempts, voltage ruled out) — 100MHz remains the
+      verified ceiling, despite `gap_sdk` spec headers saying cluster should
+      reach 175MHz. Capture: measured 69.4ms on-chip (confirms the old 73ms
+      figure) with the current per-frame camera restart pattern — ~44ms of
+      that is stop/start overhead, not pixel transfer; continuous streaming
+      measures ~25ms instead. MAC-budget table now in `VISION_HOVER_PLAN.md`.
+      See `GAP8_PERF_RESULT.md`.
 - [ ] **Phase 1 hover — 30s held, no wall contact.** Best so far 7.0s via
       `fly.py takeoff`. Independent of the GAP8 work; runs in parallel.
 - [x] **Track B — can the GAP8 run a net at all?** DONE 2026-08-29. Yes.

@@ -24,33 +24,48 @@ used only for capturing training data and for debugging, never for flight.
 
 ### Frame budget
 
-Measured end-to-end on 2026-08-28: 136ms mean per frame (7.342 fps) with JPEG
-streaming enabled. `STATUS.md` documents the GAP8 side as 73ms capture + 58ms
-encode = 131ms, which matches within 4%.
+All four "not verified" items from the original 2026-08-28 version of this
+section (GAP8 L2 ceiling, inference time N, the capture/encode split as an
+onboard measurement, a working reference NN) are now measured. History: the
+original number here was a same-day end-to-end guess (136ms/frame, split
+inferred as 73ms capture + 58ms encode from an unrelated debugging session);
+`GAP8_DORY_RESULT.md` and `GAP8_PERF_RESULT.md` replaced every piece of it
+with direct on-chip measurement. That inferred split held up surprisingly
+well (73ms vs. a measured 69.4ms, FACT-026) but the model-sizing math below
+is now built from the measured numbers, not the inference.
 
-If that attribution holds (see `memory/HYPOTHESES.md` HYP-AIDECK-RATE), onboard
-inference drops the ~58ms JPEG encode, leaving:
+**Measured throughput** (DroNet, 41.1M MACs, as the sizing reference — not a
+design target): 114 MMAC/s at 1 core, **644 MMAC/s at 8 cores**, both at
+100MHz — the verified-correct clock; 150MHz hangs reproducibly and is not
+usable (FACT-025). Use the 8-core number; 1 core cannot clear a useful MAC
+budget at any control rate below (see table).
 
-```
-73ms capture + N ms inference = control rate
-```
+**Measured capture cost** (FACT-026, on-chip `pi_perf`, 324×244 QVGA
+grayscale, no JPEG): **69.4ms** with the camera stop/started every frame
+(current pattern, e.g. `wifi-img-streamer.c`) — of which ~44ms is stop/start
+resync, not pixel transfer. **~25ms** if the capture loop is redesigned to
+stream continuously instead (measured standalone only, not yet combined with
+real inference in one pipeline).
 
-So ~13.7 fps is the ceiling before the net runs, and N sets everything below
-that. Design the model to a measured N, not to a guess.
+**MAC budget = (control period − capture cost) × 644 MMAC/s, 8 cores @ 100MHz:**
 
-**Not verified (as written 2026-08-28):** GAP8 L2 memory ceiling, actual
-inference time N on the flashed firmware, the capture/encode split as an
-onboard measurement, and the current Bitcraze reference NN example name. All
-four hard-constrain the model. *Two of these are now resolved — see the update
-below. The capture/encode split is still unmeasured and is the open one that
-matters.*
+| Capture pattern | Rate | Period | Budget after capture | MAC budget | Fits DroNet-scale (41.1M)? |
+|---|---|---|---|---|---|
+| Current (69.4ms, per-frame restart) | 5Hz | 200ms | 130.6ms | 84.1M | yes |
+| Current (69.4ms) | 10Hz | 100ms | 30.6ms | 19.7M | no |
+| Current (69.4ms) | 15Hz | 66.7ms | — | **capture-bound, infeasible at any model size** | — |
+| Continuous (25.1ms, redesign needed) | 5Hz | 200ms | 174.9ms | 112.6M | yes |
+| Continuous (25.1ms) | 10Hz | 100ms | 74.9ms | 48.2M | yes |
+| Continuous (25.1ms) | 15Hz | 66.7ms | 41.5ms | 26.8M | no |
 
-**Update 2026-08-29:** Track B measured a real N — DroNet (comparable size:
-15 layers, 41M MACs) runs in 359.9ms single-core (2.78 fps) on this exact
-GAP8/AI Deck. That is far above the ~73ms capture floor and blows the ~13.7fps
-budget above on its own. Multi-core (untried, 8 cluster cores available) or a
-substantially smaller model than DroNet-scale will be required for onboard
-vision-hover to hit a usable control rate. See `GAP8_DORY_RESULT.md`.
+**Reading this:** 5Hz works today, with the existing capture pattern, at
+8 cores, with 2×-DroNet headroom (84.1M MACs). 10Hz needs the capture loop
+redesigned to continuous streaming first — that alone is worth more than
+switching to 8 cores was. 15Hz is off the table with the current capture
+implementation regardless of model size, and even after a capture redesign
+only allows a model smaller than DroNet. Size the vision-hover network to
+whichever row is the actual target control rate — full detail and
+methodology in `GAP8_PERF_RESULT.md`.
 
 ## What carries over from ai-grand-prix-stack
 

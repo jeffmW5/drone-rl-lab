@@ -230,3 +230,31 @@
 - **Confidence:** high.
 - **Not verified:** multi-core performance (this run used 1 of GAP8's 8 cluster cores — the realistic deployment number is likely much faster and wasn't measured); root cause of the `simple_cnn` crash (FACT-022, now known to be network-specific, not further diagnosed); root cause of odd per-layer "Checking L2 input/weights: Checksum Failed" lines in the DroNet run (final output checksum passed, so likely a false-positive in the generated harness, not investigated).
 - **Next falsification test:** rebuild DroNet with multi-core enabled and re-measure fps for the real frame-budget number `VISION_HOVER_PLAN.md` needs.
+
+## FACT-024
+- **Statement:** DroNet rebuilt with `CORE=8` (identical network, identical 100MHz clock, only core count changed) ran 6,381,688 cycles = 63.82ms/inference (15.67 fps), 6.441 MAC/cycle, final output checksum OK. Speedup vs. the CORE=1 baseline (FACT-023, 359.90ms): 5.64×.
+- **Type:** fact
+- **Scope:** GAP8 onboard-inference throughput, `real_flight/GAP8_PERF_PROMPT.md` Task 1.
+- **Supported by:** `real_flight/GAP8_PERF_RESULT.md`, this session's build/flash/run logs.
+- **Counterevidence:** none.
+- **Confidence:** high.
+- **Next falsification test:** none needed for this number; multi-core + higher clock combined is the open next step (blocked on FACT-025's clock ceiling).
+
+## FACT-025
+- **Statement:** Raising GAP8's cluster clock to 150MHz (from the working 100MHz) hangs reproducibly, identically, across 3 attempts that varied FC clock (100 vs 150MHz) and voltage (1000mV default vs 1200mV, the documented `DCDC_DEFAULT_NV` max) independently. All three stop at the exact same content point (same layer, same checksum values) with no crash/exit code — the run simply stops producing output. `gap_sdk` source (`pmu_driver.c`) documents the cluster domain's spec range as 87–175MHz, voltage-coupled; 1200mV should cover 150MHz per that spec's linear FV-slope model, but did not in practice.
+- **Type:** fact
+- **Scope:** GAP8 clock scaling, this hardware/`gap_sdk` install. Verified-correct clock ceiling remains 100MHz (matching FACT-023/024).
+- **Supported by:** `real_flight/GAP8_PERF_RESULT.md`, 3 build/flash/run attempts this session.
+- **Counterevidence:** none — all 3 attempts failed identically.
+- **Confidence:** high that 100MHz is safe and 150MHz is not, with voltage/FC-clock ruled out as the sole cause; low confidence on the actual root cause or the true ceiling between 100–150MHz (untested).
+- **Next falsification test:** binary-search 100–150MHz; re-attempt with `gdb_port` enabled to capture a register/PC dump at the hang.
+
+## FACT-026
+- **Statement:** HM01B0 camera capture time measured directly on GAP8 via `pi_perf` cycle counting (30 frames, 324×244 QVGA grayscale, 100MHz FC, no JPEG encode), two configurations: (1) camera started once, captured repeatedly without stopping between frames — mean 25.12ms, range 15.75–29.33ms (frame 0 excluded as a 69.2ms warm-up outlier); (2) camera stopped and restarted every frame, exactly matching `wifi-img-streamer.c`'s actual loop — mean 69.408ms, stdev 0.0205ms (extremely tight), min 69.354ms, max 69.448ms.
+- **Type:** fact
+- **Scope:** AI Deck camera capture cost, real hardware, resolves HYP-AIDECK-RATE's capture half.
+- **Supported by:** `real_flight/GAP8_PERF_RESULT.md`, `capture_timing_app/` build/flash/run logs.
+- **Counterevidence:** none. The two configurations' results are mutually consistent: config 1's one-off frame-0 cost (69.2ms) matches config 2's steady-state per-frame cost (69.4ms) almost exactly, both attributable to the same camera stop/start resync, whether paid once or every frame.
+- **Confidence:** high, especially for config 2 (±0.02ms spread over 30 frames).
+- **Not verified:** whether continuous-streaming capture (config 1's ~25ms) holds up when combined with a real inference workload in one integrated pipeline — only measured standalone.
+- **Next falsification test:** build a combined continuous-capture + inference app and re-measure end-to-end.
