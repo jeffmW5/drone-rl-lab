@@ -1,0 +1,45 @@
+2026-08-28 21:14:20 === Packet test ===
+2026-08-28 21:14:20 Run directory: D:\drone-rl-lab\real_flight\aideck_logs\session_20260828_211353\packet_test_20260828_211420
+2026-08-28 21:14:20 Candidates: 192.168.4.1
+2026-08-28 21:14:20 Duration per connected candidate: 45.0s
+2026-08-28 21:14:20 WLAN: ssid=aideck-stream state=connected signal=100% rx=150Mbps tx=150Mbps
+
+2026-08-28 21:14:20 === Candidate 192.168.4.1:5000 ===
+2026-08-28 21:14:21 Ping return code: 0
+2026-08-28 21:14:21 Connecting TCP 192.168.4.1:5000 ...
+2026-08-28 21:14:21 TCP connected.
+2026-08-28 21:14:21 Packet 0001: len=13 payload=11 route=0x63 func=0x05 gap=0.141s first=bc4401f40001010f1c0000
+2026-08-28 21:14:21 Image header: 324x244 JPEG 7183 bytes at packet 1
+2026-08-28 21:14:21 Packet 0002: len=308 payload=306 route=0x63 func=0x05 gap=0.000s first=ffd8ffdb0043000805060d070607090c
+2026-08-28 21:14:21 Packet 0003: len=1022 payload=1020 route=0x63 func=0x05 gap=0.000s first=e1923ff3f954c138a9552a4094a12942
+2026-08-28 21:14:21 Packet 0004: len=1022 payload=1020 route=0x63 func=0x05 gap=0.000s first=5f462d93f3ae4356baceff00f3deb9c9
+2026-08-28 21:14:21 Packet 0005: len=1022 payload=1020 route=0x63 func=0x05 gap=0.000s first=c7d17f2a91b51db16e75dbbba533ed29
+2026-08-28 21:14:21 Packet 0006: len=1022 payload=1020 route=0x63 func=0x05 gap=0.000s first=f8d7a36ffe74c327fe834ddfc533767f
+2026-08-28 21:14:21 Packet 0007: len=1022 payload=1020 route=0x63 func=0x05 gap=0.000s first=27b9e00f4a92dbc392cbd7d2b413488a
+2026-08-28 21:14:21 Packet 0008: len=1022 payload=1020 route=0x63 func=0x05 gap=0.016s first=dccd95c7f9e954641cff009f5a824514
+2026-08-28 21:14:21 Packet 0009: len=757 payload=755 route=0x63 func=0x05 gap=0.015s first=a881e29d9cd3d463f2a72e3eb56235e3
+2026-08-28 21:14:21 Packet 0010: len=4 payload=2 route=0x63 func=0x05 gap=0.000s first=ffd9
+2026-08-28 21:14:21 Frame complete: 7183 bytes saved to frame_001.jpg
+2026-08-28 21:14:22 Packet 0011: len=13 payload=11 route=0x63 func=0x05 gap=0.094s first=bc4401f4000101ef1b0000
+2026-08-28 21:14:22 Image header: 324x244 JPEG 7151 bytes at packet 11
+2026-08-28 21:14:22 Packet 0012: len=308 payload=306 route=0x63 func=0x05 gap=0.000s first=ffd8ffdb0043000805060d070607090c
+2026-08-28 21:14:22 Packet 0013: len=1022 payload=1020 route=0x63 func=0x05 gap=0.000s first=e1513fa54eb1d4ab1d481294252ece9f
+2026-08-28 21:14:22 Packet 0014: len=1022 payload=1020 route=0x63 func=0x05 gap=0.000s first=6b89603cb2bf2300a0d5af145d6fb3e0
+2026-08-28 21:14:22 Packet 0015: len=1022 payload=1020 route=0x63 func=0x05 gap=0.000s first=35d61429fa569c9cfe5559c5577155a4
+2026-08-28 21:14:22 Packet 0016: len=1022 payload=1020 route=0x63 func=0x05 gap=0.000s first=6ffe47fa546cdfce99bffa7f5a66ff00
+2026-08-28 21:14:22 Packet 0017: len=1022 payload=1020 route=0x63 func=0x05 gap=0.016s first=45676b779fbbd8bd31b6b9e82f6485be
+2026-08-28 21:14:22 Packet 0018: len=1022 payload=1020 route=0x63 func=0x05 gap=0.000s first=aaea3a534475220f414f111eb5284f9b
+2026-08-28 21:14:22 Packet 0019: len=725 payload=723 route=0x63 func=0x05 gap=0.000s first=f852803fcfe352e699e6019a746ccdf4
+2026-08-28 21:14:22 Packet 0020: len=4 payload=2 route=0x63 func=0x05 gap=0.000s first=ffd9
+2026-08-28 21:14:22 Frame complete: 7151 bytes saved to frame_002.jpg
+2026-08-28 21:14:22 Packet 0021: len=13 payload=11 route=0x63 func=0x05 gap=0.125s first=bc4401f4000101111c0000
+2026-08-28 21:14:22 Image header: 324x244 JPEG 7185 bytes at packet 21
+2026-08-28 21:14:22 Packet 0022: len=308 payload=306 route=0x63 func=0x05 gap=0.000s first=ffd8ffdb0043000805060d070607090c
+2026-08-28 21:14:22 Packet 0023: len=1022 payload=1020 route=0x63 func=0x05 gap=0.000s first=e1923a9963a9447fd2a40b4bb78a76ce
+2026-08-28 21:14:22 Packet 0024: len=1022 payload=1020 route=0x63 func=0x05 gap=0.015s first=fe735ce4f2b03c1f5fd2a84f7879cf1c
+2026-08-28 21:14:22 Packet 0025: len=1022 payload=1020 route=0x63 func=0x05 gap=0.000s first=069171bb38fd29a2ed248cb741f2d711
+2026-08-28 21:14:22 Frame complete: 7185 bytes saved to frame_003.jpg
+2026-08-28 21:14:22 Reached max_frames=3; stopping.
+
+2026-08-28 21:14:22 === Summary ===
+2026-08-28 21:14:22 192.168.4.1: connected=True packets=30 bytes=21672 headers=3 frames=3 stall=False error=None

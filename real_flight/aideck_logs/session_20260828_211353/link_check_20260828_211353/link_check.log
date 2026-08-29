@@ -1,0 +1,24 @@
+2026-08-28 21:13:53 === Link check ===
+2026-08-28 21:13:53 WLAN: ssid=aideck-stream state=connected signal=100% rx=150Mbps tx=150Mbps
+
+2026-08-28 21:13:53 Pinging 192.168.4.1 ...
+2026-08-28 21:13:54 Pinging 192.168.4.1 with 32 bytes of data:
+Reply from 192.168.4.1: bytes=32 time<1ms TTL=255
+Reply from 192.168.4.1: bytes=32 time=1ms TTL=255
+
+Ping statistics for 192.168.4.1:
+    Packets: Sent = 2, Received = 2, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 1ms, Average = 0ms
+2026-08-28 21:13:54 TCP 192.168.4.1:5000 OK in 0.015s
+
+2026-08-28 21:13:54 Pinging 192.168.7.201 ...
+2026-08-28 21:13:59 Pinging 192.168.7.201 with 32 bytes of data:
+Request timed out.
+Request timed out.
+
+Ping statistics for 192.168.7.201:
+    Packets: Sent = 2, Received = 0, Lost = 2 (100% loss),
+2026-08-28 21:14:03 TCP 192.168.7.201:5000 failed: timed out
+
+2026-08-28 21:14:03 Reachable on TCP 5000: ['192.168.4.1']

@@ -1,0 +1,660 @@
+{
+  "test": "reconnect_test",
+  "created_at": "2026-08-28T21:14:28",
+  "run_dir": "D:\\drone-rl-lab\\real_flight\\aideck_logs\\session_20260828_211353\\reconnect_test_20260828_211422",
+  "target": {
+    "ip": "192.168.4.1",
+    "port": 5000
+  },
+  "env": {
+    "ipconfig_all": {
+      "returncode": 0,
+      "stdout": "Windows IP Configuration\r\n\r\n   Host Name . . . . . . . . . . . . : DESKTOP-CP5V6TB\r\n   Primary Dns Suffix  . . . . . . . : \r\n   Node Type . . . . . . . . . . . . : Hybrid\r\n   IP Routing Enabled. . . . . . . . : No\r\n   WINS Proxy Enabled. . . . . . . . : No\r\n\r\nEthernet adapter Ethernet:\r\n\r\n   Media State . . . . . . . . . . . : Media disconnected\r\n   Connection-specific DNS Suffix  . : \r\n   Description . . . . . . . . . . . : Realtek PCIe GbE Family Controller\r\n   Physical Address. . . . . . . . . : E0-D5-5E-A1-EB-F2\r\n   DHCP Enabled. . . . . . . . . . . : Yes\r\n   Autoconfiguration Enabled . . . . : Yes\r\n\r\nUnknown adapter NordLynx:\r\n\r\n   Media State . . . . . . . . . . . : Media disconnected\r\n   Connection-specific DNS Suffix  . : \r\n   Description . . . . . . . . . . . : NordLynx Tunnel\r\n   Physical Address. . . . . . . . . : \r\n   DHCP Enabled. . . . . . . . . . . : No\r\n   Autoconfiguration Enabled . . . . : Yes\r\n\r\nEthernet adapter Ethernet 4:\r\n\r\n   Media State . . . . . . . . . . . : Media disconnected\r\n   Connection-specific DNS Suffix  . : \r\n   Description . . . . . . . . . . . : TAP-NordVPN Windows Adapter V9\r\n   Physical Address. . . . . . . . . : 00-FF-C7-45-92-2C\r\n   DHCP Enabled. . . . . . . . . . . : Yes\r\n   Autoconfiguration Enabled . . . . : Yes\r\n\r\nWireless LAN adapter Local Area Connection* 9:\r\n\r\n   Media State . . . . . . . . . . . : Media disconnected\r\n   Connection-specific DNS Suffix  . : \r\n   Description . . . . . . . . . . . : Microsoft Wi-Fi Direct Virtual Adapter\r\n   Physical Address. . . . . . . . . : 26-4B-FE-17-2A-FB\r\n   DHCP Enabled. . . . . . . . . . . : Yes\r\n   Autoconfiguration Enabled . . . . : Yes\r\n\r\nWireless LAN adapter Local Area Connection* 10:\r\n\r\n   Media State . . . . . . . . . . . : Media disconnected\r\n   Connection-specific DNS Suffix  . : \r\n   Description . . . . . . . . . . . : Microsoft Wi-Fi Direct Virtual Adapter #2\r\n   Physical Address. . . . . . . . . : 24-4B-FE-17-2A-FB\r\n   DHCP Enabled. . . . . . . . . . . : Yes\r\n   Autoconfiguration Enabled . . . . : Yes\r\n\r\nEthernet adapter Ethernet 2:\r\n\r\n   Media State . . . . . . . . . . . : Media disconnected\r\n   Connection-specific DNS Suffix  . : \r\n   Description . . . . . . . . . . . : AnchorFree TAP-Windows Adapter V9\r\n   Physical Address. . . . . . . . . : 00-FF-BF-6B-D2-31\r\n   DHCP Enabled. . . . . . . . . . . : Yes\r\n   Autoconfiguration Enabled . . . . : Yes\r\n\r\nWireless LAN adapter Wi-Fi:\r\n\r\n   Connection-specific DNS Suffix  . : \r\n   Description . . . . . . . . . . . : ASUS Wireless PCI-E Adapter\r\n   Physical Address. . . . . . . . . : 24-4B-FE-17-2A-FB\r\n   DHCP Enabled. . . . . . . . . . . : Yes\r\n   Autoconfiguration Enabled . . . . : Yes\r\n   Link-local IPv6 Address . . . . . : fe80::af4:5ab:1d59:e3b9%8(Preferred) \r\n   IPv4 Address. . . . . . . . . . . : 192.168.4.2(Preferred) \r\n   Subnet Mask . . . . . . . . . . . : 255.255.255.0\r\n   Lease Obtained. . . . . . . . . . : Friday, August 28, 2026 9:13:42 PM\r\n   Lease Expires . . . . . . . . . . : Friday, August 28, 2026 11:13:42 PM\r\n   Default Gateway . . . . . . . . . : 192.168.4.1\r\n   DHCP Server . . . . . . . . . . . : 192.168.4.1\r\n   DHCPv6 IAID . . . . . . . . . . . : 472140798\r\n   DHCPv6 Client DUID. . . . . . . . : 00-01-00-01-22-F3-1C-0B-E0-D5-5E-A1-EB-F2\r\n   DNS Servers . . . . . . . . . . . : 192.168.4.1\r\n   NetBIOS over Tcpip. . . . . . . . : Disabled",
+      "stderr": ""
+    },
+    "route_print": {
+      "returncode": 0,
+      "stdout": "===========================================================================\r\nInterface List\r\n  3...e0 d5 5e a1 eb f2 ......Realtek PCIe GbE Family Controller\r\n 50...........................NordLynx Tunnel\r\n 19...00 ff c7 45 92 2c ......TAP-NordVPN Windows Adapter V9\r\n  4...26 4b fe 17 2a fb ......Microsoft Wi-Fi Direct Virtual Adapter\r\n  6...24 4b fe 17 2a fb ......Microsoft Wi-Fi Direct Virtual Adapter #2\r\n 18...00 ff bf 6b d2 31 ......AnchorFree TAP-Windows Adapter V9\r\n  8...24 4b fe 17 2a fb ......ASUS Wireless PCI-E Adapter\r\n  1...........................Software Loopback Interface 1\r\n===========================================================================\r\n\r\nIPv4 Route Table\r\n===========================================================================\r\nActive Routes:\r\nNetwork Destination        Netmask          Gateway       Interface  Metric\r\n          0.0.0.0          0.0.0.0      192.168.4.1      192.168.4.2     50\r\n        127.0.0.0        255.0.0.0         On-link         127.0.0.1    331\r\n        127.0.0.1  255.255.255.255         On-link         127.0.0.1    331\r\n  127.255.255.255  255.255.255.255         On-link         127.0.0.1    331\r\n      192.168.4.0    255.255.255.0         On-link       192.168.4.2    306\r\n      192.168.4.2  255.255.255.255         On-link       192.168.4.2    306\r\n    192.168.4.255  255.255.255.255         On-link       192.168.4.2    306\r\n        224.0.0.0        240.0.0.0         On-link         127.0.0.1    331\r\n        224.0.0.0        240.0.0.0         On-link       192.168.4.2    306\r\n  255.255.255.255  255.255.255.255         On-link         127.0.0.1    331\r\n  255.255.255.255  255.255.255.255         On-link       192.168.4.2    306\r\n===========================================================================\r\nPersistent Routes:\r\n  None",
+      "stderr": ""
+    },
+    "netsh_wlan": {
+      "returncode": 0,
+      "stdout": "There is 1 interface on the system: \r\n\r\n    Name                   : Wi-Fi\r\n    Description            : ASUS Wireless PCI-E Adapter\r\n    GUID                   : 33a34f54-ce21-4f9b-8e7d-72b033359106\r\n    Physical address       : 24:4b:fe:17:2a:fb\r\n    State                  : connected\r\n    SSID                   : aideck-stream\r\n    BSSID                  : 94:54:c5:bc:d8:45\r\n    Network type           : Infrastructure\r\n    Radio type             : 802.11n\r\n    Authentication         : Open\r\n    Cipher                 : None\r\n    Connection mode        : Profile\r\n    Channel                : 1\r\n    Receive rate (Mbps)    : 150\r\n    Transmit rate (Mbps)   : 150\r\n    Signal                 : 100% \r\n    Profile                : aideck-stream \r\n\r\n    Hosted network status  : Not available",
+      "stderr": "",
+      "parsed": {
+        "name": "Wi-Fi",
+        "state": "connected",
+        "ssid": "aideck-stream",
+        "bssid": "94:54:c5:bc:d8:45",
+        "radio type": "802.11n",
+        "channel": "1",
+        "receive rate (mbps)": "150",
+        "transmit rate (mbps)": "150",
+        "signal": "100%"
+      }
+    },
+    "hostname": "DESKTOP-CP5V6TB"
+  },
+  "results": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "error": null,
+      "width": 324,
+      "height": 244,
+      "encoding": "JPEG",
+      "size": 7181,
+      "elapsed_s": 0.156,
+      "packet_count": 10,
+      "frame_path": "attempt_01.jpg",
+      "packets": [
+        {
+          "length": 13,
+          "payload_len": 11,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "bc4401f40001010d1c0000",
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 308,
+          "payload_len": 306,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ffd8ffdb0043000805060d070607090c",
+          "frame_bytes": 306,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "e1923fe42a658f8a9163a95529db2944",
+          "frame_bytes": 1326,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "7f67b70328783ed5a5e21bc596cb83c3",
+          "frame_bytes": 2346,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "8fc3f9d749bb7a823b8ff1a85fbd567a",
+          "frame_bytes": 3366,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "e3fcfb5337d465bf9d46ce33fe7b530b",
+          "frame_bytes": 4386,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "33ec33dc9ab56be1777e5ba715705941",
+          "frame_bytes": 5406,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "9b1ed8a9043c5489173d3b54f1440e7f",
+          "frame_bytes": 6426,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 755,
+          "payload_len": 753,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "e95206c7ebfc853f048f6a7a3765ab90",
+          "frame_bytes": 7179,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 4,
+          "payload_len": 2,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ffd9",
+          "frame_bytes": 7181,
+          "t_rel_s": 0.156
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "ok": true,
+      "error": null,
+      "width": 324,
+      "height": 244,
+      "encoding": "JPEG",
+      "size": 7022,
+      "elapsed_s": 0.14,
+      "packet_count": 10,
+      "frame_path": "attempt_02.jpg",
+      "packets": [
+        {
+          "length": 13,
+          "payload_len": 11,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "bc4401f40001016e1b0000",
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 308,
+          "payload_len": 306,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ffd8ffdb0043000805060d070607090c",
+          "frame_bytes": 306,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "e1912a658ea5095205a5dbfe7f2a5d94",
+          "frame_bytes": 1326,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "91b8047be6aff88ee775a7fbc3f4c579",
+          "frame_bytes": 2346,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "4077a06ec40a85c55790556945539455",
+          "frame_bytes": 3366,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "fa55ab23fbe4ff007d2bb488e7fcfad4",
+          "frame_bytes": 4386,
+          "t_rel_s": 0.14
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "5f02a22fc537cdc2d6a7871b77da3fed",
+          "frame_bytes": 5406,
+          "t_rel_s": 0.14
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "26b634cf0bdd48c098f038aea2dfc258",
+          "frame_bytes": 6426,
+          "t_rel_s": 0.14
+        },
+        {
+          "length": 596,
+          "payload_len": 594,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "4330c8aa2c3e43f502981b8148add7fc",
+          "frame_bytes": 7020,
+          "t_rel_s": 0.14
+        },
+        {
+          "length": 4,
+          "payload_len": 2,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ffd9",
+          "frame_bytes": 7022,
+          "t_rel_s": 0.14
+        }
+      ]
+    },
+    {
+      "attempt": 3,
+      "ok": true,
+      "error": null,
+      "width": 324,
+      "height": 244,
+      "encoding": "JPEG",
+      "size": 7303,
+      "elapsed_s": 0.156,
+      "packet_count": 10,
+      "frame_path": "attempt_03.jpg",
+      "packets": [
+        {
+          "length": 13,
+          "payload_len": 11,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "bc4401f4000101871c0000",
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 308,
+          "payload_len": 306,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ffd8ffdb0043000805060d070607090c",
+          "frame_bytes": 306,
+          "t_rel_s": 0.14
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "e1523a9963a9563a91529427f4a50942",
+          "frame_bytes": 1326,
+          "t_rel_s": 0.14
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "4795fcab3bc416bf68d2ef23fefda4e3",
+          "frame_bytes": 2346,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "f7971505b9d8c403f7aa4718e7fcf7a8",
+          "frame_bytes": 3366,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "c6d12e98855524fb56ce8df0e6eef0ab",
+          "frame_bytes": 4386,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "28832c7cbf22b313c6d94f9a3e7150da",
+          "frame_bytes": 5406,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "009fad41f67cd5ab783e502acc70fb50",
+          "frame_bytes": 6426,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 877,
+          "payload_len": 875,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "2381537dd07b9a67ccf52469814f55ef",
+          "frame_bytes": 7301,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 4,
+          "payload_len": 2,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ffd9",
+          "frame_bytes": 7303,
+          "t_rel_s": 0.156
+        }
+      ]
+    },
+    {
+      "attempt": 4,
+      "ok": true,
+      "error": null,
+      "width": 324,
+      "height": 244,
+      "encoding": "JPEG",
+      "size": 6682,
+      "elapsed_s": 0.188,
+      "packet_count": 10,
+      "frame_path": "attempt_04.jpg",
+      "packets": [
+        {
+          "length": 13,
+          "payload_len": 11,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "bc4401f40001011a1a0000",
+          "t_rel_s": 0.109
+        },
+        {
+          "length": 308,
+          "payload_len": 306,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ffd8ffdb0043000805060d070607090c",
+          "frame_bytes": 306,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "e1638ea658ea554a90250a94bb3f953b",
+          "frame_bytes": 1326,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "05d9f95a72cbbb779cabfa66b6a6754c",
+          "frame_bytes": 2346,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "a95a36ff005a6edcd21a4c537149b7af",
+          "frame_bytes": 3366,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "c49d3e9c54724b573c3e3cdbe8c7f74e",
+          "frame_bytes": 4386,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "e823f72c3b6fff000abd3c6acbb48edc",
+          "frame_bytes": 5406,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "14d03e634ffa77aaed51e78ff3da9acd",
+          "frame_bytes": 6426,
+          "t_rel_s": 0.188
+        },
+        {
+          "length": 256,
+          "payload_len": 254,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "45fd2a4cd5291be6e7de9578a5a8c372",
+          "frame_bytes": 6680,
+          "t_rel_s": 0.188
+        },
+        {
+          "length": 4,
+          "payload_len": 2,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ffd9",
+          "frame_bytes": 6682,
+          "t_rel_s": 0.188
+        }
+      ]
+    },
+    {
+      "attempt": 5,
+      "ok": true,
+      "error": null,
+      "width": 324,
+      "height": 244,
+      "encoding": "JPEG",
+      "size": 6650,
+      "elapsed_s": 0.156,
+      "packet_count": 10,
+      "frame_path": "attempt_05.jpg",
+      "packets": [
+        {
+          "length": 13,
+          "payload_len": 11,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "bc4401f4000101fa190000",
+          "t_rel_s": 0.141
+        },
+        {
+          "length": 308,
+          "payload_len": 306,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ffd8ffdb0043000805060d070607090c",
+          "frame_bytes": 306,
+          "t_rel_s": 0.141
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "e1123fe9532c752ac75205a5db4a1297",
+          "frame_bytes": 1326,
+          "t_rel_s": 0.141
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "fb4e7f4cd64acbb0f156cea7e5c1b7fb",
+          "frame_bytes": 2346,
+          "t_rel_s": 0.141
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "86d43c19c728dbab9aba4f9452da1f9c",
+          "frame_bytes": 3366,
+          "t_rel_s": 0.141
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ff001dff000a04658f4f5ab505888a36",
+          "frame_bytes": 4386,
+          "t_rel_s": 0.141
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "51483b55393ef63d2902673532c34ff2",
+          "frame_bytes": 5406,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "edd3ff006b5665bf85e04c6ef9ab4e0b",
+          "frame_bytes": 6426,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 224,
+          "payload_len": 222,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "fcaab35519b8635bde0aff0097dffb72",
+          "frame_bytes": 6648,
+          "t_rel_s": 0.156
+        },
+        {
+          "length": 4,
+          "payload_len": 2,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ffd9",
+          "frame_bytes": 6650,
+          "t_rel_s": 0.156
+        }
+      ]
+    },
+    {
+      "attempt": 6,
+      "ok": true,
+      "error": null,
+      "width": 324,
+      "height": 244,
+      "encoding": "JPEG",
+      "size": 7233,
+      "elapsed_s": 0.125,
+      "packet_count": 10,
+      "frame_path": "attempt_06.jpg",
+      "packets": [
+        {
+          "length": 13,
+          "payload_len": 11,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "bc4401f4000101411c0000",
+          "t_rel_s": 0.109
+        },
+        {
+          "length": 308,
+          "payload_len": 306,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ffd8ffdb0043000805060d070607090c",
+          "frame_bytes": 306,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "e1523a9963a94254813ad3847fca9765",
+          "frame_bytes": 1326,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "69fa74af543c2fe1cfe18aa971751c47",
+          "frame_bytes": 2346,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "8fd3fad73be25b3de22971f74edfceb9",
+          "frame_bytes": 3366,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "b567f698360e395ac37d0187f1d43fd8",
+          "frame_bytes": 4386,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "5760ed51449b8fb56fe89a2bdd480918",
+          "frame_bytes": 5406,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 1022,
+          "payload_len": 1020,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "9f5aa8dd7350bad53ba5e2b57c20a07d",
+          "frame_bytes": 6426,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 807,
+          "payload_len": 805,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "98a9a3c5123e149f6aa40fcdf5a9cbfc",
+          "frame_bytes": 7231,
+          "t_rel_s": 0.125
+        },
+        {
+          "length": 4,
+          "payload_len": 2,
+          "routing": 99,
+          "function": 5,
+          "first16_hex": "ffd9",
+          "frame_bytes": 7233,
+          "t_rel_s": 0.125
+        }
+      ]
+    }
+  ],
+  "ok_count": 6,
+  "attempts_run": 6
+}

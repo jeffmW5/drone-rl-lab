@@ -1,0 +1,35 @@
+2026-08-28 21:14:28 === Sustained throughput test ===
+2026-08-28 21:14:28 Run directory: D:\drone-rl-lab\real_flight\aideck_logs\session_20260828_211353\throughput_test_20260828_211428
+2026-08-28 21:14:28 Target: 192.168.4.1:5000
+2026-08-28 21:14:28 Duration: 120s, saving every 25 frame(s)
+2026-08-28 21:14:28 WLAN: ssid=aideck-stream state=connected signal=100% rx=150Mbps tx=150Mbps
+2026-08-28 21:14:28 Connecting TCP 192.168.4.1:5000 ...
+2026-08-28 21:14:28 TCP connected.
+2026-08-28 21:14:33 t=   5.1s frames=   38 fps= 7.51 rate=   51.4 KiB/s
+2026-08-28 21:14:38 t=  10.1s frames=   75 fps= 7.45 rate=   50.9 KiB/s
+2026-08-28 21:14:43 t=  15.1s frames=  111 fps= 7.34 rate=   50.7 KiB/s
+2026-08-28 21:14:48 t=  20.2s frames=  149 fps= 7.38 rate=   50.7 KiB/s
+2026-08-28 21:14:53 t=  25.2s frames=  187 fps= 7.41 rate=   50.1 KiB/s
+2026-08-28 21:14:58 t=  30.3s frames=  224 fps= 7.40 rate=   49.2 KiB/s
+2026-08-28 21:15:04 t=  35.3s frames=  262 fps= 7.41 rate=   48.8 KiB/s
+2026-08-28 21:15:09 t=  40.4s frames=  299 fps= 7.40 rate=   49.3 KiB/s
+2026-08-28 21:15:14 t=  45.4s frames=  336 fps= 7.39 rate=   49.8 KiB/s
+2026-08-28 21:15:19 t=  50.4s frames=  371 fps= 7.36 rate=   50.0 KiB/s
+2026-08-28 21:15:24 t=  55.5s frames=  409 fps= 7.38 rate=   50.3 KiB/s
+2026-08-28 21:15:29 t=  60.5s frames=  446 fps= 7.38 rate=   50.2 KiB/s
+2026-08-28 21:15:34 t=  65.5s frames=  483 fps= 7.37 rate=   50.1 KiB/s
+2026-08-28 21:15:39 t=  70.6s frames=  521 fps= 7.38 rate=   50.0 KiB/s
+2026-08-28 21:15:44 t=  75.6s frames=  558 fps= 7.38 rate=   50.1 KiB/s
+2026-08-28 21:15:49 t=  80.7s frames=  594 fps= 7.36 rate=   50.0 KiB/s
+2026-08-28 21:15:54 t=  85.7s frames=  632 fps= 7.37 rate=   49.8 KiB/s
+2026-08-28 21:15:59 t=  90.8s frames=  668 fps= 7.36 rate=   49.7 KiB/s
+2026-08-28 21:16:04 t=  95.8s frames=  706 fps= 7.37 rate=   49.8 KiB/s
+2026-08-28 21:16:09 t= 100.9s frames=  743 fps= 7.36 rate=   50.0 KiB/s
+2026-08-28 21:16:14 t= 106.0s frames=  780 fps= 7.36 rate=   50.1 KiB/s
+2026-08-28 21:16:19 t= 111.1s frames=  818 fps= 7.36 rate=   50.2 KiB/s
+2026-08-28 21:16:24 t= 116.1s frames=  854 fps= 7.35 rate=   50.4 KiB/s
+
+2026-08-28 21:16:28 === Summary ===
+2026-08-28 21:16:28 frames=881 in 120.0s -> 7.342 fps, 50.5 KiB/s
+2026-08-28 21:16:28 frame interval mean=0.136s median=0.14s max=0.406s gaps>=3.0s: 0
+2026-08-28 21:16:28 stalled=False error=None

@@ -1,0 +1,68 @@
+{
+  "test": "link_check",
+  "created_at": "2026-08-28T21:14:03",
+  "run_dir": "D:\\drone-rl-lab\\real_flight\\aideck_logs\\session_20260828_211353\\link_check_20260828_211353",
+  "env": {
+    "ipconfig_all": {
+      "returncode": 0,
+      "stdout": "Windows IP Configuration\r\n\r\n   Host Name . . . . . . . . . . . . : DESKTOP-CP5V6TB\r\n   Primary Dns Suffix  . . . . . . . : \r\n   Node Type . . . . . . . . . . . . : Hybrid\r\n   IP Routing Enabled. . . . . . . . : No\r\n   WINS Proxy Enabled. . . . . . . . : No\r\n\r\nEthernet adapter Ethernet:\r\n\r\n   Media State . . . . . . . . . . . : Media disconnected\r\n   Connection-specific DNS Suffix  . : \r\n   Description . . . . . . . . . . . : Realtek PCIe GbE Family Controller\r\n   Physical Address. . . . . . . . . : E0-D5-5E-A1-EB-F2\r\n   DHCP Enabled. . . . . . . . . . . : Yes\r\n   Autoconfiguration Enabled . . . . : Yes\r\n\r\nUnknown adapter NordLynx:\r\n\r\n   Media State . . . . . . . . . . . : Media disconnected\r\n   Connection-specific DNS Suffix  . : \r\n   Description . . . . . . . . . . . : NordLynx Tunnel\r\n   Physical Address. . . . . . . . . : \r\n   DHCP Enabled. . . . . . . . . . . : No\r\n   Autoconfiguration Enabled . . . . : Yes\r\n\r\nEthernet adapter Ethernet 4:\r\n\r\n   Media State . . . . . . . . . . . : Media disconnected\r\n   Connection-specific DNS Suffix  . : \r\n   Description . . . . . . . . . . . : TAP-NordVPN Windows Adapter V9\r\n   Physical Address. . . . . . . . . : 00-FF-C7-45-92-2C\r\n   DHCP Enabled. . . . . . . . . . . : Yes\r\n   Autoconfiguration Enabled . . . . : Yes\r\n\r\nWireless LAN adapter Local Area Connection* 9:\r\n\r\n   Media State . . . . . . . . . . . : Media disconnected\r\n   Connection-specific DNS Suffix  . : \r\n   Description . . . . . . . . . . . : Microsoft Wi-Fi Direct Virtual Adapter\r\n   Physical Address. . . . . . . . . : 26-4B-FE-17-2A-FB\r\n   DHCP Enabled. . . . . . . . . . . : Yes\r\n   Autoconfiguration Enabled . . . . : Yes\r\n\r\nWireless LAN adapter Local Area Connection* 10:\r\n\r\n   Media State . . . . . . . . . . . : Media disconnected\r\n   Connection-specific DNS Suffix  . : \r\n   Description . . . . . . . . . . . : Microsoft Wi-Fi Direct Virtual Adapter #2\r\n   Physical Address. . . . . . . . . : 24-4B-FE-17-2A-FB\r\n   DHCP Enabled. . . . . . . . . . . : Yes\r\n   Autoconfiguration Enabled . . . . : Yes\r\n\r\nEthernet adapter Ethernet 2:\r\n\r\n   Media State . . . . . . . . . . . : Media disconnected\r\n   Connection-specific DNS Suffix  . : \r\n   Description . . . . . . . . . . . : AnchorFree TAP-Windows Adapter V9\r\n   Physical Address. . . . . . . . . : 00-FF-BF-6B-D2-31\r\n   DHCP Enabled. . . . . . . . . . . : Yes\r\n   Autoconfiguration Enabled . . . . : Yes\r\n\r\nWireless LAN adapter Wi-Fi:\r\n\r\n   Connection-specific DNS Suffix  . : \r\n   Description . . . . . . . . . . . : ASUS Wireless PCI-E Adapter\r\n   Physical Address. . . . . . . . . : 24-4B-FE-17-2A-FB\r\n   DHCP Enabled. . . . . . . . . . . : Yes\r\n   Autoconfiguration Enabled . . . . : Yes\r\n   Link-local IPv6 Address . . . . . : fe80::af4:5ab:1d59:e3b9%8(Preferred) \r\n   IPv4 Address. . . . . . . . . . . : 192.168.4.2(Preferred) \r\n   Subnet Mask . . . . . . . . . . . : 255.255.255.0\r\n   Lease Obtained. . . . . . . . . . : Friday, August 28, 2026 9:13:42 PM\r\n   Lease Expires . . . . . . . . . . : Friday, August 28, 2026 11:13:41 PM\r\n   Default Gateway . . . . . . . . . : 192.168.4.1\r\n   DHCP Server . . . . . . . . . . . : 192.168.4.1\r\n   DHCPv6 IAID . . . . . . . . . . . : 472140798\r\n   DHCPv6 Client DUID. . . . . . . . : 00-01-00-01-22-F3-1C-0B-E0-D5-5E-A1-EB-F2\r\n   DNS Servers . . . . . . . . . . . : 192.168.4.1\r\n   NetBIOS over Tcpip. . . . . . . . : Disabled",
+      "stderr": ""
+    },
+    "route_print": {
+      "returncode": 0,
+      "stdout": "===========================================================================\r\nInterface List\r\n  3...e0 d5 5e a1 eb f2 ......Realtek PCIe GbE Family Controller\r\n 50...........................NordLynx Tunnel\r\n 19...00 ff c7 45 92 2c ......TAP-NordVPN Windows Adapter V9\r\n  4...26 4b fe 17 2a fb ......Microsoft Wi-Fi Direct Virtual Adapter\r\n  6...24 4b fe 17 2a fb ......Microsoft Wi-Fi Direct Virtual Adapter #2\r\n 18...00 ff bf 6b d2 31 ......AnchorFree TAP-Windows Adapter V9\r\n  8...24 4b fe 17 2a fb ......ASUS Wireless PCI-E Adapter\r\n  1...........................Software Loopback Interface 1\r\n===========================================================================\r\n\r\nIPv4 Route Table\r\n===========================================================================\r\nActive Routes:\r\nNetwork Destination        Netmask          Gateway       Interface  Metric\r\n          0.0.0.0          0.0.0.0      192.168.4.1      192.168.4.2     50\r\n        127.0.0.0        255.0.0.0         On-link         127.0.0.1    331\r\n        127.0.0.1  255.255.255.255         On-link         127.0.0.1    331\r\n  127.255.255.255  255.255.255.255         On-link         127.0.0.1    331\r\n      192.168.4.0    255.255.255.0         On-link       192.168.4.2    306\r\n      192.168.4.2  255.255.255.255         On-link       192.168.4.2    306\r\n    192.168.4.255  255.255.255.255         On-link       192.168.4.2    306\r\n        224.0.0.0        240.0.0.0         On-link         127.0.0.1    331\r\n        224.0.0.0        240.0.0.0         On-link       192.168.4.2    306\r\n  255.255.255.255  255.255.255.255         On-link         127.0.0.1    331\r\n  255.255.255.255  255.255.255.255         On-link       192.168.4.2    306\r\n===========================================================================\r\nPersistent Routes:\r\n  None",
+      "stderr": ""
+    },
+    "netsh_wlan": {
+      "returncode": 0,
+      "stdout": "There is 1 interface on the system: \r\n\r\n    Name                   : Wi-Fi\r\n    Description            : ASUS Wireless PCI-E Adapter\r\n    GUID                   : 33a34f54-ce21-4f9b-8e7d-72b033359106\r\n    Physical address       : 24:4b:fe:17:2a:fb\r\n    State                  : connected\r\n    SSID                   : aideck-stream\r\n    BSSID                  : 94:54:c5:bc:d8:45\r\n    Network type           : Infrastructure\r\n    Radio type             : 802.11n\r\n    Authentication         : Open\r\n    Cipher                 : None\r\n    Connection mode        : Profile\r\n    Channel                : 1\r\n    Receive rate (Mbps)    : 150\r\n    Transmit rate (Mbps)   : 150\r\n    Signal                 : 100% \r\n    Profile                : aideck-stream \r\n\r\n    Hosted network status  : Not available",
+      "stderr": "",
+      "parsed": {
+        "name": "Wi-Fi",
+        "state": "connected",
+        "ssid": "aideck-stream",
+        "bssid": "94:54:c5:bc:d8:45",
+        "radio type": "802.11n",
+        "channel": "1",
+        "receive rate (mbps)": "150",
+        "transmit rate (mbps)": "150",
+        "signal": "100%"
+      }
+    },
+    "hostname": "DESKTOP-CP5V6TB"
+  },
+  "results": [
+    {
+      "ip": "192.168.4.1",
+      "ping": {
+        "returncode": 0,
+        "stdout": "Pinging 192.168.4.1 with 32 bytes of data:\r\nReply from 192.168.4.1: bytes=32 time<1ms TTL=255\r\nReply from 192.168.4.1: bytes=32 time=1ms TTL=255\r\n\r\nPing statistics for 192.168.4.1:\r\n    Packets: Sent = 2, Received = 2, Lost = 0 (0% loss),\r\nApproximate round trip times in milli-seconds:\r\n    Minimum = 0ms, Maximum = 1ms, Average = 0ms",
+        "stderr": "",
+        "ok": true
+      },
+      "tcp": {
+        "ok": true,
+        "error": null,
+        "connect_s": 0.015
+      }
+    },
+    {
+      "ip": "192.168.7.201",
+      "ping": {
+        "returncode": 1,
+        "stdout": "Pinging 192.168.7.201 with 32 bytes of data:\r\nRequest timed out.\r\nRequest timed out.\r\n\r\nPing statistics for 192.168.7.201:\r\n    Packets: Sent = 2, Received = 0, Lost = 2 (100% loss),",
+        "stderr": "",
+        "ok": false
+      },
+      "tcp": {
+        "ok": false,
+        "error": "TimeoutError('timed out')",
+        "connect_s": null
+      }
+    }
+  ],
+  "reachable": [
+    "192.168.4.1"
+  ],
+  "ok": true
+}
