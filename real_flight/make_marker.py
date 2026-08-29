@@ -16,9 +16,26 @@ dialogs and silently shrinks by a few percent.
     python3 make_marker.py --size-in 2.0    # bigger square, longer usable range
     python3 make_marker.py --self-test      # verify geometry, no printer needed
 
-On marker size: the detector ignores blobs below `min_area_frac` of the frame,
-which sets a smallest visible marker and therefore a furthest usable distance.
-Doubling the printed square doubles that range. See `VISION_HOVER_PLAN.md`.
+On marker size -- print the 4 in, not the 1 in. The binding constraint is not
+the detector's area floor, it is Otsu. `detect_marker` thresholds globally, and
+when the black square is a small fraction of the frame Otsu splits the
+histogram between the white page and the wall behind it instead, putting the
+square on the same side as the wall where it never becomes its own contour.
+Relaxing `min_area_frac` or `min_squareness` does nothing about this: the
+square is not being rejected by a filter, it is not being segmented at all.
+
+Simulated at 87 deg FOV and 0.5 m, the crossover sits near 0.5% black pixels:
+
+| square | black in frame | Otsu picks | outcome |
+| --- | --- | --- | --- |
+| 1 in | 0.10% | 227 | splits wall/page, square invisible |
+| 2 in | 0.37% | 226 | splits wall/page, square invisible |
+| 3 in | 0.79% | 8 | splits on the square |
+| 4 in | 1.54% | 85 | splits on the square |
+
+Bigger also buys precision: relative distance error equals relative size
+error, so a 60 px marker measured to +/-0.5 px is +/-0.8%, where a 9 px one is
++/-5.6%. See `VISION_HOVER_PLAN.md` and HYP-MARKER-OTSU.
 """
 
 from __future__ import annotations

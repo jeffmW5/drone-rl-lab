@@ -73,3 +73,13 @@
 - **Statement:** The `dorytest` custom `simple_cnn` network's hardware crash (FACT-022) was caused by a bug specific to that non-stock network/build, not a defect in the `gap_sdk`/DORY/JTAG toolchain.
 - **Resolution:** DroNet (a real DORY stock `PULP.GAP8` example) built, flashed, and ran to completion on the identical `gap_sdk` install, OpenOCD, and physical board — all 15 layers, final checksum OK (FACT-023). Confirmed: the toolchain was never the problem. `simple_cnn`'s specific crash cause remains undiagnosed (not blocking — DroNet answers Track B's actual question) — see `real_flight/GAP8_DORY_RESULT.md`.
 - **Last reviewed:** 2026-08-29
+
+## HYP-MARKER-OTSU
+- **Statement:** `marker_detector.detect_marker` fails to see a small printed marker not because of its area/squareness filters but because of global Otsu thresholding. When the black square is below roughly 0.5% of frame pixels, Otsu splits the histogram between the white page and the wall behind it, leaving the square on the same side as the wall where it never forms its own contour. Above that fraction Otsu splits on the square and detection works.
+- **Type:** hypothesis
+- **Status:** supported by simulation only; **not verified on hardware**
+- **Evidence:** rendered `marker_{1,2,3,4}in.pdf` at 300dpi, composited onto a grey (200) wall at a simulated 87 deg FOV, 0.5m. Measured Otsu threshold and black fraction: 1in 0.10%/t=227 miss, 2in 0.37%/t=226 miss, 3in 0.79%/t=8 hit, 4in 1.54%/t=85 hit. Detected size at 1-2in was ~83-139px, i.e. the page outline, not the square.
+- **Predicts:** relaxing `min_area_frac` or `min_squareness` will NOT improve detection of a small marker, because the square is not being rejected by a filter — it is not being segmented. Predicts a 4in marker detects reliably where a 1in one does not, on the same hardware and lighting.
+- **Counterevidence sought:** adaptive thresholding (mean-C, blocks 31/61/101, both polarities, plus an 0.80 bbox-fill filter) was tried as the principled fix and did **not** reliably beat Otsu — it still locked onto the page at 0.3m. So "global thresholding is the whole story" is too strong; page-vs-marker competition persists under a local threshold too.
+- **Scope caveat:** the 87 deg FOV is assumed, not measured — the AI Deck's actual lens FOV is unknown to this analysis, and the crossover fraction will shift with it. All numbers are simulation.
+- **Next falsification test:** at the bench, print the 4in and the 1in, and try both at the same distance and lighting. If the 1in detects reliably, this is wrong. If the 4in fails too, the problem is elsewhere (lens, focus, exposure) and the marker size is a red herring.

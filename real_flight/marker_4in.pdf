@@ -1,0 +1,61 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 1706 >>
+stream
+0 0 0 rg
+162.0000 252.0000 288.0000 288.0000 re f
+BT /F1 14 Tf 72.00 750.00 Td (Vision-hover marker) Tj ET
+BT /F1 10 Tf 72.00 732.00 Td (4.000 in  \(101.6 mm\) solid square) Tj ET
+72.00 190.00 432.00 1.2 re f
+72.00 190.00 1.2 12.00 re f
+BT /F1 8 Tf 70.00 179.00 Td (0) Tj ET
+144.00 190.00 1.2 7.00 re f
+BT /F1 8 Tf 142.00 179.00 Td (1) Tj ET
+216.00 190.00 1.2 12.00 re f
+BT /F1 8 Tf 214.00 179.00 Td (2) Tj ET
+288.00 190.00 1.2 7.00 re f
+BT /F1 8 Tf 286.00 179.00 Td (3) Tj ET
+360.00 190.00 1.2 12.00 re f
+BT /F1 8 Tf 358.00 179.00 Td (4) Tj ET
+432.00 190.00 1.2 7.00 re f
+BT /F1 8 Tf 430.00 179.00 Td (5) Tj ET
+504.00 190.00 1.2 12.00 re f
+BT /F1 8 Tf 502.00 179.00 Td (6) Tj ET
+BT /F1 9 Tf 72.00 165.00 Td (Ruler check: these ticks must sit exactly 1 inch apart.) Tj ET
+BT /F1 9 Tf 72.00 145.00 Td (BEFORE USE - print at 100% / Actual Size. Turn OFF Fit to Page and) Tj ET
+BT /F1 9 Tf 72.00 133.50 Td (Shrink to Fit. Then measure the square with a ruler: it must be) Tj ET
+BT /F1 9 Tf 72.00 122.00 Td (exactly 4.000 in \(101.6 mm\) on each edge. A scaled print) Tj ET
+BT /F1 9 Tf 72.00 110.50 Td (silently corrupts every distance the drone computes.) Tj ET
+BT /F1 9 Tf 72.00 87.50 Td (Mount flat on a light-coloured wall, square is upright, no tilt.) Tj ET
+BT /F1 9 Tf 72.00 76.00 Td (A page that contrasts strongly with the wall behind it can itself) Tj ET
+BT /F1 9 Tf 72.00 64.50 Td (read as a large square blob and beat the marker - if the calibration) Tj ET
+BT /F1 9 Tf 72.00 53.00 Td (wizard warns the box is huge, that is what happened. Trim the) Tj ET
+BT /F1 9 Tf 72.00 41.50 Td (margins or use a lighter backing.) Tj ET
+BT /F1 8 Tf 72.00 30.00 Td (drone-rl-lab / real_flight/make_marker.py) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000001999 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+2069
+%%EOF
