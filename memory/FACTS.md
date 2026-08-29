@@ -260,11 +260,11 @@
 - **Next falsification test:** build a combined continuous-capture + inference app and re-measure end-to-end.
 
 ## FACT-027
-- **Statement:** A live AI Deck distance-calibration run saved at 2026-08-29T18:45:57 produced 3 samples at 0.6096 m, 0.813 m, and 0.90805 m with fitted `k_px_m` = 18.855 and worst residual 3.95%. The wizard warned that the distance span was only 1.49× (want 2×). The wizard recorded `marker_input` as 1.0 inches. The operator reported the physical marker was a 4 in × 4 in square on paper because a 1 in marker did not detect.
+- **Statement:** A live AI Deck distance-calibration run saved at 2026-08-29T18:45:57 produced 3 samples at 0.6096 m, 0.813 m, and 0.90805 m with fitted `k_px_m` = 18.855 and worst residual 3.95%. The wizard warned that the distance span was only 1.49× (want 2×). The saved artifact records `marker_input` 4.0 inches / `marker_size_m` 0.1016, giving `focal_px` 185.58 (FOV 82.2 deg on the 324 px axis). The physical marker was a 4 in x 4 in square throughout, switched up from 1 in because the 1 in would not detect -- confirmed by the operator 2026-08-29.
 - **Type:** fact
 - **Scope:** vision-hover step 2, native Windows host, this one live run
 - **Supported by:** `real_flight/marker_calibration.json` (samples, k, residuals, original wizard `marker_input`); operator report of the 4 in physical size and 1 in non-detection
-- **Counterevidence:** none noted
-- **Confidence:** high for the saved samples / k / residuals and that the wizard wrote 1.0 in; the 4 in physical size and 1 in non-detection are operator-reported, not independently measured in this turn
-- **Last reviewed:** 2026-08-29
-- **Next falsification test:** rerun with a measured 4 in square and a distance span of at least 2×; retry 1 in detection and record miss / false-positive rates.
+- **Counterevidence:** the fit is weak in two ways the headline number hides. Span is 1.49x, below the wizard's own 2x guard, so k is poorly constrained. More telling, the residuals are monotonic in distance (-3.29%, +3.10%, +3.95% at 0.610/0.813/0.908 m) rather than scattered -- the signature of a constant distance-datum offset, not noise. Refitting `size = k/(d + c)` yields c = -11.8 cm, k = 15.698, and drops the worst residual from 3.95% to 0.41%. That is suggestive only: 3 points against 2 parameters is near-interpolation and may simply be overfitting.
+- **Confidence:** high for the saved samples, k, and residuals as recorded; high that the physical marker was 4 in. Low that k = 18.855 is the right constant -- if the offset is real, the correct near-field constant is 15.698 and the current k over-reads distance close in.
+- **Last reviewed:** 2026-08-29 (superseded the earlier note that the wizard recorded 1.0 in; that was a transient UI state, not what was saved)
+- **Next falsification test:** one sample at 0.30 m measured decides it. No offset predicts ~63 px; a -11.8 cm offset predicts ~86 px. Same reading also lifts the span past 2x. Full spread should be roughly 0.30 / 0.50 / 0.80 / 1.20 / 1.80 m, which is 6x span and uses the 4 in marker's real 2.12 m range.
