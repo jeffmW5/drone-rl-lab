@@ -179,20 +179,22 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
 - [x] Unblock AI Deck camera stream — was slirp, works natively on Windows (2026-08-28)
 - [ ] Sim-to-real tuning (thrust scaling, attitude response lag, position drift)
 - [ ] Wait for exp_071+ results (obs normalization, action smoothness) for better checkpoints
-- [ ] **Track B — can the GAP8 run a net at all?** In progress, not done.
-      Toolchain fully proven on real hardware: DORY-generated code builds for
-      the AI Deck's real chip target, flashes clean over JTAG (100%,
-      `bitcraze/aideck` Docker's OpenOCD — the only local one with the custom
-      `gap8` target driver; note `configs/ai_deck.sh` assumes the wrong Olimex
-      adapter, needs `GAPY_OPENOCD_CABLE=interface/ftdi/olimex-arm-usb-tiny-h.cfg`
-      override for this bench), and boots. But the specific network under
-      test (`dorytest`'s custom `simple_cnn`, not a DORY stock example —
-      exactly the deviation `GAP8_DORY_PROMPT.md` warned against) crashes with
-      a PULP-OS runtime fault right after buffer setup, before any layer runs
-      or any fps/L2 number is produced. Reproduced twice. Next step: run a
-      real DORY stock example through the same pipeline to isolate
-      network-bug vs. toolchain-bug. See `GAP8_DORY_RESULT.md`,
-      `GAP8_DORY_PROMPT.md`, `memory/HYPOTHESES.md` HYP-GAP8-DORY-CRASH.
+- [x] **Track B — can the GAP8 run a net at all?** DONE 2026-08-29. Yes.
+      DroNet (DORY's own `PULP.GAP8` stock example) runs end-to-end on the
+      physical AI Deck: 359.9ms/inference (≈2.78 fps) single-core, final
+      output checksum OK. Toolchain fully proven: DORY codegen → `gap_sdk`
+      build (`ai_deck`/`GAP8_V2` target) → JTAG flash → JTAG boot, all clean.
+      (Note for next time: `configs/ai_deck.sh` assumes the wrong Olimex
+      adapter — needs `GAPY_OPENOCD_CABLE=interface/ftdi/olimex-arm-usb-tiny-h.cfg`
+      override; only `bitcraze/aideck` Docker's OpenOCD has the custom `gap8`
+      target driver, a locally-built vanilla openocd cannot flash/run GAP8 at
+      all.) An earlier custom test network (`simple_cnn` in `~/projects/gap_sdk/dorytest`)
+      crashed on hardware — confirmed to be that network's own bug, not the
+      toolchain, since DroNet runs clean on the identical setup. 359.9ms is
+      far above the ~13.7fps ceiling `VISION_HOVER_PLAN.md`'s frame budget
+      assumes — multi-core (untried, GAP8 has 8 cluster cores) or a smaller
+      model will be needed for real vision-hover. See `GAP8_DORY_RESULT.md`,
+      `memory/FACTS.md` FACT-023.
 - [ ] Finish Track A's stated exit criterion. It called for a 5-minute sustained
       hold; only 120s was run. One long capture before trusting it for a dataset session.
 

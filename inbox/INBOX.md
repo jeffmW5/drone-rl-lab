@@ -188,7 +188,9 @@
 - **Result:** FAILURE — 0 gates, 0.52s crash, reward 7.75
 - See `results/exp_043_view_times_progress/EXPERIMENT.md`
 
-### [CLAIMED:jeff-VirtualBox-4316-1788011506] gap8-dory-track-b -- Can the GAP8 run a net at all?
+### [DONE 2026-08-29] gap8-dory-track-b -- Can the GAP8 run a net at all?
+- **Result:** YES. DroNet (DORY stock PULP.GAP8 example) runs end-to-end on real hardware: 359.9ms/inference (2.78 fps) single-core, final checksum OK.
+- See `real_flight/GAP8_DORY_RESULT.md`, `memory/FACTS.md` FACT-023.
 - **Host:** Linux VM only. `gap_sdk` + JTAG are Linux; DORY codegen feeds them.
 - **Prompt:** `real_flight/GAP8_DORY_PROMPT.md` -- read it before starting.
 - **Question:** does a known reference network run on our physical AI Deck, and at what fps and free L2?

@@ -42,6 +42,13 @@ that. Design the model to a measured N, not to a guess.
 flashed firmware, the capture/encode split as an onboard measurement, and the
 current Bitcraze reference NN example name. All four hard-constrain the model.
 
+**Update 2026-08-29:** Track B measured a real N — DroNet (comparable size:
+15 layers, 41M MACs) runs in 359.9ms single-core (2.78 fps) on this exact
+GAP8/AI Deck. That is far above the ~73ms capture floor and blows the ~13.7fps
+budget above on its own. Multi-core (untried, 8 cluster cores available) or a
+substantially smaller model than DroNet-scale will be required for onboard
+vision-hover to hit a usable control rate. See `GAP8_DORY_RESULT.md`.
+
 ## What carries over from ai-grand-prix-stack
 
 Carries: the method. Learning-by-cheating (privileged teacher -> vision
@@ -79,7 +86,13 @@ Data capture must run from a native host. Never capture through the VM.
 Remaining: the exit criterion was a 5-minute hold; this was 2 minutes. Run one
 longer capture before trusting it for a full dataset session.
 
-### Track B — prove the GAP8 can run a net at all
+### Track B — prove the GAP8 can run a net at all — **PASSED 2026-08-29**
+
+DroNet (DORY stock `PULP.GAP8` example) ran end-to-end on the physical AI
+Deck: 359.9ms/inference (2.78 fps) single-core, final output checksum OK.
+See `GAP8_DORY_RESULT.md`. This is far too slow at DroNet's scale/core-count
+for the frame budget above — multi-core and/or a smaller model are now the
+open design question, not "can it run at all."
 
 No stream needed. This is the project-killer question and it is cheap.
 

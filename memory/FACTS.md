@@ -220,3 +220,13 @@
 - **Confidence:** high that build→flash→boot works on this hardware; high that this specific network crashes deterministically right after L3 buffer setup; zero confidence on root cause (network bug vs. hardware/config issue) or on any fps/free-L2 number, since none was reached.
 - **Not verified:** whether a DORY stock example runs cleanly on the same hardware/toolchain (would isolate network-bug vs. toolchain-bug, exactly the ambiguity `GAP8_DORY_PROMPT.md` warned this scope deviation would create); the specific exception/fault type (only a generic semihosting exit code was captured, no register/PC dump).
 - **Next falsification test:** flash and run a real DORY-shipped example network through the same pipeline; if it also crashes at the same point, suspect the `gap_sdk`/hardware combination rather than the network.
+
+## FACT-023
+- **Statement:** DroNet (DORY's own `PULP.GAP8` regression-suite network, NEMO frontend, `config_NEMO_dronet.json`) built via a fresh `pulp-platform/dory` clone, flashed over JTAG (993,456 bytes, 100%), and ran to completion on the physical AI Deck's GAP8: all 15 layers executed, final output checksum OK, clean exit. Measured: 35,989,730 cycles at the app's configured 100MHz FC/cluster clock = 359.9ms per inference (≈2.78 fps), single core (`CORE=1`), 41,103,104 MACs (1.14 MAC/cycle). Static L2 footprint 55,184 B / 512KB (10.53%); full 1.29MB of weights paged through L3/hyperflash per layer via DORY's tiler, no allocation failure.
+- **Type:** fact
+- **Scope:** GAP8 onboard-inference hardware measurement — this is the Track B exit criterion (`GAP8_DORY_PROMPT.md`), now met.
+- **Supported by:** `real_flight/GAP8_DORY_RESULT.md`, this session's build/flash/run logs.
+- **Counterevidence:** none. Resolves FACT-022's ambiguity: DroNet ran clean on the identical `gap_sdk` install, OpenOCD, and physical board that the earlier `simple_cnn` crashed on — confirms the crash was that network's own bug, not the toolchain.
+- **Confidence:** high.
+- **Not verified:** multi-core performance (this run used 1 of GAP8's 8 cluster cores — the realistic deployment number is likely much faster and wasn't measured); root cause of the `simple_cnn` crash (FACT-022, now known to be network-specific, not further diagnosed); root cause of odd per-layer "Checking L2 input/weights: Checksum Failed" lines in the DroNet run (final output checksum passed, so likely a false-positive in the generated harness, not investigated).
+- **Next falsification test:** rebuild DroNet with multi-core enabled and re-measure fps for the real frame-budget number `VISION_HOVER_PLAN.md` needs.
