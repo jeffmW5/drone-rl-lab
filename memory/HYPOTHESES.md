@@ -70,3 +70,13 @@
 - **Confidence:** medium-high
 - **Falsification test:** instrument the GAP8 to timestamp capture start, encode end, and CPX send, and compare against the host-side interval.
 - **Why it matters:** if true, disabling JPEG encode for onboard inference frees ~58ms, giving a ~73ms floor (~13.7 fps ceiling) before any network inference cost. That budget determines the model size for the onboard vision hover work.
+
+## HYP-GAP8-DORY-CRASH
+- **Statement:** The `dorytest` custom `simple_cnn` network's hardware crash (FACT-022 — semihosting runtime-error exit right after L3 buffer allocation, before any layer executes) is caused by a bug specific to that non-stock network/build (e.g. its `CORE=1` single-core cluster config, or a DORY-codegen issue for this particular net) rather than a defect in the `gap_sdk`/DORY/JTAG toolchain itself.
+- **Type:** hypothesis
+- **Scope:** GAP8 onboard-inference toolchain bring-up, `real_flight/GAP8_DORY_PROMPT.md` Track B.
+- **Supported by:** everything upstream of network execution verifiably works on this exact hardware/toolchain combination — clean build, clean 100% JTAG flash, clean JTAG boot with live console output through three successful buffer allocations. The failure point is deep inside network-specific code (cluster/DMA startup for layer 0), not in generic boot/runtime setup.
+- **Why it is not a fact:** no stock DORY reference example has been run on this same hardware to confirm the toolchain itself is clean under a known-good network. No register/PC dump was captured at the fault, so the exact exception type is unknown — a chip-side or `gap_sdk`-install-side bug that only a cluster-launching network would trigger cannot be ruled out.
+- **Confidence:** medium — the reasoning is sound (isolate by process of elimination) but unverified by the one experiment that would actually confirm it.
+- **Falsification test:** flash a real DORY-shipped stock example (not `simple_cnn`) through the identical `bitcraze/aideck` container pipeline and JTAG cable override. Clean run → hypothesis confirmed, `simple_cnn` is the bug. Same crash → hypothesis false, something in this `gap_sdk`/hardware pairing is broken for any cluster-launching network.
+- **Why it matters:** determines whether Track B's toolchain risk is actually closed (just swap the test network) or still open (need to debug `gap_sdk`/hardware itself before any real vision model can be deployed).

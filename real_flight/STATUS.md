@@ -179,15 +179,20 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
 - [x] Unblock AI Deck camera stream — was slirp, works natively on Windows (2026-08-28)
 - [ ] Sim-to-real tuning (thrust scaling, attitude response lag, position drift)
 - [ ] Wait for exp_071+ results (obs normalization, action smoothness) for better checkpoints
-- [ ] **Track B — can the GAP8 run a net at all?** In progress, not done. A
-      prior local DORY+`gap_sdk` bring-up was found already on the Linux VM
-      (untracked); build now succeeds for the AI Deck's real chip target
-      (`ai_deck`/`GAP8_V2`) after fixing an install-path bug, and
-      `gap8-openocd` was built from source. Blocked on hardware: no JTAG
-      adapter or AI Deck currently connected to the VM (`lsusb` shows none).
-      Needs the Olimex JTAG cable + AI Deck/Crazyflie connected via VirtualBox
-      USB passthrough to get the actual fps/L2 measurement. See
-      `GAP8_DORY_RESULT.md` and `GAP8_DORY_PROMPT.md`.
+- [ ] **Track B — can the GAP8 run a net at all?** In progress, not done.
+      Toolchain fully proven on real hardware: DORY-generated code builds for
+      the AI Deck's real chip target, flashes clean over JTAG (100%,
+      `bitcraze/aideck` Docker's OpenOCD — the only local one with the custom
+      `gap8` target driver; note `configs/ai_deck.sh` assumes the wrong Olimex
+      adapter, needs `GAPY_OPENOCD_CABLE=interface/ftdi/olimex-arm-usb-tiny-h.cfg`
+      override for this bench), and boots. But the specific network under
+      test (`dorytest`'s custom `simple_cnn`, not a DORY stock example —
+      exactly the deviation `GAP8_DORY_PROMPT.md` warned against) crashes with
+      a PULP-OS runtime fault right after buffer setup, before any layer runs
+      or any fps/L2 number is produced. Reproduced twice. Next step: run a
+      real DORY stock example through the same pipeline to isolate
+      network-bug vs. toolchain-bug. See `GAP8_DORY_RESULT.md`,
+      `GAP8_DORY_PROMPT.md`, `memory/HYPOTHESES.md` HYP-GAP8-DORY-CRASH.
 - [ ] Finish Track A's stated exit criterion. It called for a 5-minute sustained
       hold; only 120s was run. One long capture before trusting it for a dataset session.
 

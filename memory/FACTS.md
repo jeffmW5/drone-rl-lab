@@ -210,3 +210,13 @@
 - **Confidence:** high for the build result; not applicable to runtime performance (none measured).
 - **Not verified:** hardware inference rate, free L2 at runtime, per-layer checksum correctness — all require the physical AI Deck on JTAG, which is not connected to this VM (`lsusb` shows no Olimex adapter present).
 - **Next falsification test:** connect the Olimex JTAG adapter + AI Deck/Crazyflie via VirtualBox USB passthrough, run `make all` in `~/projects/gap_sdk/dorytest` (builds, flashes, runs), read `cycle_network_execution` off UART.
+
+## FACT-022
+- **Statement:** With the Olimex ARM-USB-TINY-H JTAG adapter connected to the Linux VM, the `dorytest` DORY-generated `simple_cnn` network built for `ai_deck`/`GAP8_V2` (FACT-021) flashed to the AI Deck's hyperflash successfully over JTAG (498,556 bytes, 100%, via the `bitcraze/aideck` Docker image's OpenOCD — the only local OpenOCD build with GreenWaves' custom `gap8` target driver; the `gap_sdk`-recipe vanilla `riscv/riscv-openocd` build has no such driver and cannot flash or run GAP8 at all). Loading the flashed ELF via JTAG and starting it produced three live prints over GAP8's JTAG debug console ("L3 Buffer alloc initial ... Ok" ×3), then the target issued semihosting `SYS_EXIT` with reason `0x20023` (`ADP_Stopped_RunTimeErrorUnknown`) — a runtime fault, not a normal exit — before any layer executed or any `print_perf`/checksum output appeared. Reproduced twice, identically.
+- **Type:** fact
+- **Scope:** GAP8 onboard-inference hardware run, this specific `dorytest` build only.
+- **Supported by:** `real_flight/GAP8_DORY_RESULT.md`, session build/flash/run logs.
+- **Counterevidence:** none. Not yet tested: whether a DORY *stock* reference example (not this custom `simple_cnn`) crashes the same way.
+- **Confidence:** high that build→flash→boot works on this hardware; high that this specific network crashes deterministically right after L3 buffer setup; zero confidence on root cause (network bug vs. hardware/config issue) or on any fps/free-L2 number, since none was reached.
+- **Not verified:** whether a DORY stock example runs cleanly on the same hardware/toolchain (would isolate network-bug vs. toolchain-bug, exactly the ambiguity `GAP8_DORY_PROMPT.md` warned this scope deviation would create); the specific exception/fault type (only a generic semihosting exit code was captured, no register/PC dump).
+- **Next falsification test:** flash and run a real DORY-shipped example network through the same pipeline; if it also crashes at the same point, suspect the `gap_sdk`/hardware combination rather than the network.
