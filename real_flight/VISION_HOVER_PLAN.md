@@ -9,7 +9,7 @@ running **on the GAP8**, not on a host PC.
 | Decision | Choice | Why |
 | --- | --- | --- |
 | Where inference runs | Onboard GAP8 | A robot cannot have WiFi in its control loop. |
-| First task | Vision-only hover / station-keep | Smallest net that still proves the whole chain, and it also fixes the hover instability everything else depends on. |
+| First task | Rise-to-level + distance-hold on a printed square (narrowed 2026-08-29, see below) | Smallest net that still proves the whole chain, and it also fixes the hover instability everything else depends on. |
 | Training images | Real captured frames | Chosen over simulator rendering. Track A cleared this. |
 | Ground truth | Printed wall marker, pose solved on the host | **No Lighthouse or mocap is owned.** Flow deck gives velocity and height only, so it cannot label absolute position. A marker of known size makes every frame self-labelling. |
 
@@ -188,11 +188,51 @@ The VM is not disqualified by Track A. That failure was VirtualBox slirp
 networking; JTAG is USB passthrough and is unaffected. The capture host and the
 build host do not need to be the same machine, and already are not.
 
+## Simplified first task (narrowed 2026-08-29)
+
+Full 6DOF marker pose was more than the first task needs. Narrowed to two
+numbers only:
+
+- **Vertical offset** — how far the marker's center is from vertical-center
+  of frame. Drives "rise until level with the square."
+- **Apparent size** — the marker's bounding-box size in pixels. A known
+  real-world size (1"×1", printed) at a given distance maps predictably to
+  pixel size, so this alone drives "adjust distance."
+
+**Setup:** drone starts on the floor, facing the marker. Marker is a plain
+1"×1" square drawn/printed on paper — high contrast (black on white), not a
+fiducial tag. Plain enough that classical CV (threshold → contour → bounding
+box) detects it directly; no fiducial library needed.
+
+**Method — teacher (classical CV) → student (CNN), matching the project's
+existing learning-by-cheating pattern** (`docs/AI_GP_VISION_TRANSITION_PLAN.md`):
+classical CV run on captured frames on the host generates the (vertical
+offset, apparent size) label for free — this *is* the "marker of known size
+makes every frame self-labelling" decision above, concretized. The CNN that
+ships to the GAP8 learns to reproduce that same output directly from the raw
+frame, since the classical detector itself is too fragile/lighting-dependent
+to trust as the flight-time detector, and porting OpenCV to GAP8 isn't the
+point of this project anyway — the trained net is.
+
+Steps, with status:
+
+| # | Step | Host | Status |
+| --- | --- | --- | --- |
+| 1 | Marker detector (classical CV: threshold/contour/bbox → vertical offset + size) | Linux VM (portable Python/OpenCV, no hardware needed) | in progress |
+| 2 | Distance calibration — apparent size ↔ real distance, a few known-distance reference shots | Windows (native host) | **depends on step 1** |
+| 3 | Synchronized capture — frames (+ telemetry where useful) during flight | Windows (native host) | may largely reuse `windows_testbed/flight_watch_gui.py` already; check before building new |
+| 4 | Auto-label captured frames via step 1's detector | Either host | depends on step 1 |
+| 5 | Train tiny CNN (image → vertical offset + size), P-controller converts to thrust/pitch initially | Windows (1070Ti) or Linux VM | depends on step 4 |
+| 6 | Deploy via the DORY pipeline already proven (`GAP8_DORY_RESULT.md`) | Linux VM | depends on step 5 |
+
+Windows-side wizards (calibration + capture) requested via a prompt for the
+Windows agent — see `WINDOWS_MARKER_WIZARDS_PROMPT.md`.
+
 ## Phases after both tracks pass
 
 | Phase | Work | Exit criterion |
 | --- | --- | --- |
-| 1 | Stable real hover on the flow deck | Holds position 30s, no wall contact. Current state: drifted into a wall 2026-04-20 — expected, the flow deck has no absolute reference. |
+| 1 | Stable real hover on the flow deck | Holds position 30s, no wall contact. Current state: drifted into a wall 2026-04-20 — expected, the flow deck has no absolute reference. Narrowed first task above runs independently of this — it doesn't need 30s stability, just enough manual/`fly.py` flight time to capture varied frames. |
 | 2 | Synchronized capture — frames + telemetry, timestamp-aligned | A dataset of flights with per-frame pose |
 | 3 | Auto-label offline from the marker's apparent size and skew | Labeled set, held-out split |
 | 4 | Train small int8 CNN, deploy via DORY | Runs on GAP8 within the Track B budget |
