@@ -233,6 +233,18 @@ Steps, with status:
 Windows-side wizards (calibration + capture) requested via a prompt for the
 Windows agent — see `WINDOWS_MARKER_WIZARDS_PROMPT.md`.
 
+**Streamer XOR net.** The GAP8 runs `wifi-img-streamer` or a DORY network,
+never both — one hyperflash image. Steps 2 and 3 need the streamer; step 6
+needs the net. So the teacher->student loop crosses a JTAG round-trip in each
+direction, on the Linux box, for work that is otherwise Windows-side.
+
+This bit already: after Track B and the perf session flashed three networks in
+turn, `aideck-stream` stopped broadcasting and blocked calibration. Confirmed
+2026-08-29 with the drone powered on — 74 BSSIDs scanned, zero Espressif APs in
+range. Unblock prompt: `GAP8_RESTORE_STREAMER_PROMPT.md`. If the swap becomes
+the bottleneck for dataset iteration, the answer is one app that both streams
+and infers.
+
 ## Phases after both tracks pass
 
 | Phase | Work | Exit criterion |
