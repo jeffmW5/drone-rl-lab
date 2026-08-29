@@ -1,0 +1,20 @@
+{
+  "test": "flight_watch",
+  "created_at": "2026-08-28T22:34:03",
+  "run_dir": "D:\\drone-rl-lab\\real_flight\\aideck_logs\\flightwatch_20260828_223403\\flight_20260828_223403",
+  "connected": true,
+  "frames": 2080,
+  "packets": 17005,
+  "bytes_total": 11235751,
+  "stall": {
+    "after_frames": 2080,
+    "t_rel_s": 281.75
+  },
+  "error": null,
+  "target": {
+    "ip": "192.168.4.1",
+    "port": 5000
+  },
+  "elapsed_s": 281.8,
+  "fps": 7.382
+}
