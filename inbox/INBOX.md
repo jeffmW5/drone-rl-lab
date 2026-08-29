@@ -188,6 +188,16 @@
 - **Result:** FAILURE — 0 gates, 0.52s crash, reward 7.75
 - See `results/exp_043_view_times_progress/EXPERIMENT.md`
 
+### [READY] gap8-dory-track-b -- Can the GAP8 run a net at all?
+- **Host:** Linux VM only. `gap_sdk` + JTAG are Linux; DORY codegen feeds them.
+- **Prompt:** `real_flight/GAP8_DORY_PROMPT.md` -- read it before starting.
+- **Question:** does a known reference network run on our physical AI Deck, and at what fps and free L2?
+- **Why now:** project-killer question for the onboard vision plan, and unstarted. Nothing downstream is worth designing before this number exists.
+- **Blocker absorbed:** the GreenWaves AutoTiler can no longer be obtained (FACT-020), so Bitcraze's stock NN examples cannot be built. Retargeted to DORY.
+- **Step 0:** check the VM for an already-pulled AutoTiler copy. If found, stop and report -- that changes the path.
+- **Not an experiment.** No `exp_NNN` id, no config, no training run. Deliberately outside the exp_ namespace.
+- **Out of scope:** dataset capture (native Windows only, FACT-018), model training, flight testing, flashing TXQ16.
+
 ---
 
 ## Completed

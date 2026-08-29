@@ -189,3 +189,14 @@
 - **Counterevidence:** none
 - **Confidence:** high for the end-to-end number; the attribution of that 136ms to onboard capture+encode is inference, not measurement — see HYP.
 - **Next falsification test:** measure capture and encode time on the GAP8 directly and confirm they sum to ~131ms.
+
+## FACT-020
+- **Statement:** The GreenWaves AutoTiler can no longer be obtained. Bitcraze's GAP8 documentation page carries a top-of-page warning that the GreenWaves Technologies website is down, preventing fetching and compiling the autotiler, and states that deploying neural networks through `gap_sdk` is therefore not possible unless you already have the file. The AutoTiler is closed-source, was never shipped inside `gap_sdk`, and was pulled from that site at setup time via `make autotiler`. Bitcraze's builder image is titled "Builder docker image for Bitcraze AIdeck for the GAP8 sdk (without autotiler)", so Docker does not route around it. Bitcraze documents DORY as the alternative NN deployment path.
+- **Type:** fact
+- **Scope:** External toolchain availability as observed 2026-08-29. Constrains GAP8 onboard-inference work only; does not touch the sim RL line or the AI Deck WiFi stream.
+- **Supported by:** bitcraze.io GAP8 dev page; github.com/bitcraze/docker-aideck repo title; github.com/GreenWaves-Technologies/gap_sdk
+- **Counterevidence:** none found. Note this is an availability observation from vendor documentation, not a bench measurement.
+- **Confidence:** high that the documented outage is real; unknown whether it is permanent or temporary.
+- **Consequences:** `VISION_HOVER_PLAN.md` Track B and Phase 4 retargeted from GAPflow/nntool to DORY. Track B's original "flash Bitcraze's stock NN example" is blocked, because the facedetection and classification examples are the AutoTiler-dependent ones.
+- **Not verified:** whether a previously-pulled AutoTiler copy already exists in a container on the Linux VM; whether DORY's pinned `gap_sdk` 3.6 and Bitcraze's tested 3.8.1 can be satisfied by one tree.
+- **Next falsification test:** search the VM's Docker volumes for an existing AutoTiler library. If one is found, the original path is unblocked locally and this fact's practical consequence narrows to "cannot be re-obtained" rather than "cannot be used".

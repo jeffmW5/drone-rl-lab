@@ -102,6 +102,21 @@ one frame inside the VM.
 
 Capture the drone's camera data from a native host, never from the VM.
 
+### Toolchain constraint: AutoTiler unavailable (2026-08-29)
+
+The GreenWaves website is down, so the closed-source AutoTiler can no longer be
+fetched. It was never shipped inside `gap_sdk`; `make autotiler` pulled it from
+that site. Bitcraze's builder image is "without autotiler", so Docker does not
+route around it. Bitcraze documents **DORY** as the alternative NN deployment
+path, and the vision plan has adopted it.
+
+This blocks Bitcraze's stock NN examples (facedetection, classification) and
+the `GAPflow`/`nntool` route. It does **not** affect the WiFi stream work
+above — `wifi-img-streamer` builds without the AutoTiler, which is why the
+existing GAP8 flashes succeeded and why they prove nothing about running a net.
+
+See `memory/FACTS.md` FACT-020 and `VISION_HOVER_PLAN.md`.
+
 ### Historical: the VM-era diagnosis (superseded)
 
 **Firmware flashed:**
@@ -164,6 +179,10 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
 - [x] Unblock AI Deck camera stream — was slirp, works natively on Windows (2026-08-28)
 - [ ] Sim-to-real tuning (thrust scaling, attitude response lag, position drift)
 - [ ] Wait for exp_071+ results (obs normalization, action smoothness) for better checkpoints
+- [ ] **Track B — can the GAP8 run a net at all?** Unstarted, and the highest
+      priority item on the vision plan. Prompt: `GAP8_DORY_PROMPT.md`. Linux VM only.
+- [ ] Finish Track A's stated exit criterion. It called for a 5-minute sustained
+      hold; only 120s was run. One long capture before trusting it for a dataset session.
 
 ## File Locations (full reference)
 
