@@ -112,12 +112,11 @@ See `GAP8_DORY_RESULT.md`. This is far too slow at DroNet's scale/core-count
 for the frame budget above — multi-core and/or a smaller model are now the
 open design question, not "can it run at all."
 
-The useful number this leaves behind is **114 MMAC/s** (41.1M MACs / 36.0M
-cycles at 100MHz, one core), which lets a model be sized in MACs before it is
-written. But the deployable rate is still unknown by roughly 10x, because
-neither multi-core nor a higher clock has been tried. Closing that range is
-the next task: `real_flight/GAP8_PERF_PROMPT.md`. Do not design the
-vision-hover network before that table exists.
+That range has since been closed by `GAP8_PERF_PROMPT.md` /
+`GAP8_PERF_RESULT.md`: 8 cores gives 5.64x (63.82ms, 15.67 fps), 150MHz hangs
+so 100MHz stands, and capture measures 69.4ms as-is or ~25ms if the loop stops
+restarting the camera every frame. The Frame budget table above is built from
+those numbers and is what the model should be sized against.
 
 <details>
 <summary>Original track definition, retained for provenance — all steps completed</summary>
@@ -188,6 +187,12 @@ The VM is not disqualified by Track A. That failure was VirtualBox slirp
 networking; JTAG is USB passthrough and is unaffected. The capture host and the
 build host do not need to be the same machine, and already are not.
 
+## Hardware layout
+
+GAP8 is 9 cores: 1 fabric controller that orchestrates, plus an 8-core compute
+cluster. The orchestrator is the 9th core, not one of the 8, so all 8 compute
+and there is no core to reclaim. See `GAP8_ARCHITECTURE.md`.
+
 ## Simplified first task (narrowed 2026-08-29)
 
 Full 6DOF marker pose was more than the first task needs. Narrowed to two
@@ -219,7 +224,7 @@ Steps, with status:
 | # | Step | Host | Status |
 | --- | --- | --- | --- |
 | 1 | Marker detector (classical CV: threshold/contour/bbox → vertical offset + size) | Linux VM (portable Python/OpenCV, no hardware needed) | in progress |
-| 2 | Distance calibration — apparent size ↔ real distance, a few known-distance reference shots | Windows (native host) | **depends on step 1** |
+| 2 | Distance calibration — apparent size ↔ real distance, a few known-distance reference shots | Windows (native host) | tool built: `windows_testbed/marker_calibration_gui.py`; fit maths self-tested, **never run against a real marker** |
 | 3 | Synchronized capture — frames (+ telemetry where useful) during flight | Windows (native host) | may largely reuse `windows_testbed/flight_watch_gui.py` already; check before building new |
 | 4 | Auto-label captured frames via step 1's detector | Either host | depends on step 1 |
 | 5 | Train tiny CNN (image → vertical offset + size), P-controller converts to thrust/pitch initially | Windows (1070Ti) or Linux VM | depends on step 4 |
