@@ -188,7 +188,7 @@
 - **Result:** FAILURE — 0 gates, 0.52s crash, reward 7.75
 - See `results/exp_043_view_times_progress/EXPERIMENT.md`
 
-### [READY] gap8-dory-track-b -- Can the GAP8 run a net at all?
+### [CLAIMED:jeff-VirtualBox-4316-1788011506] gap8-dory-track-b -- Can the GAP8 run a net at all?
 - **Host:** Linux VM only. `gap_sdk` + JTAG are Linux; DORY codegen feeds them.
 - **Prompt:** `real_flight/GAP8_DORY_PROMPT.md` -- read it before starting.
 - **Question:** does a known reference network run on our physical AI Deck, and at what fps and free L2?
