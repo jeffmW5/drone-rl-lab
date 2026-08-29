@@ -48,3 +48,4 @@ ssh_key_runpod.pub
 # Local AI-GP captures, extracted references, and machine-specific agent state
 tmp/
 agents/*.json
+.cfcache/

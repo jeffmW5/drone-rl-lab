@@ -54,11 +54,39 @@ and cannot show a stall that first appears at frame 40.
 Each run writes `real_flight/aideck_logs/<test>_<timestamp>/` plus a matching
 `.zip` so runs move off the Windows box by whatever route is convenient.
 
+## Flight Watch
+
+`run_flight_watch.bat` is the companion tool for actual test flights. Four
+steps: find the drone, pre-flight check, record, result.
+
+**It never commands the drone.** Step 2 reads battery, fitted decks and the
+estimator over the Crazyradio, then releases the radio. Step 3 records the
+camera only. Two programs cannot share one Crazyradio, so a viewer that kept
+hold of it would lock `fly.py` out of the flight.
+
+The camera arrives over the AI Deck's WiFi and flight control goes over the
+Crazyradio — separate links, so recording does not compete with flying. The
+AI Deck AP was measured on WiFi channel 1 (2412 MHz) and the default
+`radio://0/80/2M` sits at 2480 MHz, clear of it.
+
+Needs `cflib` for steps 1 and 2 (`py -3 -m pip install cflib`). Without it
+those steps say so and the recording still works.
+
+Each run writes `aideck_logs/flightwatch_<timestamp>/` holding the frames,
+`frames.csv` with per-frame timings, `REPORT.md`, and a zip. Times in
+`frames.csv` are seconds from the start of recording, so they align with the
+`fly.py` flight log by wall-clock offset.
+
+To rehearse without hardware, put `127.0.0.1:5555` in the address box and run
+`mock_deck.py --port 5555`.
+
 ## Files
 
 - `aideck_core.py` — CPX/image protocol, Windows shell helpers, run folders
 - `aideck_tests.py` — the four tests
 - `testbed_gui.py` — guided 4-step Tkinter front end, live log, frame preview
+- `flight_watch_gui.py` — 4-step flight recorder; reads the drone, then records the camera
+- `run_flight_watch.bat` — flight watch launcher
 - `testbed_cli.py` — console front end
 - `mock_deck.py` — test fixture; a fake deck for validating the test bed
 - `run_testbed.bat` — launcher
