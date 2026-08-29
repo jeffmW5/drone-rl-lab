@@ -16,7 +16,7 @@ they are standing by the drone. `check` is safe to run anytime.
 |-----------|---------|
 | Drone | Crazyflie 2.1 (cf21B_500, 43.4g) |
 | Radio | Crazyradio PA USB dongle |
-| Positioning | Lighthouse V2 base stations (primary) or Flow Deck V2 |
+| Positioning | Flow Deck V2 only — no Lighthouse (confirmed 2026-08-28) |
 | Radio URI | `radio://0/80/2M` (configured in `config.yaml`) |
 | VM USB | VirtualBox USB passthrough required — udev rules already in `/etc/udev/rules.d/99-bitcraze.rules` |
 
@@ -27,7 +27,7 @@ they are standing by the drone. `check` is safe to run anytime.
 3. Run `python3.11 real_flight/fly.py check` and verify:
    - Battery > 3.2V (3.7V+ is healthy, below 3.4V is low)
    - Position variance < 0.001 (estimator converged)
-   - Z near 0.0 when on ground (Lighthouse calibrated)
+   - Z near 0.0 when on ground
    - Quaternion near [0, 0, 0, 1] when level
 
 If any check fails, **do not proceed to flight**. Diagnose first.
@@ -55,7 +55,7 @@ RL policy. Flies to `hover_height` (default 0.5m) for `hover_duration` (default
 
 Run this first before any RL flight to verify:
 - Thrust is sufficient (drone lifts off)
-- Position hold is stable (Lighthouse/FlowDeck is reliable)
+- Position hold is stable (Flow deck; expect slow drift, it has no absolute reference)
 - Landing works cleanly
 - No oscillations or drift
 
@@ -167,9 +167,9 @@ Pos variance: 0.000042       ← Should be < 0.001. Higher = estimator hasn't co
 ```
 
 **Common issues:**
-- Position values like [12.8, 11.2, -0.3] = Lighthouse geometry not calibrated
+- Position values like [12.8, 11.2, -0.3] = estimator diverged; reset it and re-check
   to your room origin. Drone will fly but gate positions in config won't match.
-- High variance after 2s warmup = Lighthouse base stations may not have line of
+- High variance after 2s warmup = flow deck cannot see the floor: too dark, too high, or a blank untextured surface. Line of
   sight, or FlowDeck surface is not textured enough.
 - Z offset when on ground = normal if small (<0.1m), re-place drone on flat
   surface if large.
@@ -260,7 +260,7 @@ Note: `stabilizer.qx/qy/qz/qw` does NOT exist in this firmware. The original
 | Connection timeout | Drone off or wrong channel | Power cycle drone, verify URI channel |
 | `Variable X not in TOC` | Wrong firmware log variable name | Check `cf_cache/*.json` for available vars |
 | `Log configuration too large` | Too many vars in one LogConfig | Split into groups (max ~26 bytes = 6 floats per group) |
-| High position variance | Lighthouse not converged | Wait longer, check base station visibility |
-| Large position offset on ground | Lighthouse geometry not set | Run geometry calibration in cfclient |
+| High position variance | Flow deck not tracking the floor | Add light, add floor texture, lower the drone |
+| Large position offset on ground | Estimator drifted | Reset the Kalman estimator on connect |
 | Drone flips on takeoff | Props on wrong motors, or Mellinger not set | Check prop direction, verify `controller: 2` |
 | Policy oscillates wildly | Obs format mismatch or bad policy | Try `--no-gates` first, check obs dim logs |

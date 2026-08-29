@@ -10,7 +10,8 @@ running **on the GAP8**, not on a host PC.
 | --- | --- | --- |
 | Where inference runs | Onboard GAP8 | A robot cannot have WiFi in its control loop. |
 | First task | Vision-only hover / station-keep | Smallest net that still proves the whole chain, and it also fixes the hover instability everything else depends on. |
-| Training images | Real captured frames | Chosen over simulator rendering. **This makes the AI Deck WiFi stream a hard blocker**, see below. |
+| Training images | Real captured frames | Chosen over simulator rendering. Track A cleared this. |
+| Ground truth | Printed wall marker, pose solved on the host | **No Lighthouse or mocap is owned.** Flow deck gives velocity and height only, so it cannot label absolute position. A marker of known size makes every frame self-labelling. |
 
 ## Architecture
 
@@ -95,13 +96,13 @@ Measure it before designing anything.
 
 | Phase | Work | Exit criterion |
 | --- | --- | --- |
-| 1 | Stable real hover under Lighthouse | Holds position 30s, no wall contact. Current state: drifted into a wall 2026-04-20. |
+| 1 | Stable real hover on the flow deck | Holds position 30s, no wall contact. Current state: drifted into a wall 2026-04-20 — expected, the flow deck has no absolute reference. |
 | 2 | Synchronized capture — frames + telemetry, timestamp-aligned | A dataset of flights with per-frame pose |
-| 3 | Auto-label offline from Lighthouse pose | Labeled set, held-out split |
+| 3 | Auto-label offline from the marker's apparent size and skew | Labeled set, held-out split |
 | 4 | Train small int8 CNN, quantize via GAPflow/nntool | Runs on GAP8 within the Track B budget |
-| 5 | Shadow mode — net infers while Lighthouse flies | Net output tracks Lighthouse correction |
-| 6 | Bounded live — net closes the loop, Lighthouse as safety net | Holds position on camera alone |
-| 7 | Remove Lighthouse dependency | Hover with no external positioning |
+| 5 | Shadow mode — net infers while the flow deck flies | Net output tracks the marker-derived pose |
+| 6 | Bounded live — net closes the loop, flow deck as fallback | Holds position on camera alone |
+| 7 | Remove the marker | Hover on learned visual features alone |
 
 ## Open items carried in from the existing stack
 

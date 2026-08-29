@@ -8,11 +8,10 @@ radio:
   # (channel 100, drone id 10 from level2.toml)
 
 # -- Positioning system --
-# Options: "lighthouse", "flowdeck", "mocap"
-# lighthouse: Absolute 3D position via Lighthouse V2 base stations
-# flowdeck:   Relative position via Flow Deck V2 (limited range, no yaw)
-# mocap:      External motion capture (Vicon/OptiTrack) via cflib
-positioning: "lighthouse"
+# Options: "flowdeck" (owned), "lighthouse"/"mocap" (not owned)
+# flowdeck: velocity + height only. Position is integrated, so it DRIFTS.
+positioning: "flowdeck"   # Hardware confirmed 2026-08-28: Flow deck v2 + AI deck. No Lighthouse owned.
+# NOTE: fly.py does not currently read this key.
 
 # -- Firmware settings --
 firmware:

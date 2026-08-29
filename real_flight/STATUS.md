@@ -4,7 +4,7 @@ Last updated: 2026-05-16 (consolidated from sessions through 2026-04-26)
 
 ## Overview
 
-Deploying trained RL policies from MuJoCo sim to a real Crazyflie 2.1 drone. Uses cflib directly (no ROS2/Vicon). Positioning via Lighthouse V2 or Flow Deck v2. Best sim checkpoint so far: exp_069 (2x128 network, first deterministic gate passages).
+Deploying trained RL policies from MuJoCo sim to a real Crazyflie 2.1 drone. Uses cflib directly (no ROS2/Vicon). Positioning via Flow Deck v2 only — no Lighthouse hardware. Flow deck gives velocity and height, so position drifts over time. Best sim checkpoint so far: exp_069 (2x128 network, first deterministic gate passages).
 
 ## Hardware
 
@@ -13,7 +13,7 @@ Deploying trained RL policies from MuJoCo sim to a real Crazyflie 2.1 drone. Use
 | Drone | Crazyflie 2.1 (cf21B_500, 43.4g) |
 | Firmware | 2025.12.1 (protocol v10) — rolled back from 2026.04 (broke Flow Deck) |
 | Radio | Crazyradio PA USB dongle, `radio://0/80/2M` |
-| Positioning | Lighthouse V2 (primary), Flow Deck v2 (backup, bottom connector) |
+| Positioning | Flow Deck v2 (bottom connector) — **only** option. No Lighthouse owned (confirmed 2026-08-28). |
 | AI Deck | Top connector, ESP32 Nina W102 + GAP8 |
 | JTAG | Olimex ARM-USB-TINY-H + ARM-JTAG-20-10 adapter |
 | VM USB | VirtualBox passthrough, udev rules at `/etc/udev/rules.d/99-bitcraze.rules` |
@@ -41,7 +41,7 @@ Deploying trained RL policies from MuJoCo sim to a real Crazyflie 2.1 drone. Use
 
 ### Architecture decisions
 
-- **cflib-only** — avoids ROS2 + Vicon dependency. Fly with just Lighthouse or Flow Deck.
+- **cflib-only** — avoids ROS2 + Vicon dependency. Flies on the Flow Deck alone.
 - **Auto-detect policy architecture** from checkpoint weight shapes (obs_dim, hidden_size, act_dim).
 - **Safety-first sequence**: PID takeoff -> hover stabilize -> RL handoff. Ctrl+C -> safe landing. Geofence/battery/variance violations -> emergency stop.
 - **State estimation** via cflib log framework (`stateEstimate.x/y/z`, `stateEstimate.qx/qy/qz/qw`, `gyro.x/y/z`) at 100Hz. Policy runs at 50Hz.
