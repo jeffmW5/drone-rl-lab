@@ -168,6 +168,14 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
 
 ## Open Items
 
+- [ ] **BLOCKING — restore `wifi-img-streamer` to the GAP8.** Three DORY apps
+      overwrote it (`simple_cnn`, DroNet, then `capture_timing_app`, which has
+      no WiFi code at all), so `aideck-stream` no longer broadcasts. Confirmed
+      2026-08-29 from Windows with the drone powered on: 74 BSSIDs scanned,
+      zero Espressif APs in range. Blocks distance calibration and all dataset
+      capture. **The GAP8 runs the streamer or a network, never both** — steps
+      2 and 3 of the vision task need the streamer, step 6 needs the net.
+      Prompt: `GAP8_RESTORE_STREAMER_PROMPT.md`. Linux VM only.
 - [x] Stable hover achieved 2026-08-28 via `fly.py takeoff` (firmware high-level
       commander). 0.374m peak, 7.0s airborne, 4.4cm max drift, 0.075 m/s lateral.
 - [ ] `hover` mode remains broken and is superseded by `takeoff`. Its linear
@@ -191,12 +199,15 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
 - [ ] **Phase 1 hover — 30s held, no wall contact.** Best so far 7.0s via
       `fly.py takeoff`. Independent of the GAP8 work; runs in parallel.
 - [ ] **Vision-hover first task narrowed** 2026-08-29: rise-to-level +
-      distance-hold on a plain 1"x1" marker (not full 6DOF pose). Marker
-      detector written and self-tested on synthetic frames
-      (`real_flight/marker_detector.py`) — never seen a real camera frame yet.
-      Next: `real_flight/WINDOWS_MARKER_WIZARDS_PROMPT.md` (distance
-      calibration + capture, Windows-only, queued in INBOX as
-      `marker-wizards`). See `VISION_HOVER_PLAN.md` "Simplified first task".
+      distance-hold on a plain 1"x1" marker (not full 6DOF pose). Detector
+      (`marker_detector.py`), printable marker (`make_marker.py`,
+      `marker_1in.pdf`, square verified at 1.0000in by rendering) and the
+      distance-calibration wizard
+      (`windows_testbed/marker_calibration_gui.py`, fit maths self-tested) are
+      all built. **None has seen a real camera frame** — calibration is
+      blocked on the streamer item above. Capture wizard (step 3) still to do;
+      check `flight_watch_gui.py` first, it may already cover it. See
+      `WINDOWS_MARKER_WIZARDS_PROMPT.md`, INBOX `marker-wizards`.
 - [x] **Track B — can the GAP8 run a net at all?** DONE 2026-08-29. Yes.
       DroNet (DORY's own `PULP.GAP8` stock example) runs end-to-end on the
       physical AI Deck: 359.9ms/inference (≈2.78 fps) single-core, final

@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-08-29T15:09:48+00:00",
+  "generated_at": "2026-08-29T22:10:40+00:00",
   "repo": {
     "path": "C:\\Users\\JefferyWhitmire\\Desktop\\Shared\\drone-rl-lab",
     "available": true,
     "branch": "master",
-    "commit": "516198b11bb2adca08ad1c6a199b8cd2fef86cc3",
+    "commit": "b955091bae129262435cd8a411bde1549907562a",
     "dirty": true
   },
   "external_repos": {
@@ -16,9 +16,9 @@
   "agents": [
     {
       "id": "jeff-VirtualBox-4316-1788011506",
-      "status": "idle: gap8-dory-track-b DONE",
+      "status": "idle: gap8-perf-envelope DONE",
       "task": null,
-      "heartbeat": "2026-08-29T15:10:00+00:00"
+      "heartbeat": "2026-08-29T16:00:00+00:00"
     },
     {
       "id": "jeff-VirtualBox-6765-1776612627",
@@ -29,7 +29,7 @@
   ],
   "queue": {
     "counts": {
-      "done": 27,
+      "done": 28,
       "note": 1,
       "ready": 9,
       "deferred": 2
@@ -88,8 +88,8 @@
       {
         "status": "READY",
         "status_kind": "ready",
-        "title": "gap8-perf-envelope -- What rate can the GAP8 actually sustain?",
-        "body": "- **Host:** Linux VM only. Reuses the pipeline proven in `GAP8_DORY_RESULT.md`.\n- **Prompt:** `real_flight/GAP8_PERF_PROMPT.md` -- read it before starting.\n- **Questions:** (1) DroNet at 8 cluster cores instead of 1? (2) highest verified-correct clock? (3) camera capture cost measured on-chip, no JPEG encode?\n- **Why now:** Track B gave 114 MMAC/s single-core at 100MHz. The deployable rate is unknown by ~10x, and the vision-hover model cannot be designed until that range closes. Multi-core is the difference between a ~3M-MAC budget and a ~21M-MAC one.\n- **Also tests:** HYP-AIDECK-RATE. The 73ms capture floor under every budget number is inferred from an end-to-end stream measurement, not measured on the chip.\n- **Deliverable:** a rewritten \"Frame budget\" table in `VISION_HOVER_PLAN.md` -- measured capture cost, measured throughput, MAC budget at 5/10/15 Hz.\n- **Validation rule:** final output checksum must pass on every reported run. A fast wrong answer is worse than a slow right one.\n- **Not an experiment.** Hardware measurement, deliberately outside the `exp_` namespace.\n- **Out of scope:** designing or training the vision model, dataset capture (Windows only, FACT-018), flight testing.",
+        "title": "marker-wizards -- distance calibration + capture wizards",
+        "body": "- **Host:** Windows (native) only. Two wizards: (1) distance calibration -- apparent marker size to real distance, (2) capture -- frames for auto-labeling. Depends on `real_flight/marker_detector.py` (done, self-tested, never seen a real frame).\n- **Prompt:** `real_flight/WINDOWS_MARKER_WIZARDS_PROMPT.md` -- read it before starting.\n- **Why now:** vision-hover first task narrowed to two numbers (vertical offset, apparent size), both from the marker detector. Need real distance calibration and real captured frames before any labeling or training can start.\n- **Check first:** `windows_testbed/flight_watch_gui.py` may already cover the capture wizard's job -- confirm before building something new.\n- **Out of scope:** training the CNN (depends on this), flight control changes, GAP8/DORY deployment (Linux VM's job, already proven).",
         "task_id": null
       },
       {
