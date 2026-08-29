@@ -1,0 +1,13 @@
+# Git guesses text-vs-binary by looking for NUL bytes. A PDF has none, so it
+# is guessed as text and gets line-ending conversion on checkout -- which
+# shifts every byte offset in its xref table and corrupts the file. The
+# marker PDF's geometry is what the distance calibration is built on, so mark
+# these explicitly rather than relying on the guess.
+*.pdf   binary
+*.npz   binary
+*.zip   binary
+*.ckpt  binary
+*.bin   binary
+*.jpg   binary
+*.jpeg  binary
+*.png   binary
