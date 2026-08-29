@@ -153,7 +153,11 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
 
 ## Open Items
 
-- [ ] Tune hover P controller gains (drifted into wall on first flight)
+- [x] Stable hover achieved 2026-08-28 via `fly.py takeoff` (firmware high-level
+      commander). 0.374m peak, 7.0s airborne, 4.4cm max drift, 0.075 m/s lateral.
+- [ ] `hover` mode remains broken and is superseded by `takeoff`. Its linear
+      `thrust_to_pwm` under-commands hover thrust (34861 PWM), so it reached only
+      8.5cm and skidded 1.11m at 1.42 m/s. Fix or retire it.
 - [ ] Fix obs format mismatch (get `train_race.py` from RunPod or print obs space)
 - [ ] Complete progressive flight testing (hover stable -> fly --no-gates -> fly)
 - [ ] Measure real gate positions and update config.yaml (currently nominal level2.toml)

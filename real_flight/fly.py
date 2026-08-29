@@ -461,6 +461,57 @@ def try_arm(cf):
         pass
 
 
+def read_canfly(cf, timeout: float = 2.5) -> dict:
+    """Read the firmware's own opinion on whether it will fly.
+
+    ``sys.canfly`` is the firmware's go/no-go flag. When it is 0 the high-level
+    commander accepts a takeoff and then does nothing, which looks exactly like
+    a thrust problem from the host side. On 2026-08-28 a takeoff was refused
+    this way with no error anywhere -- the drone had latched a failure after
+    skidding across the floor on the previous flight.
+
+    Returns a dict of whatever it managed to read; missing keys just mean the
+    firmware does not publish that variable.
+    """
+    from cflib.crazyflie.log import LogConfig
+
+    lg = LogConfig(name="canfly", period_in_ms=100)
+    for var in ("sys.canfly", "sys.isTumbled", "sys.isFlying", "pm.state"):
+        try:
+            lg.add_variable(var, "float")
+        except Exception:  # noqa: BLE001
+            pass
+    values: dict = {}
+    try:
+        cf.log.add_config(lg)
+        lg.data_received_cb.add_callback(lambda ts, data, conf: values.update(data))
+        lg.start()
+        deadline = time.time() + timeout
+        while time.time() < deadline and "sys.canfly" not in values:
+            time.sleep(0.05)
+        lg.stop()
+    except Exception:  # noqa: BLE001
+        pass
+    return values
+
+
+def canfly_blocked(values: dict) -> str | None:
+    """Return an operator-readable reason the drone will not fly, or None."""
+    if values.get("sys.canfly", 1.0) >= 0.5:
+        return None
+    reasons = []
+    if values.get("sys.isTumbled", 0.0) >= 0.5:
+        reasons.append("it thinks it is tumbled")
+    if values.get("pm.state", 0.0) >= 0.5:
+        reasons.append(f"power state is {int(values['pm.state'])}, not on battery")
+    detail = "; ".join(reasons) if reasons else "no specific cause reported"
+    return (
+        f"FIRMWARE REFUSES TO FLY (sys.canfly=0): {detail}. "
+        "Power the drone off and on, stand it level on the floor, and leave it "
+        "untouched for ~5s while it boots so the gyro can calibrate."
+    )
+
+
 # ─── Emergency stop ───────────────────────────────────────────────────────────
 
 def emergency_stop(cf):
@@ -494,15 +545,24 @@ def cmd_check(cfg: dict):
         print(f"  Quaternion: [{snap['quat'][0]:.3f}, {snap['quat'][1]:.3f}, {snap['quat'][2]:.3f}, {snap['quat'][3]:.3f}]")
         print(f"  Pos variance: {snap['pos_var']:.6f}")
 
+        flags = read_canfly(cf)
+        if "sys.canfly" in flags:
+            print(f"  Firmware canfly: {int(flags['sys.canfly'])}"
+                  f"{'' if flags['sys.canfly'] >= 0.5 else '   <-- REFUSING TO FLY'}")
+
         min_bat = cfg["safety"]["min_battery_voltage"]
         max_var = cfg["safety"]["max_position_variance"]
         ok = True
+        blocked = canfly_blocked(flags)
+        if blocked:
+            print(f"  [FAIL] {blocked}")
+            ok = False
         if snap["battery"] < min_bat:
             print(f"  [FAIL] Battery below {min_bat}V")
             ok = False
         if snap["pos_var"] > max_var:
             print(f"  [WARN] Position variance {snap['pos_var']:.6f} > {max_var} — estimator may not have converged")
-            print(f"         Check Lighthouse / Flow Deck setup")
+            print("         Check the Flow Deck: floor texture, lighting, height")
         if abs(snap["pos"][2]) > 0.1:
             print(f"  [WARN] Z={snap['pos'][2]:.3f} — drone may not be on flat ground, or estimator is drifting")
 
@@ -562,6 +622,9 @@ def cmd_hover(cfg: dict):
         log.info("Ramping up...")
         ramp_time = 1.5
         ramp_steps = int(ramp_time * freq)
+        # Log seconds-from-start, matching the hold loop below. Logging wall
+        # clock here left the saved `t` array non-monotonic and unusable.
+        ramp_start = time.time()
         for i in range(ramp_steps):
             if abort.is_set():
                 break
@@ -578,7 +641,7 @@ def cmd_hover(cfg: dict):
             roll_cmd = np.clip(-kp_xy * y_err, -15.0, 15.0)
 
             cf.commander.send_setpoint(roll_cmd, pitch_cmd, 0, pwm)
-            flight_log.log(time.time(), snap)
+            flight_log.log(time.time() - ramp_start, snap)
             time.sleep(dt)
 
         # Hold hover
@@ -603,7 +666,7 @@ def cmd_hover(cfg: dict):
             roll_cmd = np.clip(-kp_xy * y_err, -15.0, 15.0)
 
             cf.commander.send_setpoint(roll_cmd, pitch_cmd, 0, pwm)
-            flight_log.log(time.time() - t_start, snap)
+            flight_log.log(time.time() - ramp_start, snap)
 
             elapsed = time.time() - t_loop
             if dt - elapsed > 0:
@@ -635,6 +698,106 @@ def cmd_hover(cfg: dict):
         cf.commander.send_stop_setpoint()
         flight_log.save()
         scf.close_link()
+
+
+def cmd_takeoff(cfg: dict, height: float | None = None, duration: float | None = None):
+    """Hover using the firmware's own takeoff/land. No hand-rolled controller.
+
+    ``cmd_hover`` rebuilds position hold from scratch at 50Hz over the radio,
+    on top of ``thrust_to_pwm``'s linear force->PWM map. Real rotor thrust is
+    closer to quadratic in PWM, so the computed hover command comes out well
+    under what is needed to lift the drone. On 2026-08-28 that produced a
+    maximum height of 8.5cm against a 0.5m target, followed by a 1.4 m/s
+    sideways skid: too little thrust to climb, and ``kp_xy`` tilting the drone
+    anyway, which pointed what thrust there was sideways.
+
+    This mode hands takeoff, position hold and landing to the onboard
+    controller, which Bitcraze tunes for this airframe and which works with a
+    flow deck without any host-side thrust model.
+    """
+    scf, state = connect_crazyflie(cfg)
+    cf = scf.cf
+    safety = SafetyMonitor(cfg)
+    flight_log = FlightLogger(cfg)
+
+    height = height if height is not None else cfg["control"]["hover_height"]
+    duration = duration if duration is not None else cfg["control"]["hover_duration"]
+    takeoff_time = 2.0
+    land_time = cfg["control"]["landing_duration"]
+
+    abort = Event()
+
+    def _sigint(sig, frame):
+        abort.set()
+
+    signal.signal(signal.SIGINT, _sigint)
+
+    airborne = False
+    try:
+        snap = state.snapshot()
+        violation = safety.check_state(snap)
+        if violation:
+            log.error(f"Pre-flight safety check failed: {violation}")
+            return
+
+        blocked = canfly_blocked(read_canfly(cf))
+        if blocked:
+            log.error(blocked)
+            return
+
+        start_x, start_y = snap["pos"][0], snap["pos"][1]
+        log.info(f"Firmware takeoff to {height}m, hold {duration}s")
+        log.info("Press Ctrl+C to land early")
+
+        cf.param.set_value("commander.enHighLevel", "1")
+        try_arm(cf)
+        cf.high_level_commander.takeoff(height, takeoff_time)
+        airborne = True
+
+        t0 = time.time()
+        total = takeoff_time + duration
+        while (time.time() - t0) < total and not abort.is_set():
+            snap = state.snapshot()
+            flight_log.log(time.time() - t0, snap)
+            violation = safety.check_state(snap)
+            if violation:
+                log.error(f"Safety violation: {violation}")
+                break
+            time.sleep(0.02)
+
+        if abort.is_set():
+            log.info("Abort requested, landing.")
+
+        log.info("Landing...")
+        cf.high_level_commander.land(0.05, land_time)
+        t1 = time.time()
+        while (time.time() - t1) < land_time + 0.5:
+            flight_log.log(time.time() - t0, state.snapshot())
+            time.sleep(0.02)
+        airborne = False
+
+        snap = state.snapshot()
+        drift = float(np.hypot(snap["pos"][0] - start_x, snap["pos"][1] - start_y))
+        log.info(f"Down. Estimator says it moved {drift:.2f}m from the takeoff spot.")
+        log.info("Measure the real distance from your floor marker -- the flow deck")
+        log.info("has no absolute reference, so this number can drift on its own.")
+
+    except Exception as e:
+        log.error(f"Error during flight: {e}")
+        import traceback
+        traceback.print_exc()
+        emergency_stop(cf)
+    finally:
+        if airborne:
+            try:
+                cf.high_level_commander.land(0.05, land_time)
+                time.sleep(land_time + 0.5)
+            except Exception:  # noqa: BLE001
+                emergency_stop(cf)
+        cf.commander.send_stop_setpoint()
+        flight_log.save()
+        scf.close_link()
+        log.info("Connection closed.")
 
 
 def cmd_fly(cfg: dict, checkpoint: str | None = None, no_gates: bool = False):
@@ -794,16 +957,22 @@ def cmd_fly(cfg: dict, checkpoint: str | None = None, no_gates: bool = False):
 
 def main():
     parser = argparse.ArgumentParser(description="Deploy RL policies to Crazyflie")
-    parser.add_argument("mode", choices=["check", "hover", "fly"], help="Flight mode")
+    parser.add_argument("mode", choices=["check", "takeoff", "hover", "fly"], help="Flight mode")
     parser.add_argument("--config", default=None, help="Path to config.yaml")
     parser.add_argument("--checkpoint", default=None, help="Override policy checkpoint path")
     parser.add_argument("--no-gates", action="store_true", help="Ignore gate observations")
+    parser.add_argument("--height", type=float, default=None,
+                        help="takeoff mode: hover height in metres (default from config)")
+    parser.add_argument("--duration", type=float, default=None,
+                        help="takeoff mode: seconds to hold (default from config)")
     args = parser.parse_args()
 
     cfg = load_config(args.config)
 
     if args.mode == "check":
         cmd_check(cfg)
+    elif args.mode == "takeoff":
+        cmd_takeoff(cfg, height=args.height, duration=args.duration)
     elif args.mode == "hover":
         cmd_hover(cfg)
     elif args.mode == "fly":
