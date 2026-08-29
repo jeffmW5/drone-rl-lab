@@ -168,14 +168,17 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
 
 ## Open Items
 
-- [ ] **BLOCKING — restore `wifi-img-streamer` to the GAP8.** Three DORY apps
-      overwrote it (`simple_cnn`, DroNet, then `capture_timing_app`, which has
-      no WiFi code at all), so `aideck-stream` no longer broadcasts. Confirmed
-      2026-08-29 from Windows with the drone powered on: 74 BSSIDs scanned,
-      zero Espressif APs in range. Blocks distance calibration and all dataset
-      capture. **The GAP8 runs the streamer or a network, never both** — steps
-      2 and 3 of the vision task need the streamer, step 6 needs the net.
-      Prompt: `GAP8_RESTORE_STREAMER_PROMPT.md`. Linux VM only.
+- [ ] **Streamer flashed; native-Windows verification pending.** Rebuilt the
+      confirmed JPEG/`aideck-stream` source and flashed its 73,760-byte GAP8
+      hyperflash image successfully over Olimex JTAG on 2026-08-29. OpenOCD
+      completed at 100% with exit code 0. Exact image archived under
+      `real_flight/firmware/gap8_wifi_img_streamer_aideck_stream_jpeg_20260829/`
+      (SHA256 `6851a619f7a7ce4f7135f7abab3b31559d039be390cd694bf3f7b304b620edbf`).
+      Remaining exit criterion: physically power-cycle the Crazyflie, confirm
+      the SSID on native Windows, connect to `192.168.4.1:5000`, and verify
+      JPEG frame flow near the established 7.3 fps. **The GAP8 runs the
+      streamer or a network, never both** — steps 2 and 3 of the vision task
+      need the streamer, step 6 needs the net.
 - [x] Stable hover achieved 2026-08-28 via `fly.py takeoff` (firmware high-level
       commander). 0.374m peak, 7.0s airborne, 4.4cm max drift, 0.075 m/s lateral.
 - [ ] `hover` mode remains broken and is superseded by `takeoff`. Its linear
@@ -204,9 +207,10 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
       `marker_1in.pdf`, square verified at 1.0000in by rendering) and the
       distance-calibration wizard
       (`windows_testbed/marker_calibration_gui.py`, fit maths self-tested) are
-      all built. **None has seen a real camera frame** — calibration is
-      blocked on the streamer item above. Capture wizard (step 3) still to do;
-      check `flight_watch_gui.py` first, it may already cover it. See
+      all built. **None has seen a real camera frame.** The streamer image is
+      now flashed, pending power-cycle and native-Windows validation. Capture
+      wizard (step 3) still to do; check `flight_watch_gui.py` first, it may
+      already cover it. See
       `WINDOWS_MARKER_WIZARDS_PROMPT.md`, INBOX `marker-wizards`.
 - [x] **Track B — can the GAP8 run a net at all?** DONE 2026-08-29. Yes.
       DroNet (DORY's own `PULP.GAP8` stock example) runs end-to-end on the
@@ -240,6 +244,7 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
 | Real env (needs ROS2) | `~/.local/lib/python3.11/site-packages/lsy_drone_racing/envs/real_race_env.py` |
 | Level2 config | `~/.local/lib/python3.11/site-packages/config/level2_attitude.toml` |
 | GAP8 source (modified) | `/tmp/gap8-2025.02/examples/other/wifi-img-streamer/` |
+| Archived GAP8 streamer image | `real_flight/firmware/gap8_wifi_img_streamer_aideck_stream_jpeg_20260829/target.board.devices.flash.img` |
 | ESP32 binary | `/tmp/esp-fw/aideck_esp.bin` |
 | OpenOCD | `~/Downloads/openocd-esp32/` |
 | Olimex udev rules | `/etc/udev/rules.d/99-olimex.rules` |
