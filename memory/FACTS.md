@@ -258,3 +258,13 @@
 - **Confidence:** high, especially for config 2 (±0.02ms spread over 30 frames).
 - **Not verified:** whether continuous-streaming capture (config 1's ~25ms) holds up when combined with a real inference workload in one integrated pipeline — only measured standalone.
 - **Next falsification test:** build a combined continuous-capture + inference app and re-measure end-to-end.
+
+## FACT-027
+- **Statement:** A live AI Deck distance-calibration run saved at 2026-08-29T18:45:57 produced 3 samples at 0.6096 m, 0.813 m, and 0.90805 m with fitted `k_px_m` = 18.855 and worst residual 3.95%. The wizard warned that the distance span was only 1.49× (want 2×). The wizard recorded `marker_input` as 1.0 inches. The operator reported the physical marker was a 4 in × 4 in square on paper because a 1 in marker did not detect.
+- **Type:** fact
+- **Scope:** vision-hover step 2, native Windows host, this one live run
+- **Supported by:** `real_flight/marker_calibration.json` (samples, k, residuals, original wizard `marker_input`); operator report of the 4 in physical size and 1 in non-detection
+- **Counterevidence:** none noted
+- **Confidence:** high for the saved samples / k / residuals and that the wizard wrote 1.0 in; the 4 in physical size and 1 in non-detection are operator-reported, not independently measured in this turn
+- **Last reviewed:** 2026-08-29
+- **Next falsification test:** rerun with a measured 4 in square and a distance span of at least 2×; retry 1 in detection and record miss / false-positive rates.

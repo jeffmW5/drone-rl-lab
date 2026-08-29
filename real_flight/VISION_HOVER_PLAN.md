@@ -201,13 +201,16 @@ numbers only:
 - **Vertical offset** — how far the marker's center is from vertical-center
   of frame. Drives "rise until level with the square."
 - **Apparent size** — the marker's bounding-box size in pixels. A known
-  real-world size (1"×1", printed) at a given distance maps predictably to
-  pixel size, so this alone drives "adjust distance."
+  real-world size (currently 4"×4" on paper; 1" did not detect) at a given
+  distance maps predictably to pixel size, so this alone drives "adjust
+  distance."
 
 **Setup:** drone starts on the floor, facing the marker. Marker is a plain
-1"×1" square drawn/printed on paper — high contrast (black on white), not a
-fiducial tag. Plain enough that classical CV (threshold → contour → bounding
-box) detects it directly; no fiducial library needed.
+high-contrast square on paper (black on white), not a fiducial tag. The
+original plan was 1"×1". On the 2026-08-29 live calibration a 1" square did
+not detect, so a 4"×4" square was used (`marker_calibration.json`,
+HYP-MARKER-OTSU). Plain enough that classical CV (threshold → contour →
+bounding box) detects it directly; no fiducial library needed.
 
 **Method — teacher (classical CV) → student (CNN), matching the project's
 existing learning-by-cheating pattern** (`docs/AI_GP_VISION_TRANSITION_PLAN.md`):
@@ -224,7 +227,7 @@ Steps, with status:
 | # | Step | Host | Status |
 | --- | --- | --- | --- |
 | 1 | Marker detector (classical CV: threshold/contour/bbox → vertical offset + size) | Linux VM (portable Python/OpenCV, no hardware needed) | in progress |
-| 2 | Distance calibration — apparent size ↔ real distance, a few known-distance reference shots | Windows (native host) | tool built: `windows_testbed/marker_calibration_gui.py`; fit maths self-tested, **never run against a real marker** |
+| 2 | Distance calibration — apparent size ↔ real distance, a few known-distance reference shots | Windows (native host) | first live run 2026-08-29: 3 samples, k=18.86 px·m, worst residual 3.95%, span only 1.49x (wizard warning). Physical marker was a **4 in × 4 in** square on paper — operator reported a 1 in marker did not detect. See `marker_calibration.json`. |
 | 3 | Synchronized capture — frames (+ telemetry where useful) during flight | Windows (native host) | may largely reuse `windows_testbed/flight_watch_gui.py` already; check before building new |
 | 4 | Auto-label captured frames via step 1's detector | Either host | depends on step 1 |
 | 5 | Train tiny CNN (image → vertical offset + size), P-controller converts to thrust/pitch initially | Windows (1070Ti) or Linux VM | depends on step 4 |

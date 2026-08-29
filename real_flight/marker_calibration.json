@@ -1,0 +1,73 @@
+{
+  "created_at": "2026-08-29T18:45:57",
+  "marker_size_m": 0.1016,
+  "marker_input": {
+    "value": "4.0",
+    "units": "inches"
+  },
+  "wizard_saved_marker_input": {
+    "value": "1.0",
+    "units": "inches"
+  },
+  "frame_shape": {
+    "height": 244,
+    "width": 324
+  },
+  "model": "size_px = k / distance_m",
+  "k_px_m": 18.85543295687374,
+  "focal_px": 185.5849700479699,
+  "n_samples": 3,
+  "span_ratio": 1.4895833333333333,
+  "worst_abs_error_pct": 3.9537830117296604,
+  "warnings": [
+    "distance span is only 1.49x (want 2x or more) -- samples too bunched to constrain the fit"
+  ],
+  "caveats": [
+    "Operator-reported: the physical marker was a 4 in by 4 in square drawn on paper. A 1 in marker did not detect.",
+    "The wizard saved marker_size_m=0.0254 (1.0 in) because that is what was entered in the size field. k_px_m and the samples do not depend on that field; marker_size_m and focal_px in this file were corrected to 4 in before commit. Do not treat the original wizard save as a 1 in calibration.",
+    "Fit is from 3 live samples spanning only 1.49x in distance (0.610 m to 0.908 m). The wizard's own 2x-span warning still applies."
+  ],
+  "samples": [
+    {
+      "distance_m": 0.813,
+      "size_px": 22.494443758403985,
+      "source": "live"
+    },
+    {
+      "distance_m": 0.90805,
+      "size_px": 19.974984355438178,
+      "source": "live"
+    },
+    {
+      "distance_m": 0.6096,
+      "size_px": 31.984371183438952,
+      "source": "live"
+    }
+  ],
+  "residuals": [
+    {
+      "distance_m": 0.813,
+      "size_px": 22.494443758403985,
+      "predicted_px": 23.192414461099315,
+      "implied_distance_m": 0.8382262375271805,
+      "distance_error_m": 0.02522623752718056,
+      "distance_error_pct": 3.102858244425654
+    },
+    {
+      "distance_m": 0.90805,
+      "size_px": 19.974984355438178,
+      "predicted_px": 20.764751893479147,
+      "implied_distance_m": 0.9439523266380112,
+      "distance_error_m": 0.035902326638011184,
+      "distance_error_pct": 3.9537830117296604
+    },
+    {
+      "distance_m": 0.6096,
+      "size_px": 31.984371183438952,
+      "predicted_px": 30.930828341328315,
+      "implied_distance_m": 0.5895202018739957,
+      "distance_error_m": -0.020079798126004356,
+      "distance_error_pct": -3.293930138780242
+    }
+  ]
+}
