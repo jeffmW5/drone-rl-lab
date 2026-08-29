@@ -200,7 +200,7 @@
 - **Not an experiment.** No `exp_NNN` id, no config, no training run. Deliberately outside the exp_ namespace.
 - **Out of scope:** dataset capture (native Windows only, FACT-018), model training, flight testing, flashing TXQ16.
 
-### [READY] gap8-perf-envelope -- What rate can the GAP8 actually sustain?
+### [CLAIMED:jeff-VirtualBox-4316-1788011506] gap8-perf-envelope -- What rate can the GAP8 actually sustain?
 - **Host:** Linux VM only. Reuses the pipeline proven in `GAP8_DORY_RESULT.md`.
 - **Prompt:** `real_flight/GAP8_PERF_PROMPT.md` -- read it before starting.
 - **Questions:** (1) DroNet at 8 cluster cores instead of 1? (2) highest verified-correct clock? (3) camera capture cost measured on-chip, no JPEG encode?
