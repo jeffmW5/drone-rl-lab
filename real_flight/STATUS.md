@@ -179,8 +179,15 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
 - [x] Unblock AI Deck camera stream — was slirp, works natively on Windows (2026-08-28)
 - [ ] Sim-to-real tuning (thrust scaling, attitude response lag, position drift)
 - [ ] Wait for exp_071+ results (obs normalization, action smoothness) for better checkpoints
-- [ ] **Track B — can the GAP8 run a net at all?** Unstarted, and the highest
-      priority item on the vision plan. Prompt: `GAP8_DORY_PROMPT.md`. Linux VM only.
+- [ ] **Track B — can the GAP8 run a net at all?** In progress, not done. A
+      prior local DORY+`gap_sdk` bring-up was found already on the Linux VM
+      (untracked); build now succeeds for the AI Deck's real chip target
+      (`ai_deck`/`GAP8_V2`) after fixing an install-path bug, and
+      `gap8-openocd` was built from source. Blocked on hardware: no JTAG
+      adapter or AI Deck currently connected to the VM (`lsusb` shows none).
+      Needs the Olimex JTAG cable + AI Deck/Crazyflie connected via VirtualBox
+      USB passthrough to get the actual fps/L2 measurement. See
+      `GAP8_DORY_RESULT.md` and `GAP8_DORY_PROMPT.md`.
 - [ ] Finish Track A's stated exit criterion. It called for a 5-minute sustained
       hold; only 120s was run. One long capture before trusting it for a dataset session.
 

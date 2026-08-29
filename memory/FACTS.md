@@ -200,3 +200,13 @@
 - **Consequences:** `VISION_HOVER_PLAN.md` Track B and Phase 4 retargeted from GAPflow/nntool to DORY. Track B's original "flash Bitcraze's stock NN example" is blocked, because the facedetection and classification examples are the AutoTiler-dependent ones.
 - **Not verified:** whether a previously-pulled AutoTiler copy already exists in a container on the Linux VM; whether DORY's pinned `gap_sdk` 3.6 and Bitcraze's tested 3.8.1 can be satisfied by one tree.
 - **Next falsification test:** search the VM's Docker volumes for an existing AutoTiler library. If one is found, the original path is unblocked locally and this fact's practical consequence narrows to "cannot be re-obtained" rather than "cannot be used".
+
+## FACT-021
+- **Statement:** A prior local DORY+`gap_sdk` bring-up already existed at `~/projects/gap_sdk` on the Linux VM (`dorytest`/`dorytest_old`), untracked in any repo. After fixing a chip-target install path (`install/GAP8_V2` was missing; symlinked to the already-populated `install/GAP8_V3`, which is chip-generic) and building `gap8-openocd` from source (`riscv/riscv-openocd` @ `1449af5bd`, per `gap_sdk`'s own pinned Makefile target), the existing DORY-generated network (`dorytest`, a custom 19-conv-layer + FC int8 CNN, not a DORY stock example) built clean against the AI Deck's actual board config (`configs/ai_deck.sh`, `TARGET_CHIP=GAP8_V2`, `gap_rev1` chip). Link-time memory: L2 63,176 B / 512 KB (12.05%), L1 28 B / 65,532 B (0.04%), fc_tcdm 5,068 B / 16,380 B (30.94%).
+- **Type:** fact
+- **Scope:** GAP8 onboard-inference toolchain, Linux VM, `~/projects/gap_sdk`. Resolves the SDK-version-mismatch risk in FACT-020; does not resolve a hardware inference measurement.
+- **Supported by:** `real_flight/GAP8_DORY_RESULT.md`, build log in this session, `~/projects/gap_sdk/dorytest/BUILD/GAP8_V2/GCC_RISCV_PULPOS/main.size`
+- **Counterevidence:** none. GVSoC simulation of the same build crashed (SIGABRT, no output) — not diagnosed, not required for the exit criterion.
+- **Confidence:** high for the build result; not applicable to runtime performance (none measured).
+- **Not verified:** hardware inference rate, free L2 at runtime, per-layer checksum correctness — all require the physical AI Deck on JTAG, which is not connected to this VM (`lsusb` shows no Olimex adapter present).
+- **Next falsification test:** connect the Olimex JTAG adapter + AI Deck/Crazyflie via VirtualBox USB passthrough, run `make all` in `~/projects/gap_sdk/dorytest` (builds, flashes, runs), read `cycle_network_execution` off UART.
