@@ -179,6 +179,12 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
 - [x] Unblock AI Deck camera stream — was slirp, works natively on Windows (2026-08-28)
 - [ ] Sim-to-real tuning (thrust scaling, attitude response lag, position drift)
 - [ ] Wait for exp_071+ results (obs normalization, action smoothness) for better checkpoints
+- [ ] **GAP8 performance envelope** — DroNet at 8 cores, highest
+      verified-correct clock, and on-chip camera capture cost. The deployable
+      rate is unknown by ~10x and gates the model design.
+      Prompt: `GAP8_PERF_PROMPT.md`. Linux VM only.
+- [ ] **Phase 1 hover — 30s held, no wall contact.** Best so far 7.0s via
+      `fly.py takeoff`. Independent of the GAP8 work; runs in parallel.
 - [x] **Track B — can the GAP8 run a net at all?** DONE 2026-08-29. Yes.
       DroNet (DORY's own `PULP.GAP8` stock example) runs end-to-end on the
       physical AI Deck: 359.9ms/inference (≈2.78 fps) single-core, final

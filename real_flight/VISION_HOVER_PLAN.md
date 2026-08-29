@@ -38,9 +38,12 @@ inference drops the ~58ms JPEG encode, leaving:
 So ~13.7 fps is the ceiling before the net runs, and N sets everything below
 that. Design the model to a measured N, not to a guess.
 
-**Not verified:** GAP8 L2 memory ceiling, actual inference time N on the
-flashed firmware, the capture/encode split as an onboard measurement, and the
-current Bitcraze reference NN example name. All four hard-constrain the model.
+**Not verified (as written 2026-08-28):** GAP8 L2 memory ceiling, actual
+inference time N on the flashed firmware, the capture/encode split as an
+onboard measurement, and the current Bitcraze reference NN example name. All
+four hard-constrain the model. *Two of these are now resolved — see the update
+below. The capture/encode split is still unmeasured and is the open one that
+matters.*
 
 **Update 2026-08-29:** Track B measured a real N — DroNet (comparable size:
 15 layers, 41M MACs) runs in 359.9ms single-core (2.78 fps) on this exact
@@ -94,12 +97,22 @@ See `GAP8_DORY_RESULT.md`. This is far too slow at DroNet's scale/core-count
 for the frame budget above — multi-core and/or a smaller model are now the
 open design question, not "can it run at all."
 
+The useful number this leaves behind is **114 MMAC/s** (41.1M MACs / 36.0M
+cycles at 100MHz, one core), which lets a model be sized in MACs before it is
+written. But the deployable rate is still unknown by roughly 10x, because
+neither multi-core nor a higher clock has been tried. Closing that range is
+the next task: `real_flight/GAP8_PERF_PROMPT.md`. Do not design the
+vision-hover network before that table exists.
+
+<details>
+<summary>Original track definition, retained for provenance — all steps completed</summary>
+
 No stream needed. This is the project-killer question and it is cheap.
 
-**The original path for this track is blocked.** It said "flash Bitcraze's
+**The original path for this track was blocked.** It said "flash Bitcraze's
 stock NN example." Those examples (facedetection, classification) build through
 the GreenWaves AutoTiler, which can no longer be obtained. See "Toolchain
-constraint" below. The track is unchanged in purpose; only the toolchain moves.
+constraint" below. The track was unchanged in purpose; only the toolchain moved.
 
 1. Stand up DORY and its `gap_sdk` backend on the Linux VM.
 2. Build and flash a known reference network to the GAP8 via Olimex JTAG,
@@ -108,10 +121,15 @@ constraint" below. The track is unchanged in purpose; only the toolchain moves.
 3. Measure inference rate and free L2.
 4. Exit criterion: a known network runs on our deck at a measured fps.
 
-If that number is low, the model design and possibly the whole task change.
-Measure it before designing anything.
+Prompt for this work: `real_flight/GAP8_DORY_PROMPT.md`. Result:
+`real_flight/GAP8_DORY_RESULT.md`.
 
-Prompt for this work: `real_flight/GAP8_DORY_PROMPT.md`.
+One caution from that run is worth carrying forward: the first attempt used a
+custom `simple_cnn` rather than a stock example, it crashed on hardware, and
+that conflated "our network is wrong" with "the toolchain is wrong" for a full
+session (FACT-022). Test toolchains with known-good artifacts.
+
+</details>
 
 ## Toolchain constraint — AutoTiler unavailable (recorded 2026-08-29)
 

@@ -200,6 +200,23 @@
 - **Not an experiment.** No `exp_NNN` id, no config, no training run. Deliberately outside the exp_ namespace.
 - **Out of scope:** dataset capture (native Windows only, FACT-018), model training, flight testing, flashing TXQ16.
 
+### [READY] gap8-perf-envelope -- What rate can the GAP8 actually sustain?
+- **Host:** Linux VM only. Reuses the pipeline proven in `GAP8_DORY_RESULT.md`.
+- **Prompt:** `real_flight/GAP8_PERF_PROMPT.md` -- read it before starting.
+- **Questions:** (1) DroNet at 8 cluster cores instead of 1? (2) highest verified-correct clock? (3) camera capture cost measured on-chip, no JPEG encode?
+- **Why now:** Track B gave 114 MMAC/s single-core at 100MHz. The deployable rate is unknown by ~10x, and the vision-hover model cannot be designed until that range closes. Multi-core is the difference between a ~3M-MAC budget and a ~21M-MAC one.
+- **Also tests:** HYP-AIDECK-RATE. The 73ms capture floor under every budget number is inferred from an end-to-end stream measurement, not measured on the chip.
+- **Deliverable:** a rewritten "Frame budget" table in `VISION_HOVER_PLAN.md` -- measured capture cost, measured throughput, MAC budget at 5/10/15 Hz.
+- **Validation rule:** final output checksum must pass on every reported run. A fast wrong answer is worse than a slow right one.
+- **Not an experiment.** Hardware measurement, deliberately outside the `exp_` namespace.
+- **Out of scope:** designing or training the vision model, dataset capture (Windows only, FACT-018), flight testing.
+
+### [READY] phase-1-hover -- 30s stable hover, no wall contact
+- **Host:** wherever the radio is. Flow deck + `fly.py`, not the AI Deck. Independent of all GAP8 work -- runs in parallel.
+- **Status:** best so far is 7.0s airborne via `fly.py takeoff` (0.374m, 4.4cm drift). Exit criterion is 30s held, no wall contact.
+- **Why it matters:** this is Phase 1 of `VISION_HOVER_PLAN.md` and the actual gate on Phases 2-3. Both tracks now pass, so nothing upstream is blocking it, and nobody is working it.
+- **Open question carried in:** the legacy `hover` mode remains broken (linear `thrust_to_pwm` under-commands hover thrust; reached 8.5cm and skidded 1.11m). Fix it or retire it in favour of `takeoff` -- decide, do not leave both.
+
 ---
 
 ## Completed
