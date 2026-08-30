@@ -193,7 +193,7 @@ GAP8 is 9 cores: 1 fabric controller that orchestrates, plus an 8-core compute
 cluster. The orchestrator is the 9th core, not one of the 8, so all 8 compute
 and there is no core to reclaim. See `GAP8_ARCHITECTURE.md`.
 
-## Simplified first task (narrowed 2026-08-29)
+## Simplified first task / integration milestone (narrowed 2026-08-29)
 
 Full 6DOF marker pose was more than the first task needs. Narrowed to two
 numbers only:
@@ -212,6 +212,11 @@ not detect, so a 4"×4" square was used (`marker_calibration.json`,
 HYP-MARKER-OTSU). Plain enough that classical CV (threshold → contour →
 bounding box) detects it directly; no fiducial library needed.
 
+This marker is deliberate scaffolding, not the final perception target. It
+provides known geometry and cheap labels while the camera -> GAP8 -> STM32 ->
+motors path is proved. Once that path works, the roadmap moves first to hands
+and then to other drones; see `OBJECT_PERCEPTION_PLAN.md`.
+
 **Method — teacher (classical CV) → student (CNN), matching the project's
 existing learning-by-cheating pattern** (`docs/AI_GP_VISION_TRANSITION_PLAN.md`):
 classical CV run on captured frames on the host generates the (vertical
@@ -226,8 +231,8 @@ Steps, with status:
 
 | # | Step | Host | Status |
 | --- | --- | --- | --- |
-| 1 | Marker detector (classical CV: threshold/contour/bbox → vertical offset + size) | Linux VM (portable Python/OpenCV, no hardware needed) | in progress |
-| 2 | Distance calibration — apparent size ↔ real distance, a few known-distance reference shots | Windows (native host) | first live run 2026-08-29: 3 samples, k=18.86 px·m, worst residual 3.95%, span only 1.49x (wizard warning). Physical marker was a **4 in × 4 in** square on paper — operator reported a 1 in marker did not detect. See `marker_calibration.json`. |
+| 1 | Marker detector (classical CV: threshold/contour/bbox → vertical offset + size) | Linux VM (portable Python/OpenCV, no hardware needed) | synthetic tests pass and a 4 in marker detects over a narrow live range. Next: save failure frames and replace external-only/largest-box selection with hierarchy-aware or connected-component selection plus a rotation-stable size measure. |
+| 2 | Distance calibration — apparent size ↔ real distance, a few known-distance reference shots | Windows (native host) | **not yet accepted.** The 2026-08-29 run had 3 samples over only 1.49x span. The 2026-08-30 run had only 2 samples over 1.47x; its 0.4826 m sample required about 30 deg marker/camera angle and is not valid for the face-on model. Combined runs suggest, but do not prove, a roughly 10-12 cm distance-datum offset. Use a face-on 4 in marker, measure from the lens plane, save raw frames, and target roughly 0.30/0.45/0.60/0.75/0.90 m after the detector fix. See `marker_calibration.json` and Git history for the overwritten first run. |
 | 3 | Synchronized capture — frames (+ telemetry where useful) during flight | Windows (native host) | may largely reuse `windows_testbed/flight_watch_gui.py` already; check before building new |
 | 4 | Auto-label captured frames via step 1's detector | Either host | depends on step 1 |
 | 5 | Train tiny CNN (image → vertical offset + size), P-controller converts to thrust/pitch initially | Windows (1070Ti) or Linux VM | depends on step 4 |
@@ -258,7 +263,19 @@ and infers.
 | 4 | Train small int8 CNN, deploy via DORY | Runs on GAP8 within the Track B budget |
 | 5 | Shadow mode — net infers while the flow deck flies | Net output tracks the marker-derived pose |
 | 6 | Bounded live — net closes the loop, flow deck as fallback | Holds position on camera alone |
-| 7 | Remove the marker | Hover on learned visual features alone |
+| 7 | Generalize beyond the marker | Hand detection first, then nearby-drone detection/tracking under the promotion gates in `OBJECT_PERCEPTION_PLAN.md`. |
+
+## Beyond the marker
+
+The end target is learned object perception, not increasingly elaborate
+thresholding of a printed square. Hands are the first target because they are
+larger and easier to collect/label; nearby drones follow once the complete
+onboard inference and safety path is proven. Object perception changes the
+student output from `(vertical offset, marker size)` to class confidence and a
+bounding box, with temporal tracking and a separately validated range signal.
+Unknown-size hands and attitude-varying drones cannot reuse the marker's
+inverse-size distance equation without qualification. The data, model,
+distance, safety, and promotion plan is `OBJECT_PERCEPTION_PLAN.md`.
 
 ## Open items carried in from the existing stack
 
@@ -269,10 +286,9 @@ and infers.
 ## What this plan does NOT claim
 
 - No vision model has been trained. None exists in either repo.
-- No network of any kind has been run on the GAP8. Track B is unstarted, and
-  the toolchain it depends on has itself changed. Both questions are open.
-- DORY is documented by Bitcraze as the alternative and is adopted here on that
-  basis. It has not been run on this bench. Nothing about it is verified.
+- No task-specific marker, hand, or drone vision model has been trained or run
+  on the GAP8. DORY itself and a stock DroNet inference have been verified on
+  this bench; the open question is the task model and integrated control loop.
 - The sim RL line has passed one gate, once (exp_028). It is not a usable
   teacher for racing and is not on this plan's critical path.
 

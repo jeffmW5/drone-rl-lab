@@ -168,15 +168,15 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
 
 ## Open Items
 
-- [ ] **Streamer flashed; native-Windows verification pending.** Rebuilt the
+- [x] **Streamer restored and live native-Windows frames verified.** Rebuilt the
       confirmed JPEG/`aideck-stream` source and flashed its 73,760-byte GAP8
       hyperflash image successfully over Olimex JTAG on 2026-08-29. OpenOCD
       completed at 100% with exit code 0. Exact image archived under
       `real_flight/firmware/gap8_wifi_img_streamer_aideck_stream_jpeg_20260829/`
       (SHA256 `6851a619f7a7ce4f7135f7abab3b31559d039be390cd694bf3f7b304b620edbf`).
-      Remaining exit criterion: physically power-cycle the Crazyflie, confirm
-      the SSID on native Windows, connect to `192.168.4.1:5000`, and verify
-      JPEG frame flow near the established 7.3 fps. **The GAP8 runs the
+      The 2026-08-29 and 2026-08-30 live marker-calibration runs prove the
+      restored stream reaches the native-Windows wizard. The separate 5-minute
+      sustained-capture exit criterion remains open below. **The GAP8 runs the
       streamer or a network, never both** — steps 2 and 3 of the vision task
       need the streamer, step 6 needs the net.
 - [x] Stable hover achieved 2026-08-28 via `fly.py takeoff` (firmware high-level
@@ -201,17 +201,24 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
       See `GAP8_PERF_RESULT.md`.
 - [ ] **Phase 1 hover — 30s held, no wall contact.** Best so far 7.0s via
       `fly.py takeoff`. Independent of the GAP8 work; runs in parallel.
-- [ ] **Vision-hover first task narrowed** 2026-08-29: rise-to-level +
-      distance-hold on a plain 1"x1" marker (not full 6DOF pose). Detector
-      (`marker_detector.py`), printable marker (`make_marker.py`,
-      `marker_1in.pdf`, square verified at 1.0000in by rendering) and the
-      distance-calibration wizard
-      (`windows_testbed/marker_calibration_gui.py`, fit maths self-tested) are
-      all built. **None has seen a real camera frame.** The streamer image is
-      now flashed, pending power-cycle and native-Windows validation. Capture
-      wizard (step 3) still to do; check `flight_watch_gui.py` first, it may
-      already cover it. See
-      `WINDOWS_MARKER_WIZARDS_PROMPT.md`, INBOX `marker-wizards`.
+- [ ] **Vision-hover marker integration milestone.** Rise-to-level +
+      distance-hold uses a plain 4 in square (1 in did not detect), not full
+      6DOF pose. The detector and calibration wizard have now seen live frames
+      in two runs. Neither calibration is accepted: the first covered only
+      1.49x distance span; the second had only two points over 1.47x, and its
+      0.4826 m sample required about 30 deg angle, violating the face-on model.
+      Next: make the detector preserve raw success/failure frames, handle
+      nested contours instead of external-only/largest-box selection, use a
+      rotation-stable size measure, then repeat face-on samples measured from
+      the lens plane. Capture step 3 still needs confirmation against
+      `flight_watch_gui.py`. See `VISION_HOVER_PLAN.md`.
+- [ ] **General object perception after marker integration.** The marker is
+      scaffolding, not the end target. Progression is nearby hand detection ->
+      hand tracking/optional gestures -> nearby-drone detection -> tracking and
+      conservative avoidance/following. Use real 324x244 grayscale AI Deck
+      data, a host-side teacher plus human corrections, session-separated
+      evaluation, a tiny int8 DORY student, shadow mode, and Flow Deck safety
+      fallback. See `OBJECT_PERCEPTION_PLAN.md`.
 - [x] **Track B — can the GAP8 run a net at all?** DONE 2026-08-29. Yes.
       DroNet (DORY's own `PULP.GAP8` stock example) runs end-to-end on the
       physical AI Deck: 359.9ms/inference (≈2.78 fps) single-core, final
@@ -224,10 +231,11 @@ docker run --rm -v ${PWD}:/module --device /dev/ttyUSB0 --privileged -P \
       all.) An earlier custom test network (`simple_cnn` in `~/projects/gap_sdk/dorytest`)
       crashed on hardware — confirmed to be that network's own bug, not the
       toolchain, since DroNet runs clean on the identical setup. 359.9ms is
-      far above the ~13.7fps ceiling `VISION_HOVER_PLAN.md`'s frame budget
-      assumes — multi-core (untried, GAP8 has 8 cluster cores) or a smaller
-      model will be needed for real vision-hover. See `GAP8_DORY_RESULT.md`,
-      `memory/FACTS.md` FACT-023.
+      The later performance pass measured 8-core DroNet at 63.82ms
+      (15.67fps) and established the full model/capture budget in
+      `VISION_HOVER_PLAN.md`; the task-specific model still needs to be sized,
+      trained, and tested. See `GAP8_DORY_RESULT.md`, `GAP8_PERF_RESULT.md`,
+      and `memory/FACTS.md` FACT-023 through FACT-026.
 - [ ] Finish Track A's stated exit criterion. It called for a 5-minute sustained
       hold; only 120s was run. One long capture before trusting it for a dataset session.
 
