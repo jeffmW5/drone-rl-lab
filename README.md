@@ -1,5 +1,10 @@
 # drone-rl-lab
 
+Current local AI-deck/1070 Ti setup: [tether perception pipeline](real_flight/tether/README.md).
+The pipeline builds through DORY and passes simulator checks; real tether
+data and physical integration remain pending. Historical racing progress below
+is not a live training-status feed; consult recorded results and `outbox/STATUS.md`.
+
 An agentic loop for autonomously training and iterating on RL drone controllers,
 inspired by [Andrej Karpathy's autoresearch](https://github.com/karpathy/autoresearch).
 
@@ -65,9 +70,8 @@ mistakes. Automation also writes a machine-readable snapshot to
 
 - `exp_056` finished on 2026-03-25 with **28.92 final mean reward** (peak 40.96)
   but **0 gates** and a **0.64s average dive-crash** benchmark.
-- `exp_057` (body-frame gate observations) is currently training on RunPod.
-- `exp_058` (soft-collision curriculum) and `exp_059` (asymmetric actor-critic)
-  are implemented and queued.
+- `exp_057`, `exp_058` and `exp_059` have recorded results in
+  `memory/EXPERIMENT_LOG.md`; the old queued/running status is superseded.
 - `exp_046` remains the best short-flight benchmark reference in the current
   direct-racing line: **1.37s average flight**, **0 gates**, but consistent
   flights toward gate 0.
@@ -88,7 +92,7 @@ reward definitions change.
 
 ```bash
 source /home/jeff/drones-venv/bin/activate
-cd /media/drone-rl-lab
+cd /home/jeff/drone-rl-lab
 
 # Run an experiment
 python train.py configs/exp_NNN.yaml

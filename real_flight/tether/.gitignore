@@ -1,0 +1,10 @@
+vendor/
+runs/
+generated/
+firmware/
+recordings/
+data/
+/sdk-image.json
+/gap8-*-result.json
+/evidence-current.json
+*.log

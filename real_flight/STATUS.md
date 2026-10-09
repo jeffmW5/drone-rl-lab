@@ -1,6 +1,16 @@
 # Real Flight Deployment — Status
 
-Last updated: 2026-05-16 (consolidated from sessions through 2026-04-26)
+Latest software integration: 2026-10-08. Historical hardware entries below
+retain their recorded dates; they were not rerun during this integration.
+
+## Local WSL / tether pipeline
+
+See [`tether/README.md`](tether/README.md). GTX 1070 Ti GPU training is verified,
+and the new small DORY model passes 16 GVSOC inputs with exact per-layer
+comparison. Camera image generation and observation-only STM32 builds pass.
+This model has not run on the physical AI-deck. Existing DroNet hardware
+results below remain separate evidence. Omarchy was located on D: and started;
+guest setup awaits user unlock. Native Windows remains the dataset-capture host.
 
 ## Overview
 

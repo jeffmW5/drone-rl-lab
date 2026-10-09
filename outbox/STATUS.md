@@ -1,4 +1,11 @@
-# Status -- Last Updated 2026-04-19
+# Status -- Local pipeline update 2026-10-08
+
+The local GTX 1070 Ti / WSL AI-deck pipeline is now in
+[`real_flight/tether`](../real_flight/tether/README.md). See
+[`tether_pipeline_2026_10_08.md`](tether_pipeline_2026_10_08.md) for integration
+checks and remaining physical validation. Square detection/calibration remains
+under `real_flight`. The racing report below is historical as of 2026-04-19;
+no new racing training or benchmark was run in this integration.
 
 ## Latest Result
 

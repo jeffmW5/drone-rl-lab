@@ -1,0 +1,152 @@
+{
+  "sources": {
+    "crazyflie-lib-python": {
+      "commit": "3c1cb0d024fef6f45d08f0ad236a22ac395dd924",
+      "dirty": ""
+    },
+    "crazyflie-firmware": {
+      "commit": "f6e0f0a3b526861328caf3296a7ecf00bb915d39",
+      "dirty": ""
+    },
+    "dory": {
+      "commit": "add0d9c1be889b5f802b2606ced8c59acff8aa02",
+      "dirty": ""
+    },
+    "aideck-gap8-examples": {
+      "commit": "d39d2ec5001f94bf774dbd1187ae4cf869a3094d",
+      "dirty": ""
+    }
+  },
+  "artifacts": {
+    "runs/smoke/model.pt": {
+      "bytes": 21873,
+      "sha256": "0c0938aea239d0e7f4b38d36f742579c5f5ad58e1e795ba2a05a57274e234d8c"
+    },
+    "runs/smoke/model.float.onnx": {
+      "bytes": 20544,
+      "sha256": "d5ee744c5d696c580defa429c3facce188f934ae1eb34e2412035c2218dd80c3"
+    },
+    "runs/quantized/model_int.onnx": {
+      "bytes": 20618,
+      "sha256": "99bd8ea50b0dc970857045e4d86f13bc4d75714fb70238427e24f16b30eadf54"
+    },
+    "firmware/stm32/build/cf2.bin": {
+      "bytes": 308268,
+      "sha256": "4ac8a674e52f6ac3848f5627d533bb56ada469fe854fea33314f2eb121b57e34"
+    },
+    "firmware/stm32-cf21bl/build/cf21bl.bin": {
+      "bytes": 300904,
+      "sha256": "e448082646630b698eb8eb4435d583873b77f2580893eb4ab455aaef73252b42"
+    },
+    "firmware/tether-camera/BUILD/GAP8_V2/GCC_RISCV_FREERTOS/tether_camera": {
+      "bytes": 1046408,
+      "sha256": "12fd1766ba84100aaf0ac3691951a0e0fd2c588c7c6b03be8cacf438a31349f4"
+    },
+    "firmware/tether-golden/BUILD/GAP8_V2/GCC_RISCV_FREERTOS/main": {
+      "bytes": 233800,
+      "sha256": "66bedef592de91802688c9b354327e7b8f0c7f6f67d4e5e8201163547e04d2d2"
+    }
+  },
+  "quantization": {
+    "samples": 512,
+    "synthetic": true,
+    "float_accuracy": 0.998046875,
+    "integer_accuracy": 0.998046875,
+    "prediction_disagreements": 0,
+    "onnx_integer_reference_max_error": 0,
+    "output_scale": 0.00048828125,
+    "classes": [
+      "absent",
+      "left",
+      "center",
+      "right"
+    ],
+    "layers": [
+      {
+        "op": "conv",
+        "index": 0,
+        "weight_scale": 0.0078125,
+        "input_scale": 0.00390625,
+        "accumulator_bound": 91967
+      },
+      {
+        "op": "relu",
+        "index": 1,
+        "shift": 9,
+        "scale": 0.015625
+      },
+      {
+        "op": "maxpool",
+        "index": 2
+      },
+      {
+        "op": "conv",
+        "index": 3,
+        "weight_scale": 0.00390625,
+        "input_scale": 0.015625,
+        "accumulator_bound": 848470
+      },
+      {
+        "op": "relu",
+        "index": 4,
+        "shift": 8,
+        "scale": 0.015625
+      },
+      {
+        "op": "maxpool",
+        "index": 5
+      },
+      {
+        "op": "conv",
+        "index": 6,
+        "weight_scale": 0.00390625,
+        "input_scale": 0.015625,
+        "accumulator_bound": 1210771
+      },
+      {
+        "op": "relu",
+        "index": 7,
+        "shift": 11,
+        "scale": 0.125
+      },
+      {
+        "op": "avgpool",
+        "index": 8
+      },
+      {
+        "op": "linear",
+        "index": 10,
+        "weight_scale": 0.00390625,
+        "input_scale": 0.125,
+        "accumulator_bound": 1160413
+      }
+    ],
+    "portable_c_integer_match": true,
+    "generated_c_validated": false,
+    "hardware_validated": false
+  },
+  "arm_compiler": "arm-none-eabi-gcc (15:13.2.rel1-2) 13.2.1 20231009",
+  "sdk_results": {
+    "camera": {
+      "stage": "camera",
+      "image": "bitcraze/aideck@sha256:038197df9cb86ccf8e6649e93dd0cf23781830e136288523983768918851633e",
+      "exit_code": 0,
+      "passed": true,
+      "log": "/home/n33du/ai/crazyflie-tether/gap8-camera-build.log",
+      "physical_hardware_tested": false
+    },
+    "golden": {
+      "stage": "golden",
+      "image": "bitcraze/aideck@sha256:038197df9cb86ccf8e6649e93dd0cf23781830e136288523983768918851633e",
+      "exit_code": 0,
+      "passed": true,
+      "log": "/home/n33du/ai/crazyflie-tether/gap8-golden-build.log",
+      "physical_hardware_tested": false
+    }
+  },
+  "gap8_compilation_verified": true,
+  "gap8_golden_input_verified": true,
+  "physical_hardware_verified": false,
+  "omarchy_configured": false,
+  "goal_complete": false
+}

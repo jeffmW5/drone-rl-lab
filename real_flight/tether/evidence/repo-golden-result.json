@@ -1,0 +1,8 @@
+{
+  "stage": "golden",
+  "image": "bitcraze/aideck@sha256:038197df9cb86ccf8e6649e93dd0cf23781830e136288523983768918851633e",
+  "exit_code": 0,
+  "passed": true,
+  "log": "/home/n33du/ai/drone-rl-lab/real_flight/tether/gap8-golden-build.log",
+  "physical_hardware_tested": false
+}

@@ -12,3 +12,4 @@
 *.jpeg  binary
 *.png   binary
 *.img   binary
+*.sh text eol=lf

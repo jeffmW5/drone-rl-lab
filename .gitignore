@@ -19,6 +19,7 @@ results/ai_gp_*/
 
 # Logs
 *.log
+real_flight/aideck_logs/*.zip
 
 # Generated plots (regenerate with plot.py)
 results/**/*.png

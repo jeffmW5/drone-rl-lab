@@ -1,0 +1,28 @@
+{
+  "gpu": "NVIDIA GeForce GTX 1070 Ti",
+  "torch": "2.14.0+cu126",
+  "cuda": "12.6",
+  "capability": [
+    6,
+    1
+  ],
+  "architectures": [
+    "sm_50",
+    "sm_60",
+    "sm_70",
+    "sm_75",
+    "sm_80",
+    "sm_86",
+    "sm_90"
+  ],
+  "synthetic": true,
+  "parameters": 4596,
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 1.379750370979309,
+      "val_accuracy": 0.341796875
+    }
+  ],
+  "flight_ready": false
+}
