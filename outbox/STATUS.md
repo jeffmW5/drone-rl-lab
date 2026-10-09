@@ -66,3 +66,5 @@ See `research/deployment_gap_mean_policy.md` for full details.
 2. Keep `exp_069` as the last benchmark-backed comparison point until `exp_071` is actually benchmarked.
 3. Continue with `exp_072` if queue momentum matters more than immediate evaluation repair, but keep `exp_071` explicitly unresolved.
 4. Use `docs/throughput_findings_2026_04_19.md` as the current reference for rollout bottleneck discussion.
+
+2026-10-08: Added randomized tether navigation and HTML guide. 19 tests pass; CPU V005 smoke saved/evaluated policies. CUDA smoke interrupted by WSL restarts, cause unconfirmed. Known geometry, static horizontal routes, no vision/hardware validation. Main V005 launch follows commit.

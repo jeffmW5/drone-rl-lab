@@ -97,3 +97,5 @@ The main run completed 250,880 transitions in 510.24 seconds. Final payload
 RMSE was 0.22857 m versus PD's 0.20472 m. Best evaluated PPO RMSE was
 0.20595 m at 50,000 steps. Neither beat PD; both controllers had zero crashes
 on the three evaluation seeds. These are limited simulator results.
+
+V005: six random physical obstacles, bounded 2D A* routing, coordinate goal commands, randomized dynamics. CPU smoke completed 2048 transitions with checkpoints/evaluation; 19 tests pass. CUDA V003/V004 attempts ended during WSL restarts, cause unconfirmed. Preserved artifacts. Main command: python -m tether_sim.train --config configs/tether_v005.json --output tmp/tether-runs/tether_v005
