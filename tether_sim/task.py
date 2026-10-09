@@ -14,6 +14,7 @@ class LiftCarryTask(gym.Wrapper):
         self.observation_space=spaces.Box(-np.inf,np.inf,(self.env.observation_space.shape[0]+6,),np.float64)
         self.phase=0.
         self.previous=np.zeros(4)
+        self.external_wind=np.zeros(3)
 
     def reset(self, *, seed=None, options=None):
         self.env.reset(seed=seed,options={'scenario':'lift_carry'})
@@ -24,6 +25,7 @@ class LiftCarryTask(gym.Wrapper):
         self.env.data.qpos[:2]=rng.uniform(-.05,.05,2)
         self.phase=float(rng.uniform(0,2*np.pi))
         self.previous[:]=0
+        self.external_wind[:]=0
         mujoco.mj_forward(self.env.model,self.env.data)
         return self._task_obs(self.env._obs()),self.env.metrics()
 
@@ -35,7 +37,7 @@ class LiftCarryTask(gym.Wrapper):
         if correction.shape!=(4,) or not np.isfinite(correction).all():
             raise ValueError('Four finite residual commands required')
         correction=np.clip(correction,-1,1)
-        self.env.wind[:]=[.012*np.sin(2*np.pi*self.env.data.time/2.5+self.phase),0,0]
+        self.env.wind[:]=np.array([.012*np.sin(2*np.pi*self.env.data.time/2.5+self.phase),0,0])+self.external_wind
         motors=np.clip(self.env.baseline()+self.residual_scale*correction,0,1)
         obs,_,terminated,truncated,info=self.env.step(motors)
         payload_target=self.env.target-[0,0,self.env.config.length+.02]

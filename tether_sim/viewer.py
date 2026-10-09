@@ -17,8 +17,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=8766)
     parser.add_argument('--training-run',default='tmp/tether-runs/tether_v002')
+    parser.add_argument('--policy-run',help='Run directory containing best/final checkpoint pairs')
+    parser.add_argument('--checkpoint',choices=['best','final','PD'],default='best')
+    parser.add_argument('--seed',type=int,default=10001)
     args = parser.parse_args()
-    env = TetherEnv()
+    playback=None
+    if args.policy_run:
+        from .playback import PolicyPlayback
+        playback=PolicyPlayback(args.policy_run,args.checkpoint,args.seed)
+    env = playback.env if playback else TetherEnv()
     env.model.vis.quality.offsamples=2
     env.model.vis.quality.shadowsize=2048
     prop_bases=[env.model.geom(f'prop{i}').quat.copy() for i in range(4)]
@@ -86,7 +93,10 @@ def main():
     camera.distance, camera.azimuth, camera.elevation = 1.65, 135, -15
     print(f'Tether Lab http://localhost:{args.port}', flush=True)
     scenario, paused, gust_until = 'lift_carry', False, 0
-    env.reset(options={'scenario':scenario})
+    if playback:
+        playback.reset()
+    else:
+        env.reset(options={'scenario':scenario})
     mode='overview'
     accumulator=0.
     last=time.monotonic()
@@ -102,11 +112,20 @@ def main():
                 commands, shared['commands'] = shared['commands'], []
             for command in commands:
                 if command.get('type') == 'reset':
-                    scenario = command.get('scenario','hover')
+                    scenario = 'lift_carry' if playback else command.get('scenario','hover')
                     if scenario in ('hover','swing','lift','carry','lift_carry'):
-                        env.reset(options={'scenario':scenario})
+                        playback.reset() if playback else env.reset(options={'scenario':scenario})
                         paused=False
                         accumulator=0
+                        gust_until=0
+                elif command.get('type')=='controller' and playback:
+                    choice=command.get('controller')
+                    if choice in ('PD','best','final'):
+                        playback.controller=choice
+                        playback.reset()
+                        paused=False
+                        accumulator=0
+                        gust_until=0
                 elif command.get('type') == 'pause':
                     paused = not paused
                 elif command.get('type') == 'gust':
@@ -122,12 +141,15 @@ def main():
                     camera.distance = max(.4,min(8,camera.distance+float(command.get('zoom',0))))
             if not paused:
                 accumulator+=elapsed
-                env.wind[0] = .025 if env.data.time < gust_until else 0
+                if playback:
+                    playback.task.external_wind[0]=.025 if env.data.time<gust_until else 0
+                else:
+                    env.wind[0] = .025 if env.data.time < gust_until else 0
                 for _ in range(min(10,int(accumulator/env.config.control_dt))):
-                    _,_,terminated,truncated,_ = env.step(env.baseline())
+                    _,_,terminated,truncated,_ = playback.step() if playback else env.step(env.baseline())
                     accumulator-=env.config.control_dt
                     if truncated:
-                        env.reset(options={'scenario':scenario})
+                        playback.reset() if playback else env.reset(options={'scenario':scenario})
                         accumulator=0
                         break
                     if terminated:
@@ -151,6 +173,7 @@ def main():
             frame_times=frame_times[-60:]
             fps=(len(frame_times)-1)/(frame_times[-1]-frame_times[0]) if len(frame_times)>1 else 0
             state = env.metrics() | dict(paused=paused,scenario=scenario, wind_N=env.wind.tolist(),fps=fps,view=mode,lag_s=accumulator)
+            state.update(policy_loaded=bool(playback),controller=playback.controller if playback else 'PD',policy_inferences=playback.inferences if playback else 0,residual_action=playback.last_action.tolist() if playback else [0]*4,seed=args.seed)
             try:
                 state['training']=json.loads((Path(args.training_run)/'status.json').read_text())
             except (OSError,ValueError):

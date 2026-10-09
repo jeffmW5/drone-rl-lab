@@ -71,3 +71,29 @@ This small MLP can be faster on CPU; GPU use here satisfies the requested
 Three evaluation seeds and fixed physics are insufficient for broad claims.
 Larger held-out sets, parameter randomization and hardware calibration remain
 necessary before relying on this controller beyond the current simulator.
+
+## Watch a saved policy
+
+```bash
+/home/n33du/ai/crazyflie-tether-venv/bin/python -m tether_sim.viewer \
+  --policy-run tmp/tether-runs/tether_v002 --checkpoint best --seed 10001
+```
+
+The viewer runs the exact LiftCarryTask observation/action contract, loads
+the matching normalization file with updates disabled, and performs deterministic
+CPU inference. CPU inference avoids unnecessary CUDA overhead for one live drone.
+Use the PD / Best policy / Final policy buttons for a same-seed comparison;
+changing controller resets the episode. Only the trained lift/carry scenario
+is enabled in policy mode. The sinusoidal training wind remains active; Wind
+pulse adds an extra disturbance outside the original evaluation conditions.
+The controller label and inference counter show which controller actually runs.
+
+`python -m tether_sim.check_playback --run tmp/tether-runs/tether_v002`
+checks the reloaded best policy against its saved evaluation. On this run,
+the three-seed RMSE reproduced as 0.205950080967 m versus 0.205950081223 m
+recorded, across 1,800 inference steps.
+
+The main run completed 250,880 transitions in 510.24 seconds. Final payload
+RMSE was 0.22857 m versus PD's 0.20472 m. Best evaluated PPO RMSE was
+0.20595 m at 50,000 steps. Neither beat PD; both controllers had zero crashes
+on the three evaluation seeds. These are limited simulator results.

@@ -1,5 +1,11 @@
 # Status -- Local pipeline update 2026-10-08
 
+Tether v002 completed 250,880 steps / 510.24 s. Final payload RMSE 0.22857 m
+versus PD 0.20472 m; best checkpoint 0.20595 m. No improvement on the three
+evaluation seeds; zero crashes for both. Saved-policy playback now reproduces
+the best checkpoint's recorded evaluation and supports same-seed PD/best/final
+comparison in Flight Studio. See `tether_sim/TRAINING.md`.
+
 First tether training pipeline: [`tether_sim/TRAINING.md`](../tether_sim/TRAINING.md).
 The CUDA smoke passed 2,048 transitions with saved checkpoints and paired PD
 evaluation. No improvement was established. A first main run is configured
