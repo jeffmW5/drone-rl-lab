@@ -5,6 +5,7 @@ import json
 import threading
 import time
 import math
+import re
 import numpy as np
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -20,12 +21,20 @@ def main():
     parser.add_argument('--policy-run',help='Run directory containing best/final checkpoint pairs')
     parser.add_argument('--checkpoint',choices=['best','final','PD'],default='best')
     parser.add_argument('--seed',type=int,default=10001)
+    parser.add_argument('--generalize',action='store_true',help='Preview randomized obstacle task with PD')
+    parser.add_argument('--navigation',action='store_true',help='Preview random clutter and destination commands')
     args = parser.parse_args()
     playback=None
     if args.policy_run:
         from .playback import PolicyPlayback
         playback=PolicyPlayback(args.policy_run,args.checkpoint,args.seed)
-    env = playback.env if playback else TetherEnv()
+    preview=None
+    if (args.generalize or args.navigation) and not playback:
+        from .generalize import GeneralLiftCarryTask
+        from .navigation import NavigationTask
+        preview=NavigationTask() if args.navigation else GeneralLiftCarryTask()
+        preview.reset(seed=args.seed)
+    env = playback.env if playback else preview.env if preview else TetherEnv()
     env.model.vis.quality.offsamples=2
     env.model.vis.quality.shadowsize=2048
     prop_bases=[env.model.geom(f'prop{i}').quat.copy() for i in range(4)]
@@ -33,6 +42,9 @@ def main():
     shared = dict(frame=b'', camera=b'', state={}, commands=[], paused=False)
 
     class Handler(BaseHTTPRequestHandler):
+        def setup(self):
+            super().setup()
+            self.connection.settimeout(3)
         def log_message(self, *args):
             pass
 
@@ -62,6 +74,8 @@ def main():
                     body, mime = shared['camera'], 'image/jpeg'
                 elif self.path == '/state':
                     body, mime = json.dumps(shared['state']).encode(), 'application/json'
+                elif self.path in ('/guide','/guide/'):
+                    body,mime=Path(__file__).with_name('guide.html').read_bytes(),'text/html'
                 else:
                     body, mime = Path(__file__).with_name('studio.html').read_bytes(), 'text/html'
             self.send_response(200)
@@ -69,7 +83,10 @@ def main():
             self.send_header('Cache-Control', 'no-store')
             self.send_header('Content-Length', str(len(body)))
             self.end_headers()
-            self.wfile.write(body)
+            try:
+                self.wfile.write(body)
+            except (BrokenPipeError,ConnectionResetError,TimeoutError):
+                pass
 
         def do_POST(self):
             size = int(self.headers.get('Content-Length',0))
@@ -78,14 +95,23 @@ def main():
                 return
             try:
                 command = json.loads(self.rfile.read(size))
+                if not isinstance(command,dict) or command.get('type') not in ('reset','pause','gust','view','orbit','controller','seed','loop','goal'):
+                    raise ValueError('Unknown command')
+                for key in ('dx','dy','zoom'):
+                    if key in command and (not isinstance(command[key],(float,int)) or not math.isfinite(command[key])):
+                        raise ValueError('Invalid camera value')
                 with lock:
-                    shared['commands'].append(command)
+                    if len(shared['commands'])<128:
+                        shared['commands'].append(command)
                 self.send_response(204)
                 self.end_headers()
             except (ValueError, TypeError):
                 self.send_error(400)
 
-    server = ThreadingHTTPServer(('127.0.0.1',args.port), Handler)
+    class Server(ThreadingHTTPServer):
+        daemon_threads=True
+        request_queue_size=32
+    server = Server(('127.0.0.1',args.port), Handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     camera = mujoco.MjvCamera()
     mujoco.mjv_defaultCamera(camera)
@@ -95,6 +121,9 @@ def main():
     scenario, paused, gust_until = 'lift_carry', False, 0
     if playback:
         playback.reset()
+    elif preview:
+        preview.reset(seed=args.seed)
+        env=preview.env
     else:
         env.reset(options={'scenario':scenario})
     mode='overview'
@@ -103,6 +132,25 @@ def main():
     frame_times=[]
     onboard_jpeg=b''
     frame_number=0
+    loop=False
+    stop_reason=''
+    episodes=0
+    command_message=''
+    def reset_episode():
+        nonlocal env,prop_bases,episodes
+        if playback:
+            playback.seed=args.seed
+            playback.reset()
+            env=playback.env
+        elif preview:
+            preview.reset(seed=args.seed)
+            env=preview.env
+        else:
+            env.reset(options={'scenario':scenario})
+        env.model.vis.quality.offsamples=2
+        env.model.vis.quality.shadowsize=2048
+        prop_bases=[env.model.geom(f'prop{i}').quat.copy() for i in range(4)]
+        episodes+=1
     try:
         while True:
             start = time.monotonic()
@@ -111,21 +159,51 @@ def main():
             with lock:
                 commands, shared['commands'] = shared['commands'], []
             for command in commands:
+                if command.get('type')=='goal':
+                    task=playback.task if playback else preview
+                    try:
+                        if not task or not hasattr(task,'set_goal'):
+                            raise ValueError('Destination commands require the navigation task')
+                        match=re.fullmatch(r'\s*(?:go\s+(?:to\s+)?)?(-?\d+(?:\.\d+)?)\s*[, ]\s*(-?\d+(?:\.\d+)?)\s*',str(command.get('prompt','')),re.I)
+                        if not match:
+                            raise ValueError('Use: go to 1.2 -0.5 (coordinates in meters)')
+                        goal=[float(match[1]),float(match[2])]
+                        task.set_goal(goal)
+                        if playback:
+                            playback.obs=task._task_obs(env._obs())
+                        paused=False;stop_reason='';accumulator=0
+                        command_message=f'Route planned to ({goal[0]:.2f}, {goal[1]:.2f}) m'
+                    except ValueError as error:
+                        command_message='Goal refused: '+str(error)
                 if command.get('type') == 'reset':
-                    scenario = 'lift_carry' if playback else command.get('scenario','hover')
+                    scenario = 'lift_carry' if playback or preview else command.get('scenario','hover')
                     if scenario in ('hover','swing','lift','carry','lift_carry'):
-                        playback.reset() if playback else env.reset(options={'scenario':scenario})
+                        reset_episode()
                         paused=False
+                        stop_reason=''
                         accumulator=0
                         gust_until=0
                 elif command.get('type')=='controller' and playback:
                     choice=command.get('controller')
                     if choice in ('PD','best','final'):
                         playback.controller=choice
-                        playback.reset()
+                        reset_episode()
                         paused=False
                         accumulator=0
                         gust_until=0
+                        stop_reason=''
+                elif command.get('type')=='seed':
+                    try:
+                        args.seed=int(command.get('seed',args.seed))
+                        reset_episode()
+                        paused=False
+                        accumulator=0
+                        gust_until=0
+                        stop_reason=''
+                    except (ValueError,TypeError,OverflowError):
+                        pass
+                elif command.get('type')=='loop':
+                    loop=bool(command.get('enabled',False))
                 elif command.get('type') == 'pause':
                     paused = not paused
                 elif command.get('type') == 'gust':
@@ -138,22 +216,37 @@ def main():
                 elif command.get('type') == 'orbit':
                     camera.azimuth += max(-30,min(30,float(command.get('dx',0))))
                     camera.elevation = max(-85,min(-5,camera.elevation+float(command.get('dy',0))))
-                    camera.distance = max(.4,min(8,camera.distance+float(command.get('zoom',0))))
+                    camera.distance = max(.12,min(8,camera.distance+float(command.get('zoom',0))))
             if not paused:
                 accumulator+=elapsed
                 if playback:
                     playback.task.external_wind[0]=.025 if env.data.time<gust_until else 0
+                elif preview:
+                    preview.external_wind[0]=.025 if env.data.time<gust_until else 0
                 else:
                     env.wind[0] = .025 if env.data.time < gust_until else 0
                 for _ in range(min(10,int(accumulator/env.config.control_dt))):
-                    _,_,terminated,truncated,_ = playback.step() if playback else env.step(env.baseline())
+                    try:
+                        result=playback.step() if playback else preview.step(np.zeros(4)) if preview else env.step(env.baseline())
+                        _,_,terminated,truncated,info=result
+                    except FloatingPointError as error:
+                        paused=True
+                        stop_reason=str(error)
+                        accumulator=0
+                        break
                     accumulator-=env.config.control_dt
                     if truncated:
-                        playback.reset() if playback else env.reset(options={'scenario':scenario})
+                        if loop:
+                            reset_episode()
+                            gust_until=0
+                        else:
+                            paused=True
+                            stop_reason='Episode complete — Replay to restart'
                         accumulator=0
                         break
                     if terminated:
                         paused = True
+                        stop_reason='Obstacle collision' if info.get('obstacle_collision') else 'Drone reached the ground'
                         break
             else:
                 accumulator=0
@@ -174,6 +267,8 @@ def main():
             fps=(len(frame_times)-1)/(frame_times[-1]-frame_times[0]) if len(frame_times)>1 else 0
             state = env.metrics() | dict(paused=paused,scenario=scenario, wind_N=env.wind.tolist(),fps=fps,view=mode,lag_s=accumulator)
             state.update(policy_loaded=bool(playback),controller=playback.controller if playback else 'PD',policy_inferences=playback.inferences if playback else 0,residual_action=playback.last_action.tolist() if playback else [0]*4,seed=args.seed)
+            state.update(loop=loop,stop_reason=stop_reason,episode=episodes,generalized=bool(preview or playback and playback.config.get('task')=='general_lift_carry_v1'),domain=preview.domain if preview else getattr(playback.task,'domain',{}) if playback else {})
+            state.update(navigation=bool(hasattr(preview,'set_goal') or playback and hasattr(playback.task,'set_goal')),command_message=command_message)
             try:
                 state['training']=json.loads((Path(args.training_run)/'status.json').read_text())
             except (OSError,ValueError):

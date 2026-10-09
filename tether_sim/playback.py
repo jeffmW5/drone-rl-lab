@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import numpy as np
 from .task import LiftCarryTask
+from .generalize import make_task
 
 
 class PolicyPlayback:
@@ -13,7 +14,7 @@ class PolicyPlayback:
         torch.set_num_threads(1)
         self.run=Path(run)
         self.config=json.loads((self.run/'config.json').read_text())
-        self.task=LiftCarryTask(self.config['residual_scale'],self.config['episode_seconds'])
+        self.task=make_task(self.config)
         self.env=self.task.env
         self.seed=seed
         self.models={}
@@ -30,6 +31,7 @@ class PolicyPlayback:
 
     def reset(self):
         self.obs,_=self.task.reset(seed=self.seed)
+        self.env=self.task.env
         self.last_action=np.zeros(4)
 
     def step(self):

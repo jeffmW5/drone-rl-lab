@@ -1,0 +1,13 @@
+{
+  "name": "tether_v003", "task": "general_lift_carry_v1",
+  "hypothesis": "Seeded physical/route variation and obstacle observations begin transfer beyond one fixed lift/carry trajectory; smaller zero-initialized residual updates may preserve baseline stability.",
+  "algorithm": "SB3 PPO residual motor control", "seed": 17, "device": "cuda", "vec_backend": "dummy",
+  "total_timesteps": 100000, "budget_seconds": 900, "n_envs": 4,
+  "n_steps": 256, "batch_size": 512, "n_epochs": 3,
+  "learning_rate": 0.00003, "gamma": 0.995, "log_std_init": -3,
+  "zero_residual_init": true, "residual_scale": 0.03, "episode_seconds": 16,
+  "eval_every_steps": 25000, "checkpoint_every_steps": 10000,
+  "eval_seeds": [20001,20002,20003,20004,20005],
+  "test_seeds": [30001,30002,30003,30004,30005,30006,30007,30008,30009,30010],
+  "notes": "New observation contract and random physical gate domains. Ground-truth state, obstacle geometry and domain parameters; no vision. Validation seeds select checkpoints, final test seeds used only at the end. Generalization must be measured, not assumed."
+}

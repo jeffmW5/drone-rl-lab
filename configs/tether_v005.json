@@ -1,0 +1,14 @@
+{
+  "name":"tether_v005", "task":"random_navigation_v1",
+  "hypothesis":"An inflated A* planner plus a domain-randomized residual controller can execute destination commands through reachable clutter layouts while preserving tether clearance.",
+  "algorithm":"SB3 PPO residual motor control with geometric route planner",
+  "seed":27,"device":"cpu","vec_backend":"dummy",
+  "total_timesteps":100000,"budget_seconds":900,"n_envs":2,
+  "n_steps":256,"batch_size":256,"n_epochs":3,"learning_rate":0.00003,
+  "gamma":0.995,"log_std_init":-3,"zero_residual_init":true,
+  "residual_scale":0.03,"episode_seconds":30,
+  "eval_every_steps":25000,"checkpoint_every_steps":10000,
+  "eval_seeds":[21001,21002,21003,21004,21005],
+  "test_seeds":[31001,31002,31003,31004,31005,31006,31007,31008,31009,31010],
+  "notes":"CPU fallback after v004 CUDA smoke coincided with WSL restart. Six randomized physical boxes, straight-path blocker, reachable layouts and bounded 2D A*. Ground-truth state/geometry, no vision. No arbitrary-obstacle guarantee. Final test seeds are separate from smoke probes and validation."
+}

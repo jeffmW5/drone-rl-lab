@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-10-09T01:23:11+00:00",
+  "generated_at": "2026-10-09T03:08:12+00:00",
   "repo": {
-    "path": "/mnt/d/drone-rl-lab",
+    "path": "D:\\drone-rl-lab",
     "available": true,
     "branch": "master",
-    "commit": "4968846b54c44c86c13572e32d75bf880be6eeab",
+    "commit": "30c976c669e077e23c7106d24fe7e40cf70089cc",
     "dirty": true
   },
   "external_repos": {
     "lsy_drone_racing": {
-      "path": "/media/lsy_drone_racing",
+      "path": "\\media\\lsy_drone_racing",
       "available": false
     }
   },
@@ -41,14 +41,14 @@
         "status": "READY",
         "status_kind": "ready",
         "title": "exp_070 -- Larger Network + Extended Training (14400s)",
-        "body": "- **Hypothesis:** exp_069 (2\u00d7128) peaked at 52.39 at iter 650/848 (still climbing). Doubling budget to 14400s gives the larger network time to converge. Single change from exp_069: budget 7200\u219214400.\n- **Expected outcome:** If capacity + training time is the key, deterministic gates should improve further. If gates plateau despite higher reward, something else is limiting.\n- **Config:** `configs/exp_070_larger_longer.yaml`",
+        "body": "- **Hypothesis:** exp_069 (2\u00c3\u2014128) peaked at 52.39 at iter 650/848 (still climbing). Doubling budget to 14400s gives the larger network time to converge. Single change from exp_069: budget 7200\u00e2\u2020\u201914400.\n- **Expected outcome:** If capacity + training time is the key, deterministic gates should improve further. If gates plateau despite higher reward, something else is limiting.\n- **Config:** `configs/exp_070_larger_longer.yaml`",
         "task_id": "exp_070"
       },
       {
         "status": "READY",
         "status_kind": "ready",
         "title": "exp_071 -- Observation Normalization",
-        "body": "- **Hypothesis:** Missing observation normalization causes poorly conditioned mean actions. The \"What Matters in On-Policy RL\" study (250K agents) identifies obs normalization as critical. Our Agent has NONE. Adding running-mean/std normalization should directly improve mean policy quality.\n- **What to change:** Add VecNormalize or equivalent running observation normalization to the training environment wrapper. Single change from exp_069 baseline (2\u00d7128, 7200s budget).\n- **Expected outcome:** Improved deterministic benchmark gates, potentially large improvement.\n- **Paper basis:** \"What Matters In On-Policy RL?\" (2006.05990), SimpleFlight (2412.11764), Swift (all normalize observations)\n- **Config:** `configs/exp_071_obs_normalization.yaml`",
+        "body": "- **Hypothesis:** Missing observation normalization causes poorly conditioned mean actions. The \"What Matters in On-Policy RL\" study (250K agents) identifies obs normalization as critical. Our Agent has NONE. Adding running-mean/std normalization should directly improve mean policy quality.\n- **What to change:** Add VecNormalize or equivalent running observation normalization to the training environment wrapper. Single change from exp_069 baseline (2\u00c3\u2014128, 7200s budget).\n- **Expected outcome:** Improved deterministic benchmark gates, potentially large improvement.\n- **Paper basis:** \"What Matters In On-Policy RL?\" (2006.05990), SimpleFlight (2412.11764), Swift (all normalize observations)\n- **Config:** `configs/exp_071_obs_normalization.yaml`",
         "task_id": "exp_071"
       },
       {
@@ -62,7 +62,7 @@
         "status": "READY",
         "status_kind": "ready",
         "title": "exp_073 -- Entropy Annealing (Late Mean Convergence)",
-        "body": "- **Hypothesis:** The mean doesn't converge because entropy stays constant. Annealing ent_coef from 0.01\u21920.001 over the last 30% of training forces the distribution to collapse onto the mean, making the mean carry all performance.\n- **What to change:** From exp_069 baseline, add ent_coef annealing schedule: 0.01 for first 70%, linearly anneal to 0.001 over remaining 30%.\n- **Expected outcome:** Deterministic benchmark should improve as mean sharpens late in training.\n- **Paper basis:** \"Learning Optimal Deterministic Policies\" (2405.02235), \"Entropy Annealing\" (2405.20250)\n- **Risk note:** exp_064 failed with ent_coef=0.03 start (3x too high). This starts from the working 0.01 and only anneals late.\n- **Config:** `configs/exp_073_entropy_annealing_late.yaml`",
+        "body": "- **Hypothesis:** The mean doesn't converge because entropy stays constant. Annealing ent_coef from 0.01\u00e2\u2020\u20190.001 over the last 30% of training forces the distribution to collapse onto the mean, making the mean carry all performance.\n- **What to change:** From exp_069 baseline, add ent_coef annealing schedule: 0.01 for first 70%, linearly anneal to 0.001 over remaining 30%.\n- **Expected outcome:** Deterministic benchmark should improve as mean sharpens late in training.\n- **Paper basis:** \"Learning Optimal Deterministic Policies\" (2405.02235), \"Entropy Annealing\" (2405.20250)\n- **Risk note:** exp_064 failed with ent_coef=0.03 start (3x too high). This starts from the working 0.01 and only anneals late.\n- **Config:** `configs/exp_073_entropy_annealing_late.yaml`",
         "task_id": "exp_073"
       },
       {
@@ -83,7 +83,7 @@
         "status": "READY",
         "status_kind": "ready",
         "title": "phase-1-hover -- 30s stable hover, no wall contact",
-        "body": "- **Host:** wherever the radio is. Flow deck + `fly.py`, not the AI Deck. Independent of all GAP8 work -- runs in parallel.\n- **Status:** best so far is 7.0s airborne via `fly.py takeoff` (0.374m, 4.4cm drift). Exit criterion is 30s held, no wall contact.\n- **Why it matters:** this is Phase 1 of `VISION_HOVER_PLAN.md` and the actual gate on Phases 2-3. Both tracks now pass, so nothing upstream is blocking it, and nobody is working it.\n- **Open question carried in:** the legacy `hover` mode remains broken (linear `thrust_to_pwm` under-commands hover thrust; reached 8.5cm and skidded 1.11m). Fix it or retire it in favour of `takeoff` -- decide, do not leave both.\n\n---\n\n## Completed\n\n- exp_028-039: reward tuning, PBRS, entropy, curriculum \u2014 all hover-or-crash, 0 gates\n- exp_040: view+progress, falling exploit (0.95s crash), then XY-only fix still saturates at 7.75 (facing-only exploit)\n- exp_041-043: progress/view variants without stability \u2014 all 0.52s crash, 0 gates (need survival incentive)\n- exp_044: best training ever (peak 37) but 0 benchmark gates \u2014 deterministic mean crashes (exploration-exploitation gap confirmed)",
+        "body": "- **Host:** wherever the radio is. Flow deck + `fly.py`, not the AI Deck. Independent of all GAP8 work -- runs in parallel.\n- **Status:** best so far is 7.0s airborne via `fly.py takeoff` (0.374m, 4.4cm drift). Exit criterion is 30s held, no wall contact.\n- **Why it matters:** this is Phase 1 of `VISION_HOVER_PLAN.md` and the actual gate on Phases 2-3. Both tracks now pass, so nothing upstream is blocking it, and nobody is working it.\n- **Open question carried in:** the legacy `hover` mode remains broken (linear `thrust_to_pwm` under-commands hover thrust; reached 8.5cm and skidded 1.11m). Fix it or retire it in favour of `takeoff` -- decide, do not leave both.\n\n---\n\n## Completed\n\n- exp_028-039: reward tuning, PBRS, entropy, curriculum \u00e2\u20ac\u201d all hover-or-crash, 0 gates\n- exp_040: view+progress, falling exploit (0.95s crash), then XY-only fix still saturates at 7.75 (facing-only exploit)\n- exp_041-043: progress/view variants without stability \u00e2\u20ac\u201d all 0.52s crash, 0 gates (need survival incentive)\n- exp_044: best training ever (peak 37) but 0 benchmark gates \u00e2\u20ac\u201d deterministic mean crashes (exploration-exploitation gap confirmed)",
         "task_id": null
       }
     ],
