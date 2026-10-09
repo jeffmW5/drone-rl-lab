@@ -1,5 +1,11 @@
 # Status -- Local pipeline update 2026-10-08
 
+New owner-requested simulator: [`tether_sim`](../tether_sim/README.md), with live
+3D/MJPEG Flight Studio, official Bitcraze visual meshes, lift/carry PD baseline,
+Gymnasium API and synthetic camera demonstrations. Twelve model checks pass;
+baseline evaluation is in `tether_sim/evidence/baseline.json`. This is an
+uncalibrated research starting point, not validated SOTA or a real-flight result.
+
 The local GTX 1070 Ti / WSL AI-deck pipeline is now in
 [`real_flight/tether`](../real_flight/tether/README.md). See
 [`tether_pipeline_2026_10_08.md`](tether_pipeline_2026_10_08.md) for integration

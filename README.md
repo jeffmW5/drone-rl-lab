@@ -1,5 +1,9 @@
 # drone-rl-lab
 
+Local lift/carry simulation and live 3D view: [Tether Lab / Flight Studio](tether_sim/README.md).
+Includes official Bitcraze visual meshes, segmented cable contacts, a synthetic
+onboard camera and a Gymnasium interface. Hardware fidelity remains uncalibrated.
+
 Current local AI-deck/1070 Ti setup: [tether perception pipeline](real_flight/tether/README.md).
 The pipeline builds through DORY and passes simulator checks; real tether
 data and physical integration remain pending. Historical racing progress below

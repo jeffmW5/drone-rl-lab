@@ -56,3 +56,4 @@ ssh_key_runpod.pub
 tmp/
 agents/*.json
 .cfcache/
+MUJOCO_LOG.TXT

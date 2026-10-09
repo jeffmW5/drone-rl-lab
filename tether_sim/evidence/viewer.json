@@ -1,0 +1,17 @@
+{
+  "sample_seconds": 3,
+  "fps_min": 24.687829034102872,
+  "fps_mean": 25.056557498999382,
+  "fps_max": 25.878928709445788,
+  "max_backlog_s": 0.01967848800005412,
+  "stream_boundaries_in_256KiB": 12,
+  "main_resolution": [
+    960,
+    540
+  ],
+  "onboard_resolution": [
+    324,
+    244
+  ],
+  "notes": "Local WSLg run; frame rate varies with host load. Camera updates every third rendered frame."
+}
