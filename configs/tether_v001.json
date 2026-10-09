@@ -1,0 +1,21 @@
+{
+  "name": "tether_v001",
+  "hypothesis": "A bounded learned motor residual can reduce payload tracking error and swing relative to the privileged PD baseline under seeded initial disturbances and wind.",
+  "algorithm": "SB3 PPO residual motor control",
+  "seed": 7,
+  "device": "cuda",
+  "total_timesteps": 250000,
+  "budget_seconds": 900,
+  "n_envs": 8,
+  "n_steps": 256,
+  "batch_size": 512,
+  "n_epochs": 5,
+  "learning_rate": 0.0001,
+  "gamma": 0.995,
+  "residual_scale": 0.05,
+  "episode_seconds": 12,
+  "eval_every_steps": 50000,
+  "checkpoint_every_steps": 20000,
+  "eval_seeds": [10001, 10002, 10003],
+  "notes": "Privileged state plus PD baseline; not camera-only or standalone motor control. CPU MuJoCo rollouts, CUDA policy updates. First feasibility run, not a SOTA benchmark."
+}

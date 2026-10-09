@@ -1,0 +1,85 @@
+{
+  "kind": "CUDA execution smoke, not a performance claim",
+  "timesteps": 2048,
+  "provenance": {
+    "commit": "4d037a9a5a34804193e5527a0f0640ba6562f7ec",
+    "dirty": true,
+    "python": "3.12.3",
+    "torch": "2.14.0+cu126",
+    "mujoco": "3.15.0",
+    "gymnasium": "1.4.0",
+    "sb3": "2.9.0",
+    "gpu": "NVIDIA GeForce GTX 1070 Ti",
+    "pid": 637,
+    "model": "residual motor PPO with privileged PD",
+    "limitations": "Lower-memory single-process rollouts after v001 subprocess smoke terminated with host allocation error. Privileged state plus PD baseline, not camera-only or independent control. CPU MuJoCo rollouts, CUDA policy updates. First feasibility run, not SOTA."
+  },
+  "evaluation": {
+    "PD": {
+      "runs": [
+        {
+          "seed": 10001,
+          "return_": -186.7346615762426,
+          "crashed": false,
+          "steps": 600,
+          "payload_rmse_m": 0.20542128748864802,
+          "final_payload_error_m": 0.048854158226822424,
+          "peak_swing_deg": 5.319289116301608
+        },
+        {
+          "seed": 10002,
+          "return_": -182.58871312579882,
+          "crashed": false,
+          "steps": 600,
+          "payload_rmse_m": 0.2036194971463414,
+          "final_payload_error_m": 0.0005442781666191912,
+          "peak_swing_deg": 2.1699331478036097
+        },
+        {
+          "seed": 10003,
+          "return_": -184.8112280339102,
+          "crashed": false,
+          "steps": 600,
+          "payload_rmse_m": 0.20513140839981336,
+          "final_payload_error_m": 0.05479789213955404,
+          "peak_swing_deg": 4.244297740234123
+        }
+      ],
+      "mean_payload_rmse_m": 0.20472406434493426,
+      "crashes": 0
+    },
+    "PPO_residual": {
+      "runs": [
+        {
+          "seed": 10001,
+          "return_": -188.62669038562552,
+          "crashed": false,
+          "steps": 600,
+          "payload_rmse_m": 0.2066311080719121,
+          "final_payload_error_m": 0.05082134487807376,
+          "peak_swing_deg": 5.289043369864158
+        },
+        {
+          "seed": 10002,
+          "return_": -181.05446147887,
+          "crashed": false,
+          "steps": 600,
+          "payload_rmse_m": 0.20262606644721953,
+          "final_payload_error_m": 0.006004310223540851,
+          "peak_swing_deg": 2.183518037073461
+        },
+        {
+          "seed": 10003,
+          "return_": -185.95147093779642,
+          "crashed": false,
+          "steps": 600,
+          "payload_rmse_m": 0.20601446620047414,
+          "final_payload_error_m": 0.05449639101099776,
+          "peak_swing_deg": 4.21481621602385
+        }
+      ],
+      "mean_payload_rmse_m": 0.20509054690653525,
+      "crashes": 0
+    }
+  }
+}

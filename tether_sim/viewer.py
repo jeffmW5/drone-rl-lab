@@ -16,6 +16,7 @@ from .env import TetherEnv
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=8766)
+    parser.add_argument('--training-run',default='tmp/tether-runs/tether_v002')
     args = parser.parse_args()
     env = TetherEnv()
     env.model.vis.quality.offsamples=2
@@ -150,6 +151,10 @@ def main():
             frame_times=frame_times[-60:]
             fps=(len(frame_times)-1)/(frame_times[-1]-frame_times[0]) if len(frame_times)>1 else 0
             state = env.metrics() | dict(paused=paused,scenario=scenario, wind_N=env.wind.tolist(),fps=fps,view=mode,lag_s=accumulator)
+            try:
+                state['training']=json.loads((Path(args.training_run)/'status.json').read_text())
+            except (OSError,ValueError):
+                state['training']={'status':'not started'}
             with lock:
                 shared.update(frame=fp.getvalue(), camera=onboard_jpeg,state=state)
             time.sleep(max(0,1/30-(time.monotonic()-start)))

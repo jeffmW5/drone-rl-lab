@@ -4,6 +4,8 @@ An executable starting point for Crazyflie **lift and carry** research, with
 MuJoCo physics, a live 3D browser viewer, and a Gymnasium environment.
 This is not yet a validated state-of-the-art simulator.
 
+First CUDA residual-PPO training: [training setup and limits](TRAINING.md).
+
 ## Run on this machine
 
 ```powershell

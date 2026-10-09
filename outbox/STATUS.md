@@ -1,5 +1,11 @@
 # Status -- Local pipeline update 2026-10-08
 
+First tether training pipeline: [`tether_sim/TRAINING.md`](../tether_sim/TRAINING.md).
+The CUDA smoke passed 2,048 transitions with saved checkpoints and paired PD
+evaluation. No improvement was established. A first main run is configured
+for 250,000 transitions / 900 seconds using bounded motor residual PPO on
+the 1070 Ti; consult its live status rather than treating this as completion.
+
 New owner-requested simulator: [`tether_sim`](../tether_sim/README.md), with live
 3D/MJPEG Flight Studio, official Bitcraze visual meshes, lift/carry PD baseline,
 Gymnasium API and synthetic camera demonstrations. Twelve model checks pass;

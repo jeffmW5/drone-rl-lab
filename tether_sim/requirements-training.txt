@@ -1,0 +1,5 @@
+# Install in the verified CUDA venv; retain its working Pascal-compatible Torch.
+mujoco==3.15.0
+gymnasium==1.4.0
+stable-baselines3==2.9.0
+numpy==2.4.6
