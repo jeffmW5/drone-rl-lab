@@ -1,9 +1,9 @@
 {
-  "status": "waiting for active training/evaluation",
+  "status": "launching tether_research_002_more_steps",
   "trials": [
     {
       "name": "tether_research_001_lower_lr",
-      "status": "running",
+      "status": "complete",
       "hypothesis": "Smaller PPO updates may reduce steady destination error from the selected parent policy",
       "changes": {
         "learning_rate": 1e-05,
@@ -35,16 +35,64 @@
         "evidence": "/home/n33du/ai/drone-rl-lab/tmp/tether-runs/tether_puffer_precision_v001/eval_163840.json"
       },
       "launched_at": 1791758913.943998,
-      "pid": 16036
+      "pid": 16036,
+      "candidate": {
+        "run": "/home/n33du/ai/drone-rl-lab/tmp/tether-runs/tether_research_001_lower_lr",
+        "checkpoint": "best",
+        "validation": {
+          "crashes": 0,
+          "successes": 0,
+          "mean_final_error_mm": 114.283804295764,
+          "completed_routes": 3,
+          "errors_mm": [
+            101.73074607362595,
+            96.6436108734107,
+            144.47705594025535
+          ],
+          "seeds": [
+            51001,
+            51002,
+            51003
+          ]
+        },
+        "evidence": "/home/n33du/ai/drone-rl-lab/tmp/tether-runs/tether_research_001_lower_lr/eval_200704.json"
+      },
+      "decision": "retain incumbent"
     },
     {
       "name": "tether_research_002_more_steps",
-      "status": "queued",
+      "status": "running",
       "hypothesis": "More optimization from the provisional incumbent may improve deterministic precision",
       "changes": {
         "total_timesteps": 400000,
         "budget_seconds": 1800
-      }
+      },
+      "run": "tmp/tether-runs/tether_research_002_more_steps",
+      "config": "configs/research_tether_research_002_more_steps.json",
+      "config_sha256": "8e6dc743e4890f8f1022c970917028377d7697a2bd08695915c2309c353ece30",
+      "parent": {
+        "run": "/home/n33du/ai/drone-rl-lab/tmp/tether-runs/tether_puffer_precision_v001",
+        "checkpoint": "best",
+        "validation": {
+          "crashes": 0,
+          "successes": 0,
+          "mean_final_error_mm": 116.89002510453281,
+          "completed_routes": 3,
+          "errors_mm": [
+            102.85655853599674,
+            103.06168299639855,
+            144.75183378120317
+          ],
+          "seeds": [
+            51001,
+            51002,
+            51003
+          ]
+        },
+        "evidence": "/home/n33du/ai/drone-rl-lab/tmp/tether-runs/tether_puffer_precision_v001/eval_163840.json"
+      },
+      "launched_at": 1791760153.5008826,
+      "pid": 19414
     },
     {
       "name": "tether_research_003_long_horizon",
@@ -78,7 +126,7 @@
     },
     "evidence": "/home/n33du/ai/drone-rl-lab/tmp/tether-runs/tether_puffer_precision_v001/eval_163840.json"
   },
-  "updated_at": 1791758991.270126,
+  "updated_at": 1791760153.5812654,
   "active_pids": [
     16036,
     16069,

@@ -91,3 +91,11 @@ advances one job at a time. First lower-learning-rate trial launched, CUDA
 policy/advantage kernel confirmed; initially evaluating transfer. Precision
 v001 completed: 0/20 strict successes, 0 crashes, final payload destination
 error188.025 mm PPO vs195.346 mm PD. No millimeter performance claim.
+
+2026-10-11 23:09 UTC research review: lower-learning-rate trial completed200704
+transitions. Best validation payload destination error114.284 mm vs incumbent
+116.890 mm (~2.23% reduction), zero crashes, zero strict successes and3/3 routes
+complete on seeds51001-51003. Below5% promotion gate; incumbent retained. Second
+trial (400000 transitions /1800 training seconds plus validation) launched from
+that incumbent. Reserved audit seeds untouched. Source: state/tether_research/
+v001.json and trial eval_200704.json; single small validation set, provisional.
