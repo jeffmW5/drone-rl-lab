@@ -80,7 +80,7 @@ class GeneralLiftCarryTask(LiftCarryTask):
         self.external_wind[:]=pulse+desired-[.012*np.sin(2*np.pi*t/2.5+self.phase),0,0]
         _,reward,done,truncated,info=super().step(action)
         self.external_wind[:]=pulse
-        collision=any(c.geom1 in self.obstacle_ids or c.geom2 in self.obstacle_ids for c in self.env.data.contact[:self.env.data.ncon])
+        collision=self.env.obstacle_collision_in_step or any(c.geom1 in self.obstacle_ids or c.geom2 in self.obstacle_ids for c in self.env.data.contact[:self.env.data.ncon])
         clearance=self.clearance()
         reward-=.04*np.square(action).sum()+2*max(0,.12-clearance)**2
         if collision:
@@ -105,6 +105,9 @@ class GeneralLiftCarryTask(LiftCarryTask):
 
 
 def make_task(config):
+    if config.get('task')=='random_navigation_v2':
+        from .navigation_v2 import NavigationTaskV2
+        return NavigationTaskV2(config['residual_scale'],config['episode_seconds'],config.get('navigation',{}),config.get('physics',{}))
     if config.get('task')=='random_navigation_v1':
         from .navigation import NavigationTask
         return NavigationTask(config['residual_scale'],config['episode_seconds'])

@@ -17,11 +17,13 @@ from .env import TetherEnv
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=8766)
+    parser.add_argument('--host', default='127.0.0.1', help='Bind address; Command Center uses the WSL private interface')
     parser.add_argument('--training-run',default='tmp/tether-runs/tether_v002')
     parser.add_argument('--policy-run',help='Run directory containing best/final checkpoint pairs')
     parser.add_argument('--checkpoint',choices=['best','final','PD'],default='best')
     parser.add_argument('--seed',type=int,default=10001)
     parser.add_argument('--generalize',action='store_true',help='Preview randomized obstacle task with PD')
+    parser.add_argument('--task-config',help='Frozen task config for PD preview; supports v2 physics')
     parser.add_argument('--navigation',action='store_true',help='Preview random clutter and destination commands')
     args = parser.parse_args()
     playback=None
@@ -29,7 +31,11 @@ def main():
         from .playback import PolicyPlayback
         playback=PolicyPlayback(args.policy_run,args.checkpoint,args.seed)
     preview=None
-    if (args.generalize or args.navigation) and not playback:
+    if args.task_config and not playback:
+        from .generalize import make_task
+        preview=make_task(json.loads(Path(args.task_config).read_text()))
+        preview.reset(seed=args.seed)
+    elif (args.generalize or args.navigation) and not playback:
         from .generalize import GeneralLiftCarryTask
         from .navigation import NavigationTask
         preview=NavigationTask() if args.navigation else GeneralLiftCarryTask()
@@ -111,7 +117,7 @@ def main():
     class Server(ThreadingHTTPServer):
         daemon_threads=True
         request_queue_size=32
-    server = Server(('127.0.0.1',args.port), Handler)
+    server = Server((args.host,args.port), Handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     camera = mujoco.MjvCamera()
     mujoco.mjv_defaultCamera(camera)
@@ -269,6 +275,10 @@ def main():
             state.update(policy_loaded=bool(playback),controller=playback.controller if playback else 'PD',policy_inferences=playback.inferences if playback else 0,residual_action=playback.last_action.tolist() if playback else [0]*4,seed=args.seed)
             state.update(loop=loop,stop_reason=stop_reason,episode=episodes,generalized=bool(preview or playback and playback.config.get('task')=='general_lift_carry_v1'),domain=preview.domain if preview else getattr(playback.task,'domain',{}) if playback else {})
             state.update(navigation=bool(hasattr(preview,'set_goal') or playback and hasattr(playback.task,'set_goal')),command_message=command_message)
+            task=playback.task if playback else preview
+            if task and hasattr(task,'_metrics'):
+                navigation_metrics=task._metrics()
+                state.update({k:navigation_metrics[k] for k in ('goal_distance_m','payload_goal_error_m','route_remaining_m','goal_reached')})
             try:
                 state['training']=json.loads((Path(args.training_run)/'status.json').read_text())
             except (OSError,ValueError):

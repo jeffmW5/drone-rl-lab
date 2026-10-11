@@ -1,0 +1,96 @@
+{
+  "kind": "simulator consistency; not hardware validation",
+  "pendulum": [
+    {
+      "segments": 6,
+      "timestep_s": 0.002,
+      "period_s": 1.5316015304599155,
+      "rigid_rod_reference_period_s": 1.5298355216052706,
+      "positive_crossings_s": [
+        0.3838965552453292,
+        1.9154102455562378,
+        3.4470210334192437,
+        4.978701146625076
+      ],
+      "relative_reference_difference": 0.0011543782515860673
+    },
+    {
+      "segments": 12,
+      "timestep_s": 0.002,
+      "period_s": 1.5316230844000085,
+      "rigid_rod_reference_period_s": 1.530084606112895,
+      "positive_crossings_s": [
+        0.3839413224112304,
+        1.915567980591756,
+        3.447191511720242,
+        4.978810575611257
+      ],
+      "relative_reference_difference": 0.00100548576266115
+    },
+    {
+      "segments": 12,
+      "timestep_s": 0.001,
+      "period_s": 1.5316261732460568,
+      "rigid_rod_reference_period_s": 1.530084606112895,
+      "positive_crossings_s": [
+        0.383442168124695,
+        1.9150720275360564,
+        3.446698641706585,
+        4.978320687862865
+      ],
+      "relative_reference_difference": 0.0010075045046548483
+    },
+    {
+      "segments": 24,
+      "timestep_s": 0.001,
+      "period_s": 1.531607754195445,
+      "rigid_rod_reference_period_s": 1.530146870904309,
+      "positive_crossings_s": [
+        0.38346185838019725,
+        1.9150324440127169,
+        3.4466743294388746,
+        4.978285120966532
+      ],
+      "relative_reference_difference": 0.0009547340316898165
+    }
+  ],
+  "timestep_period_relative_difference": 2.016710149138458e-06,
+  "hardware": "Crazyflie 2.1 with Flow deck and AI deck (user confirmed 2026-10-11)",
+  "nominal_config": {
+    "drone_mass": 0.0434,
+    "payload_mass": 0.005,
+    "cable_mass": 0.001,
+    "length": 0.6,
+    "segments": 12,
+    "timestep": 0.002,
+    "control_dt": 0.02,
+    "motor_tau": 0.025,
+    "max_motor_thrust": 0.2,
+    "duration": 20.0,
+    "obstacles": [],
+    "rotor_collisions": false,
+    "propeller_radius": 0.0225,
+    "deck_collisions": false,
+    "substep_collision_checks": false,
+    "drone_inertia": [
+      2.5e-05,
+      2.5e-05,
+      4e-05
+    ],
+    "linear_drag": 0.015
+  },
+  "calibration_required": [
+    "weighed assembled vehicle including battery",
+    "payload and cable mass/length/diameter",
+    "thrust vs command and battery voltage",
+    "inertia/attachment geometry",
+    "free swing decay and slack/contact recordings",
+    "camera intrinsics and measured capture/control latency"
+  ],
+  "limitations": [
+    "rigid segmented links can transmit compression",
+    "drag/thrust/inertia not fitted to real flights",
+    "primitive rotor/deck volumes",
+    "navigation uses privileged state and known static obstacles"
+  ]
+}

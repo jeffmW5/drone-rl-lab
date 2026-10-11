@@ -19,6 +19,13 @@ class Config:
     max_motor_thrust: float = .20
     duration: float = 20.
     obstacles: tuple = ()
+    # Opt-in v2 geometry; v1 defaults preserve recorded experiments.
+    rotor_collisions: bool = False
+    propeller_radius: float = .0225
+    deck_collisions: bool = False
+    substep_collision_checks: bool = False
+    drone_inertia: tuple = (.000025,.000025,.00004)
+    linear_drag: float = .015
 
 
 def model_xml(c):
@@ -35,7 +42,10 @@ def model_xml(c):
     sites = ''.join(f'<site name="motor{i}" pos="{x} {y} 0" size=".018" type="cylinder" rgba=".2 .7 .9 0"/>' for i,(x,y) in enumerate(motors))
     actuators = ''.join(f'<general name="motor{i}" site="motor{i}" gear="0 0 1 0 0 {(.006 if i%2==0 else -.006)}" ctrllimited="true" ctrlrange="0 {c.max_motor_thrust}"/>' for i in range(4))
     obstacles = ''.join(f'<geom name="obstacle{i}" type="box" pos="{o[0]} {o[1]} {o[2]}" size="{o[3]} {o[4]} {o[5]}" euler="0 0 {o[6]}" rgba=".32 .48 .66 1"/>' for i,o in enumerate(c.obstacles))
-    return f'''<mujoco model="Crazyflie tether lab"><compiler angle="radian"/><option timestep="{c.timestep}" integrator="implicitfast" gravity="0 0 -9.81" iterations="80" tolerance="1e-10"/><visual><quality shadowsize="4096" offsamples="4"/><rgba haze=".12 .16 .22 1"/><map zfar="30"/><global offwidth="1280" offheight="720"/><headlight ambient=".4 .4 .4"/></visual><default><geom friction=".7 .01 .001" solref=".01 1"/></default><asset>{visual_assets()}<texture type="skybox" builtin="gradient" rgb1=".12 .17 .24" rgb2=".025 .035 .055" width="512" height="3072"/><texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1=".12 .16 .2" rgb2=".18 .23 .28"/><material name="floor" texture="grid" texrepeat="12 12"/></asset><worldbody><light pos="1 -1 4" diffuse=".9 .9 .9"/><light pos="-2 1 2" diffuse=".35 .45 .6" castshadow="false"/><geom name="ground" type="plane" size="5 5 .1" material="floor"/><site name="target" type="cylinder" pos="0 0 .003" size=".04 .001" rgba=".2 1 .4 .6"/>{obstacles}<body name="drone" pos="0 0 1.2"><freejoint/><inertial pos="0 0 0" mass="{c.drone_mass}" diaginertia=".000025 .000025 .00004"/><geom type="box" size=".035 .035 .012" mass="0" rgba=".2 .65 .85 0" group="3"/>{visual_drone(motors)}{sites}<camera name="onboard" pos=".02 0 -.015" xyaxes="0 -1 0 1 0 0" fovy="90"/>{rope}</body></worldbody><actuator>{actuators}</actuator></mujoco>'''
+    rotor_geoms = ''.join(f'<geom name="rotor_collision{i}" type="cylinder" pos="{x} {y} .006" size="{c.propeller_radius} .001" mass="0" rgba=".8 .2 .2 0" group="3"/>' for i,(x,y) in enumerate(motors)) if c.rotor_collisions else ''
+    deck_geoms = '<geom name="ai_deck_collision" type="box" pos="0 0 .023" size=".015 .014 .004" mass="0" rgba=".2 .8 .2 0" group="3"/><geom name="flow_deck_collision" type="box" pos="0 0 -.016" size=".014 .014 .003" mass="0" rgba=".2 .8 .2 0" group="3"/>' if c.deck_collisions else ''
+    inertia=' '.join(str(v) for v in c.drone_inertia)
+    return f'''<mujoco model="Crazyflie tether lab"><compiler angle="radian"/><option timestep="{c.timestep}" integrator="implicitfast" gravity="0 0 -9.81" iterations="80" tolerance="1e-10"/><visual><quality shadowsize="4096" offsamples="4"/><rgba haze=".12 .16 .22 1"/><map zfar="30"/><global offwidth="1280" offheight="720"/><headlight ambient=".4 .4 .4"/></visual><default><geom friction=".7 .01 .001" solref=".01 1"/></default><asset>{visual_assets()}<texture type="skybox" builtin="gradient" rgb1=".12 .17 .24" rgb2=".025 .035 .055" width="512" height="3072"/><texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1=".12 .16 .2" rgb2=".18 .23 .28"/><material name="floor" texture="grid" texrepeat="12 12"/></asset><worldbody><light pos="1 -1 4" diffuse=".9 .9 .9"/><light pos="-2 1 2" diffuse=".35 .45 .6" castshadow="false"/><geom name="ground" type="plane" size="5 5 .1" material="floor"/><site name="target" type="cylinder" pos="0 0 .003" size=".04 .001" rgba=".2 1 .4 .6"/>{obstacles}<body name="drone" pos="0 0 1.2"><freejoint/><inertial pos="0 0 0" mass="{c.drone_mass}" diaginertia="{inertia}"/><geom type="box" size=".035 .035 .012" mass="0" rgba=".2 .65 .85 0" group="3"/>{visual_drone(motors)}{rotor_geoms}{deck_geoms}{sites}<camera name="onboard" pos=".02 0 -.015" xyaxes="0 -1 0 1 0 0" fovy="90"/>{rope}</body></worldbody><actuator>{actuators}</actuator></mujoco>'''
 
 
 class TetherEnv(gym.Env):
@@ -59,6 +69,11 @@ class TetherEnv(gym.Env):
         self.drone = self.model.body('drone').id
         self.payload = self.model.body('payload').id
         self.substeps = round(c.control_dt/c.timestep)
+        if not np.isclose(self.substeps*c.timestep,c.control_dt,rtol=0,atol=1e-12):
+            raise ValueError('control_dt must be an integer multiple of timestep')
+        self.obstacle_geom_ids={self.model.geom(f'obstacle{i}').id for i in range(len(c.obstacles))}
+        self.dynamic_collision_geoms=[i for i in range(self.model.ngeom) if self.model.geom_bodyid[i]>0 and (self.model.geom_contype[i] or self.model.geom_conaffinity[i])]
+        self.obstacle_collision_in_step=False
         self.reset()
 
     def _obs(self):
@@ -67,6 +82,7 @@ class TetherEnv(gym.Env):
     def reset(self, *, seed=None, options=None):
         super().reset(seed=seed)
         mujoco.mj_resetData(self.model, self.data)
+        self.obstacle_collision_in_step=False
         self.motors[:] = 0
         self.wind[:] = 0
         self.target[:] = [0, 0, 1.2]
@@ -111,13 +127,16 @@ class TetherEnv(gym.Env):
         a = np.asarray(action, dtype=float)
         if a.shape != (4,) or not np.isfinite(a).all():
             raise ValueError('Action must contain four finite motor commands')
+        self.obstacle_collision_in_step=False
         command = np.clip(a,0,1)*self.config.max_motor_thrust
         for _ in range(self.substeps):
             self.motors += (1-np.exp(-self.config.timestep/self.config.motor_tau))*(command-self.motors)
             self.data.ctrl[:] = self.motors
             self.data.xfrc_applied[:] = 0
-            self.data.xfrc_applied[self.drone,:3] = self.wind-.015*self.data.qvel[:3]
+            self.data.xfrc_applied[self.drone,:3] = self.wind-self.config.linear_drag*self.data.qvel[:3]
             mujoco.mj_step(self.model,self.data)
+            if self.config.substep_collision_checks:
+                self.obstacle_collision_in_step |= any(c.geom1 in self.obstacle_geom_ids or c.geom2 in self.obstacle_geom_ids for c in self.data.contact[:self.data.ncon])
             if any(self.data.warning[i].number for i in (mujoco.mjtWarning.mjWARN_BADQPOS,mujoco.mjtWarning.mjWARN_BADQVEL,mujoco.mjtWarning.mjWARN_BADQACC)):
                 raise FloatingPointError('MuJoCo numerical instability; rollout is invalid')
         self._update_target()

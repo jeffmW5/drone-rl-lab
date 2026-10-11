@@ -1,3 +1,10 @@
+# Local destination training update -- 2026-10-11
+
+V006 simulator/transfer setup validated: 25 model checks, native .NET integration,
+2,048 additional smoke transitions and pendulum timestep check passed. Main V006
+launch follows this setup commit. Hardware confirmed: CF2.1 + Flow + AI decks.
+Physical fidelity remains uncalibrated. See [V006 report](tether_v006.md).
+
 # Status -- Local pipeline update 2026-10-08
 
 Tether v002 completed 250,880 steps / 510.24 s. Final payload RMSE 0.22857 m
@@ -68,3 +75,4 @@ See `research/deployment_gap_mean_policy.md` for full details.
 4. Use `docs/throughput_findings_2026_04_19.md` as the current reference for rollout bottleneck discussion.
 
 2026-10-08: Added randomized tether navigation and HTML guide. 19 tests pass; CPU V005 smoke saved/evaluated policies. CUDA smoke interrupted by WSL restarts, cause unconfirmed. Known geometry, static horizontal routes, no vision/hardware validation. Main V005 launch follows commit.
+

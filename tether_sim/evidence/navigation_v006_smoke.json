@@ -1,0 +1,50 @@
+{
+  "PD": {
+    "runs": [
+      {
+        "goal_distance_m": 0.03340876291708428,
+        "payload_goal_error_m": 0.08942565492942064,
+        "route_remaining_m": 0.0,
+        "seed": 42001,
+        "return_": -726.8353015670847,
+        "crashed": false,
+        "steps": 2250,
+        "payload_rmse_m": 0.144248941870795,
+        "settled_rmse_m": 0.13688146368284143,
+        "final_payload_error_m": 0.08942565492942064,
+        "peak_swing_deg": 8.38284358509141,
+        "obstacle_collision": false,
+        "minimum_clearance_m": 0.19952883626175832,
+        "success": false
+      }
+    ],
+    "mean_payload_rmse_m": 0.144248941870795,
+    "crashes": 0,
+    "successes": 0,
+    "mean_goal_distance_m": 0.03340876291708428
+  },
+  "PPO_residual": {
+    "runs": [
+      {
+        "goal_distance_m": 0.031140145992247733,
+        "payload_goal_error_m": 0.08759430934418454,
+        "route_remaining_m": 0.0,
+        "seed": 42001,
+        "return_": -729.3037146677401,
+        "crashed": false,
+        "steps": 2250,
+        "payload_rmse_m": 0.14503073140066533,
+        "settled_rmse_m": 0.13787633576609087,
+        "final_payload_error_m": 0.08759430934418454,
+        "peak_swing_deg": 8.356853538551281,
+        "obstacle_collision": false,
+        "minimum_clearance_m": 0.19377124158927717,
+        "success": false
+      }
+    ],
+    "mean_payload_rmse_m": 0.14503073140066533,
+    "crashes": 0,
+    "successes": 0,
+    "mean_goal_distance_m": 0.031140145992247733
+  }
+}

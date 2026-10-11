@@ -99,3 +99,22 @@ RMSE was 0.22857 m versus PD's 0.20472 m. Best evaluated PPO RMSE was
 on the three evaluation seeds. These are limited simulator results.
 
 V005: six random physical obstacles, bounded 2D A* routing, coordinate goal commands, randomized dynamics. CPU smoke completed 2048 transitions with checkpoints/evaluation; 19 tests pass. CUDA V003/V004 attempts ended during WSL restarts, cause unconfirmed. Preserved artifacts. Main command: python -m tether_sim.train --config configs/tether_v005.json --output tmp/tether-runs/tether_v005
+
+## V006 continuation (2026-10-11)
+
+`configs/tether_v006.json` transfers V005 best weights, optimizer and paired
+normalization to `random_navigation_v2`. Budget: 200,000 additional transitions
+or 1,200 training seconds. It uses five new validation seeds and twenty new test
+seeds, geometry-aware collision checks and destination-based success. The simulator
+and route changes mean this is a transfer experiment, not a clean training-only
+comparison with V005. See [fidelity changes and checks](FIDELITY.md).
+
+```bash
+python -m tether_sim.train --config configs/tether_v006.json --output tmp/tether-runs/tether_v006
+python -m tether_sim.viewer --task-config configs/tether_v006.json
+```
+
+The source policy and normalizer SHA-256 hashes and source timestep count are in
+`provenance.json`. `evaluation_initial.json` measures the transferred controller
+before training on the V006 validation layouts. `status.json` counts additional
+transitions in this run. The main run output is separate from every prior run.

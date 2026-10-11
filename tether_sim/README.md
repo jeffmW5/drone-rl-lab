@@ -112,3 +112,8 @@ has been trained or deployed by this package.
 References: [MuJoCo modeling](https://mujoco.readthedocs.io/en/stable/modeling.html),
 [Python/rendering](https://mujoco.readthedocs.io/en/stable/python.html),
 [official Bitcraze meshes](https://github.com/bitcraze/crazyflie-simulation).
+
+Versioned refinement on 2026-10-11: [V006 simulator consistency and calibration](FIDELITY.md).
+V1 defaults remain available; `--task-config configs/tether_v006.json` previews
+rotor/deck contact geometry, full cable clearance and adaptive route setpoints.
+These checks improve model consistency; measured real-flight fidelity remains unverified.
