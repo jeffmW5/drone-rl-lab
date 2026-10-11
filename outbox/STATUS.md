@@ -82,3 +82,12 @@ PufferLib3 CUDA migration: four adapter/kernel checks passed; 4096-step CUDA smo
 Main tether_puffer_cuda_v003 active: 40960 steps at 743.8/s in first training segment; CUDA policy/updates/advantages verified. Native monitor and duplicate guard verified. Broader held-out performance pending.
 
 2026-10-11 update: v003 completed 200704 transitions; final 20 seeds PPO 5 successes, PD 3, both zero crashes. Mean payload RMSE 15.83 vs 15.86 cm. New millimeter precision task/config verified and queued; see tether_precision.md. Prior active snapshot above is superseded.
+
+Local research loop installed for 1070 Ti: configs/tether_research_1070ti_v001.json
+queues three adaptive trials; system-Python runner persists state and excludes
+duplicates. Five harness checks and three precision checks passed. Thread
+heartbeat 1070-ti-drone-research ACTIVE every20 minutes; reviews evidence and
+advances one job at a time. First lower-learning-rate trial launched, CUDA
+policy/advantage kernel confirmed; initially evaluating transfer. Precision
+v001 completed: 0/20 strict successes, 0 crashes, final payload destination
+error188.025 mm PPO vs195.346 mm PD. No millimeter performance claim.

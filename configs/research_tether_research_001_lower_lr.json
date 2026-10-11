@@ -1,0 +1,70 @@
+{
+  "name": "tether_research_001_lower_lr",
+  "task": "random_navigation_precision_v1",
+  "hypothesis": "Smaller PPO updates may reduce steady destination error from the selected parent policy",
+  "algorithm": "PufferLib 3 PuffeRL transferred Gaussian residual controller",
+  "seed": 37,
+  "device": "cuda",
+  "vec_backend": "subproc",
+  "total_timesteps": 200000,
+  "budget_seconds": 1200,
+  "n_envs": 8,
+  "n_steps": 256,
+  "batch_size": 1024,
+  "n_epochs": 3,
+  "learning_rate": 1e-05,
+  "gamma": 0.995,
+  "log_std_init": -3,
+  "zero_residual_init": false,
+  "residual_scale": 0.03,
+  "episode_seconds": 90,
+  "eval_every_steps": 100000,
+  "checkpoint_every_steps": 50000,
+  "eval_seeds": [
+    51001,
+    51002,
+    51003
+  ],
+  "test_seeds": [
+    51001,
+    51002,
+    51003
+  ],
+  "notes": "Local adaptive research trial: Smaller PPO updates may reduce steady destination error from the selected parent policy. Actual parent is resume_run/resume_checkpoint. Fixed 90-second precision benchmark, 3 validation seeds, frozen normalization. evaluation_final uses validation seeds; no held-out claim. Uncalibrated privileged MuJoCo simulation. CUDA learning and advantages; four CPU workers. Provisional best selection only.",
+  "resume_run": "/home/n33du/ai/drone-rl-lab/tmp/tether-runs/tether_puffer_precision_v001",
+  "resume_checkpoint": "best",
+  "navigation": {
+    "planner_margin_m": 0.26,
+    "speed_m_s": 0.12,
+    "acceleration_m_s2": 0.08,
+    "goal_error_weight": 1.5,
+    "payload_tolerance_m": 0.001,
+    "hold_seconds": 3.0,
+    "payload_speed_limit_m_s": 0.005
+  },
+  "physics": {
+    "randomization": {
+      "drone_mass_kg": [
+        0.033,
+        0.046
+      ],
+      "inertia_scale": [
+        0.85,
+        1.15
+      ],
+      "max_motor_thrust_N": [
+        0.17,
+        0.2
+      ],
+      "linear_drag_N_s_m": [
+        0.012,
+        0.018
+      ]
+    }
+  },
+  "num_workers": 4,
+  "rollout_batch_size": 4096,
+  "minibatch_size": 1024,
+  "bptt_horizon": 128,
+  "require_cuda_advantage": true
+}

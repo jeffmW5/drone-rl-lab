@@ -29,6 +29,9 @@ def main():
     parser.add_argument('--output', default='tmp/tether-runs/tether_puffer_v001')
     parser.add_argument('--smoke', action='store_true')
     args = parser.parse_args()
+    from .training_lock import acquire_training_lease
+    lease = acquire_training_lease()
+    atexit.register(lease.close)
     config = json.loads(Path(args.config).read_text())
     if args.smoke:
         config.update(total_timesteps=4096, n_envs=2, num_workers=2,
@@ -140,6 +143,8 @@ def main():
                 next_save += config['checkpoint_every_steps']
             if trainer.global_step >= next_eval:
                 export('latest')
+                write_json(out/'status.json', dict(status='evaluating validation',
+                           timesteps=trainer.global_step, device='cuda', updated_at=time.time()))
                 result = evaluate(model, normalizer, config)
                 result.update(timesteps=trainer.global_step, elapsed_seconds=time.monotonic()-started)
                 write_json(out/('eval_'+str(trainer.global_step)+'.json'), result)
@@ -156,6 +161,8 @@ def main():
         export('final')
         if not (out/'best.zip').exists():
             export('best')
+        write_json(out/'status.json', dict(status='evaluating final',
+                   timesteps=trainer.global_step, device='cuda', updated_at=time.time()))
         result = evaluate(model, normalizer, config, seeds=config['test_seeds'])
         write_json(out/'evaluation_final.json', result)
         write_json(out/'status.json', dict(status='interrupted' if stopping[0] else 'complete',

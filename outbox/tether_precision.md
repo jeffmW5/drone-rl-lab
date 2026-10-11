@@ -27,6 +27,15 @@ Status evaluating initial transfer, zero new transitions at this observation.
 Actual resume_run/provenance fields identify v003 best; the inherited base note
 mentioning V007 describes ancestry rather than the immediate source checkpoint.
 
+Completion: evaluation_final.json reports 200704 new transitions; 20 seeds:
+PPO 0 precision successes / 0 crashes, PD 0 / 0. Mean final full 3D payload
+destination error 188.025 mm PPO vs 195.346 mm PD. This is final destination
+error, not tracking RMSE; single experiment, no replication or hardware claim.
+Best three-seed validation checkpoint at163840: mean final destination error
+116.890 mm, zero successes/crashes, all three routes complete. This checkpoint
+became the provisional parent of the local research campaign. The final test
+results were recorded but not used by its checkpoint selector.
+
 Previous v003 final evaluation (tmp/tether-runs/tether_puffer_cuda_v003/
 evaluation_final.json, one 20-seed test): PPO 5/20 success vs PD 3/20, both zero
 crashes; mean payload tracking RMSE 0.158266 m vs 0.158572 m. Modest success

@@ -1,0 +1,20 @@
+{
+  "name": "tether_research_1070ti_v001",
+  "initial_run": "tmp/tether-runs/tether_puffer_precision_v001",
+  "base_config": "configs/tether_puffer_precision_v001.json",
+  "state_path": "state/tether_research/v001.json",
+  "report_path": "outbox/tether_research_1070ti.md",
+  "validation_seeds": [51001, 51002, 51003],
+  "reserved_audit_seeds": [71001, 71002, 71003, 71004, 71005, 71006, 71007, 71008, 71009, 71010, 71011, 71012, 71013, 71014, 71015, 71016, 71017, 71018, 71019, 71020],
+  "trials": [
+    {"name": "tether_research_001_lower_lr", "status": "queued",
+     "hypothesis": "Smaller PPO updates may reduce steady destination error from the selected parent policy",
+     "changes": {"learning_rate": 0.00001, "total_timesteps": 200000, "budget_seconds": 1200}},
+    {"name": "tether_research_002_more_steps", "status": "queued",
+     "hypothesis": "More optimization from the provisional incumbent may improve deterministic precision",
+     "changes": {"total_timesteps": 400000, "budget_seconds": 1800}},
+    {"name": "tether_research_003_long_horizon", "status": "queued",
+     "hypothesis": "A larger discount factor may improve credit assignment across long obstacle routes and settling",
+     "changes": {"gamma": 0.999, "total_timesteps": 200000, "budget_seconds": 1200}}
+  ]
+}
