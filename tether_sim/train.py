@@ -127,8 +127,8 @@ def main():
     model=PPO('MlpPolicy',env,device=config['device'],seed=config['seed'],n_steps=config['n_steps'],batch_size=config['batch_size'],n_epochs=config['n_epochs'],learning_rate=config['learning_rate'],gamma=config['gamma'],policy_kwargs=dict(net_arch=dict(pi=[256,256],vf=[256,256]),log_std_init=config.get('log_std_init',-2),ortho_init=True),target_kl=.03,verbose=1)
     if config.get('resume_run'):
         source=Path(config['resume_run']);checkpoint=config.get('resume_checkpoint','best')
-        if checkpoint not in ('best','final'):
-            raise ValueError('Resume checkpoint must be best or final')
+        if checkpoint not in ('best','final','interrupted'):
+            raise ValueError('Resume checkpoint must be best, final or interrupted')
         model_file=source/(checkpoint+'.zip');norm_file=source/(checkpoint+'_normalize.pkl')
         if not model_file.is_file() or not norm_file.is_file():
             raise ValueError('Resume requires policy ZIP and matching normalizer PKL')

@@ -1,0 +1,81 @@
+{
+  "name": "tether_v007_cuda",
+  "task": "random_navigation_v2",
+  "hypothesis": "Transfer V005 weights into geometry-aware navigation; wider routes, adaptive corner tracking and destination metrics may reduce collisions while PPO learns disturbance compensation.",
+  "algorithm": "SB3 PPO residual motor control with geometric route planner",
+  "seed": 37,
+  "device": "cuda",
+  "vec_backend": "subproc",
+  "total_timesteps": 156036,
+  "budget_seconds": 1200,
+  "n_envs": 8,
+  "n_steps": 256,
+  "batch_size": 1024,
+  "n_epochs": 3,
+  "learning_rate": 3e-05,
+  "gamma": 0.995,
+  "log_std_init": -3,
+  "zero_residual_init": false,
+  "residual_scale": 0.03,
+  "episode_seconds": 45,
+  "eval_every_steps": 40000,
+  "checkpoint_every_steps": 10000,
+  "eval_seeds": [
+    51001,
+    51002,
+    51003,
+    51004,
+    51005
+  ],
+  "test_seeds": [
+    61001,
+    61002,
+    61003,
+    61004,
+    61005,
+    61006,
+    61007,
+    61008,
+    61009,
+    61010,
+    61011,
+    61012,
+    61013,
+    61014,
+    61015,
+    61016,
+    61017,
+    61018,
+    61019,
+    61020
+  ],
+  "notes": "Transfer initialization from V005 best plus matching normalizer, new optimizer run. CF2.1 + Flow/AI decks user-confirmed. Rotor/deck primitive collision volumes, all-substep obstacle contacts, full cable-geom clearance. Assumed physics ranges, no measured thrust/cable/inertia fit. Known static geometry and state; no vision or hardware flight. New held-out seeds; v1 results are not directly comparable after simulator/task changes. CUDA continuation from V006 interruption; eight CPU simulator workers; batch size 1024. Optimizer and normalization preserved. Throughput not yet benchmarked against CPU.",
+  "resume_run": "tmp/tether-runs/tether_v006",
+  "resume_checkpoint": "interrupted",
+  "navigation": {
+    "planner_margin_m": 0.26,
+    "speed_m_s": 0.12,
+    "acceleration_m_s2": 0.08,
+    "goal_error_weight": 1.5
+  },
+  "physics": {
+    "randomization": {
+      "drone_mass_kg": [
+        0.033,
+        0.046
+      ],
+      "inertia_scale": [
+        0.85,
+        1.15
+      ],
+      "max_motor_thrust_N": [
+        0.17,
+        0.2
+      ],
+      "linear_drag_N_s_m": [
+        0.012,
+        0.018
+      ]
+    }
+  }
+}

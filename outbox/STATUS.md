@@ -76,3 +76,5 @@ See `research/deployment_gap_mean_policy.md` for full details.
 
 2026-10-08: Added randomized tether navigation and HTML guide. 19 tests pass; CPU V005 smoke saved/evaluated policies. CUDA smoke interrupted by WSL restarts, cause unconfirmed. Known geometry, static horizontal routes, no vision/hardware validation. Main V005 launch follows commit.
 
+
+2026-10-11: V006 saved at 43,964 steps; V007 CUDA continuation launched on GTX 1070 Ti with eight simulator workers. See tether_v007_cuda.md.

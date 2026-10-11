@@ -9,3 +9,5 @@ transitions or 1,200 training seconds plus evaluation; launch is the next step.
 
 See `tether_sim/FIDELITY.md` and `configs/tether_v006.json` for sources, assumptions,
 new held-out seeds, success criteria and required real hardware calibration.
+
+Main V006 ran to 43,964 transitions, then saved an interrupted pair for the user-requested CUDA continuation. See tether_v007_cuda.md.

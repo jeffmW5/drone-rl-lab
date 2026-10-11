@@ -63,11 +63,11 @@ def act(action,run_name=None):
         if result.returncode: raise RuntimeError(result.stderr[-300:])
         data=json.loads(result.stdout)
         if action=='train':
-            if any('tether_sim.train' in p['args'] for p in data['processes']) or any(p.poll() is None and label.startswith('tether_v006_') for p,label in launchers):
+            if any('tether_sim.train' in p['args'] for p in data['processes']) or any(p.poll() is None and label.startswith('tether_v007_cuda_') for p,label in launchers):
                 return 'Training is already running; no duplicate started.'
-            name='tether_v006_'+time.strftime('%Y%m%d_%H%M%S')
-            launch([TRAIN,'-u','-m','tether_sim.train','--config','configs/tether_v006.json','--output','tmp/tether-runs/'+name],name)
-            return 'Started V006 transfer training: '+name+'. Existing results are preserved.'
+            name='tether_v007_cuda_'+time.strftime('%Y%m%d_%H%M%S')
+            launch([TRAIN,'-u','-m','tether_sim.train','--config','configs/tether_v007_cuda.json','--output','tmp/tether-runs/'+name],name)
+            return 'Started V007 CUDA continuation: '+name+'. Existing results are preserved.'
         if action=='policy':
             run_name=run_name or 'tether_v005'
             run=next((r for r in data['runs'] if r['name']==run_name),{})
@@ -88,9 +88,9 @@ def act(action,run_name=None):
             if not {'best.zip','final.zip'}.issubset(set(run.get('checkpoints',[]))):
                 raise ValueError('Selected run best/final checkpoint pairs are not ready yet.')
             args += ['--policy-run','tmp/tether-runs/'+run_name,'--checkpoint','best']
-        else: args+=['--task-config','configs/tether_v006.json']
+        else: args+=['--task-config','configs/tether_v007_cuda.json']
         launch(args,'viewer')
-        return 'Starting '+('selected trained policy' if action=='policy' else 'V006 geometry-aware PD obstacle preview')+'. Open Flight Studio in a few seconds.'
+        return 'Starting '+('selected trained policy' if action=='policy' else 'V007 geometry-aware PD obstacle preview')+'. Open Flight Studio in a few seconds.'
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -180,3 +180,4 @@ def main():
             if label=='viewer' and process.poll() is None: process.terminate()
 
 if __name__=='__main__': main()
+
