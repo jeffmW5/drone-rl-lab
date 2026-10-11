@@ -21,6 +21,12 @@ Existing four adapter/kernel checks passed alongside two initial residence tests
 Precision training queued at commit; progress/results belong in run status and
 evaluation JSON, not inferred from these tests.
 
+Launch verified after commit c0f049a: run tether_puffer_precision_v001, PID 11033,
+GTX 1070 Ti, compiled CUDA advantages true, source best policy 200704 steps.
+Status evaluating initial transfer, zero new transitions at this observation.
+Actual resume_run/provenance fields identify v003 best; the inherited base note
+mentioning V007 describes ancestry rather than the immediate source checkpoint.
+
 Previous v003 final evaluation (tmp/tether-runs/tether_puffer_cuda_v003/
 evaluation_final.json, one 20-seed test): PPO 5/20 success vs PD 3/20, both zero
 crashes; mean payload tracking RMSE 0.158266 m vs 0.158572 m. Modest success
