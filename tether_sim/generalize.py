@@ -105,6 +105,9 @@ class GeneralLiftCarryTask(LiftCarryTask):
 
 
 def make_task(config):
+    if config.get('task')=='random_navigation_precision_v1':
+        from .navigation_precision import NavigationPrecisionTask
+        return NavigationPrecisionTask(config['residual_scale'],config['episode_seconds'],config.get('navigation',{}),config.get('physics',{}))
     if config.get('task')=='random_navigation_v2':
         from .navigation_v2 import NavigationTaskV2
         return NavigationTaskV2(config['residual_scale'],config['episode_seconds'],config.get('navigation',{}),config.get('physics',{}))

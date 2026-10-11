@@ -50,8 +50,15 @@ def evaluate(model,normalizer,config,seeds=None):
             success=bool(not terminated and errors[-1]<.08 and swings[-1]<10)
             if config.get('task')=='random_navigation_v2':
                 success=bool(not terminated and info.get('goal_reached',False) and info['payload_goal_error_m']<.08 and swings[-1]<10)
+            if config.get('task')=='random_navigation_precision_v1':
+                success=bool(not terminated and info.get('precision_success',False))
             runs.append(dict(goal_distance_m=info.get('goal_distance_m'),payload_goal_error_m=info.get('payload_goal_error_m'),route_remaining_m=info.get('route_remaining_m'),seed=seed,return_=total,crashed=terminated,steps=len(errors),payload_rmse_m=float(np.sqrt(np.mean(np.square(errors)))),settled_rmse_m=float(np.sqrt(np.mean(np.square(settled)))) if settled else None,final_payload_error_m=errors[-1],peak_swing_deg=max(swings),obstacle_collision=info.get('obstacle_collision',False),minimum_clearance_m=min(clearances) if np.isfinite(min(clearances)) else None,success=success))
             env.close()
+            if config.get('task')=='random_navigation_precision_v1':
+                runs[-1].update(precision_hold_seconds=info['precision_hold_seconds'],
+                               peak_precision_hold_seconds=info['peak_precision_hold_seconds'],
+                               final_payload_speed_m_s=info['payload_speed_m_s'],
+                               final_payload_goal_error_mm=info['payload_goal_error_mm'])
         results[label]=dict(runs=runs,mean_payload_rmse_m=float(np.mean([r['payload_rmse_m'] for r in runs])),crashes=sum(r['crashed'] for r in runs),successes=sum(r['success'] for r in runs),mean_goal_distance_m=float(np.mean([r['goal_distance_m'] for r in runs])) if runs and runs[0]['goal_distance_m'] is not None else None)
     return results
 

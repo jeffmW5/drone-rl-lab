@@ -1,0 +1,87 @@
+{
+  "name": "tether_puffer_precision_v001",
+  "task": "random_navigation_precision_v1",
+  "hypothesis": "Longer settling plus smooth millimeter-scale destination shaping may improve sustained payload precision; uncalibrated simulation only.",
+  "algorithm": "PufferLib 3 PuffeRL transferred Gaussian residual controller",
+  "seed": 37,
+  "device": "cuda",
+  "vec_backend": "subproc",
+  "total_timesteps": 200000,
+  "budget_seconds": 1200,
+  "n_envs": 8,
+  "n_steps": 256,
+  "batch_size": 1024,
+  "n_epochs": 3,
+  "learning_rate": 3E-05,
+  "gamma": 0.995,
+  "log_std_init": -3,
+  "zero_residual_init": false,
+  "residual_scale": 0.03,
+  "episode_seconds": 90,
+  "eval_every_steps": 40000,
+  "checkpoint_every_steps": 10000,
+  "eval_seeds": [
+    51001,
+    51002,
+    51003
+  ],
+  "test_seeds": [
+    61001,
+    61002,
+    61003,
+    61004,
+    61005,
+    61006,
+    61007,
+    61008,
+    61009,
+    61010,
+    61011,
+    61012,
+    61013,
+    61014,
+    61015,
+    61016,
+    61017,
+    61018,
+    61019,
+    61020
+  ],
+  "notes": "PufferLib 3 compatibility migration retaining NavigationTaskV2 MuJoCo physics, privileged state and rotor/deck/cable contact checks. Transfer V007 final policy, optimizer and normalization. Observation/reward statistics frozen; upstream clamps training reward to [-1,1]. Finite duration treated as terminal because PufferLib 3 advantage kernel ignores separate truncations. Different PPO variant, value clipping, no strict equivalence to SB3. CUDA policy and updates; compiled advantage kernel also runs on CUDA; Four CPU-only MuJoCo workers (two environments each) fork before CUDA initialization to share library memory. Uncalibrated hardware assumptions. No seconds-scale speed or learning improvement claim. New version: 90-second episodes; full 3D payload error <=1mm for 3 continuous seconds, payload speed <=5mm/s, completed route and no crash. Smooth destination shaping; historical success/reward scales are not comparable.",
+  "resume_run": "tmp/tether-runs/tether_puffer_cuda_v003",
+  "resume_checkpoint": "best",
+  "navigation": {
+    "planner_margin_m": 0.26,
+    "speed_m_s": 0.12,
+    "acceleration_m_s2": 0.08,
+    "goal_error_weight": 1.5,
+    "payload_tolerance_m": 0.001,
+    "hold_seconds": 3.0,
+    "payload_speed_limit_m_s": 0.005
+  },
+  "physics": {
+    "randomization": {
+      "drone_mass_kg": [
+        0.033,
+        0.046
+      ],
+      "inertia_scale": [
+        0.85,
+        1.15
+      ],
+      "max_motor_thrust_N": [
+        0.17,
+        0.2
+      ],
+      "linear_drag_N_s_m": [
+        0.012,
+        0.018
+      ]
+    }
+  },
+  "num_workers": 4,
+  "rollout_batch_size": 4096,
+  "minibatch_size": 1024,
+  "bptt_horizon": 128,
+  "require_cuda_advantage": true
+}

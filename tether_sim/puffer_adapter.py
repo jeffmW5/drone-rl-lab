@@ -35,6 +35,10 @@ class PufferTask(gym.Wrapper):
                            goal_distance_m=info['goal_distance_m'],
                            success=float(not terminated and info['goal_reached']
                                          and info['payload_goal_error_m'] < .08 and info['swing_deg'] < 10))
+            if 'precision_success' in info:
+                metrics.update(success=float(not terminated and info['precision_success']),
+                               payload_goal_error_mm=info['payload_goal_error_mm'],
+                               precision_hold_seconds=info['precision_hold_seconds'])
         scaled = float(np.clip(reward / self.reward_std, -self.reward_clip, self.reward_clip))
         # PufferLib 3's advantage implementation does not separately consume
         # truncations. Treat finite task duration as terminal to prevent returns

@@ -80,3 +80,5 @@ See `research/deployment_gap_mean_policy.md` for full details.
 2026-10-11: V006 saved at 43,964 steps; V007 CUDA continuation launched on GTX 1070 Ti with eight simulator workers. See tether_v007_cuda.md.
 PufferLib3 CUDA migration: four adapter/kernel checks passed; 4096-step CUDA smoke complete, no broad improvement claim. See tether_puffer.md.
 Main tether_puffer_cuda_v003 active: 40960 steps at 743.8/s in first training segment; CUDA policy/updates/advantages verified. Native monitor and duplicate guard verified. Broader held-out performance pending.
+
+2026-10-11 update: v003 completed 200704 transitions; final 20 seeds PPO 5 successes, PD 3, both zero crashes. Mean payload RMSE 15.83 vs 15.86 cm. New millimeter precision task/config verified and queued; see tether_precision.md. Prior active snapshot above is superseded.

@@ -145,6 +145,9 @@ def main():
                 write_json(out/('eval_'+str(trainer.global_step)+'.json'), result)
                 ppo = result['PPO_residual']
                 rank = (ppo['crashes'], -ppo['successes'], ppo['mean_payload_rmse_m'])
+                if config.get('task') == 'random_navigation_precision_v1':
+                    rank = (ppo['crashes'], -ppo['successes'],
+                            float(np.mean([r['final_payload_goal_error_mm'] for r in ppo['runs']])))
                 if best_rank is None or rank < best_rank:
                     export('best'); best_rank = rank
                 next_eval += config['eval_every_steps']
