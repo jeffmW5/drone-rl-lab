@@ -1,0 +1,60 @@
+{
+  "scope": "single-seed PD interventions; no hardware validation or causal generalization",
+  "config": "configs/tether_research_recovery_v001.json",
+  "results": [
+    {
+      "case": "randomized",
+      "seed": 51001,
+      "crashed": false,
+      "final_error_mm": 386.85836992396816,
+      "route_remaining_m": 0.0,
+      "tail_samples": 501,
+      "tail_mean_drone_xyz_error_mm": [
+        5.1746743066996075,
+        20.425113356416926,
+        -367.9745501687076
+      ],
+      "tail_mean_payload_xyz_error_mm": [
+        6.44797535113279,
+        22.717207615294083,
+        -366.27099608860726
+      ]
+    },
+    {
+      "case": "wind_off",
+      "seed": 51001,
+      "crashed": false,
+      "final_error_mm": 379.417473427031,
+      "route_remaining_m": 0.0,
+      "tail_samples": 501,
+      "tail_mean_drone_xyz_error_mm": [
+        1.241732993745624,
+        -19.00148187650388,
+        -368.38052785162444
+      ],
+      "tail_mean_payload_xyz_error_mm": [
+        1.3394710300916477,
+        -20.123848250275206,
+        -367.2006710155091
+      ]
+    },
+    {
+      "case": "wind_off_matched_motors",
+      "seed": 51001,
+      "crashed": false,
+      "final_error_mm": 367.4341723582586,
+      "route_remaining_m": 0.0,
+      "tail_samples": 501,
+      "tail_mean_drone_xyz_error_mm": [
+        -0.008669242982278303,
+        -0.002482866160150071,
+        -368.63165326157923
+      ],
+      "tail_mean_payload_xyz_error_mm": [
+        -0.0006989612627916066,
+        -0.00045841045185871567,
+        -367.51255624342934
+      ]
+    }
+  ]
+}

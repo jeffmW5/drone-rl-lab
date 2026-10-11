@@ -26,3 +26,34 @@ against the original2ms campaign. New failures capture their pre-step state.
 Reserved audit seeds untouched. Recovery is the third research training launch
 in the rolling24h window; defer the original long-horizon trial and new training
 until the limit allows. Review recovery evidence before preparing campaignv002.
+
+23:49 UTC review: recovery completed102400 transitions in441.800s including
+final evaluation. No recorded numerical-failure snapshots or logged instability
+in this shorter trial; this does not establish a fix for the237568-step failure.
+Three validation seeds: zero crashes, zero1mm successes,3/3 routes complete.
+Mean final payload destination error199.116mm initial ->194.025mm final (2.56%);
+PD211.579mm. No cross-timestep promotion, original selected policy unchanged.
+Evidence: tether_sim/evidence/recovery_v001_evaluations.json and
+state/tether_research/recovery_v001.json. Further launches permitted only after
+2026-10-12 22:48:33 UTC under the rolling24h allowance.
+
+Single-seed PD interventions, seed51001,1ms model, final10s summaries:
+randomized final error386.858mm; wind off379.417mm; wind off + matched motor
+gains367.434mm. All routes complete, no crashes. Mean vertical error remained
+about-368mm even with wind off and matched gains. Therefore wind/motor imbalance
+alone does not explain this particular case. This is one diagnostic, not a
+general causal conclusion; tether_sim/evidence/recovery_bias_probe.json.
+
+Attitude-gain intervention on that same randomized case: default .015 final
+error386.858mm, route complete, mean tilt12.44deg. Lower .006 gain reduced mean
+tilt to1.83deg and mean vertical error from-0.368m to+0.051m, but route remained
+1.335m incomplete and final error1425.945mm. Reject that gain change as a
+controller improvement. Evidence: tether_sim/evidence/attitude_gain_probe.json.
+Hypothesis (low confidence): coupled motor lag/attitude tracking and outer-loop
+steady error contribute; decreasing gain alone trades height behavior for route
+tracking. Next falsification: paired PD sweeps over intermediate gain/damping,
+plus inspect saturation and directional errors on all three validation seeds.
+Consider an opt-in anti-windup integral controller only after those diagnostics;
+never silently change the frozen benchmark/controller or count this as learned
+policy progress. Reproduction: scripts/probe_tether_precision_bias.py and
+scripts/probe_tether_attitude_gain.py from the native checkout.

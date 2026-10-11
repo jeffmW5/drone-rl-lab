@@ -1,5 +1,5 @@
 {
-  "status": "needs review: numerical instability",
+  "status": "needs review: failed trial; no automatic continuation",
   "trials": [
     {
       "name": "tether_research_001_lower_lr",
@@ -128,7 +128,7 @@
     },
     "evidence": "/home/n33du/ai/drone-rl-lab/tmp/tether-runs/tether_puffer_precision_v001/eval_163840.json"
   },
-  "updated_at": 1791761355.7876499,
+  "updated_at": 1791762561.3535175,
   "active_pids": [],
   "error": "MuJoCo numerical instability killed Process-3; parent waited on dead worker"
 }

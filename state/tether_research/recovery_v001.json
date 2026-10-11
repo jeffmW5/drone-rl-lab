@@ -1,5 +1,5 @@
 {
-  "status": "started",
+  "status": "complete",
   "run": "tmp/tether-runs/tether_research_recovery_v001",
   "config": "configs/tether_research_recovery_v001.json",
   "launched_at": 1791761663.248961,
@@ -7,5 +7,40 @@
   "research_launch_number": 3,
   "next_launch_allowed_after": 1791845313.943998,
   "benchmark": "1ms recovery, not comparable to original2ms validation",
-  "pid": 23662
+  "pid": 23662,
+  "timesteps": 102400,
+  "elapsed_seconds": 441.80021593200036,
+  "reviewed_at": 1791762688.7973301,
+  "numerical_failure_snapshots": 0,
+  "decision": "Diagnostic completed; no cross-timestep promotion",
+  "evaluations": {
+    "evaluation_initial.json": {
+      "PD": {
+        "crashes": 0,
+        "successes": 0,
+        "mean_final_error_mm": 211.5785107554494,
+        "completed_routes": 3
+      },
+      "PPO_residual": {
+        "crashes": 0,
+        "successes": 0,
+        "mean_final_error_mm": 199.11597512201402,
+        "completed_routes": 3
+      }
+    },
+    "evaluation_final.json": {
+      "PD": {
+        "crashes": 0,
+        "successes": 0,
+        "mean_final_error_mm": 211.5785107554494,
+        "completed_routes": 3
+      },
+      "PPO_residual": {
+        "crashes": 0,
+        "successes": 0,
+        "mean_final_error_mm": 194.0252275151963,
+        "completed_routes": 3
+      }
+    }
+  }
 }

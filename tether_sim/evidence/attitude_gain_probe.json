@@ -1,0 +1,25 @@
+{
+  "scope": "single-seed 1ms PD gain intervention; not a trained-policy benchmark",
+  "results": [
+    {
+      "gain": 0.015,
+      "seed": 51001,
+      "crashed": false,
+      "route_remaining_m": 0.0,
+      "final_error_mm": 386.85836992396816,
+      "tail_mean_error_mm": 385.87032143902275,
+      "tail_mean_z_error_m": -0.3679745501687076,
+      "tail_mean_tilt_deg": 12.438935336863633
+    },
+    {
+      "gain": 0.006,
+      "seed": 51001,
+      "crashed": false,
+      "route_remaining_m": 1.3346854258095333,
+      "final_error_mm": 1425.9450610738656,
+      "tail_mean_error_mm": 1174.6281195262561,
+      "tail_mean_z_error_m": 0.05146668721694353,
+      "tail_mean_tilt_deg": 1.8323865753041115
+    }
+  ]
+}

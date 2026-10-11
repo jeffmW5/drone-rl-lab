@@ -1,6 +1,6 @@
 # Local 1070 Ti tether research loop
 
-Status: needs review: numerical instability
+Status: needs review: failed trial; no automatic continuation
 
 Validation selects provisional candidates; training reward does not select winners.
 No hardware accuracy claim. Fresh audit seeds are reserved for a final selected policy.

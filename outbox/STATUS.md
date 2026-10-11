@@ -106,3 +106,11 @@ Stopped only failed job, incumbent unchanged. Worker watchdog, numerical state
 capture and failed-campaign stop added;12 checks passed. Separate1ms recovery
 diagnostic prepared (100k transitions /600s), third research launch allowance;
 further training deferred. See tether_research_recovery.md.
+
+23:49 UTC:1ms recovery completed102400 steps, no recorded numerical failure;
+0/3 strict successes,0 crashes, destination error199.116->194.025mm. Short-run
+stability only; selected2ms policy unchanged. Single-seed diagnostics retain
+large vertical error after removing wind/motor imbalance; weaker attitude gain
+improves height/tilt but fails route completion and is rejected. Record includes
+counterevidence and next controller diagnostics. Daily launch allowance returns
+2026-10-12 22:48:33 UTC. Reserved audit seeds untouched in this review.
