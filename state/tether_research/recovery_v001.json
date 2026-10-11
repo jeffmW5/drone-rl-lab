@@ -1,0 +1,11 @@
+{
+  "status": "started",
+  "run": "tmp/tether-runs/tether_research_recovery_v001",
+  "config": "configs/tether_research_recovery_v001.json",
+  "launched_at": 1791761663.248961,
+  "config_sha256": "f737e7d46c95ac7a208a37cc5210c0909572c78d01c14195ab6b950442ab1816",
+  "research_launch_number": 3,
+  "next_launch_allowed_after": 1791845313.943998,
+  "benchmark": "1ms recovery, not comparable to original2ms validation",
+  "pid": 23662
+}
