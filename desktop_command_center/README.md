@@ -18,3 +18,4 @@ inside source/; retain the icon at the executable's directory root.
 Hardware flight commands are not implemented. Configuration paths currently target
 this user's Windows/WSL installation. V006 physics remains uncalibrated.
 
+PufferLib controls launch scripts/run_tether_puffer.sh with the frozen CUDA v002 config. PufferLib lesson opens tether_sim/puffer_guide.html. Puffer policies export matching SB3 ZIP/normalizer pairs for playback.

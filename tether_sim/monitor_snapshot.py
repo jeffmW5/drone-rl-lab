@@ -18,7 +18,7 @@ def snapshot(root=Path('tmp/tether-runs')):
     for p in Path('/proc').glob('[0-9]*/cmdline'):
         try:
             args=p.read_bytes().decode().split('\0')
-            if 'tether_sim.train' in args or 'tether_sim.viewer' in args:
+            if any(module in args for module in ('tether_sim.train','tether_sim.puffer_train','tether_sim.viewer')):
                 processes.append({'pid':int(p.parent.name),'args':args})
         except (OSError, UnicodeError):
             pass
@@ -26,7 +26,7 @@ def snapshot(root=Path('tmp/tether-runs')):
     for p in sorted(root.glob('*/config.json'),key=lambda p:p.stat().st_mtime,reverse=True)[:20]:
         folder=p.parent
         status=read_json(folder/'status.json')
-        active=any('tether_sim.train' in q['args'] and str(folder) in q['args'] for q in processes)
+        active=any(any(module in q['args'] for module in ('tether_sim.train','tether_sim.puffer_train')) and str(folder) in q['args'] for q in processes)
         effective=status.get('status','not started')
         if active and effective!='complete':
             effective='training / evaluating'

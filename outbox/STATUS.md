@@ -78,3 +78,4 @@ See `research/deployment_gap_mean_policy.md` for full details.
 
 
 2026-10-11: V006 saved at 43,964 steps; V007 CUDA continuation launched on GTX 1070 Ti with eight simulator workers. See tether_v007_cuda.md.
+PufferLib3 CUDA migration: four adapter/kernel checks passed; 4096-step CUDA smoke complete, no broad improvement claim. See tether_puffer.md.

@@ -55,16 +55,20 @@ def launch(args,label):
 
 def act(action,run_name=None):
     global backend
-    if action not in ('preview','policy','train'):
+    if action not in ('preview','policy','train','puffer'):
         raise ValueError('Unknown launch action')
     with action_lock:
         # Refresh processes before mutations to avoid launching duplicate jobs.
         result=subprocess.run(wsl_args('/usr/bin/python3','/mnt/d/drone-rl-lab/tether_sim/monitor_snapshot.py'),capture_output=True,text=True,timeout=12,creationflags=FLAGS)
         if result.returncode: raise RuntimeError(result.stderr[-300:])
         data=json.loads(result.stdout)
-        if action=='train':
-            if any('tether_sim.train' in p['args'] for p in data['processes']) or any(p.poll() is None and label.startswith('tether_v007_cuda_') for p,label in launchers):
+        if action in ('train','puffer'):
+            if any(any(module in p['args'] for module in ('tether_sim.train','tether_sim.puffer_train')) for p in data['processes']) or any(p.poll() is None and label.startswith(('tether_v007_cuda_','tether_puffer_')) for p,label in launchers):
                 return 'Training is already running; no duplicate started.'
+            if action=='puffer':
+                name='tether_puffer_'+time.strftime('%Y%m%d_%H%M%S')
+                launch(['/bin/bash','scripts/run_tether_puffer.sh','--config','configs/tether_puffer_cuda_v002.json','--output','tmp/tether-runs/'+name],name)
+                return 'Started PufferLib CUDA training: '+name+'. Existing results are preserved.'
             name='tether_v007_cuda_'+time.strftime('%Y%m%d_%H%M%S')
             launch([TRAIN,'-u','-m','tether_sim.train','--config','configs/tether_v007_cuda.json','--output','tmp/tether-runs/'+name],name)
             return 'Started V007 CUDA continuation: '+name+'. Existing results are preserved.'
@@ -180,4 +184,3 @@ def main():
             if label=='viewer' and process.poll() is None: process.terminate()
 
 if __name__=='__main__': main()
-

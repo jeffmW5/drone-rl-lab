@@ -1,0 +1,78 @@
+{
+  "scope": "PufferLib CUDA smoke; one held-out seed, not broad improvement evidence",
+  "status": {
+    "status": "complete",
+    "timesteps": 4096,
+    "elapsed_seconds": 30.17871441799997,
+    "device": "cuda",
+    "evaluation": {
+      "PD": {
+        "runs": [
+          {
+            "goal_distance_m": 0.13244063349069654,
+            "payload_goal_error_m": 0.15161665381149655,
+            "route_remaining_m": 0.0,
+            "seed": 61001,
+            "return_": -693.0502831869593,
+            "crashed": false,
+            "steps": 2250,
+            "payload_rmse_m": 0.13662268394609767,
+            "settled_rmse_m": 0.1169504625896161,
+            "final_payload_error_m": 0.15161665381149655,
+            "peak_swing_deg": 7.574994742041407,
+            "obstacle_collision": false,
+            "minimum_clearance_m": 0.09737436760601569,
+            "success": false
+          }
+        ],
+        "mean_payload_rmse_m": 0.13662268394609767,
+        "crashes": 0,
+        "successes": 0,
+        "mean_goal_distance_m": 0.13244063349069654
+      },
+      "PPO_residual": {
+        "runs": [
+          {
+            "goal_distance_m": 0.12737533317762,
+            "payload_goal_error_m": 0.14574915922717432,
+            "route_remaining_m": 0.0,
+            "seed": 61001,
+            "return_": -689.6258527562599,
+            "crashed": false,
+            "steps": 2250,
+            "payload_rmse_m": 0.13676473957448385,
+            "settled_rmse_m": 0.11577928015703615,
+            "final_payload_error_m": 0.14574915922717432,
+            "peak_swing_deg": 7.554762602375995,
+            "obstacle_collision": false,
+            "minimum_clearance_m": 0.09698833701526038,
+            "success": false
+          }
+        ],
+        "mean_payload_rmse_m": 0.13676473957448385,
+        "crashes": 0,
+        "successes": 0,
+        "mean_goal_distance_m": 0.12737533317762
+      }
+    },
+    "updated_at": 1791754188.3885796
+  },
+  "provenance": {
+    "commit": "dc49712fbfacc318bd1a8d08f46612ec4908804c",
+    "dirty": true,
+    "pid": 1177,
+    "trainer": "PufferLib 3 PuffeRL",
+    "pufferlib": "3.0",
+    "torch": "2.14.0+cu126",
+    "gpu": "NVIDIA GeForce GTX 1070 Ti",
+    "advantage_cuda": true,
+    "source_timesteps": 157696,
+    "source_run": "tmp/tether-runs/tether_v007_cuda",
+    "policy_sha256": "02168a87809a4267ef8480f35a995fe9875182561ba58ee430c87b3521ee69e6",
+    "normalizer_sha256": "613787d0332ed85a97582de9300f3ef8f1181ea5b98a9af0728c2c44310fc515",
+    "limitations": "PufferLib 3 compatibility migration retaining NavigationTaskV2 MuJoCo physics, privileged state and rotor/deck/cable contact checks. Transfer V007 final policy, optimizer and normalization. Observation/reward statistics frozen; upstream clamps training reward to [-1,1]. Finite duration treated as terminal because PufferLib 3 advantage kernel ignores separate truncations. Different PPO variant, value clipping, no strict equivalence to SB3. CUDA policy and updates; compiled advantage kernel also runs on CUDA; CPU-only MuJoCo workers fork before CUDA initialization to share library memory. Uncalibrated hardware assumptions. No seconds-scale speed or learning improvement claim."
+  },
+  "max_parameter_change": 0.0024704039096832275,
+  "normalizer_sha256": "613787d0332ed85a97582de9300f3ef8f1181ea5b98a9af0728c2c44310fc515",
+  "tests": "four adapter/kernel tests passed"
+}

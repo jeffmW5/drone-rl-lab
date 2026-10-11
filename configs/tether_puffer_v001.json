@@ -1,0 +1,85 @@
+{
+  "name": "tether_puffer_v001",
+  "task": "random_navigation_v2",
+  "hypothesis": "Transfer V005 weights into geometry-aware navigation; wider routes, adaptive corner tracking and destination metrics may reduce collisions while PPO learns disturbance compensation.",
+  "algorithm": "PufferLib 3 PuffeRL transferred Gaussian residual controller",
+  "seed": 37,
+  "device": "cuda",
+  "vec_backend": "subproc",
+  "total_timesteps": 200000,
+  "budget_seconds": 1200,
+  "n_envs": 8,
+  "n_steps": 256,
+  "batch_size": 1024,
+  "n_epochs": 3,
+  "learning_rate": 3E-05,
+  "gamma": 0.995,
+  "log_std_init": -3,
+  "zero_residual_init": false,
+  "residual_scale": 0.03,
+  "episode_seconds": 45,
+  "eval_every_steps": 40000,
+  "checkpoint_every_steps": 10000,
+  "eval_seeds": [
+    51001,
+    51002,
+    51003,
+    51004,
+    51005
+  ],
+  "test_seeds": [
+    61001,
+    61002,
+    61003,
+    61004,
+    61005,
+    61006,
+    61007,
+    61008,
+    61009,
+    61010,
+    61011,
+    61012,
+    61013,
+    61014,
+    61015,
+    61016,
+    61017,
+    61018,
+    61019,
+    61020
+  ],
+  "notes": "PufferLib 3 compatibility migration retaining NavigationTaskV2 MuJoCo physics, privileged state and rotor/deck/cable contact checks. Transfer V006 interrupted policy, optimizer and normalization. Observation/reward statistics frozen; upstream clamps training reward to [-1,1]. Finite duration treated as terminal because PufferLib 3 advantage kernel ignores separate truncations. Different PPO variant, value clipping, no strict equivalence to SB3. CUDA policy and updates; advantage kernel uses CPU fallback until nvcc installed. Uncalibrated hardware assumptions. No seconds-scale speed or learning improvement claim.",
+  "resume_run": "tmp/tether-runs/tether_v006",
+  "resume_checkpoint": "interrupted",
+  "navigation": {
+    "planner_margin_m": 0.26,
+    "speed_m_s": 0.12,
+    "acceleration_m_s2": 0.08,
+    "goal_error_weight": 1.5
+  },
+  "physics": {
+    "randomization": {
+      "drone_mass_kg": [
+        0.033,
+        0.046
+      ],
+      "inertia_scale": [
+        0.85,
+        1.15
+      ],
+      "max_motor_thrust_N": [
+        0.17,
+        0.2
+      ],
+      "linear_drag_N_s_m": [
+        0.012,
+        0.018
+      ]
+    }
+  },
+  "num_workers": 8,
+  "rollout_batch_size": 4096,
+  "minibatch_size": 1024,
+  "bptt_horizon": 128
+}

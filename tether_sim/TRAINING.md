@@ -118,3 +118,8 @@ The source policy and normalizer SHA-256 hashes and source timestep count are in
 `provenance.json`. `evaluation_initial.json` measures the transferred controller
 before training on the V006 validation layouts. `status.json` counts additional
 transitions in this run. The main run output is separate from every prior run.
+# PufferLib CUDA path
+
+Use `bash scripts/run_tether_puffer.sh --config configs/tether_puffer_cuda_v002.json --output tmp/tether-runs/NEW_NAME`.
+This is Python-compatible PufferLib3, not native5. See `puffer_guide.html` and
+`outbox/tether_puffer.md` for transfer differences, checks and installation.
