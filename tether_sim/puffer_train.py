@@ -48,8 +48,8 @@ def main():
     stopping = [False]
     def stop(signum, frame):
         stopping[0] = True
-    signal.signal(signal.SIGINT, stop)
-    signal.signal(signal.SIGTERM, stop)
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+    signal.signal(signal.SIGTERM, signal.SIG_DFL)
     torch.set_num_threads(1)
     torch.manual_seed(config['seed'])
     np.random.seed(config['seed'])
@@ -74,6 +74,8 @@ def main():
                 process.terminate()
             process.join(timeout=2)
     atexit.register(terminate_workers)
+    signal.signal(signal.SIGINT, stop)
+    signal.signal(signal.SIGTERM, stop)
     if not torch.cuda.is_available():
         raise RuntimeError('CUDA required for this experiment')
     model = PPO.load(model_file, device='cuda')
@@ -171,9 +173,13 @@ def main():
             if trainer is not None:
                 trainer.utilization.stop()
         elif trainer is not None:
-            trainer.close()
+            # Upstream vector close may wait indefinitely for a worker pipe.
+            # Checkpoints are saved before stopping our CPU-only children.
+            trainer.save_checkpoint()
+            trainer.utilization.stop()
+            terminate_workers()
         else:
-            vec.close()
+            terminate_workers()
 
 
 if __name__ == '__main__':

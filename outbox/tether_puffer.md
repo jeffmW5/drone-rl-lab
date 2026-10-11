@@ -35,3 +35,4 @@ held-out results are pending at this checkpoint.
 Native app adds Train PufferLib and PufferLib lesson, monitors Puffer processes and
 uses exported SB3 ZIP/normalizer pairs for playback. Teaching guide saved to Codex
 outputs/PufferLib-Training-Guide.md.
+Follow-up: CUDA smoke with final shutdown code completed 4096 steps in 26.343 seconds including final evaluation; no worker processes remained. v002 main launch hit upstream physical-core guard before learning. Frozen v003 uses eight environments across four workers and resumes the same V007 final pair. Checkpoints saved before workers are stopped; worker SIGTERM defaults restored before fork.

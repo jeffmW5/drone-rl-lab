@@ -67,7 +67,7 @@ def act(action,run_name=None):
                 return 'Training is already running; no duplicate started.'
             if action=='puffer':
                 name='tether_puffer_'+time.strftime('%Y%m%d_%H%M%S')
-                launch(['/bin/bash','scripts/run_tether_puffer.sh','--config','configs/tether_puffer_cuda_v002.json','--output','tmp/tether-runs/'+name],name)
+                launch(['/bin/bash','scripts/run_tether_puffer.sh','--config','configs/tether_puffer_cuda_v003.json','--output','tmp/tether-runs/'+name],name)
                 return 'Started PufferLib CUDA training: '+name+'. Existing results are preserved.'
             name='tether_v007_cuda_'+time.strftime('%Y%m%d_%H%M%S')
             launch([TRAIN,'-u','-m','tether_sim.train','--config','configs/tether_v007_cuda.json','--output','tmp/tether-runs/'+name],name)
