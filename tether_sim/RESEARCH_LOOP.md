@@ -52,3 +52,11 @@ Initial campaign limit: three trials, <=400000 transitions and <=1800 training
 seconds each, plus bounded finite-seed evaluations. A future heartbeat may
 prepare a new bounded campaign after evidence review. Local recurring checks
 depend on the desktop scheduler and this PC/WSL being available.
+
+2026-10-11 recovery: campaignv001 longer-training trial failed numerically;
+default tick now halts at failed trials. See outbox/tether_research_recovery.md
+and state/tether_research/recovery_v001.json for the separate1ms integration
+diagnostic. It is the third launch in the24h allowance. Do not start another
+trainer or the original third trial until that allowance returns. After this
+diagnostic completes, review it and create a new versioned plan if justified;
+never compare its1ms results as if they shared the original2ms benchmark.

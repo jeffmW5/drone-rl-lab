@@ -99,3 +99,10 @@ complete on seeds51001-51003. Below5% promotion gate; incumbent retained. Second
 trial (400000 transitions /1800 training seconds plus validation) launched from
 that incumbent. Reserved audit seeds untouched. Source: state/tether_research/
 v001.json and trial eval_200704.json; single small validation set, provisional.
+
+23:29 UTC review: research002 invalid due dead simulator worker /MuJoCo QACC
+instability at55.104s; last progress237568, saved checkpoint200704 retained.
+Stopped only failed job, incumbent unchanged. Worker watchdog, numerical state
+capture and failed-campaign stop added;12 checks passed. Separate1ms recovery
+diagnostic prepared (100k transitions /600s), third research launch allowance;
+further training deferred. See tether_research_recovery.md.

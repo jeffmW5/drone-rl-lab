@@ -111,6 +111,8 @@ def main():
                         compile=False, compile_mode='default', compile_fullgraph=False, use_rnn=False,
                         vtrace_rho_clip=1., vtrace_c_clip=1., prio_alpha=0., prio_beta0=0.)
     trainer = None
+    from .worker_watchdog import WorkerWatchdog
+    watchdog = WorkerWatchdog(vec.processes)
     started = time.monotonic()
     best_rank = None
     next_eval = config['eval_every_steps']
@@ -125,6 +127,7 @@ def main():
         # lacks the live wrapper attributes needed by its save() method.
         shutil.copyfile(norm_file, out/(name+'_normalize.pkl'))
     try:
+        watchdog.start()
         trainer = PuffeRL(train_config, vec, policy)
         trainer.optimizer.load_state_dict(model.policy.optimizer.state_dict())
         for group in trainer.optimizer.param_groups:
@@ -176,6 +179,7 @@ def main():
                    timesteps=trainer.global_step if trainer else 0, device='cuda', updated_at=time.time()))
         raise
     finally:
+        watchdog.close()
         if failed:
             # Upstream close waits for pipe replies; failed startup workers may
             # never reply. Stop only this vector's own children in that case.

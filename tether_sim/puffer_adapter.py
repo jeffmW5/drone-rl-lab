@@ -1,5 +1,10 @@
 """PufferLib 3 bridge retaining the existing MuJoCo navigation task."""
 import pickle
+import json
+import os
+import time
+from dataclasses import asdict
+from pathlib import Path
 import numpy as np
 import gymnasium as gym
 import torch
@@ -17,15 +22,33 @@ class PufferTask(gym.Wrapper):
                                                self.env.observation_space.shape, np.float32)
         self.episode_return = 0.
         self.episode_steps = 0
+        self.failure_dir = config.get('numerical_failure_dir')
 
     def reset(self, *, seed=None, options=None):
-        obs, _ = self.env.reset(seed=seed, options=options)
+        self.reset_seed = None if seed is None else int(seed)
+        obs, _ = self.env.reset(seed=self.reset_seed, options=options)
         self.episode_return = 0.
         self.episode_steps = 0
         return obs.astype(np.float32), {}
 
     def step(self, action):
-        obs, reward, terminated, truncated, info = self.env.step(action)
+        if self.failure_dir:
+            sim = self.env.env
+            before = dict(time=float(sim.data.time), qpos=sim.data.qpos.tolist(),
+                          qvel=sim.data.qvel.tolist(), motors=sim.motors.tolist(),
+                          wind=sim.wind.tolist(), target=sim.target.tolist(),
+                          action=np.asarray(action).tolist(), domain=self.env.domain,
+                          physics=asdict(sim.config), reset_seed=self.reset_seed,
+                          episode_steps=self.episode_steps)
+        try:
+            obs, reward, terminated, truncated, info = self.env.step(action)
+        except FloatingPointError as error:
+            if self.failure_dir:
+                folder = Path(self.failure_dir)
+                folder.mkdir(parents=True, exist_ok=True)
+                before['error'] = str(error)
+                (folder/f'{os.getpid()}_{time.time_ns()}.json').write_text(json.dumps(before, indent=2))
+            raise  # Numerical failures remain invalid, never a successful/reset episode.
         self.episode_return += reward
         self.episode_steps += 1
         metrics = {}

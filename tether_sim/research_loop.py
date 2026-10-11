@@ -135,6 +135,10 @@ def tick(root, plan, state, launch=True):
     if state.get('paused'):
         state['status'] = 'paused'
         return state
+    state['active_pids'] = []
+    if any(t['status'] == 'failed' for t in state['trials']):
+        state['status'] = 'needs review: failed trial; no automatic continuation'
+        return state
     if not state.get('incumbent'):
         source = root/plan['initial_run']
         if read_json(source/'status.json').get('status') != 'complete':

@@ -10,6 +10,28 @@ from .generalize import make_task
 from .puffer_adapter import PufferTask, TransferredPolicy, make_puffer_env
 
 
+def test_recovery_clock_and_numerical_failure_capture(tmp_path, monkeypatch):
+    config = json.load(open('configs/tether_research_recovery_v001.json'))
+    config['numerical_failure_dir'] = str(tmp_path)
+    env = PufferTask(config, config['resume_run']+'/checkpoint_200704_normalize.pkl')
+    obs, _ = env.reset(seed=np.int64(51001))
+    assert obs.shape == (171,) and env.env.env.substeps == 20
+    env.step(np.zeros(4))
+    assert env.env.env.data.time == pytest.approx(.02)
+    def fail(action):
+        raise FloatingPointError('test invalid rollout')
+    monkeypatch.setattr(env.env, 'step', fail)
+    with pytest.raises(FloatingPointError, match='invalid rollout'):
+        env.step(np.zeros(4))
+    records = list(tmp_path.glob('*.json'))
+    assert len(records) == 1
+    captured = json.loads(records[0].read_text())
+    assert captured['time'] == pytest.approx(.02)
+    assert captured['reset_seed'] == 51001 and len(captured['qpos']) == 55
+    assert captured['physics']['timestep'] == .001
+    env.close()
+
+
 def test_adapter_retains_rollout_and_terminal_contacts():
     config = json.load(open('configs/tether_puffer_v001.json'))
     source = config['resume_run'] + '/interrupted_normalize.pkl'

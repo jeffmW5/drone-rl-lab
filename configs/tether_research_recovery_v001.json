@@ -1,0 +1,74 @@
+{
+  "name": "tether_research_recovery_v001",
+  "task": "random_navigation_precision_v1",
+  "hypothesis": "A 1ms integrator step may avoid the observed numerical instability; this is a separate physics benchmark with no direct promotion against 2ms results.",
+  "algorithm": "PufferLib 3 PuffeRL transferred Gaussian residual controller",
+  "seed": 37,
+  "device": "cuda",
+  "vec_backend": "subproc",
+  "total_timesteps": 100000,
+  "budget_seconds": 600,
+  "n_envs": 8,
+  "n_steps": 256,
+  "batch_size": 1024,
+  "n_epochs": 3,
+  "learning_rate": 3E-05,
+  "gamma": 0.995,
+  "log_std_init": -3,
+  "zero_residual_init": false,
+  "residual_scale": 0.03,
+  "episode_seconds": 90,
+  "eval_every_steps": 100000,
+  "checkpoint_every_steps": 50000,
+  "eval_seeds": [
+    51001,
+    51002,
+    51003
+  ],
+  "test_seeds": [
+    51001,
+    51002,
+    51003
+  ],
+  "notes": "Recovery diagnostic; prior job invalid due MuJoCo QACC warning at DOF6 and simulation time55.104s. Save pre-step state on numerical failure, fail parent promptly on worker exit. 1ms integration changes the benchmark: no promotion or direct accuracy comparison against the 2ms campaign. 100000 transitions /600 training seconds plus 3-seed validation. Resume last saved checkpoint200704 from failed run; frozen normalization. Uncalibrated simulation only. Third research launch in current rolling24h; further training deferred until allowance returns.",
+  "resume_run": "tmp/tether-runs/tether_research_002_more_steps",
+  "resume_checkpoint": "checkpoint_200704",
+  "navigation": {
+    "planner_margin_m": 0.26,
+    "speed_m_s": 0.12,
+    "acceleration_m_s2": 0.08,
+    "goal_error_weight": 1.5,
+    "payload_tolerance_m": 0.001,
+    "hold_seconds": 3.0,
+    "payload_speed_limit_m_s": 0.005
+  },
+  "physics": {
+    "randomization": {
+      "drone_mass_kg": [
+        0.033,
+        0.046
+      ],
+      "inertia_scale": [
+        0.85,
+        1.15
+      ],
+      "max_motor_thrust_N": [
+        0.17,
+        0.2
+      ],
+      "linear_drag_N_s_m": [
+        0.012,
+        0.018
+      ]
+    },
+    "overrides": {
+      "timestep": 0.001
+    }
+  },
+  "num_workers": 4,
+  "rollout_batch_size": 4096,
+  "minibatch_size": 1024,
+  "bptt_horizon": 128,
+  "require_cuda_advantage": true,
+  "numerical_failure_dir": "tmp/tether-research/numerical_failures_recovery_v001"
+}

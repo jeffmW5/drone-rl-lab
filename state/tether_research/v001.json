@@ -1,5 +1,5 @@
 {
-  "status": "launching tether_research_002_more_steps",
+  "status": "needs review: numerical instability",
   "trials": [
     {
       "name": "tether_research_001_lower_lr",
@@ -61,7 +61,7 @@
     },
     {
       "name": "tether_research_002_more_steps",
-      "status": "running",
+      "status": "failed",
       "hypothesis": "More optimization from the provisional incumbent may improve deterministic precision",
       "changes": {
         "total_timesteps": 400000,
@@ -92,7 +92,9 @@
         "evidence": "/home/n33du/ai/drone-rl-lab/tmp/tether-runs/tether_puffer_precision_v001/eval_163840.json"
       },
       "launched_at": 1791760153.5008826,
-      "pid": 19414
+      "pid": 19414,
+      "decision": "invalid run; no promotion",
+      "failure_evidence": "/home/n33du/ai/drone-rl-lab/tmp/tether-runs/tether_research_002_more_steps/failure_review.json"
     },
     {
       "name": "tether_research_003_long_horizon",
@@ -126,12 +128,7 @@
     },
     "evidence": "/home/n33du/ai/drone-rl-lab/tmp/tether-runs/tether_puffer_precision_v001/eval_163840.json"
   },
-  "updated_at": 1791760153.5812654,
-  "active_pids": [
-    16036,
-    16069,
-    16070,
-    16078,
-    16084
-  ]
+  "updated_at": 1791761355.7876499,
+  "active_pids": [],
+  "error": "MuJoCo numerical instability killed Process-3; parent waited on dead worker"
 }

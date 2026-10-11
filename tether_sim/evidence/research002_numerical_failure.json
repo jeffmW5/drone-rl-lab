@@ -1,0 +1,28 @@
+{
+  "reason": "MuJoCo numerical instability killed Process-3; parent waited on dead worker",
+  "simulation_time_s": 55.104,
+  "dof": 6,
+  "last_verified_status": {
+    "status": "training",
+    "timesteps": 237568,
+    "elapsed_seconds": 468.53232682699945,
+    "steps_per_second": 507.0471905511003,
+    "device": "cuda",
+    "gpu": "NVIDIA GeForce GTX 1070 Ti",
+    "updated_at": 1791760739.4788618,
+    "losses": {
+      "policy_loss": -0.007230204607670505,
+      "value_loss": 0.9285753170649211,
+      "entropy": -6.316959738731384,
+      "old_approx_kl": 0.005263193403758729,
+      "approx_kl": 0.0022358968562912196,
+      "clipfrac": 0.022298177083333332,
+      "importance": 0.9969727148612341,
+      "explained_variance": 0.9746915698051453
+    }
+  },
+  "failed_worker_pid": 19466,
+  "parent_pid": 19414,
+  "updated_at": 1791761445.6269097,
+  "scope": "one stochastic training rollout; exact domain/seed unavailable; cause not established"
+}
