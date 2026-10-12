@@ -1,0 +1,182 @@
+[
+  {
+    "name": "cuda_auto_0054_takeoff",
+    "condition": "exploration_v1_15001_-4",
+    "steps": 262144,
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0054_takeoff/result.json",
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 3350.8449727725433
+    },
+    "periodic": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 7562.185461966731
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 3350.8449727725433
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 7503.776776141026
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 6207.936087244069
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0055_takeoff",
+    "condition": "exploration_v1_15001_-2",
+    "steps": 262144,
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0055_takeoff/result.json",
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 9899.312629037699
+    },
+    "periodic": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2514.1004380635686
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 9899.312629037699
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8276.602062948246
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 6367.188993293624
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0056_takeoff",
+    "condition": "exploration_v1_15002_-4",
+    "steps": 262144,
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0056_takeoff/result.json",
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 8485.475171886179
+    },
+    "periodic": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 7704.039662615174
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8485.475171886179
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 7300.318106899115
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 7811.250901107524
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0057_takeoff",
+    "condition": "exploration_v1_15002_-2",
+    "steps": 262144,
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0057_takeoff/result.json",
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 18,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 4472.606675088727
+    },
+    "periodic": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8003.905088276649
+      },
+      "eval_262144.json": {
+        "crashes": 18,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 4472.606675088727
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 10583.442579356379
+      },
+      "eval_196608.json": {
+        "crashes": 3,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5657.79470696277
+      }
+    }
+  }
+]
