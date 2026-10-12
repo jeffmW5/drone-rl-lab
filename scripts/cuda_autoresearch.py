@@ -54,16 +54,17 @@ try:
         run=ROOT/'tmp/cuda-research'/name;plan_path=ROOT/'configs/cuda_research'/f'{name}.json'
         if run.exists() or plan_path.exists():
             state.update(paused=True,error='Existing trial intent requires review: '+name);write(state);continue
-        previous=state.get('incumbents',{}).get(phase)
+        benchmark=phase+'|controls2'
+        previous=state.get('incumbents',{}).get(benchmark)
         plan=dict(name=name,direct=True,phase=phase,reward_version=2,steps=65536,budget_seconds=90,
           eval_every_steps=32768,evaluation_steps=250,validation_seeds=[51011,51012,51013],
           learning_rate=[1e-5,3e-6,3e-5][(index-1)%3],initial_throttle=[.61,.60,.62][((index-1)//3)%3],
-          seed=1000+index,playback_seconds=0,
-          hypothesis='Explicit takeoff/hover reward and restrained PPO updates may prevent ground collapse',
+          seed=1000+index,playback_seconds=0,control_version=2,
+          hypothesis='Learned collective and limited differential authority may improve attitude stability without PD feedback',
           limitations='Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.')
         if previous:plan['resume']=previous['checkpoint']
         plan_path.parent.mkdir(parents=True,exist_ok=True);plan_path.write_text(json.dumps(plan,indent=2))
-        trial=dict(name=name,phase=phase,plan=str(plan_path.relative_to(ROOT)),run=str(run.relative_to(ROOT)),status='launching',launched_at=time.time())
+        trial=dict(name=name,phase=phase,benchmark=benchmark,plan=str(plan_path.relative_to(ROOT)),run=str(run.relative_to(ROOT)),status='launching',launched_at=time.time())
         state['trials'].append(trial);state.update(status='running '+name);write(state)
         run.parent.mkdir(parents=True,exist_ok=True)
         sources=run.parent/(name+'.sources');sources.mkdir(exist_ok=False)
@@ -78,10 +79,10 @@ try:
         if child.returncode==0 and (run/'selection.json').exists():
             failures=0;selection=json.loads((run/'selection.json').read_text());score=selection['best']
             rank=lambda v:(v['crashes'],-v['hover_successes'],-v['takeoffs'],v['mean_final_error_mm'])
-            incumbent=state.setdefault('incumbents',{}).get(phase)
+            incumbent=state.setdefault('incumbents',{}).get(benchmark)
             promoted=incumbent is None or rank(score)<rank(incumbent['score'])
             trial.update(status='complete',selection=selection,promoted=promoted)
-            if promoted:state['incumbents'][phase]=dict(checkpoint=str(run/'best.pt'),score=score)
+            if promoted:state['incumbents'][benchmark]=dict(checkpoint=str(run/'best.pt'),score=score)
             if score['crashes']==0 and score['hover_successes']>=18 and score['mean_final_error_mm']<100:
                 state['phase']={'takeoff':'hover','hover':'destination','destination':'destination'}[phase]
             state.pop('error',None)

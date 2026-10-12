@@ -34,7 +34,7 @@ def publish(vec,mode,step):
         snapshot.update(mode=mode+(' · direct learned motors' if args.direct else ' · PD + AI residual'),step=step,positions=s.position[0].cpu().tolist(),goal=vec.goal[0].cpu().tolist(),boxes=s.boxes[0].cpu().tolist(),failed=int(s.failed[0]),gpu=torch.cuda.get_device_name(0))
 
 def evaluate(policy,seed):
-    vec=CudaVector(8,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'));vec.async_reset(seed);collisions=0;peak_height=torch.zeros(8,device='cuda');hold=torch.zeros(8,device='cuda');peak_hold=hold.clone();trajectory=[]
+    vec=CudaVector(8,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1));vec.async_reset(seed);collisions=0;peak_height=torch.zeros(8,device='cuda');hold=torch.zeros(8,device='cuda');peak_hold=hold.clone();trajectory=[]
     for step in range(plan.get('evaluation_steps',250)):
         with torch.no_grad():distribution,_=policy(vec.obs());action=distribution.mean.cpu().numpy()
         vec.send(action)
@@ -54,9 +54,11 @@ trainer=None
 try:
     from pufferlib.pufferl import PuffeRL,ADVANTAGE_CUDA
     if not ADVANTAGE_CUDA:raise RuntimeError('CUDA advantage kernel required')
-    vec=CudaVector(128,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'));policy=CudaPolicy().cuda()
+    vec=CudaVector(128,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1));policy=CudaPolicy().cuda()
     if args.direct and args.initial_throttle!=.5:
         with torch.no_grad():policy.actor.bias.fill_(2*args.initial_throttle-1);policy.log_std.fill_(-4.)
+    if plan.get('control_version',1)==2:
+        with torch.no_grad():policy.actor.bias.zero_();policy.actor.bias[0]=2*args.initial_throttle-1
     if plan.get('resume'):policy.load_state_dict(torch.load(plan['resume'],weights_only=True))
     config=dict(env='cuda_tether_prototype_v001',seed=41,torch_deterministic=True,cpu_offload=False,device='cuda',optimizer='adam',anneal_lr=False,precision='float32',amp=False,total_timesteps=32768,learning_rate=3e-4,gamma=.995,gae_lambda=.95,update_epochs=3,clip_coef=.2,vf_coef=.5,vf_clip_coef=.2,max_grad_norm=.5,ent_coef=0.,adam_beta1=.9,adam_beta2=.999,adam_eps=1e-5,min_lr_ratio=1.,data_dir=str(out/'puffer'),checkpoint_interval=100,batch_size=4096,minibatch_size=1024,max_minibatch_size=1024,bptt_horizon=32,compile=False,compile_mode='default',compile_fullgraph=False,use_rnn=False,vtrace_rho_clip=1.,vtrace_c_clip=1.,prio_alpha=0.,prio_beta0=0.)
     if args.direct:config['total_timesteps']=args.steps

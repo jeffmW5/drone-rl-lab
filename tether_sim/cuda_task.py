@@ -6,8 +6,9 @@ from .cuda_backend import CudaTether
 
 
 class CudaVector:
-    def __init__(self,count=256,direct=False,reward_version=1,phase='destination'):
+    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1):
         self.direct=direct
+        self.control_version=control_version
         self.reward_version=reward_version;self.phase=phase
         self.num_agents=self.agents_per_batch=count
         self.single_observation_space=Box(-np.inf,np.inf,(98,),np.float32)
@@ -61,6 +62,11 @@ class CudaVector:
     def send(self,actions):
         s=self.sim;residual=torch.as_tensor(actions,device='cuda',dtype=torch.float32)
         command=(.5*(residual+1)).clamp(0,1) if self.direct else self.baseline()+.03*residual
+        if self.direct and self.control_version==2:
+            # Learned collective + learned roll/pitch/yaw, fixed motor geometry.
+            # No state-feedback controller; all four channels come from policy.
+            mix=torch.tensor([[1,-1,-1],[1,1,1],[-1,1,-1],[-1,-1,1]],device='cuda',dtype=torch.float32)
+            command=(.5*(residual[:,0:1]+1)+.02*(residual[:,1:]@mix.T)).clamp(0,1)
         s.step(command.contiguous())
         if bool((s.failed==2).any()):
             raise FloatingPointError('CUDA physics numerical failure; trial invalid')
