@@ -1,0 +1,5 @@
+# First-pair GPU integration evidence
+
+2026-10-12 UTC, trials373/374, training seed36001, reward7 unchanged. Immutable pair_01_results.json contains plans, scores, selected step and sampled trajectories. Control and treatment each completed65536 transitions, training108.216/108.316s including periodic evaluations. Actual correction hook applied122 timeout-only bootstrap values with zero alignment/nonfinite exceptions (pair_01_bootstrap_status.json). Installed package remained unchanged. This validates observed execution, not every possible future adapter or learner version.
+
+Final paired destination error816.408354158015mm control versus815.586133742332mm treatment, initial822.218053865814mm both. Difference0.822220415683mm between aggregate errors is small, one training seed and reused validation; not evidence of millimeter tracking. Both zero crashes,24 takeoffs,zero sustained hover and zero airborne acquisition. Do not claim convergence or statistical superiority. Next two frozen pairs remain pending, trial375 active. No automatic adaptation promotion based on this pair. Original strict1mm benchmark/hardware fidelity remains unmet.
