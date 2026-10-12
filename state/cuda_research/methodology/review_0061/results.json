@@ -1,0 +1,79 @@
+[
+  {
+    "trial": 505,
+    "source": "tmp/cuda-research/cuda_auto_0505_takeoff/result.json",
+    "final_error_mm": 4498.183075799402,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 506,
+    "source": "tmp/cuda-research/cuda_auto_0506_takeoff/result.json",
+    "final_error_mm": 3634.071367783188,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 507,
+    "source": "tmp/cuda-research/cuda_auto_0507_takeoff/result.json",
+    "final_error_mm": 3799.3647365884935,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 508,
+    "source": "tmp/cuda-research/cuda_auto_0508_takeoff/result.json",
+    "final_error_mm": 2201.8235512002034,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 509,
+    "source": "tmp/cuda-research/cuda_auto_0509_takeoff/result.json",
+    "final_error_mm": 2001.7331648706831,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 510,
+    "source": "tmp/cuda-research/cuda_auto_0510_takeoff/result.json",
+    "final_error_mm": 2974.066446955443,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 511,
+    "source": "tmp/cuda-research/cuda_auto_0511_takeoff/result.json",
+    "final_error_mm": 3137.316248267249,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  }
+]
