@@ -1,0 +1,22 @@
+{
+  "name": "cuda_auto_0005_takeoff",
+  "direct": true,
+  "phase": "takeoff",
+  "reward_version": 2,
+  "steps": 65536,
+  "budget_seconds": 90,
+  "eval_every_steps": 32768,
+  "evaluation_steps": 250,
+  "validation_seeds": [
+    51011,
+    51012,
+    51013
+  ],
+  "learning_rate": 3e-06,
+  "initial_throttle": 0.6,
+  "seed": 1005,
+  "playback_seconds": 0,
+  "control_version": 2,
+  "hypothesis": "Learned collective and limited differential authority may improve attitude stability without PD feedback",
+  "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim."
+}
