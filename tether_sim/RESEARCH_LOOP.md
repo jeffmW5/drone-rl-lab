@@ -96,3 +96,5 @@ diagnostic. It is the third launch in the24h allowance. Do not start another
 trainer or the original third trial until that allowance returns. After this
 diagnostic completes, review it and create a new versioned plan if justified;
 never compare its1ms results as if they shared the original2ms benchmark.
+
+2026-10-12 user instruction: remove angular-velocity penalty. Reward7 equals baseline2 with omega squared cost removed, upright term retained. Legacy reward versions frozen. Queuev023 tests three seeds; low-priority queuev999 maintains reward7 for the already-running scheduler while newer methodology queues take precedence. New daemon default source also7; running daemon is not restarted. Before low-priority continuation exhaustion ensure no return to reward2; future campaigns must honor user removal except explicit frozen control arms. Geometry/observation/control/evaluation unchanged; CPU cost tests passed. At this check332 completed trials,total31784960 training transitions; recent65536-step runs~63s/~1040 transitions/s including in-budget evaluation. No achieved hover/hardware precision claim.

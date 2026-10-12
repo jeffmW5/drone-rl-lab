@@ -1,0 +1,902 @@
+[
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34101",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34101,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34102",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34102,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34103",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34103,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34104",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34104,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34105",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34105,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34106",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34106,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34107",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34107,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34108",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34108,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34109",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34109,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34110",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34110,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34111",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34111,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34112",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34112,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34113",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34113,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34114",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34114,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34115",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34115,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34116",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34116,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34117",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34117,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34118",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34118,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34119",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34119,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34120",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34120,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34121",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34121,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34122",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34122,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34123",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34123,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34124",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34124,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34125",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34125,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34126",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34126,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34127",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34127,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34128",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34128,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34129",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34129,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34130",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34130,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34131",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34131,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34132",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34132,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34133",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34133,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34134",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34134,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34135",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34135,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34136",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34136,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34137",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34137,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34138",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34138,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34139",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34139,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34140",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34140,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34141",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34141,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34142",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34142,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34143",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34143,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34144",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34144,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34145",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34145,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34146",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34146,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34147",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34147,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34148",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34148,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34149",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34149,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34150",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34150,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34151",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34151,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34152",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34152,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34153",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34153,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34154",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34154,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34155",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34155,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34156",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34156,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34157",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34157,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34158",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34158,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34159",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34159,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34160",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34160,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34161",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34161,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34162",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34162,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34163",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34163,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34164",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34164,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34165",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34165,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34166",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34166,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34167",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34167,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34168",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34168,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34169",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34169,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34170",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34170,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34171",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34171,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34172",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34172,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34173",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34173,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34174",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34174,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34175",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34175,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34176",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34176,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34177",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34177,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34178",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34178,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34179",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34179,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34180",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34180,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34181",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34181,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34182",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34182,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34183",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34183,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34184",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34184,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34185",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34185,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34186",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34186,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34187",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34187,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34188",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34188,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34189",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34189,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34190",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34190,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34191",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34191,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34192",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34192,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34193",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34193,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34194",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34194,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34195",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34195,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34196",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34196,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34197",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34197,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34198",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34198,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34199",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34199,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  },
+  {
+    "methodology_trial": "user_no_angular_continuation_v1_34200",
+    "methodology_condition": "user_no_angular_v1",
+    "hypothesis": "Continue user requested angular penalty removal; no new factor sweep",
+    "seed": 34200,
+    "reward_version": 7,
+    "steps": 65536,
+    "budget_seconds": 90
+  }
+]

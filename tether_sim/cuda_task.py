@@ -36,6 +36,11 @@ def drone_velocity_cost(velocity, reward_version):
     return .05*velocity[:,0].square().sum(1) if reward_version==6 else torch.zeros_like(velocity[:,0,0])
 
 
+def angular_velocity_cost(angular_velocity,reward_version):
+    if reward_version==7:return torch.zeros_like(angular_velocity[:,0])
+    return .002*angular_velocity.square().sum(1)
+
+
 def training_starts(start,version,phase):
     if version not in (1,2):raise ValueError('Unsupported training reset version')
     if version==1:return start
@@ -121,12 +126,12 @@ class CudaVector:
         self.reward=(-error-.02*residual.square().sum(1)).float()
         if self.direct:
             self.reward=(20*(self.previous_error-error)-.2*error-.002*s.orientation[:,4:].square().sum(1)-5*(s.failed!=0)).float()
-            if self.reward_version in (2,3,4,5,6):
+            if self.reward_version in (2,3,4,5,6,7):
                 speed=s.velocity[:,-1].square().sum(1)
                 upright=1-2*(s.orientation[:,1:3].square().sum(1))
                 reward_error=position_reward_error(s.position,self.goal,self.reward_version)
                 self.reward=(position_reward(reward_error,self.reward_version)+.2*upright-
-                  .15*speed-.002*s.orientation[:,4:].square().sum(1)-
+                  .15*speed-angular_velocity_cost(s.orientation[:,4:],self.reward_version)-
                   .8*(s.position[:,0,2]<.15)-5*(s.failed!=0)).float()
                 self.reward-=drone_velocity_cost(s.velocity,self.reward_version).float()
                 if self.reward_version==3:self.reward=bounded_reward(self.reward)

@@ -56,7 +56,7 @@ try:
             state.update(paused=True,error='Existing trial intent requires review: '+name);write(state);continue
         benchmark=phase+'|controls2'
         previous=state.get('incumbents',{}).get(benchmark)
-        plan=dict(name=name,direct=True,phase=phase,reward_version=2,steps=65536,budget_seconds=90,
+        plan=dict(name=name,direct=True,phase=phase,reward_version=7,steps=65536,budget_seconds=90,
           eval_every_steps=32768,evaluation_steps=250,validation_seeds=[51011,51012,51013],
           learning_rate=[1e-5,3e-6,3e-5][(index-1)%3],initial_throttle=[.61,.60,.62][((index-1)//3)%3],
           seed=1000+index,playback_seconds=0,control_version=2,
