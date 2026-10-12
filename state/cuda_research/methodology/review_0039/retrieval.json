@@ -1,0 +1,43 @@
+{
+  "retrieved_at": "2026-10-12T11:08:44.659869-04:00",
+  "query": "reinforcement learning time limit bootstrapping truncation",
+  "paper_ids": [
+    "1712.00378",
+    "2006.05990"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=reinforcement+learning+time+limit+bootstrapping+truncation&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/1712.00378",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/1712.00378.md",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2006.05990",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2006.05990.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ],
+  "original_methods": [
+    {
+      "sections": "3",
+      "version": "unversioned HTML as retrieved; do not infer version",
+      "url": "https://arxiv.org/html/1712.00378"
+    },
+    {
+      "sections": "3.6",
+      "version": "v1",
+      "url": "https://arxiv.org/html/2006.05990v1"
+    }
+  ]
+}
