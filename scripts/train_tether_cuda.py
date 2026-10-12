@@ -124,7 +124,18 @@ try:
         from tether_sim.timeout_bootstrap import TimeoutBootstrap
         (out/'timeout_bootstrap_source.py').write_bytes(Path('tether_sim/timeout_bootstrap.py').read_bytes())
         bootstrap=TimeoutBootstrap(vec,policy,config['gamma'])
+    shaping=None
+    if plan.get('potential_shaping_version',0):
+        if plan['potential_shaping_version']!=1 or bootstrap is not None:
+            raise ValueError('Unsupported shaping version or simultaneous return adaptation')
+        import hashlib, pufferlib.pufferl
+        if hashlib.sha256(Path(pufferlib.pufferl.__file__).read_bytes()).hexdigest()!=plan.get('pufferl_source_sha256'):
+            raise RuntimeError('Shaping requires audited PufferLib source hash')
+        from tether_sim.potential_shaping import PotentialShaping
+        (out/'potential_shaping_source.py').write_bytes(Path('tether_sim/potential_shaping.py').read_bytes())
+        shaping=PotentialShaping(vec,config['gamma'])
     trainer=PuffeRL(config,vec,policy)
+    if shaping is not None:shaping.trainer=trainer
     if bootstrap is not None:bootstrap.trainer=trainer
     diagnostic=None
     if plan.get('gradient_diagnostics'):
@@ -138,6 +149,9 @@ try:
         if bootstrap is not None:
             bootstrap.apply()
             (out/'timeout_bootstrap_status.json').write_text(json.dumps(dict(version=1,applied=bootstrap.applied)))
+        if shaping is not None:
+            shaping.apply()
+            (out/'potential_shaping_status.json').write_text(json.dumps(dict(version=1,applied=shaping.applied)))
         trainer.train();publish(vec,'PufferLib training',trainer.global_step)
         if plan.get('learner_diagnostics'):
             # Public cached Puffer metrics; logging may refresh them less often
