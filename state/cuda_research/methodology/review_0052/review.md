@@ -1,0 +1,13 @@
+# Review0052: reward9 shows no learned improvement
+
+Last reviewed completed trial index:435. Daemon69922 healthy, paused false; single trainer trial436 active. Preserve third reward8 control and finish the frozen paired batch before further changes.
+
+Reward9 trials431/433/435 all select unchanged initial checkpoint822.218mm; finals2491.555/2784.290/2581.943mm, crashes0, takeoffs24, airborne acquisition0, hover0. First two reward8 controls432/434 finish2541.244/2385.005mm; both initialbest only. One pair slightly favors9, another opposes it; no learned improvement. Third control436 is pending. Reject promotion of reward9 on available evidence. Trial429 completes earlier reward8 versus7 campaign: reward7 third control2034.414mm against reward8 third3380.241mm. All evidence preserved in results.json. Validation seeds reused, rankings provisional.
+
+Observed sampled trajectories continue to lift then drift/swing; prior source-sign and production-adapter CPU audits passed, not compiled-dynamics certification. Carrier position bonus alone has not solved learning. Alternative explanations include inaccurate critic returns and physics/contact defects. No causal diagnosis follows from a reward comparison. Do not silently resume parameter sweeps after this campaign.
+
+HF search and metadata/markdown requests preserved in retrieval.json (full text unavailable there); original source methods re-read:
+https://arxiv.org/html/1707.05110 header v1, III-C eq4 and following paragraph fits MC values with up to200 value optimization iterations. IV-B explicitly adds PD and gravity bias, counterevidence against copying hardware outcomes into pure learned PPO. Author framework https://bitbucket.org/leggedrobotics/rai .
+https://arxiv.org/html/2006.05990v1 sections3.3 normalization and3.4 value-loss clipping distinguish implementation choices from guarantees; supports inspecting value learning, not assuming reward alone controls convergence. This is PPO benchmark evidence, not tethered drone evidence. Previously rejected value-gradient and timeout-bootstrap adaptations remain counterevidence; do not relaunch them under a new name. No author code executed.
+
+Decision: no new adaptation launched during pending paired evaluation. Next actionable review must inspect final pair436, replicated value-return probe430/next38003 alongside423, and versioned rollout/critic diagnostics before choosing the next single reward hypothesis. User priority remains reward refinement; if critic evidence justifies a learner diagnostic, keep that intervention separate from reward ablations. Reserve audit/hardware seeds. Keep one GPU trainer and bound each run. Sustained1mm obstacle/hardware claims remain unachieved and separate.

@@ -1,0 +1,93 @@
+[
+  {
+    "trial": 429,
+    "reward": 7,
+    "seed": 39003,
+    "source": "tmp/cuda-research/cuda_auto_0429_takeoff/result.json",
+    "final_error_mm": 2034.4144760580286,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 430,
+    "reward": 7,
+    "seed": 38002,
+    "source": "tmp/cuda-research/cuda_auto_0430_takeoff/result.json",
+    "final_error_mm": 1658.8916383965072,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 431,
+    "reward": 9,
+    "seed": 40001,
+    "source": "tmp/cuda-research/cuda_auto_0431_takeoff/result.json",
+    "final_error_mm": 2491.5554223273207,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 432,
+    "reward": 8,
+    "seed": 40001,
+    "source": "tmp/cuda-research/cuda_auto_0432_takeoff/result.json",
+    "final_error_mm": 2541.2436236691938,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 433,
+    "reward": 9,
+    "seed": 40002,
+    "source": "tmp/cuda-research/cuda_auto_0433_takeoff/result.json",
+    "final_error_mm": 2784.2904060191454,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 434,
+    "reward": 8,
+    "seed": 40002,
+    "source": "tmp/cuda-research/cuda_auto_0434_takeoff/result.json",
+    "final_error_mm": 2385.004878036154,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 435,
+    "reward": 9,
+    "seed": 40003,
+    "source": "tmp/cuda-research/cuda_auto_0435_takeoff/result.json",
+    "final_error_mm": 2581.942909461014,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  }
+]
