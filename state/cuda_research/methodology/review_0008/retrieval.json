@@ -1,0 +1,22 @@
+{
+  "retrieved_at": "2026-10-12T05:09:04.381786+00:00",
+  "query": "rope collision segment contact position based dynamics",
+  "paper_ids": [
+    "2202.09714"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=rope+collision+segment+contact+position+based+dynamics&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2202.09714",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2202.09714.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}

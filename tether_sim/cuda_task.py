@@ -18,7 +18,7 @@ def configure_exploration(policy, log_std):
 
 
 class CudaVector:
-    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None):
+    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None,physics_version=1):
         self.direct=direct
         self.training_region=training_region
         self.control_version=control_version
@@ -26,7 +26,8 @@ class CudaVector:
         self.num_agents=self.agents_per_batch=count
         self.single_observation_space=Box(-np.inf,np.inf,(98,),np.float32)
         self.single_action_space=self.action_space=Box(-1,1,(4,),np.float32)
-        self.sim=CudaTether(count)
+        if physics_version not in (1,2):raise ValueError('Unsupported physics version')
+        self.sim=CudaTether(count,library=f'tmp/cuda-tether-v{physics_version:03d}/libtether.so')
         if direct:self.sim.params[:,8]=1
         self.ids=np.arange(count);self.mask=np.ones(count,dtype=bool)
         self.steps=torch.zeros(count,device='cuda',dtype=torch.int32)

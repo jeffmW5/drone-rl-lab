@@ -78,7 +78,7 @@ try:
         run.parent.mkdir(parents=True,exist_ok=True)
         sources=run.parent/(name+'.sources');sources.mkdir(exist_ok=False)
         hashes={}
-        for source in ['scripts/train_tether_cuda.py','tether_sim/cuda_task.py','tether_sim/cuda_backend.py','tether_sim/cuda/host.c','tether_sim/cuda/physics_v001.cu']:
+        for source in ['scripts/train_tether_cuda.py','tether_sim/cuda_task.py','tether_sim/cuda_backend.py','tether_sim/cuda/host.c',f"tether_sim/cuda/physics_v{plan.get('physics_version',1):03d}.cu"]:
             data=(ROOT/source).read_bytes();hashes[source]=hashlib.sha256(data).hexdigest();shutil.copyfile(ROOT/source,sources/Path(source).name)
         (sources/'hashes.json').write_text(json.dumps(hashes,indent=2))
         with (run.parent/(name+'.log')).open('wb') as log:

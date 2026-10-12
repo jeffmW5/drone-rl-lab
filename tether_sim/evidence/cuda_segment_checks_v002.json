@@ -1,0 +1,20 @@
+{
+  "1": {
+    "midpoint": 0,
+    "near_grazing": 0,
+    "miss": 0,
+    "corner_miss": 0,
+    "endpoint": 1,
+    "physics_transitions_per_second": 5713.769663991354
+  },
+  "2": {
+    "midpoint": 1,
+    "near_grazing": 1,
+    "miss": 0,
+    "corner_miss": 0,
+    "endpoint": 1,
+    "physics_transitions_per_second": 5296.37327653877
+  },
+  "collision_free_position_difference_m": 0.0,
+  "scope": "Axis-aligned boxes; detection only. No contact response, offset attachment, hardware calibration or original1mm claim."
+}
