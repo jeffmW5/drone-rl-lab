@@ -114,7 +114,18 @@ try:
                     raw_reward=reward[ids].cpu().tolist(),clipped_reward=reward[ids].clamp(-1,1).cpu().tolist())
             with (out/'terminal_diagnostics.jsonl').open('a') as stream:stream.write(json.dumps(row)+'\n')
         vec.terminal_observer=observe_terminal
+    bootstrap=None
+    if plan.get('timeout_bootstrap_version',0):
+        if plan['timeout_bootstrap_version']!=1:raise ValueError('Unsupported timeout bootstrap version')
+        import hashlib, pufferlib.pufferl
+        source=Path(pufferlib.pufferl.__file__).read_bytes()
+        if hashlib.sha256(source).hexdigest()!=plan.get('pufferl_source_sha256'):
+            raise RuntimeError('Timeout bootstrap requires audited PufferLib source hash')
+        from tether_sim.timeout_bootstrap import TimeoutBootstrap
+        (out/'timeout_bootstrap_source.py').write_bytes(Path('tether_sim/timeout_bootstrap.py').read_bytes())
+        bootstrap=TimeoutBootstrap(vec,policy,config['gamma'])
     trainer=PuffeRL(config,vec,policy)
+    if bootstrap is not None:bootstrap.trainer=trainer
     diagnostic=None
     if plan.get('gradient_diagnostics'):
         from tether_sim.gradient_diagnostics import GradientDiagnostics
@@ -123,7 +134,11 @@ try:
     started=time.monotonic()
     next_eval=plan.get('eval_every_steps',65536)
     while trainer.global_step<config['total_timesteps'] and time.monotonic()-started<plan.get('budget_seconds',120):
-        trainer.evaluate();trainer.train();publish(vec,'PufferLib training',trainer.global_step)
+        trainer.evaluate()
+        if bootstrap is not None:
+            bootstrap.apply()
+            (out/'timeout_bootstrap_status.json').write_text(json.dumps(dict(version=1,applied=bootstrap.applied)))
+        trainer.train();publish(vec,'PufferLib training',trainer.global_step)
         if plan.get('learner_diagnostics'):
             # Public cached Puffer metrics; logging may refresh them less often
             # than each update. Retain repeated rows rather than invent freshness.

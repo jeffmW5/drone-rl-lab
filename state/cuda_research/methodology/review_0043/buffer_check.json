@@ -1,0 +1,5 @@
+{
+  "status": "pass",
+  "scope": "CPU real hook and simulated Puffer buffer lifecycle; GPU learner end-to-end still pending",
+  "applied_before_failure": 3
+}
