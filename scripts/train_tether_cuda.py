@@ -175,6 +175,23 @@ try:
         if shaping is not None:
             shaping.apply()
             (out/'potential_shaping_status.json').write_text(json.dumps(dict(version=1,applied=shaping.applied)))
+        if plan.get('rollout_capture_version',0):
+            if plan['rollout_capture_version'] != 1:
+                raise ValueError('Unsupported rollout capture version')
+            import hashlib, pufferlib.pufferl
+            if hashlib.sha256(Path(pufferlib.pufferl.__file__).read_bytes()).hexdigest() != plan.get('pufferl_source_sha256'):
+                raise RuntimeError('Rollout capture requires audited PufferLib source')
+            # Snapshot only; detached CPU copies do not mutate buffers or RNG.
+            # Rewards/terminals here describe the arriving transition; actions
+            # describe the action issued from the observation in that cell.
+            if trainer.global_step == config['batch_size'] or trainer.global_step >= config['total_timesteps']:
+                names=('observations','actions','values','logprobs','rewards','terminals','truncations')
+                snapshot={name:getattr(trainer,name).detach().cpu().clone() for name in names}
+                torch.save(snapshot,out/('rollout_'+str(trainer.global_step)+'.pt'))
+                (out/('rollout_'+str(trainer.global_step)+'.json')).write_text(json.dumps(dict(
+                    step=trainer.global_step, version=1, shapes={k:list(v.shape) for k,v in snapshot.items()},
+                    scope='Pre-train learner buffers after reward adapters; incoming reward and outgoing action must not be paired at the same index without alignment review. No actual PPO advantage snapshot.',
+                    source_sha256=hashlib.sha256(Path(pufferlib.pufferl.__file__).read_bytes()).hexdigest()),indent=2))
         trainer.train();publish(vec,'PufferLib training',trainer.global_step)
         if vec.landing_gate is not None:
             (out/'landing_diagnostics.json').write_text(json.dumps(dict(version=1,training_step=trainer.global_step,**vec.landing_gate.diagnostics()),indent=2))
