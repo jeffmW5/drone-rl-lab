@@ -45,7 +45,7 @@ def evaluate(policy,seed):
         hold=torch.where(stable,hold+.02,0);peak_hold=torch.maximum(peak_hold,hold)
         if step%10==0:publish(vec,'deterministic evaluation',step)
         if plan and step%25==0:
-            trajectory.append(dict(step=step,positions=vec.sim.position[0].cpu().tolist(),orientation=vec.sim.orientation[0].cpu().tolist(),motors=vec.sim.motors[0].cpu().tolist(),terminal=bool(vec.done[0])))
+            trajectory.append(dict(step=step,positions=vec.sim.position[0].cpu().tolist(),velocities=vec.sim.velocity[0].cpu().tolist(),orientation=vec.sim.orientation[0].cpu().tolist(),motors=vec.sim.motors[0].cpu().tolist(),terminal=bool(vec.done[0])))
     error=torch.linalg.vector_norm(vec.sim.position[:,-1]-vec.goal,dim=1)
     return dict(seed=seed,mean_final_error_mm=float(error.mean()*1000),errors_mm=(error*1000).tolist(),crashes=collisions,takeoffs=int((peak_height>.3).sum()),hover_successes=int((peak_hold>=1).sum()),peak_hover_hold_s=peak_hold.cpu().tolist(),peak_drone_height_m=peak_height.cpu().tolist(),
       trajectory=trajectory,scope='Prototype evaluation; not original obstacle navigation or sustained1mm benchmark')

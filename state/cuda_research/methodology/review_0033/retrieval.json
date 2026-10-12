@@ -1,0 +1,47 @@
+{
+  "retrieved_at": "2026-10-12T09:08:53.161524-04:00",
+  "query": "quadrotor reinforcement learning hover velocity reward",
+  "paper_ids": [
+    "2311.13081",
+    "2103.08624"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=quadrotor+reinforcement+learning+hover+velocity+reward&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2311.13081",
+      "status": 200,
+      "file": "source_01.txt"
+    },
+    {
+      "url": "https://huggingface.co/papers/2311.13081.md",
+      "status": 200,
+      "file": "source_02.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2103.08624",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2103.08624.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ],
+  "original_methods": [
+    {
+      "url": "https://arxiv.org/html/2311.13081v2",
+      "sections": "IV",
+      "code": "https://github.com/arplaboratory/learning-to-fly",
+      "version": "v2"
+    },
+    {
+      "url": "https://arxiv.org/html/1707.05110v1",
+      "sections": "III/IV",
+      "code": "https://bitbucket.org/leggedrobotics/rai",
+      "version": "v1"
+    }
+  ]
+}

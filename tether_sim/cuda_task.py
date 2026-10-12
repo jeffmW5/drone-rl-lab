@@ -31,6 +31,10 @@ def configure_exploration(policy, log_std):
     with torch.no_grad():policy.log_std.fill_(log_std)
 
 
+def drone_velocity_cost(velocity, reward_version):
+    return .05*velocity[:,0].square().sum(1) if reward_version==6 else torch.zeros_like(velocity[:,0,0])
+
+
 class CudaVector:
     def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None,physics_version=1):
         self.direct=direct
@@ -103,13 +107,14 @@ class CudaVector:
         self.reward=(-error-.02*residual.square().sum(1)).float()
         if self.direct:
             self.reward=(20*(self.previous_error-error)-.2*error-.002*s.orientation[:,4:].square().sum(1)-5*(s.failed!=0)).float()
-            if self.reward_version in (2,3,4,5):
+            if self.reward_version in (2,3,4,5,6):
                 speed=s.velocity[:,-1].square().sum(1)
                 upright=1-2*(s.orientation[:,1:3].square().sum(1))
                 reward_error=position_reward_error(s.position,self.goal,self.reward_version)
                 self.reward=(position_reward(reward_error,self.reward_version)+.2*upright-
                   .15*speed-.002*s.orientation[:,4:].square().sum(1)-
                   .8*(s.position[:,0,2]<.15)-5*(s.failed!=0)).float()
+                self.reward-=drone_velocity_cost(s.velocity,self.reward_version).float()
                 if self.reward_version==3:self.reward=bounded_reward(self.reward)
         self.previous_error=error
         self.truncated=self.steps>=500;self.done=(s.failed!=0)|self.truncated
