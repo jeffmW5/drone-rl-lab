@@ -1,0 +1,149 @@
+[
+  {
+    "name": "cuda_auto_0101_takeoff",
+    "condition": "gradient_diag_v1_18001_off",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0101_takeoff/result.json",
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 8817.919458525339
+    },
+    "diagnostics": null
+  },
+  {
+    "name": "cuda_auto_0102_takeoff",
+    "condition": "gradient_diag_v1_18001_on",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0102_takeoff/result.json",
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 8817.919458525339
+    },
+    "diagnostics": {
+      "optimizer_steps": 192,
+      "groups": {
+        "actor": {
+          "mean_before_clip": 11.53372573852539,
+          "mean_after_clip": 0.39103585481643677,
+          "max_before_clip": 25.7971134185791,
+          "max_after_clip": 0.4997880756855011
+        },
+        "value_head": {
+          "mean_before_clip": 5.614452362060547,
+          "mean_after_clip": 0.18229609727859497,
+          "max_before_clip": 11.231606483459473,
+          "max_after_clip": 0.32212573289871216
+        },
+        "shared_body": {
+          "mean_before_clip": 7.0334014892578125,
+          "mean_after_clip": 0.2198304980993271,
+          "max_before_clip": 15.628971099853516,
+          "max_after_clip": 0.3787616789340973
+        }
+      },
+      "scope": "Combined loss gradients; shared body cannot be attributed separately to actor or critic. Norms are not causal proof."
+    }
+  },
+  {
+    "name": "cuda_auto_0103_takeoff",
+    "condition": "gradient_diag_v1_18002_off",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0103_takeoff/result.json",
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 9670.825368383692
+    },
+    "diagnostics": null
+  },
+  {
+    "name": "cuda_auto_0104_takeoff",
+    "condition": "gradient_diag_v1_18002_on",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0104_takeoff/result.json",
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 9670.825368383692
+    },
+    "diagnostics": {
+      "optimizer_steps": 192,
+      "groups": {
+        "actor": {
+          "mean_before_clip": 12.478277206420898,
+          "mean_after_clip": 0.3984937369823456,
+          "max_before_clip": 24.445741653442383,
+          "max_after_clip": 0.4994225800037384
+        },
+        "value_head": {
+          "mean_before_clip": 6.016058921813965,
+          "mean_after_clip": 0.18368178606033325,
+          "max_before_clip": 12.80419635772705,
+          "max_after_clip": 0.30757036805152893
+        },
+        "shared_body": {
+          "mean_before_clip": 6.951725006103516,
+          "mean_after_clip": 0.2073192298412323,
+          "max_before_clip": 15.943238258361816,
+          "max_after_clip": 0.34564143419265747
+        }
+      },
+      "scope": "Combined loss gradients; shared body cannot be attributed separately to actor or critic. Norms are not causal proof."
+    }
+  },
+  {
+    "name": "cuda_auto_0105_takeoff",
+    "condition": "gradient_diag_v1_18003_off",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0105_takeoff/result.json",
+    "final": {
+      "crashes": 1,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 6329.7612840830325
+    },
+    "diagnostics": null
+  },
+  {
+    "name": "cuda_auto_0106_takeoff",
+    "condition": "gradient_diag_v1_18003_on",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0106_takeoff/result.json",
+    "final": {
+      "crashes": 1,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 6329.7612840830325
+    },
+    "diagnostics": {
+      "optimizer_steps": 192,
+      "groups": {
+        "actor": {
+          "mean_before_clip": 12.329683303833008,
+          "mean_after_clip": 0.4116937816143036,
+          "max_before_clip": 29.217979431152344,
+          "max_after_clip": 0.49957573413848877
+        },
+        "value_head": {
+          "mean_before_clip": 5.153839111328125,
+          "mean_after_clip": 0.17015835642814636,
+          "max_before_clip": 10.352865219116211,
+          "max_after_clip": 0.33763548731803894
+        },
+        "shared_body": {
+          "mean_before_clip": 6.207555770874023,
+          "mean_after_clip": 0.1981002390384674,
+          "max_before_clip": 14.349971771240234,
+          "max_after_clip": 0.32870978116989136
+        }
+      },
+      "scope": "Combined loss gradients; shared body cannot be attributed separately to actor or critic. Norms are not causal proof."
+    }
+  }
+]

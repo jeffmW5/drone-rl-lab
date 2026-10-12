@@ -1,0 +1,24 @@
+{
+  "retrieved_at": "2026-10-12T06:29:22.331713+00:00",
+  "query": "PPO gradient clipping continuous control implementation",
+  "paper_ids": [
+    "2311.13081"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=PPO+gradient+clipping+continuous+control+implementation&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2311.13081",
+      "status": 200,
+      "file": "source_01.txt"
+    },
+    {
+      "url": "https://huggingface.co/papers/2311.13081.md",
+      "status": 200,
+      "file": "source_02.txt"
+    }
+  ]
+}

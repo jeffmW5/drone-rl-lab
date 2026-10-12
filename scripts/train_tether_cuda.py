@@ -66,6 +66,8 @@ try:
     config['control_mode']='direct_motor_policy' if args.direct else 'PD_plus_residual'
     config['initial_throttle']=args.initial_throttle
     config['learning_rate']=plan.get('learning_rate',config['learning_rate'])
+    config['max_grad_norm']=plan.get('max_grad_norm',config['max_grad_norm'])
+    if not .05<=config['max_grad_norm']<=10:raise ValueError('max_grad_norm outside bounded experiment range')
     config['seed']=plan.get('seed',41);torch.manual_seed(config['seed'])
     config['research_plan']=plan
     (out/'config.json').write_text(json.dumps(config,indent=2))
