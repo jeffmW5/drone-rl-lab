@@ -1,0 +1,13 @@
+# Review0056: replicate reward10 early checkpoint improvement
+
+Last reviewed completed trial index:468. Healthy daemon69922, trial469 active, paused false. No duplicate/compile/restart.
+
+Third pair reward10 trial460 versus reward7 trial461 final1143.264/2143.922mm. Reward10 selected updated checkpoint16384 with762.577mm, improved inherited822.218mm by59.641mm (~7.25%). Final training regressed. First two pairs were mixed and both treatment bests unchanged; therefore single seed checkpoint improvement, not replicated reward superiority or policy promotion. All treatment seeds still no airborne acquisition/hover and no benchmark crashes. Training460 landing penalty17319 agent steps,136 takeoffs,0 success. Sampled early checkpoint trajectory still payload~0.905m for0.2m target and moving, so smaller mean endpoint error is not stable target holding.
+
+Continuation462-468 regress, including crashes19 in465 and6 in468. Preserve them; no improvement inferred from reward. Evidence results.json, earlier paired reviews and immutable eval_16384/result/selection artifacts.
+
+Decision: replicate same reward10 hypothesis on new training seeds43001-43003 paired reward7, landing1 both, same inherited checkpoint242, reward/physics/control/optimizer/benchmark unchanged. Evaluate initial/16384/32768/49152/65536 checkpoints. This is replication of user-authorized reward redesign, not another coefficient sweep or optimizer adaptation. Require repeated updated checkpoint improvement over inherited initial and paired controls without more crashes/lost flight outcomes before promotion; all reused validation provisional. Do not initialize from selected460 checkpoint and call its unchanged initial improvement learning.
+
+HF search/retrieval saved. Full text fallback previously read: https://arxiv.org/html/1707.05110 v1 IV-C stable/conservative value and policy training; III-C MC value fitting, IV-B PD/gravity assistance unlike pure learned motors. Author framework https://bitbucket.org/leggedrobotics/rai . https://arxiv.org/html/2006.05990v1 sections3.3/3.4 normalization and value clipping show implementation dependence, not assurance new reward solves flight. Their results are not our simulator results; no code executed. No literature-supported new coefficient change justified before replication.
+
+Hardware/audit seeds reserved, strict sustained1mm obstacle/hardware success remains separate and unachieved. Preserve rejected versions and regression trajectories. Once replication completes, diagnose early-to-final failure and choose one concrete versioned hypothesis instead of returning to blind continuation.
