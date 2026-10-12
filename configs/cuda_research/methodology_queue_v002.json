@@ -1,0 +1,74 @@
+[
+  {
+    "reward_version": 2,
+    "training_region": null,
+    "methodology_condition": "reward_compress_v1_r2",
+    "hypothesis": "Monotone reward compression reduces hard clip plateaus; paired replicate unchanged flight evaluation",
+    "learning_rate": 1E-05,
+    "methodology_review": "state/cuda_research/methodology/review_0003/review.md",
+    "methodology_trial": "reward_compress_v1_13001_r2",
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+    "initial_throttle": 0.61,
+    "seed": 13001
+  },
+  {
+    "reward_version": 3,
+    "training_region": null,
+    "methodology_condition": "reward_compress_v1_r3",
+    "hypothesis": "Monotone reward compression reduces hard clip plateaus; paired replicate unchanged flight evaluation",
+    "learning_rate": 1E-05,
+    "methodology_review": "state/cuda_research/methodology/review_0003/review.md",
+    "methodology_trial": "reward_compress_v1_13001_r3",
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+    "initial_throttle": 0.61,
+    "seed": 13001
+  },
+  {
+    "reward_version": 2,
+    "training_region": null,
+    "methodology_condition": "reward_compress_v1_r2",
+    "hypothesis": "Monotone reward compression reduces hard clip plateaus; paired replicate unchanged flight evaluation",
+    "learning_rate": 1E-05,
+    "methodology_review": "state/cuda_research/methodology/review_0003/review.md",
+    "methodology_trial": "reward_compress_v1_13002_r2",
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+    "initial_throttle": 0.61,
+    "seed": 13002
+  },
+  {
+    "reward_version": 3,
+    "training_region": null,
+    "methodology_condition": "reward_compress_v1_r3",
+    "hypothesis": "Monotone reward compression reduces hard clip plateaus; paired replicate unchanged flight evaluation",
+    "learning_rate": 1E-05,
+    "methodology_review": "state/cuda_research/methodology/review_0003/review.md",
+    "methodology_trial": "reward_compress_v1_13002_r3",
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+    "initial_throttle": 0.61,
+    "seed": 13002
+  },
+  {
+    "reward_version": 2,
+    "training_region": null,
+    "methodology_condition": "reward_compress_v1_r2",
+    "hypothesis": "Monotone reward compression reduces hard clip plateaus; paired replicate unchanged flight evaluation",
+    "learning_rate": 1E-05,
+    "methodology_review": "state/cuda_research/methodology/review_0003/review.md",
+    "methodology_trial": "reward_compress_v1_13003_r2",
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+    "initial_throttle": 0.61,
+    "seed": 13003
+  },
+  {
+    "reward_version": 3,
+    "training_region": null,
+    "methodology_condition": "reward_compress_v1_r3",
+    "hypothesis": "Monotone reward compression reduces hard clip plateaus; paired replicate unchanged flight evaluation",
+    "learning_rate": 1E-05,
+    "methodology_review": "state/cuda_research/methodology/review_0003/review.md",
+    "methodology_trial": "reward_compress_v1_13003_r3",
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+    "initial_throttle": 0.61,
+    "seed": 13003
+  }
+]

@@ -63,13 +63,14 @@ try:
           hypothesis='Learned collective and limited differential authority may improve attitude stability without PD feedback',
           limitations='Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.')
         if previous:plan['resume']=previous['checkpoint']
-        queue_path=ROOT/'configs/cuda_research/methodology_queue_v001.json'
-        if queue_path.exists():
-            completed_ids={t.get('methodology_trial') for t in state['trials']}
+        completed_ids={t.get('methodology_trial') for t in state['trials']}
+        queued=None
+        for queue_path in sorted((ROOT/'configs/cuda_research').glob('methodology_queue_v*.json')):
             queued=next((q for q in json.loads(queue_path.read_text()) if q['methodology_trial'] not in completed_ids),None)
-            if queued:
-                plan.update(queued)
-                benchmark=phase+'|controls2|'+queued['methodology_condition']
+            if queued:break
+        if queued:
+            plan.update(queued)
+            benchmark=phase+'|controls2|'+queued['methodology_condition']
         plan_path.parent.mkdir(parents=True,exist_ok=True);plan_path.write_text(json.dumps(plan,indent=2))
         trial=dict(name=name,phase=phase,benchmark=benchmark,plan=str(plan_path.relative_to(ROOT)),run=str(run.relative_to(ROOT)),status='launching',launched_at=time.time())
         if plan.get('methodology_trial'):trial['methodology_trial']=plan['methodology_trial']

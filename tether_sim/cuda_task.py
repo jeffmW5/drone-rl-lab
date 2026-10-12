@@ -5,6 +5,11 @@ from gymnasium.spaces import Box
 from .cuda_backend import CudaTether
 
 
+def bounded_reward(reward):
+    """Strictly monotone compression; avoid downstream hard-clip plateaus."""
+    return reward/(1+reward.abs())
+
+
 class CudaVector:
     def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None):
         self.direct=direct
@@ -76,12 +81,13 @@ class CudaVector:
         self.reward=(-error-.02*residual.square().sum(1)).float()
         if self.direct:
             self.reward=(20*(self.previous_error-error)-.2*error-.002*s.orientation[:,4:].square().sum(1)-5*(s.failed!=0)).float()
-            if self.reward_version==2:
+            if self.reward_version in (2,3):
                 speed=s.velocity[:,-1].square().sum(1)
                 upright=1-2*(s.orientation[:,1:3].square().sum(1))
                 self.reward=(.8*torch.exp(-4*error.square())+.2*upright-
                   .15*speed-.002*s.orientation[:,4:].square().sum(1)-
                   .8*(s.position[:,0,2]<.15)-5*(s.failed!=0)).float()
+                if self.reward_version==3:self.reward=bounded_reward(self.reward)
         self.previous_error=error
         self.truncated=self.steps>=500;self.done=(s.failed!=0)|self.truncated
         if self.training_region is not None:
