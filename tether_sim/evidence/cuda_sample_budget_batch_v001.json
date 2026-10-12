@@ -1,0 +1,218 @@
+[
+  {
+    "name": "cuda_auto_0045_takeoff",
+    "condition": "sample_budget_v1_14001_65536",
+    "steps": 65536,
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0045_takeoff/result.json",
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 6774.73109401414
+    },
+    "periodic": {
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 6774.73109401414
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0046_takeoff",
+    "condition": "sample_budget_v1_14001_262144",
+    "steps": 262144,
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0046_takeoff/result.json",
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 5590.325992258425
+    },
+    "periodic": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8152.62696265489
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5590.325992258425
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 6774.73109401414
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 7544.561430524729
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0047_takeoff",
+    "condition": "sample_budget_v1_14002_65536",
+    "steps": 65536,
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0047_takeoff/result.json",
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 7519.725366172509
+    },
+    "periodic": {
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 7519.725366172509
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0048_takeoff",
+    "condition": "sample_budget_v1_14002_262144",
+    "steps": 262144,
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0048_takeoff/result.json",
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1761.1085806275457
+    },
+    "periodic": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 9275.4662458733
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1761.1085806275457
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 7519.725366172509
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 6462.871497361922
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0049_takeoff",
+    "condition": "sample_budget_v1_14003_65536",
+    "steps": 65536,
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0049_takeoff/result.json",
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 8530.72595794869
+    },
+    "periodic": {
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8530.72595794869
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0050_takeoff",
+    "condition": "sample_budget_v1_14003_262144",
+    "steps": 262144,
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0050_takeoff/result.json",
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 8916.855441550279
+    },
+    "periodic": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 9196.306442000752
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8916.855441550279
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8530.72595794869
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8352.689892459332
+      }
+    }
+  }
+]

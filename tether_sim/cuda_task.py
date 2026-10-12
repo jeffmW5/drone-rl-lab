@@ -10,6 +10,13 @@ def bounded_reward(reward):
     return reward/(1+reward.abs())
 
 
+def configure_exploration(policy, log_std):
+    if log_std is None:return
+    if not np.isfinite(log_std) or not -6<=log_std<=0:
+        raise ValueError('initial_log_std must be finite within [-6,0]')
+    with torch.no_grad():policy.log_std.fill_(log_std)
+
+
 class CudaVector:
     def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None):
         self.direct=direct
