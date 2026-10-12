@@ -71,6 +71,8 @@ try:
     config['gae_lambda']=plan.get('gae_lambda',config['gae_lambda'])
     if not .8<=config['gae_lambda']<=1:raise ValueError('gae_lambda outside bounded experiment range')
     config['max_grad_norm']=plan.get('max_grad_norm',config['max_grad_norm'])
+    config['vf_clip_coef']=plan.get('vf_clip_coef',config['vf_clip_coef'])
+    if not .2<=config['vf_clip_coef']<=1e6:raise ValueError('Invalid value clipping experiment bound')
     if not .05<=config['max_grad_norm']<=10:raise ValueError('max_grad_norm outside bounded experiment range')
     config['seed']=plan.get('seed',41);torch.manual_seed(config['seed'])
     config['research_plan']=plan
