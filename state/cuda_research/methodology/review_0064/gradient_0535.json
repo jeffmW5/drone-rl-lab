@@ -1,0 +1,24 @@
+{
+  "optimizer_steps": 192,
+  "groups": {
+    "actor": {
+      "mean_before_clip": 12.453374862670898,
+      "mean_after_clip": 0.4671371877193451,
+      "max_before_clip": 29.40290641784668,
+      "max_after_clip": 0.49973946809768677
+    },
+    "value_head": {
+      "mean_before_clip": 2.8618581295013428,
+      "mean_after_clip": 0.1051415503025055,
+      "max_before_clip": 8.643857955932617,
+      "max_after_clip": 0.26474812626838684
+    },
+    "shared_body": {
+      "mean_before_clip": 3.090118885040283,
+      "mean_after_clip": 0.11081590503454208,
+      "max_before_clip": 10.386107444763184,
+      "max_after_clip": 0.2432013899087906
+    }
+  },
+  "scope": "Combined loss gradients; shared body cannot be attributed separately to actor or critic. Norms are not causal proof."
+}
