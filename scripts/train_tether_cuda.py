@@ -62,7 +62,7 @@ trainer=None
 try:
     from pufferlib.pufferl import PuffeRL,ADVANTAGE_CUDA
     if not ADVANTAGE_CUDA:raise RuntimeError('CUDA advantage kernel required')
-    vec=CudaVector(128,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),training_region=plan.get('training_region'),physics_version=plan.get('physics_version',1),training_reset_version=plan.get('training_reset_version',1));policy=CudaPolicy().cuda()
+    vec=CudaVector(128,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),training_region=plan.get('training_region'),physics_version=plan.get('physics_version',1),training_reset_version=plan.get('training_reset_version',1),landing_penalty_version=plan.get('landing_penalty_version',0));policy=CudaPolicy().cuda()
     if args.direct and args.initial_throttle!=.5:
         with torch.no_grad():policy.actor.bias.fill_(2*args.initial_throttle-1);policy.log_std.fill_(-4.)
     if plan.get('control_version',1)==2:

@@ -69,8 +69,30 @@ def training_starts(start,version,phase):
     return result
 
 
+class LandingBeforeSuccess:
+    """Episode-local reward gate; does not terminate or control the drone."""
+    def __init__(self,count,device):
+        self.airborne=torch.zeros(count,device=device,dtype=torch.bool)
+        self.success=torch.zeros_like(self.airborne)
+        self.hold=torch.zeros(count,device=device,dtype=torch.int32)
+    def reset(self,mask=None):
+        if mask is None:
+            self.airborne.zero_();self.success.zero_();self.hold.zero_()
+        else:
+            self.airborne[mask]=False;self.success[mask]=False;self.hold[mask]=0
+    def update(self,positions,velocity,goal,failed):
+        height=positions[:,0,2]
+        self.airborne|=height>.3
+        stable=(torch.linalg.vector_norm(positions[:,-1]-goal,dim=1)<.1)&(
+            torch.linalg.vector_norm(velocity[:,-1],dim=1)<.2)&(
+            height>.3)&(positions[:,-1,2]>.05)&(failed==0)
+        self.hold=torch.where(stable,self.hold+1,0)
+        self.success|=self.hold>=50 # 1 second at 50 Hz, prototype criterion
+        return self.airborne&~self.success&(height<=.051)&(failed==0)
+
+
 class CudaVector:
-    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None,physics_version=1,training_reset_version=1):
+    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None,physics_version=1,training_reset_version=1,landing_penalty_version=0):
         self.direct=direct
         self.terminal_observer=None
         self.training_region=training_region
@@ -81,6 +103,8 @@ class CudaVector:
         self.single_action_space=self.action_space=Box(-1,1,(4,),np.float32)
         if physics_version not in (1,2):raise ValueError('Unsupported physics version')
         self.sim=CudaTether(count,library=f'tmp/cuda-tether-v{physics_version:03d}/libtether.so')
+        if landing_penalty_version not in (0,1):raise ValueError('Unsupported landing penalty version')
+        self.landing_gate=LandingBeforeSuccess(count,'cuda') if landing_penalty_version else None
         if direct:self.sim.params[:,8]=1
         self.ids=np.arange(count);self.mask=np.ones(count,dtype=bool)
         self.steps=torch.zeros(count,device='cuda',dtype=torch.int32)
@@ -96,6 +120,7 @@ class CudaVector:
 
     def async_reset(self,seed=41):
         torch.manual_seed(seed);self.sim.reset();self.steps.zero_()
+        if self.landing_gate is not None:self.landing_gate.reset()
         self.goal[:,:2]=torch.rand_like(self.goal[:,:2])*.8-.4;self.goal[:,2]=1.4
         # Six boxes below or beside the route; randomized domains for prototype.
         self.sim.boxes=torch.zeros(self.num_agents,6,6,device='cuda')
@@ -154,6 +179,9 @@ class CudaVector:
                 if self.reward_version==3:self.reward=bounded_reward(self.reward)
         if self.direct and self.reward_version in (8,9):
             self.reward=approach_stop_reward(s.position,s.velocity,s.orientation,self.goal,s.failed,self.reward_version)
+        if getattr(self,'landing_gate',None) is not None:
+            premature=self.landing_gate.update(s.position,s.velocity,self.goal,s.failed)
+            self.reward=torch.where(premature,torch.full_like(self.reward,-1),self.reward)
         self.previous_error=error
         self.truncated=self.steps>=500;self.done=(s.failed!=0)|self.truncated
         if self.training_region is not None:
@@ -165,6 +193,7 @@ class CudaVector:
         if bool(mask.any()):
             if self.terminal_observer is not None:
                 self.terminal_observer(self.obs(),self.done,self.truncated,s.failed,self.reward)
+            if getattr(self,'landing_gate',None) is not None:self.landing_gate.reset(mask)
             initial=self.start
             s.position[mask]=initial[mask];s.velocity[mask]=0;s.orientation[mask]=0;s.orientation[mask,0]=1
             s.motors[mask]=0 if self.direct else s.mass[mask].sum(1,keepdim=True)*9.81/4;s.failed[mask]=0;self.steps[mask]=0

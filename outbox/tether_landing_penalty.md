@@ -1,0 +1,11 @@
+# Landing before success penalty — user requested
+
+Version1 is opt-in and compared against unchanged reward7 using three matched seeds41001-41003, 65536 transitions/180s budget per trial, frozen inherited checkpoint242 and unchanged evaluation seeds/physics/control. No angular penalty or PID. Healthy current training is left alone; serial daemon picks the priority queue automatically after it finishes.
+
+After drone height exceeds0.3m in an episode, subsequent ground contact (drone centre Z<=0.051m, including1mm tolerance around0.05m radius) before success sets training reward to -1 on each grounded step. This is already in the learner's retained reward range. Initial ground state does not activate this new term. Existing reward7 near-ground cost remains, including after success; exemption applies only to the new term. No episode shortening or crash-count change. This avoids rewarding early termination/reset through an added terminal failure.
+
+Success is latched after50 consecutive50Hz steps: payload error<0.1m, speed<0.2m/s, drone Z>0.3m, payload Z>0.05m, no failed physics state. Interrupted stability resets the hold count. Episode reset clears takeoff/success/hold state per agent. History is internal to the reward gate; existing98 observations remain unchanged, so it adds history dependence to the reward. This limitation is explicit; no claim of fully Markov observations. Numerical failures remain invalid trials, not recoverable landings.
+
+CPU checks passed for initial-ground exemption, takeoff followed by landing, repeated-ground penalty gate, interrupted/50-step success hold, post-success exemption and reset. Production adapter sign/reset checks also passed. Training runtime imports these scripts after the active child drains; no CUDA compilation required.
+
+Evaluations intentionally retain old reward/termination behavior because selection uses flight outcomes, not reward magnitudes. Reject if increased crashes or lost takeoffs/hover, or worse paired updated-checkpoint destination errors. No promotion without replicated real improvement over inherited checkpoint. Sustained1mm obstacle/hardware accuracy remains unachieved. This user-authorized reward experiment is not a literature-derived result.
