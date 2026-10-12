@@ -72,6 +72,10 @@ try:
     config['control_mode']='direct_motor_policy' if args.direct else 'PD_plus_residual'
     config['initial_throttle']=args.initial_throttle
     config['learning_rate']=plan.get('learning_rate',config['learning_rate'])
+    config['batch_size']=plan.get('batch_size',config['batch_size'])
+    config['bptt_horizon']=plan.get('bptt_horizon',config['bptt_horizon'])
+    if config['batch_size'] not in (4096,16384) or config['bptt_horizon'] not in (32,128):raise ValueError('Unsupported rollout layout')
+    if config['batch_size']<128*config['bptt_horizon']:raise ValueError('Rollout batch too small for 128 agents')
     config['gae_lambda']=plan.get('gae_lambda',config['gae_lambda'])
     if not .8<=config['gae_lambda']<=1:raise ValueError('gae_lambda outside bounded experiment range')
     config['max_grad_norm']=plan.get('max_grad_norm',config['max_grad_norm'])

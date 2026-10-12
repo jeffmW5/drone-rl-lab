@@ -1,0 +1,2192 @@
+[
+  {
+    "trial": 225,
+    "plan": {
+      "name": "cuda_auto_0225_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 180,
+      "eval_every_steps": 32768,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 28001,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Independent trainable critic body may improve value fitting without modifying actor features",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0179_takeoff/best.pt",
+      "learner_diagnostics": true,
+      "vf_clip_coef": 0.2,
+      "methodology_review": "state/cuda_research/methodology/review_0027/review.md",
+      "methodology_trial": "separate_critic_v1_28001_1",
+      "value_gradient_version": 1,
+      "physics_version": 1,
+      "max_grad_norm": 0.5,
+      "training_region": null,
+      "gae_lambda": 0.95,
+      "methodology_condition": "separate_critic_v1_1"
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1439.220130229135
+    },
+    "diagnostics": [
+      {
+        "step": 4096,
+        "cached_losses": {
+          "policy_loss": -0.00036991077164808905,
+          "value_loss": 6.4948056141535435,
+          "entropy": -10.324200868606567,
+          "old_approx_kl": -0.00014410361958046755,
+          "approx_kl": 6.87465314210082e-05,
+          "clipfrac": 0.0,
+          "importance": 1.000212848186493,
+          "explained_variance": 0.00887608528137207
+        },
+        "log_std": [
+          -3.9999005794525146,
+          -3.9999547004699707,
+          -4.000087738037109,
+          -4.0000128746032715
+        ]
+      },
+      {
+        "step": 8192,
+        "cached_losses": {
+          "policy_loss": -0.00023159322639306385,
+          "value_loss": 25.707465012868244,
+          "entropy": -10.324192206064861,
+          "old_approx_kl": 0.0001772444423598548,
+          "approx_kl": 6.608368615464619e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9998888621727625,
+          "explained_variance": 0.000714421272277832
+        },
+        "log_std": [
+          -3.999875545501709,
+          -3.9999680519104004,
+          -4.00009298324585,
+          -3.999992609024048
+        ]
+      },
+      {
+        "step": 12288,
+        "cached_losses": {
+          "policy_loss": -0.00023930085202058157,
+          "value_loss": 0.8377633541822435,
+          "entropy": -10.32416844367981,
+          "old_approx_kl": 0.0004926448843131462,
+          "approx_kl": 4.9699126975610845e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9995570580164591,
+          "explained_variance": 0.014148354530334473
+        },
+        "log_std": [
+          -3.9998514652252197,
+          -3.999969720840454,
+          -4.000102519989014,
+          -3.999995708465576
+        ]
+      },
+      {
+        "step": 16384,
+        "cached_losses": {
+          "policy_loss": -0.0005210721089194218,
+          "value_loss": 3.748200039068858,
+          "entropy": -10.32417066891988,
+          "old_approx_kl": -5.179720271068314e-05,
+          "approx_kl": 0.00011434259552819034,
+          "clipfrac": 0.0,
+          "importance": 1.000166138013204,
+          "explained_variance": 0.0021302103996276855
+        },
+        "log_std": [
+          -3.9998433589935303,
+          -3.999974012374878,
+          -4.000118255615234,
+          -4.000002861022949
+        ]
+      },
+      {
+        "step": 20480,
+        "cached_losses": {
+          "policy_loss": -0.0004497381548086802,
+          "value_loss": 16.060704231262207,
+          "entropy": -10.324194351832073,
+          "old_approx_kl": 0.00033890506407866877,
+          "approx_kl": 0.00010002445196732879,
+          "clipfrac": 0.0,
+          "importance": 0.9997611244519551,
+          "explained_variance": -0.007423996925354004
+        },
+        "log_std": [
+          -3.9998302459716797,
+          -3.9999735355377197,
+          -4.0001349449157715,
+          -4.0000176429748535
+        ]
+      },
+      {
+        "step": 24576,
+        "cached_losses": {
+          "policy_loss": -0.0003445611024896304,
+          "value_loss": 28.293354670206707,
+          "entropy": -10.324205875396727,
+          "old_approx_kl": 3.5490569037695735e-05,
+          "approx_kl": 0.00017725230524471652,
+          "clipfrac": 0.0,
+          "importance": 1.0001417746146521,
+          "explained_variance": 0.011200249195098877
+        },
+        "log_std": [
+          -3.999828577041626,
+          -3.999969005584717,
+          -4.000138282775879,
+          -4.000028610229492
+        ]
+      },
+      {
+        "step": 28672,
+        "cached_losses": {
+          "policy_loss": 0.00010625490297873816,
+          "value_loss": 33.55544296900432,
+          "entropy": -10.324219385782879,
+          "old_approx_kl": 0.00010479790701841313,
+          "approx_kl": 7.71713627424712e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9999723583459853,
+          "explained_variance": -0.002107858657836914
+        },
+        "log_std": [
+          -3.99983811378479,
+          -3.9999725818634033,
+          -4.000134468078613,
+          -4.000038146972656
+        ]
+      },
+      {
+        "step": 32768,
+        "cached_losses": {
+          "policy_loss": -0.0001475028693675995,
+          "value_loss": 37.28749418258667,
+          "entropy": -10.32423178354899,
+          "old_approx_kl": -0.0001989300362765789,
+          "approx_kl": 5.637990155567726e-05,
+          "clipfrac": 0.0,
+          "importance": 1.0002553164958954,
+          "explained_variance": 0.013258159160614014
+        },
+        "log_std": [
+          -3.99984073638916,
+          -3.9999799728393555,
+          -4.000126361846924,
+          -4.0000386238098145
+        ]
+      },
+      {
+        "step": 36864,
+        "cached_losses": {
+          "policy_loss": -0.00022972747683525085,
+          "value_loss": 34.159729321797684,
+          "entropy": -10.324237744013468,
+          "old_approx_kl": 0.0004425380999843279,
+          "approx_kl": 0.0001618799481851359,
+          "clipfrac": 0.0,
+          "importance": 0.9997193515300749,
+          "explained_variance": 0.0017390251159667969
+        },
+        "log_std": [
+          -3.999849796295166,
+          -3.999990940093994,
+          -4.000126838684082,
+          -4.000035762786865
+        ]
+      },
+      {
+        "step": 40960,
+        "cached_losses": {
+          "policy_loss": -0.0004021575053532918,
+          "value_loss": 32.69460439682007,
+          "entropy": -10.32425610224406,
+          "old_approx_kl": -0.00014370769107093412,
+          "approx_kl": 0.00014589514951997748,
+          "clipfrac": 0.0,
+          "importance": 1.000289609034856,
+          "explained_variance": 0.013156294822692871
+        },
+        "log_std": [
+          -3.999864339828491,
+          -3.999993324279785,
+          -4.000132083892822,
+          -4.000022888183594
+        ]
+      },
+      {
+        "step": 45056,
+        "cached_losses": {
+          "policy_loss": -0.00015361172457536063,
+          "value_loss": 29.649914582570396,
+          "entropy": -10.324253638585407,
+          "old_approx_kl": 0.0003050081043814619,
+          "approx_kl": 9.387420141138136e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9997888604799906,
+          "explained_variance": 0.013656198978424072
+        },
+        "log_std": [
+          -3.999875783920288,
+          -3.9999887943267822,
+          -4.000132083892822,
+          -4.000006198883057
+        ]
+      },
+      {
+        "step": 49152,
+        "cached_losses": {
+          "policy_loss": 6.12096240123113e-05,
+          "value_loss": 27.964766979217526,
+          "entropy": -10.32425061861674,
+          "old_approx_kl": 0.00010750727960839866,
+          "approx_kl": 0.00010814272779195258,
+          "clipfrac": 0.0,
+          "importance": 1.0000006357828777,
+          "explained_variance": 0.008368730545043945
+        },
+        "log_std": [
+          -3.999882936477661,
+          -3.999990224838257,
+          -4.0001373291015625,
+          -4.0
+        ]
+      },
+      {
+        "step": 53248,
+        "cached_losses": {
+          "policy_loss": -0.0001502397159735362,
+          "value_loss": 27.447175343831383,
+          "entropy": -10.324250141779583,
+          "old_approx_kl": 0.0010011052751603224,
+          "approx_kl": 0.00038068636301128816,
+          "clipfrac": 0.0,
+          "importance": 0.9993795702854793,
+          "explained_variance": 0.021486759185791016
+        },
+        "log_std": [
+          -3.9998767375946045,
+          -3.9999890327453613,
+          -4.000136375427246,
+          -3.999988079071045
+        ]
+      },
+      {
+        "step": 57344,
+        "cached_losses": {
+          "policy_loss": -0.0001953275253375371,
+          "value_loss": 31.284096240997314,
+          "entropy": -10.324226776758831,
+          "old_approx_kl": -6.167610020687184e-05,
+          "approx_kl": 0.00027614698531882215,
+          "clipfrac": 0.0,
+          "importance": 1.0003378142913184,
+          "explained_variance": 0.0236322283744812
+        },
+        "log_std": [
+          -3.999870777130127,
+          -3.999986410140991,
+          -4.000130653381348,
+          -3.9999828338623047
+        ]
+      },
+      {
+        "step": 61440,
+        "cached_losses": {
+          "policy_loss": -7.001558939615885e-05,
+          "value_loss": 32.65923515955607,
+          "entropy": -10.324207146962486,
+          "old_approx_kl": 0.0004389770523024102,
+          "approx_kl": 0.00022378558545218158,
+          "clipfrac": 0.0,
+          "importance": 0.9997848023970921,
+          "explained_variance": 0.022573232650756836
+        },
+        "log_std": [
+          -3.9998579025268555,
+          -3.9999823570251465,
+          -4.0001220703125,
+          -3.9999866485595703
+        ]
+      },
+      {
+        "step": 65536,
+        "cached_losses": {
+          "policy_loss": -0.0001378295322259267,
+          "value_loss": 14.134475628534954,
+          "entropy": -10.324182430903116,
+          "old_approx_kl": 0.000521495375627031,
+          "approx_kl": 0.0001475454094664504,
+          "clipfrac": 0.0,
+          "importance": 0.9996260702610016,
+          "explained_variance": 0.030442655086517334
+        },
+        "log_std": [
+          -3.9998669624328613,
+          -3.999976396560669,
+          -4.000099182128906,
+          -3.9999771118164062
+        ]
+      }
+    ],
+    "last_drone_positions": [
+      [
+        0.5040525882865395,
+        1.0087361782448425,
+        1.452869265000881
+      ],
+      [
+        0.5597739004139144,
+        1.115439886946287,
+        1.4695787748434455
+      ],
+      [
+        1.5403006200558966,
+        0.611881653659757,
+        1.6049441978653753
+      ]
+    ]
+  },
+  {
+    "trial": 226,
+    "plan": {
+      "name": "cuda_auto_0226_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 180,
+      "eval_every_steps": 32768,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 28001,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Independent trainable critic body may improve value fitting without modifying actor features",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0179_takeoff/best.pt",
+      "learner_diagnostics": true,
+      "vf_clip_coef": 0.2,
+      "methodology_review": "state/cuda_research/methodology/review_0027/review.md",
+      "methodology_trial": "separate_critic_v1_28001_3",
+      "value_gradient_version": 3,
+      "physics_version": 1,
+      "max_grad_norm": 0.5,
+      "training_region": null,
+      "gae_lambda": 0.95,
+      "methodology_condition": "separate_critic_v1_3"
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1431.7070001986592
+    },
+    "diagnostics": [
+      {
+        "step": 4096,
+        "cached_losses": {
+          "policy_loss": -0.00037147849798202515,
+          "value_loss": 6.493558406829834,
+          "entropy": -10.324200868606567,
+          "old_approx_kl": -0.00014382220494250458,
+          "approx_kl": 6.9336155623508e-05,
+          "clipfrac": 0.0,
+          "importance": 1.0002131561438243,
+          "explained_variance": 0.008877277374267578
+        },
+        "log_std": [
+          -3.9999005794525146,
+          -3.9999547004699707,
+          -4.000087738037109,
+          -4.0000128746032715
+        ]
+      },
+      {
+        "step": 8192,
+        "cached_losses": {
+          "policy_loss": -0.00023283809423446655,
+          "value_loss": 25.70623636245728,
+          "entropy": -10.324192206064861,
+          "old_approx_kl": 0.00017803503821293512,
+          "approx_kl": 6.641422805842012e-05,
+          "clipfrac": 0.0,
+          "importance": 0.999888390302658,
+          "explained_variance": 0.0007142424583435059
+        },
+        "log_std": [
+          -3.999875545501709,
+          -3.9999680519104004,
+          -4.00009298324585,
+          -3.999992609024048
+        ]
+      },
+      {
+        "step": 12288,
+        "cached_losses": {
+          "policy_loss": -0.00024125973383585614,
+          "value_loss": 0.8376709967851641,
+          "entropy": -10.32416844367981,
+          "old_approx_kl": 0.0004927827588592967,
+          "approx_kl": 4.999472488028308e-05,
+          "clipfrac": 0.0,
+          "importance": 0.999557207028071,
+          "explained_variance": 0.0141487717628479
+        },
+        "log_std": [
+          -3.9998514652252197,
+          -3.999969720840454,
+          -4.000102519989014,
+          -3.999995708465576
+        ]
+      },
+      {
+        "step": 16384,
+        "cached_losses": {
+          "policy_loss": -0.0005249808309599757,
+          "value_loss": 3.7484432458877563,
+          "entropy": -10.32417066891988,
+          "old_approx_kl": -5.180308168443542e-05,
+          "approx_kl": 0.00011545804833682874,
+          "clipfrac": 0.0,
+          "importance": 1.0001672705014546,
+          "explained_variance": 0.002133488655090332
+        },
+        "log_std": [
+          -3.9998433589935303,
+          -3.999974012374878,
+          -4.000118255615234,
+          -4.000002861022949
+        ]
+      },
+      {
+        "step": 20480,
+        "cached_losses": {
+          "policy_loss": -0.0004542328727742036,
+          "value_loss": 16.05469481150309,
+          "entropy": -10.324194351832073,
+          "old_approx_kl": 0.00034358876291662455,
+          "approx_kl": 0.00010212492876841377,
+          "clipfrac": 0.0,
+          "importance": 0.9997585465510684,
+          "explained_variance": -0.007425904273986816
+        },
+        "log_std": [
+          -3.9998302459716797,
+          -3.9999735355377197,
+          -4.0001349449157715,
+          -4.0000176429748535
+        ]
+      },
+      {
+        "step": 24576,
+        "cached_losses": {
+          "policy_loss": -0.0003511114045977592,
+          "value_loss": 28.278241793314617,
+          "entropy": -10.324205875396727,
+          "old_approx_kl": 3.8269305756936475e-05,
+          "approx_kl": 0.0001802238499900947,
+          "clipfrac": 0.0,
+          "importance": 1.0001419583956401,
+          "explained_variance": 0.011220991611480713
+        },
+        "log_std": [
+          -3.999828577041626,
+          -3.999969005584717,
+          -4.000138282775879,
+          -4.000028610229492
+        ]
+      },
+      {
+        "step": 28672,
+        "cached_losses": {
+          "policy_loss": 0.00010569983472426733,
+          "value_loss": 33.57408062616984,
+          "entropy": -10.324219306310018,
+          "old_approx_kl": 0.00010663971382503708,
+          "approx_kl": 7.778640914087495e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9999711513519288,
+          "explained_variance": -0.0021609067916870117
+        },
+        "log_std": [
+          -3.99983811378479,
+          -3.999972343444824,
+          -4.0001349449157715,
+          -4.000038146972656
+        ]
+      },
+      {
+        "step": 32768,
+        "cached_losses": {
+          "policy_loss": -0.00014574391146500906,
+          "value_loss": 37.25981521606445,
+          "entropy": -10.324232339859005,
+          "old_approx_kl": -0.0001988753404778739,
+          "approx_kl": 5.62801966831709e-05,
+          "clipfrac": 0.0,
+          "importance": 1.000255157550176,
+          "explained_variance": 0.013377368450164795
+        },
+        "log_std": [
+          -3.99984073638916,
+          -3.9999797344207764,
+          -4.00012731552124,
+          -4.0000386238098145
+        ]
+      },
+      {
+        "step": 36864,
+        "cached_losses": {
+          "policy_loss": -0.00023136039574940998,
+          "value_loss": 34.18777561187744,
+          "entropy": -10.324238300323486,
+          "old_approx_kl": 0.0004568968627912302,
+          "approx_kl": 0.0001653369787770013,
+          "clipfrac": 0.0,
+          "importance": 0.9997084538141888,
+          "explained_variance": 0.0020222067832946777
+        },
+        "log_std": [
+          -3.999849796295166,
+          -3.999990701675415,
+          -4.000127792358398,
+          -4.000035762786865
+        ]
+      },
+      {
+        "step": 40960,
+        "cached_losses": {
+          "policy_loss": -0.00039425864815711975,
+          "value_loss": 32.57020791371664,
+          "entropy": -10.32425626118978,
+          "old_approx_kl": -0.0001466509032373627,
+          "approx_kl": 0.00014793404746645442,
+          "clipfrac": 0.0,
+          "importance": 1.0002945909897485,
+          "explained_variance": 0.012909531593322754
+        },
+        "log_std": [
+          -3.999864101409912,
+          -3.999993085861206,
+          -4.000133037567139,
+          -4.0000224113464355
+        ]
+      },
+      {
+        "step": 45056,
+        "cached_losses": {
+          "policy_loss": -0.00012993067502975464,
+          "value_loss": 29.507686932881672,
+          "entropy": -10.324253400166828,
+          "old_approx_kl": 0.00031356990803033113,
+          "approx_kl": 9.813452682768305e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9997845689455667,
+          "explained_variance": 0.01298445463180542
+        },
+        "log_std": [
+          -3.999875545501709,
+          -3.999988317489624,
+          -4.000133037567139,
+          -4.00000524520874
+        ]
+      },
+      {
+        "step": 49152,
+        "cached_losses": {
+          "policy_loss": 4.40863271554311e-05,
+          "value_loss": 27.973149458567303,
+          "entropy": -10.324249505996704,
+          "old_approx_kl": 9.378113706285753e-05,
+          "approx_kl": 0.00010824740941946706,
+          "clipfrac": 0.0,
+          "importance": 1.0000144690275192,
+          "explained_variance": 0.008955061435699463
+        },
+        "log_std": [
+          -3.9998831748962402,
+          -3.9999897480010986,
+          -4.000138282775879,
+          -3.999997854232788
+        ]
+      },
+      {
+        "step": 53248,
+        "cached_losses": {
+          "policy_loss": -0.0001414921134710312,
+          "value_loss": 27.35344727834066,
+          "entropy": -10.324248631795248,
+          "old_approx_kl": 0.000989822729025036,
+          "approx_kl": 0.00038140068742601824,
+          "clipfrac": 0.0,
+          "importance": 0.9993915756543478,
+          "explained_variance": 0.021997809410095215
+        },
+        "log_std": [
+          -3.9998762607574463,
+          -3.9999895095825195,
+          -4.000136852264404,
+          -3.999985933303833
+        ]
+      },
+      {
+        "step": 57344,
+        "cached_losses": {
+          "policy_loss": -0.00019661337137222293,
+          "value_loss": 31.335111618041992,
+          "entropy": -10.324224869410198,
+          "old_approx_kl": -6.618552530805269e-05,
+          "approx_kl": 0.0002821609183835486,
+          "clipfrac": 0.0,
+          "importance": 1.00034831960996,
+          "explained_variance": 0.023684442043304443
+        },
+        "log_std": [
+          -3.9998693466186523,
+          -3.9999871253967285,
+          -4.000131130218506,
+          -3.9999806880950928
+        ]
+      },
+      {
+        "step": 61440,
+        "cached_losses": {
+          "policy_loss": -6.50547444820404e-05,
+          "value_loss": 32.662896951039635,
+          "entropy": -10.324204126993816,
+          "old_approx_kl": 0.0004396148336430391,
+          "approx_kl": 0.00022750314868365726,
+          "clipfrac": 0.0,
+          "importance": 0.999787911772728,
+          "explained_variance": 0.022521495819091797
+        },
+        "log_std": [
+          -3.9998557567596436,
+          -3.999983072280884,
+          -4.0001220703125,
+          -3.9999842643737793
+        ]
+      },
+      {
+        "step": 65536,
+        "cached_losses": {
+          "policy_loss": -0.00013670884072780606,
+          "value_loss": 14.143869400024412,
+          "entropy": -10.324178695678713,
+          "old_approx_kl": 0.0005236197806273898,
+          "approx_kl": 0.00015037462192897996,
+          "clipfrac": 0.0,
+          "importance": 0.9996267755826315,
+          "explained_variance": 0.03053039312362671
+        },
+        "log_std": [
+          -3.9998648166656494,
+          -3.9999771118164062,
+          -4.000099182128906,
+          -3.999974489212036
+        ]
+      }
+    ],
+    "last_drone_positions": [
+      [
+        0.49121887861882757,
+        1.0057793438145484,
+        1.4520251126821457
+      ],
+      [
+        0.548849974567558,
+        1.1108298775717607,
+        1.4685074785787484
+      ],
+      [
+        1.5245438693960418,
+        0.6165770422960486,
+        1.6046350270942313
+      ]
+    ]
+  },
+  {
+    "trial": 227,
+    "plan": {
+      "name": "cuda_auto_0227_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 180,
+      "eval_every_steps": 32768,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 28002,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Independent trainable critic body may improve value fitting without modifying actor features",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0179_takeoff/best.pt",
+      "learner_diagnostics": true,
+      "vf_clip_coef": 0.2,
+      "methodology_review": "state/cuda_research/methodology/review_0027/review.md",
+      "methodology_trial": "separate_critic_v1_28002_1",
+      "value_gradient_version": 1,
+      "physics_version": 1,
+      "max_grad_norm": 0.5,
+      "training_region": null,
+      "gae_lambda": 0.95,
+      "methodology_condition": "separate_critic_v1_1"
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 3345.748987963092
+    },
+    "diagnostics": [
+      {
+        "step": 4096,
+        "cached_losses": {
+          "policy_loss": -0.00010488989452521007,
+          "value_loss": 6.540608008702596,
+          "entropy": -10.32417639096578,
+          "old_approx_kl": 0.00011023159216468532,
+          "approx_kl": 2.5487621314823627e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9999152471621832,
+          "explained_variance": 0.008843302726745605
+        },
+        "log_std": [
+          -3.9999005794525146,
+          -3.999922037124634,
+          -4.000075340270996,
+          -4.000002384185791
+        ]
+      },
+      {
+        "step": 8192,
+        "cached_losses": {
+          "policy_loss": -0.00017080890635649362,
+          "value_loss": 26.105328559875485,
+          "entropy": -10.324135224024454,
+          "old_approx_kl": 0.00013489584671333432,
+          "approx_kl": 1.9869801083890103e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9998849779367447,
+          "explained_variance": 0.0005379915237426758
+        },
+        "log_std": [
+          -3.9999008178710938,
+          -3.9999170303344727,
+          -4.0000810623168945,
+          -3.99998140335083
+        ]
+      },
+      {
+        "step": 12288,
+        "cached_losses": {
+          "policy_loss": -0.00018817558884620667,
+          "value_loss": 0.8728339920441309,
+          "entropy": -10.324109395345051,
+          "old_approx_kl": 8.375001683210333e-05,
+          "approx_kl": 2.9706963687203825e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9999459584554035,
+          "explained_variance": 0.016236424446105957
+        },
+        "log_std": [
+          -3.999889850616455,
+          -3.9999096393585205,
+          -4.000072956085205,
+          -3.999967336654663
+        ]
+      },
+      {
+        "step": 16384,
+        "cached_losses": {
+          "policy_loss": -0.0006286250427365303,
+          "value_loss": 2.7783714731534324,
+          "entropy": -10.324068387349445,
+          "old_approx_kl": 0.0001737835506598155,
+          "approx_kl": 8.139710310691348e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9999076078335445,
+          "explained_variance": 0.00110703706741333
+        },
+        "log_std": [
+          -3.9998815059661865,
+          -3.999908685684204,
+          -4.000065326690674,
+          -3.999948263168335
+        ]
+      },
+      {
+        "step": 20480,
+        "cached_losses": {
+          "policy_loss": -1.6322204222281766e-05,
+          "value_loss": 14.371298074722292,
+          "entropy": -10.324042956034342,
+          "old_approx_kl": 0.00012963088617349663,
+          "approx_kl": 9.242473849250625e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9999628116687138,
+          "explained_variance": -0.0077555179595947266
+        },
+        "log_std": [
+          -3.9998836517333984,
+          -3.999906063079834,
+          -4.000070095062256,
+          -3.9999375343322754
+        ]
+      },
+      {
+        "step": 24576,
+        "cached_losses": {
+          "policy_loss": -0.00014702634265025455,
+          "value_loss": 29.668708960215252,
+          "entropy": -10.324041922887165,
+          "old_approx_kl": 0.0002247391385026276,
+          "approx_kl": 5.9650716139003634e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9998349100351334,
+          "explained_variance": 0.01075047254562378
+        },
+        "log_std": [
+          -3.999882459640503,
+          -3.999905824661255,
+          -4.000063419342041,
+          -3.9999351501464844
+        ]
+      },
+      {
+        "step": 28672,
+        "cached_losses": {
+          "policy_loss": -0.0003930501018961271,
+          "value_loss": 34.160323460896805,
+          "entropy": -10.324025233586628,
+          "old_approx_kl": -1.4712684787809849e-05,
+          "approx_kl": 0.0002354893028192843,
+          "clipfrac": 0.0,
+          "importance": 1.000250205397606,
+          "explained_variance": -0.010127902030944824
+        },
+        "log_std": [
+          -3.9998791217803955,
+          -3.9999136924743652,
+          -4.000051498413086,
+          -3.9999310970306396
+        ]
+      },
+      {
+        "step": 32768,
+        "cached_losses": {
+          "policy_loss": -0.0001652172456185023,
+          "value_loss": 38.711462338765465,
+          "entropy": -10.324023167292278,
+          "old_approx_kl": 0.0002945203256482879,
+          "approx_kl": 0.00019209819341388842,
+          "clipfrac": 0.0,
+          "importance": 0.9998975843191146,
+          "explained_variance": 0.0129166841506958
+        },
+        "log_std": [
+          -3.9998703002929688,
+          -3.9999160766601562,
+          -4.000056266784668,
+          -3.999936819076538
+        ]
+      },
+      {
+        "step": 36864,
+        "cached_losses": {
+          "policy_loss": -0.00045005666712919873,
+          "value_loss": 37.53357299168905,
+          "entropy": -10.324024041493733,
+          "old_approx_kl": 0.0008504688351725539,
+          "approx_kl": 0.0002208495861850679,
+          "clipfrac": 0.0,
+          "importance": 0.9993703862031301,
+          "explained_variance": -0.0037688016891479492
+        },
+        "log_std": [
+          -3.99985933303833,
+          -3.999912738800049,
+          -4.000053882598877,
+          -3.9999446868896484
+        ]
+      },
+      {
+        "step": 40960,
+        "cached_losses": {
+          "policy_loss": -0.0009210743010044098,
+          "value_loss": 34.01934734980266,
+          "entropy": -10.324013392130533,
+          "old_approx_kl": 0.00011117183991397421,
+          "approx_kl": 0.00031414535381676006,
+          "clipfrac": 8.138020833333333e-05,
+          "importance": 1.0002029885848365,
+          "explained_variance": 0.010362505912780762
+        },
+        "log_std": [
+          -3.999852180480957,
+          -3.9999172687530518,
+          -4.0000457763671875,
+          -3.999952554702759
+        ]
+      },
+      {
+        "step": 45056,
+        "cached_losses": {
+          "policy_loss": 0.00014045772453149158,
+          "value_loss": 29.599157174428303,
+          "entropy": -10.32401935259501,
+          "old_approx_kl": -6.73943820099036e-05,
+          "approx_kl": 0.00019507115454568216,
+          "clipfrac": 0.0,
+          "importance": 1.000262478987376,
+          "explained_variance": 0.02252793312072754
+        },
+        "log_std": [
+          -3.9998526573181152,
+          -3.999927520751953,
+          -4.000040531158447,
+          -3.9999606609344482
+        ]
+      },
+      {
+        "step": 49152,
+        "cached_losses": {
+          "policy_loss": -0.0005081097284952799,
+          "value_loss": 27.637554804484044,
+          "entropy": -10.324038426081339,
+          "old_approx_kl": -0.00025414696816975874,
+          "approx_kl": 0.0001754859695211053,
+          "clipfrac": 0.0,
+          "importance": 1.0004296054442725,
+          "explained_variance": 0.022698521614074707
+        },
+        "log_std": [
+          -3.999859094619751,
+          -3.9999399185180664,
+          -4.000040531158447,
+          -3.999964714050293
+        ]
+      },
+      {
+        "step": 53248,
+        "cached_losses": {
+          "policy_loss": -0.000624316434065501,
+          "value_loss": 25.849435329437256,
+          "entropy": -10.32405122121175,
+          "old_approx_kl": -0.0006504192521485189,
+          "approx_kl": 0.00035384000511839986,
+          "clipfrac": 8.138020833333333e-05,
+          "importance": 1.001004233956337,
+          "explained_variance": 0.029818475246429443
+        },
+        "log_std": [
+          -3.9998619556427,
+          -3.9999427795410156,
+          -4.000041484832764,
+          -3.9999568462371826
+        ]
+      },
+      {
+        "step": 57344,
+        "cached_losses": {
+          "policy_loss": 0.00013481080532073972,
+          "value_loss": 28.864845116933186,
+          "entropy": -10.3240487575531,
+          "old_approx_kl": 7.687320855135718e-05,
+          "approx_kl": 0.0001956592701996366,
+          "clipfrac": 0.0,
+          "importance": 1.0001188069581985,
+          "explained_variance": 0.024017751216888428
+        },
+        "log_std": [
+          -3.9998619556427,
+          -3.9999468326568604,
+          -4.000046730041504,
+          -3.9999518394470215
+        ]
+      },
+      {
+        "step": 61440,
+        "cached_losses": {
+          "policy_loss": 2.3964171608289092e-05,
+          "value_loss": 31.00905068715414,
+          "entropy": -10.324060440063477,
+          "old_approx_kl": 0.00036765772771711147,
+          "approx_kl": 0.0002367284663099175,
+          "clipfrac": 0.0,
+          "importance": 0.9998690734306971,
+          "explained_variance": 0.023221254348754883
+        },
+        "log_std": [
+          -3.999868869781494,
+          -3.9999501705169678,
+          -4.000050067901611,
+          -3.999952554702759
+        ]
+      },
+      {
+        "step": 65536,
+        "cached_losses": {
+          "policy_loss": -0.0003540093700091044,
+          "value_loss": 14.580550034840902,
+          "entropy": -10.32406751314799,
+          "old_approx_kl": 0.00036477489629760385,
+          "approx_kl": 6.577976455446333e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9997009932994841,
+          "explained_variance": 0.034168362617492676
+        },
+        "log_std": [
+          -3.999861717224121,
+          -3.999952554702759,
+          -4.000044822692871,
+          -3.9999520778656006
+        ]
+      }
+    ],
+    "last_drone_positions": [
+      [
+        2.446405327921188,
+        -0.3601768066542622,
+        1.3792090030345676
+      ],
+      [
+        2.516894400374268,
+        -0.21757766318634944,
+        1.377142711849522
+      ],
+      [
+        3.2670030154143648,
+        -0.9658452756526517,
+        1.5524378897334055
+      ]
+    ]
+  },
+  {
+    "trial": 228,
+    "plan": {
+      "name": "cuda_auto_0228_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 180,
+      "eval_every_steps": 32768,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 28002,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Independent trainable critic body may improve value fitting without modifying actor features",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0179_takeoff/best.pt",
+      "learner_diagnostics": true,
+      "vf_clip_coef": 0.2,
+      "methodology_review": "state/cuda_research/methodology/review_0027/review.md",
+      "methodology_trial": "separate_critic_v1_28002_3",
+      "value_gradient_version": 3,
+      "physics_version": 1,
+      "max_grad_norm": 0.5,
+      "training_region": null,
+      "gae_lambda": 0.95,
+      "methodology_condition": "separate_critic_v1_3"
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 3351.080039551475
+    },
+    "diagnostics": [
+      {
+        "step": 4096,
+        "cached_losses": {
+          "policy_loss": -0.00010513700544834137,
+          "value_loss": 6.539440910021463,
+          "entropy": -10.32417639096578,
+          "old_approx_kl": 0.00011378606238091986,
+          "approx_kl": 2.5777146220207214e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9999119937419892,
+          "explained_variance": 0.00884556770324707
+        },
+        "log_std": [
+          -3.9999005794525146,
+          -3.999922037124634,
+          -4.000075340270996,
+          -4.000002384185791
+        ]
+      },
+      {
+        "step": 8192,
+        "cached_losses": {
+          "policy_loss": -0.00017241885264714557,
+          "value_loss": 26.11104583740234,
+          "entropy": -10.324135224024454,
+          "old_approx_kl": 0.0001363588768678407,
+          "approx_kl": 2.0032331425075732e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9998836666345596,
+          "explained_variance": 0.000537872314453125
+        },
+        "log_std": [
+          -3.9999008178710938,
+          -3.9999170303344727,
+          -4.0000810623168945,
+          -3.99998140335083
+        ]
+      },
+      {
+        "step": 12288,
+        "cached_losses": {
+          "policy_loss": -0.0001900969073176384,
+          "value_loss": 0.8728043536345166,
+          "entropy": -10.324109395345051,
+          "old_approx_kl": 8.626256991798681e-05,
+          "approx_kl": 2.9963378134804465e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9999436885118486,
+          "explained_variance": 0.016233384609222412
+        },
+        "log_std": [
+          -3.999889850616455,
+          -3.9999096393585205,
+          -4.000072956085205,
+          -3.999967098236084
+        ]
+      },
+      {
+        "step": 16384,
+        "cached_losses": {
+          "policy_loss": -0.0006335183279588819,
+          "value_loss": 2.779188573360443,
+          "entropy": -10.324068148930868,
+          "old_approx_kl": 0.00017560370421657961,
+          "approx_kl": 8.287582507667442e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9999072601397833,
+          "explained_variance": 0.001106560230255127
+        },
+        "log_std": [
+          -3.9998815059661865,
+          -3.999908685684204,
+          -4.000065326690674,
+          -3.999948024749756
+        ]
+      },
+      {
+        "step": 20480,
+        "cached_losses": {
+          "policy_loss": -1.4352612197399143e-05,
+          "value_loss": 14.364222049713135,
+          "entropy": -10.324042717615763,
+          "old_approx_kl": 0.00012926109290371338,
+          "approx_kl": 9.455435307851681e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9999653100967407,
+          "explained_variance": -0.0077582597732543945
+        },
+        "log_std": [
+          -3.9998836517333984,
+          -3.999906063079834,
+          -4.000070095062256,
+          -3.9999372959136963
+        ]
+      },
+      {
+        "step": 24576,
+        "cached_losses": {
+          "policy_loss": -0.00014949062218268716,
+          "value_loss": 29.653143088022865,
+          "entropy": -10.324041604995728,
+          "old_approx_kl": 0.00023025584717591602,
+          "approx_kl": 6.102208377948652e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9998307774464291,
+          "explained_variance": 0.01075977087020874
+        },
+        "log_std": [
+          -3.999882459640503,
+          -3.999905824661255,
+          -4.000063419342041,
+          -3.9999349117279053
+        ]
+      },
+      {
+        "step": 28672,
+        "cached_losses": {
+          "policy_loss": -0.00040006171911954874,
+          "value_loss": 34.1338030497233,
+          "entropy": -10.32402467727661,
+          "old_approx_kl": -1.4218365928779043e-05,
+          "approx_kl": 0.0002417206900039067,
+          "clipfrac": 0.0,
+          "importance": 1.000255932410558,
+          "explained_variance": -0.01014864444732666
+        },
+        "log_std": [
+          -3.9998791217803955,
+          -3.999913454055786,
+          -4.000051498413086,
+          -3.9999308586120605
+        ]
+      },
+      {
+        "step": 32768,
+        "cached_losses": {
+          "policy_loss": -0.00016057149817546207,
+          "value_loss": 38.69872220357259,
+          "entropy": -10.3240225315094,
+          "old_approx_kl": 0.00029784914416571456,
+          "approx_kl": 0.00019509652823520202,
+          "clipfrac": 0.0,
+          "importance": 0.9998972664276758,
+          "explained_variance": 0.01297140121459961
+        },
+        "log_std": [
+          -3.9998703002929688,
+          -3.999915838241577,
+          -4.000056266784668,
+          -3.999936580657959
+        ]
+      },
+      {
+        "step": 36864,
+        "cached_losses": {
+          "policy_loss": -0.0004542650034030279,
+          "value_loss": 37.529508908589676,
+          "entropy": -10.324023008346558,
+          "old_approx_kl": 0.0008641045230130354,
+          "approx_kl": 0.00022533791585980606,
+          "clipfrac": 0.0,
+          "importance": 0.9993612269560497,
+          "explained_variance": -0.0038448572158813477
+        },
+        "log_std": [
+          -3.999859094619751,
+          -3.9999125003814697,
+          -4.000053882598877,
+          -3.999943971633911
+        ]
+      },
+      {
+        "step": 40960,
+        "cached_losses": {
+          "policy_loss": -0.0009491716821988424,
+          "value_loss": 33.77337725957234,
+          "entropy": -10.324011961619059,
+          "old_approx_kl": 0.0001186333829537034,
+          "approx_kl": 0.0003219846257707104,
+          "clipfrac": 8.138020833333333e-05,
+          "importance": 1.000203346212705,
+          "explained_variance": 0.010975778102874756
+        },
+        "log_std": [
+          -3.999851942062378,
+          -3.9999167919158936,
+          -4.000045299530029,
+          -3.9999518394470215
+        ]
+      },
+      {
+        "step": 45056,
+        "cached_losses": {
+          "policy_loss": 0.00013900237778822583,
+          "value_loss": 29.65405527750651,
+          "entropy": -10.32401704788208,
+          "old_approx_kl": -6.264494732022284e-05,
+          "approx_kl": 0.00020103101754405847,
+          "clipfrac": 0.0,
+          "importance": 1.0002636810143788,
+          "explained_variance": 0.022541284561157227
+        },
+        "log_std": [
+          -3.999852418899536,
+          -3.999926805496216,
+          -4.000040054321289,
+          -3.99996018409729
+        ]
+      },
+      {
+        "step": 49152,
+        "cached_losses": {
+          "policy_loss": -0.0005159458766380947,
+          "value_loss": 27.55207061767578,
+          "entropy": -10.324036359786987,
+          "old_approx_kl": -0.00023263945089032248,
+          "approx_kl": 0.0001838595004907499,
+          "clipfrac": 0.0,
+          "importance": 1.0004165023565292,
+          "explained_variance": 0.02249819040298462
+        },
+        "log_std": [
+          -3.999858856201172,
+          -3.99993896484375,
+          -4.000040054321289,
+          -3.9999642372131348
+        ]
+      },
+      {
+        "step": 53248,
+        "cached_losses": {
+          "policy_loss": -0.0006354780246814092,
+          "value_loss": 25.64547888437907,
+          "entropy": -10.324048042297363,
+          "old_approx_kl": -0.0006595706023896734,
+          "approx_kl": 0.00036222276200229925,
+          "clipfrac": 8.138020833333333e-05,
+          "importance": 1.001021777590116,
+          "explained_variance": 0.03056478500366211
+        },
+        "log_std": [
+          -3.999861717224121,
+          -3.9999403953552246,
+          -4.0000410079956055,
+          -3.999955892562866
+        ]
+      },
+      {
+        "step": 57344,
+        "cached_losses": {
+          "policy_loss": 0.00014631760617097217,
+          "value_loss": 28.879236062367756,
+          "entropy": -10.324044307072958,
+          "old_approx_kl": 5.535044086476168e-05,
+          "approx_kl": 0.00018563416476051012,
+          "clipfrac": 0.0,
+          "importance": 1.0001302808523178,
+          "explained_variance": 0.022542893886566162
+        },
+        "log_std": [
+          -3.999861478805542,
+          -3.9999442100524902,
+          -4.000046730041504,
+          -3.999950647354126
+        ]
+      },
+      {
+        "step": 61440,
+        "cached_losses": {
+          "policy_loss": -6.633500258127839e-06,
+          "value_loss": 30.850741068522133,
+          "entropy": -10.324056466420492,
+          "old_approx_kl": 0.000370765570551157,
+          "approx_kl": 0.0002349892359537383,
+          "clipfrac": 0.0,
+          "importance": 0.999864235520363,
+          "explained_variance": 0.023157477378845215
+        },
+        "log_std": [
+          -3.999868631362915,
+          -3.999948024749756,
+          -4.000050067901611,
+          -3.999951124191284
+        ]
+      },
+      {
+        "step": 65536,
+        "cached_losses": {
+          "policy_loss": -0.0003681232531865438,
+          "value_loss": 14.58246930440267,
+          "entropy": -10.324063618977867,
+          "old_approx_kl": 0.00038720374383653205,
+          "approx_kl": 7.11773852041612e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9996839761734009,
+          "explained_variance": 0.03507441282272339
+        },
+        "log_std": [
+          -3.999861478805542,
+          -3.999950408935547,
+          -4.000045299530029,
+          -3.999950647354126
+        ]
+      }
+    ],
+    "last_drone_positions": [
+      [
+        2.4384538437900543,
+        -0.3985813050806497,
+        1.3782047010882668
+      ],
+      [
+        2.513192469226907,
+        -0.25572901352174965,
+        1.3682352822069797
+      ],
+      [
+        3.259872366031413,
+        -1.0020727754133054,
+        1.5525413615050874
+      ]
+    ]
+  },
+  {
+    "trial": 229,
+    "plan": {
+      "name": "cuda_auto_0229_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 180,
+      "eval_every_steps": 32768,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 28003,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Independent trainable critic body may improve value fitting without modifying actor features",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0179_takeoff/best.pt",
+      "learner_diagnostics": true,
+      "vf_clip_coef": 0.2,
+      "methodology_review": "state/cuda_research/methodology/review_0027/review.md",
+      "methodology_trial": "separate_critic_v1_28003_1",
+      "value_gradient_version": 1,
+      "physics_version": 1,
+      "max_grad_norm": 0.5,
+      "training_region": null,
+      "gae_lambda": 0.95,
+      "methodology_condition": "separate_critic_v1_1"
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 2035.5148325053444
+    },
+    "diagnostics": [
+      {
+        "step": 4096,
+        "cached_losses": {
+          "policy_loss": -0.00014245696365833282,
+          "value_loss": 6.615657647450765,
+          "entropy": -10.324217796325684,
+          "old_approx_kl": -8.032090651492277e-05,
+          "approx_kl": 3.3320170283938445e-05,
+          "clipfrac": 0.0,
+          "importance": 1.000113641222318,
+          "explained_variance": 0.008700728416442871
+        },
+        "log_std": [
+          -3.9999120235443115,
+          -3.999929904937744,
+          -4.00006628036499,
+          -4.000061988830566
+        ]
+      },
+      {
+        "step": 8192,
+        "cached_losses": {
+          "policy_loss": -6.156228482723236e-05,
+          "value_loss": 25.90515089035034,
+          "entropy": -10.32421612739563,
+          "old_approx_kl": 0.0001795195663968722,
+          "approx_kl": 1.126551554383089e-05,
+          "clipfrac": 0.0,
+          "importance": 0.999831736087799,
+          "explained_variance": 0.0003997683525085449
+        },
+        "log_std": [
+          -3.999910354614258,
+          -3.9999277591705322,
+          -4.000056743621826,
+          -4.000078201293945
+        ]
+      },
+      {
+        "step": 12288,
+        "cached_losses": {
+          "policy_loss": -0.00028461947416265804,
+          "value_loss": 0.8456109166145324,
+          "entropy": -10.324207464853922,
+          "old_approx_kl": 7.678397620717686e-05,
+          "approx_kl": 3.3902761060744524e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9999571045239767,
+          "explained_variance": 0.009844779968261719
+        },
+        "log_std": [
+          -3.99992299079895,
+          -3.999908685684204,
+          -4.00003719329834,
+          -4.000078201293945
+        ]
+      },
+      {
+        "step": 16384,
+        "cached_losses": {
+          "policy_loss": -0.0001561225314314167,
+          "value_loss": 3.6037904818852744,
+          "entropy": -10.32418711980184,
+          "old_approx_kl": -2.5876273866742846e-05,
+          "approx_kl": 5.197954305913299e-05,
+          "clipfrac": 0.0,
+          "importance": 1.0000778685013454,
+          "explained_variance": 0.0019360184669494629
+        },
+        "log_std": [
+          -3.9999289512634277,
+          -3.999906539916992,
+          -4.000025272369385,
+          -4.000077724456787
+        ]
+      },
+      {
+        "step": 20480,
+        "cached_losses": {
+          "policy_loss": -0.0002765962854027748,
+          "value_loss": 17.608615001042683,
+          "entropy": -10.324180444081623,
+          "old_approx_kl": 0.00026788539253175253,
+          "approx_kl": 7.044999316955605e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9998025596141814,
+          "explained_variance": -0.005528569221496582
+        },
+        "log_std": [
+          -3.99991512298584,
+          -3.999913454055786,
+          -4.000021457672119,
+          -4.000077247619629
+        ]
+      },
+      {
+        "step": 24576,
+        "cached_losses": {
+          "policy_loss": -5.102964739004772e-05,
+          "value_loss": 27.775601387023922,
+          "entropy": -10.324162483215334,
+          "old_approx_kl": 0.0004627921152859926,
+          "approx_kl": 8.13998825227221e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9996185998121897,
+          "explained_variance": 0.008952319622039795
+        },
+        "log_std": [
+          -3.99989914894104,
+          -3.9999120235443115,
+          -4.000020503997803,
+          -4.0000715255737305
+        ]
+      },
+      {
+        "step": 28672,
+        "cached_losses": {
+          "policy_loss": -3.462688376506169e-05,
+          "value_loss": 38.77254867553712,
+          "entropy": -10.324140866597492,
+          "old_approx_kl": -5.080442254741986e-05,
+          "approx_kl": 0.0001058026731091862,
+          "clipfrac": 0.0,
+          "importance": 1.0001566261053085,
+          "explained_variance": -0.009352684020996094
+        },
+        "log_std": [
+          -3.9998939037323,
+          -3.999915599822998,
+          -4.000021457672119,
+          -4.000063419342041
+        ]
+      },
+      {
+        "step": 32768,
+        "cached_losses": {
+          "policy_loss": -0.00015147340794404349,
+          "value_loss": 38.18271350860596,
+          "entropy": -10.324138164520264,
+          "old_approx_kl": -1.58140513425072e-05,
+          "approx_kl": 8.365004517448446e-05,
+          "clipfrac": 0.0,
+          "importance": 1.0000994602839153,
+          "explained_variance": 0.008314132690429688
+        },
+        "log_std": [
+          -3.9998960494995117,
+          -3.9999141693115234,
+          -4.000022888183594,
+          -4.000053405761719
+        ]
+      },
+      {
+        "step": 36864,
+        "cached_losses": {
+          "policy_loss": -0.00014060021688540775,
+          "value_loss": 35.063542524973556,
+          "entropy": -10.324127515157064,
+          "old_approx_kl": 0.00039545460216080147,
+          "approx_kl": 0.00018957722932100296,
+          "clipfrac": 0.0,
+          "importance": 0.9997941255569458,
+          "explained_variance": -8.344650268554688e-05
+        },
+        "log_std": [
+          -3.999894618988037,
+          -3.9999077320098877,
+          -4.000024795532227,
+          -4.000047206878662
+        ]
+      },
+      {
+        "step": 40960,
+        "cached_losses": {
+          "policy_loss": -5.336788793404898e-05,
+          "value_loss": 35.02385139465332,
+          "entropy": -10.324113607406616,
+          "old_approx_kl": -2.769194543361663e-05,
+          "approx_kl": 9.385525966839245e-05,
+          "clipfrac": 0.0,
+          "importance": 1.0001215587059658,
+          "explained_variance": 0.004023909568786621
+        },
+        "log_std": [
+          -3.999894380569458,
+          -3.99990177154541,
+          -4.000025272369385,
+          -4.0000410079956055
+        ]
+      },
+      {
+        "step": 45056,
+        "cached_losses": {
+          "policy_loss": -0.0005306949218114217,
+          "value_loss": 29.957842032114662,
+          "entropy": -10.32411241531372,
+          "old_approx_kl": 7.279254108046493e-05,
+          "approx_kl": 0.0001163743290817365,
+          "clipfrac": 0.0,
+          "importance": 1.0000435809294383,
+          "explained_variance": 0.005633354187011719
+        },
+        "log_std": [
+          -3.9998886585235596,
+          -3.999903678894043,
+          -4.0000386238098145,
+          -4.0000457763671875
+        ]
+      },
+      {
+        "step": 49152,
+        "cached_losses": {
+          "policy_loss": -1.988559961318971e-05,
+          "value_loss": 28.130508263905845,
+          "entropy": -10.324128150939941,
+          "old_approx_kl": 0.00016697201256950697,
+          "approx_kl": 0.00014178074100830904,
+          "clipfrac": 0.0,
+          "importance": 0.9999748120705287,
+          "explained_variance": 0.018150031566619873
+        },
+        "log_std": [
+          -3.9998838901519775,
+          -3.9999070167541504,
+          -4.0000457763671875,
+          -4.000050067901611
+        ]
+      },
+      {
+        "step": 53248,
+        "cached_losses": {
+          "policy_loss": -0.0004399847239255905,
+          "value_loss": 28.943953196207676,
+          "entropy": -10.32414396603902,
+          "old_approx_kl": 8.394136481607954e-05,
+          "approx_kl": 0.00025570169964339584,
+          "clipfrac": 0.0,
+          "importance": 1.0001717656850815,
+          "explained_variance": 0.02144598960876465
+        },
+        "log_std": [
+          -3.999887704849243,
+          -3.9999043941497803,
+          -4.000056266784668,
+          -4.000069618225098
+        ]
+      },
+      {
+        "step": 57344,
+        "cached_losses": {
+          "policy_loss": -1.261010766029359e-05,
+          "value_loss": 29.001457850138344,
+          "entropy": -10.324173212051392,
+          "old_approx_kl": 0.00021997707275052866,
+          "approx_kl": 0.00023654357937630263,
+          "clipfrac": 0.0,
+          "importance": 1.00001656015714,
+          "explained_variance": 0.02188199758529663
+        },
+        "log_std": [
+          -3.9998953342437744,
+          -3.999903917312622,
+          -4.00006628036499,
+          -4.00006628036499
+        ]
+      },
+      {
+        "step": 61440,
+        "cached_losses": {
+          "policy_loss": -0.0004365034401416779,
+          "value_loss": 32.584321339925125,
+          "entropy": -10.324168602625527,
+          "old_approx_kl": -0.0001850603730417788,
+          "approx_kl": 0.00013903912622481585,
+          "clipfrac": 0.0,
+          "importance": 1.0003241002559662,
+          "explained_variance": 0.01860952377319336
+        },
+        "log_std": [
+          -3.9999001026153564,
+          -3.999890089035034,
+          -4.000061511993408,
+          -4.000053405761719
+        ]
+      },
+      {
+        "step": 65536,
+        "cached_losses": {
+          "policy_loss": 1.5224019686381067e-06,
+          "value_loss": 14.59635678927104,
+          "entropy": -10.324133157730104,
+          "old_approx_kl": 9.67895418095092e-05,
+          "approx_kl": 0.00011857948751033594,
+          "clipfrac": 0.0,
+          "importance": 1.0000217954317727,
+          "explained_variance": 0.018309414386749268
+        },
+        "log_std": [
+          -3.999892234802246,
+          -3.9998745918273926,
+          -4.000045299530029,
+          -4.000058650970459
+        ]
+      }
+    ],
+    "last_drone_positions": [
+      [
+        -1.111849364391375,
+        0.5122797680097659,
+        1.4654874842601746
+      ],
+      [
+        -1.0730252559611362,
+        0.7205361856647312,
+        1.4716172267696683
+      ],
+      [
+        -0.008588184349963413,
+        -0.1620518202121668,
+        1.6302678102543033
+      ]
+    ]
+  },
+  {
+    "trial": 230,
+    "plan": {
+      "name": "cuda_auto_0230_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 180,
+      "eval_every_steps": 32768,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 28003,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Independent trainable critic body may improve value fitting without modifying actor features",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0179_takeoff/best.pt",
+      "learner_diagnostics": true,
+      "vf_clip_coef": 0.2,
+      "methodology_review": "state/cuda_research/methodology/review_0027/review.md",
+      "methodology_trial": "separate_critic_v1_28003_3",
+      "value_gradient_version": 3,
+      "physics_version": 1,
+      "max_grad_norm": 0.5,
+      "training_region": null,
+      "gae_lambda": 0.95,
+      "methodology_condition": "separate_critic_v1_3"
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1960.0505538357986
+    },
+    "diagnostics": [
+      {
+        "step": 4096,
+        "cached_losses": {
+          "policy_loss": -0.0001439073433478673,
+          "value_loss": 6.614390770594278,
+          "entropy": -10.324217796325684,
+          "old_approx_kl": -8.178075465063253e-05,
+          "approx_kl": 3.3773855345013245e-05,
+          "clipfrac": 0.0,
+          "importance": 1.0001155485709508,
+          "explained_variance": 0.008702635765075684
+        },
+        "log_std": [
+          -3.9999120235443115,
+          -3.999929904937744,
+          -4.00006628036499,
+          -4.000061988830566
+        ]
+      },
+      {
+        "step": 8192,
+        "cached_losses": {
+          "policy_loss": -5.95667709906896e-05,
+          "value_loss": 25.909774303436276,
+          "entropy": -10.32421612739563,
+          "old_approx_kl": 0.00017654247737179202,
+          "approx_kl": 1.1164515550869206e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9998346120119095,
+          "explained_variance": 0.0003998875617980957
+        },
+        "log_std": [
+          -3.999910354614258,
+          -3.9999277591705322,
+          -4.000056743621826,
+          -4.000078201293945
+        ]
+      },
+      {
+        "step": 12288,
+        "cached_losses": {
+          "policy_loss": -0.00028912024572491646,
+          "value_loss": 0.8463756442070007,
+          "entropy": -10.324207464853922,
+          "old_approx_kl": 7.896525009224813e-05,
+          "approx_kl": 3.4398064599372447e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9999554306268692,
+          "explained_variance": 0.009840011596679688
+        },
+        "log_std": [
+          -3.99992299079895,
+          -3.999908685684204,
+          -4.00003719329834,
+          -4.000078201293945
+        ]
+      },
+      {
+        "step": 16384,
+        "cached_losses": {
+          "policy_loss": -0.0001536001218482852,
+          "value_loss": 3.6111865242322287,
+          "entropy": -10.324186642964682,
+          "old_approx_kl": -2.7579235999534522e-05,
+          "approx_kl": 5.337596909763913e-05,
+          "clipfrac": 0.0,
+          "importance": 1.0000809530417123,
+          "explained_variance": 0.001946091651916504
+        },
+        "log_std": [
+          -3.9999289512634277,
+          -3.999906539916992,
+          -4.000025272369385,
+          -4.000077247619629
+        ]
+      },
+      {
+        "step": 20480,
+        "cached_losses": {
+          "policy_loss": -0.00027886374543110526,
+          "value_loss": 17.611326615015663,
+          "entropy": -10.324179728825888,
+          "old_approx_kl": 0.00027420061330000556,
+          "approx_kl": 7.099276505565892e-05,
+          "clipfrac": 0.0,
+          "importance": 0.9997968027989069,
+          "explained_variance": -0.005535721778869629
+        },
+        "log_std": [
+          -3.99991512298584,
+          -3.999913454055786,
+          -4.000021457672119,
+          -4.000076770782471
+        ]
+      },
+      {
+        "step": 24576,
+        "cached_losses": {
+          "policy_loss": -4.7774674991766616e-05,
+          "value_loss": 27.765529791514076,
+          "entropy": -10.324162244796753,
+          "old_approx_kl": 0.00046696603142966825,
+          "approx_kl": 8.277552842628212e-05,
+          "clipfrac": 0.0,
+          "importance": 0.999615803360939,
+          "explained_variance": 0.008948743343353271
+        },
+        "log_std": [
+          -3.999898910522461,
+          -3.9999120235443115,
+          -4.000020503997803,
+          -4.000071048736572
+        ]
+      },
+      {
+        "step": 28672,
+        "cached_losses": {
+          "policy_loss": -3.841208914915721e-05,
+          "value_loss": 38.79133987426758,
+          "entropy": -10.324140310287476,
+          "old_approx_kl": -5.553526959071556e-05,
+          "approx_kl": 0.00010549522509487967,
+          "clipfrac": 0.0,
+          "importance": 1.000161051750183,
+          "explained_variance": -0.009283065795898438
+        },
+        "log_std": [
+          -3.9998936653137207,
+          -3.999915599822998,
+          -4.000021457672119,
+          -4.000062942504883
+        ]
+      },
+      {
+        "step": 32768,
+        "cached_losses": {
+          "policy_loss": -0.00015529990196228027,
+          "value_loss": 38.24294439951578,
+          "entropy": -10.324137290318808,
+          "old_approx_kl": -1.86656640532116e-05,
+          "approx_kl": 8.274118590634316e-05,
+          "clipfrac": 0.0,
+          "importance": 1.0001014073689778,
+          "explained_variance": 0.008365333080291748
+        },
+        "log_std": [
+          -3.9998955726623535,
+          -3.9999144077301025,
+          -4.000022888183594,
+          -4.0000529289245605
+        ]
+      },
+      {
+        "step": 36864,
+        "cached_losses": {
+          "policy_loss": -0.00012452465792497,
+          "value_loss": 34.90064318974813,
+          "entropy": -10.324127356211344,
+          "old_approx_kl": 0.00039729051059111953,
+          "approx_kl": 0.00019034435293481994,
+          "clipfrac": 0.0,
+          "importance": 0.9997930626074474,
+          "explained_variance": 0.00022977590560913086
+        },
+        "log_std": [
+          -3.9998939037323,
+          -3.999908447265625,
+          -4.000025272369385,
+          -4.000046730041504
+        ]
+      },
+      {
+        "step": 40960,
+        "cached_losses": {
+          "policy_loss": -4.4050936897595726e-05,
+          "value_loss": 34.84113995234171,
+          "entropy": -10.324113766352335,
+          "old_approx_kl": -9.754206985235207e-06,
+          "approx_kl": 9.276481190075477e-05,
+          "clipfrac": 0.0,
+          "importance": 1.0001025199890137,
+          "explained_variance": 0.004444599151611328
+        },
+        "log_std": [
+          -3.9998936653137207,
+          -3.9999027252197266,
+          -4.000025749206543,
+          -4.000040531158447
+        ]
+      },
+      {
+        "step": 45056,
+        "cached_losses": {
+          "policy_loss": -0.000441058228413264,
+          "value_loss": 30.122513771057132,
+          "entropy": -10.324112494786581,
+          "old_approx_kl": 5.350258046140273e-05,
+          "approx_kl": 0.00011146129205978164,
+          "clipfrac": 0.0,
+          "importance": 1.0000579555829365,
+          "explained_variance": 0.004406273365020752
+        },
+        "log_std": [
+          -3.9998879432678223,
+          -3.999904155731201,
+          -4.000039100646973,
+          -4.000045299530029
+        ]
+      },
+      {
+        "step": 49152,
+        "cached_losses": {
+          "policy_loss": -8.289826412995657e-05,
+          "value_loss": 28.306531747182213,
+          "entropy": -10.324127833048502,
+          "old_approx_kl": 0.00014237698633223772,
+          "approx_kl": 0.00013812173953435072,
+          "clipfrac": 0.0,
+          "importance": 0.9999957531690596,
+          "explained_variance": 0.016658484935760498
+        },
+        "log_std": [
+          -3.999882459640503,
+          -3.999908447265625,
+          -4.000047206878662,
+          -4.000049591064453
+        ]
+      },
+      {
+        "step": 53248,
+        "cached_losses": {
+          "policy_loss": -0.0003864498188098272,
+          "value_loss": 28.755457878112793,
+          "entropy": -10.324144840240479,
+          "old_approx_kl": 0.00019350721656034392,
+          "approx_kl": 0.0002750254498096183,
+          "clipfrac": 0.0,
+          "importance": 1.000081514318784,
+          "explained_variance": 0.02217322587966919
+        },
+        "log_std": [
+          -3.999885320663452,
+          -3.999906063079834,
+          -4.000058174133301,
+          -4.0000691413879395
+        ]
+      },
+      {
+        "step": 57344,
+        "cached_losses": {
+          "policy_loss": -1.533950368563334e-05,
+          "value_loss": 29.182440598805744,
+          "entropy": -10.324173450469972,
+          "old_approx_kl": 0.0002345790465672811,
+          "approx_kl": 0.00023916039693479735,
+          "clipfrac": 0.0,
+          "importance": 1.0000045945247014,
+          "explained_variance": 0.022348523139953613
+        },
+        "log_std": [
+          -3.999892473220825,
+          -3.9999051094055176,
+          -4.000068187713623,
+          -4.000065803527832
+        ]
+      },
+      {
+        "step": 61440,
+        "cached_losses": {
+          "policy_loss": -0.00041211148103078205,
+          "value_loss": 32.69506216049194,
+          "entropy": -10.324167887369793,
+          "old_approx_kl": -0.00019422926319142184,
+          "approx_kl": 0.0001270365804278602,
+          "clipfrac": 0.0,
+          "importance": 1.0003212690353394,
+          "explained_variance": 0.01813185214996338
+        },
+        "log_std": [
+          -3.9998972415924072,
+          -3.9998903274536133,
+          -4.000062942504883,
+          -4.0000529289245605
+        ]
+      },
+      {
+        "step": 65536,
+        "cached_losses": {
+          "policy_loss": -6.964430212974545e-06,
+          "value_loss": 14.634442170461018,
+          "entropy": -10.324131488800049,
+          "old_approx_kl": 0.00011149469840650757,
+          "approx_kl": 0.0001190047381290545,
+          "clipfrac": 0.0,
+          "importance": 1.0000074952840807,
+          "explained_variance": 0.018303096294403076
+        },
+        "log_std": [
+          -3.999889373779297,
+          -3.9998748302459717,
+          -4.000046730041504,
+          -4.000058174133301
+        ]
+      }
+    ],
+    "last_drone_positions": [
+      [
+        -1.064248570499188,
+        0.46463422453887043,
+        1.4661814729247522
+      ],
+      [
+        -1.0277404703767916,
+        0.6738598318017262,
+        1.4741894554769535
+      ],
+      [
+        0.04821047162370887,
+        -0.20879155175959188,
+        1.633635298742651
+      ]
+    ]
+  }
+]
