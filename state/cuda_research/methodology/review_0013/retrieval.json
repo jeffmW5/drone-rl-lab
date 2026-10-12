@@ -1,0 +1,22 @@
+{
+  "retrieved_at": "2026-10-12T06:48:46.379517+00:00",
+  "query": "Implementation Matters PPO TRPO",
+  "paper_ids": [
+    "2005.12729"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=Implementation+Matters+PPO+TRPO&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2005.12729",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2005.12729.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}
