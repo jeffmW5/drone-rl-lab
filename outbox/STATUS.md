@@ -133,3 +133,5 @@ new version. No original2ms promotion or training launch. See
 tether_policy_controller_diagnostic.md for evidence/scope/next hypothesis.
 
 2026-10-12 user removed daily training-launch cap. Runner and heartbeat updated; six harness checks pass, including readiness after twenty recent launches. One trainer at a time and failed-run review remain. Historical allowance dates no longer apply.
+
+2026-10-12 01:30 UTC: tether_controller_research_001 launched, PID35638, GTX1070Ti CUDA advantages confirmed. Separate1ms/.012 controller benchmark, 100k transitions/600s, learning rate1e-5, source precisionv001 best. Initial transferred evaluation precedes optimization. No duplicate job; original2ms incumbent preserved. New active default planv002. Six harness checks and controller reset/allocation checks passed. WSL provenance reports older HEAD plus dirty tree; owned source changes synced and committed in Windows ca3cde0, not misrepresented as clean WSL HEAD.

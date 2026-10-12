@@ -1,5 +1,9 @@
 # Local 1070 Ti tether research loop
 
+Active follow-up: tether_research_1070ti_v002.md and state/tether_research/v002.json.
+The original failed campaign below remains preserved. Controller recovery trial
+launched2026-10-12 after daily cap removal; separate1ms/gain.012 benchmark.
+
 Status: needs review: failed trial; no automatic continuation
 
 Validation selects provisional candidates; training reward does not select winners.
