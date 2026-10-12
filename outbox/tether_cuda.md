@@ -30,11 +30,27 @@ with a function that raises and confirms direct stepping still works. Takeoff
 strip clear of boxes; full obstacle curriculum not yet established.
 
 Directv003 completed131072 transitions,0/8 deterministic takeoffs (>0.3m drone
-height), error1494.251->1497.226mm (worse). No crash is not success: remained on
+height), error1493.873->1497.226mm (worse). No crash is not success: remained on
 ground. Full counterevidence retained. Directv004 recovery starts equal network
 motor biases at0.61 throttle, logstd=-4; this is an initialization prior, not
 feedback PD. Motors still start zero. Bounded262144 transitions/120training seconds.
 No success claim until measured. Selected original MuJoCo policy unchanged.
+
+Directv004 complete262144 transitions/81.473s (~3218/s),128 parallel environments.
+Initialized policy8/8 takeoffs, mean error981.460mm; trained policy0/8 takeoffs,
+mean error1576.165mm. Peak trained drone height only0.1397m. This is a rejected
+learning result: near-hover initialization enabled lift, then PPO regressed.
+Crashes0 does not imply task success. Viewer deliberately plays this final failed
+policy; it is not substituted with the better initialization. Three-seed original
+leaderboard and reserved audit seeds untouched. Prototype evaluation uses seed51011
+to construct eight domains, not eight independent seed replications.
+
+Hypotheses, not facts: reward may encourage low-throttle ground behavior; aggressive
+updates with narrow exploration may destabilize learned motor balance. Next bounded
+trial should add explicit takeoff/hover objectives and smaller updates, with initial,
+periodic and final deterministic checkpoints selected by takeoffs/crashes/error.
+Diagnose ground/tether contact fidelity before long navigation training. No promotion
+of either direct-trained checkpoint. Original hybrid remains available as a reference.
 
 Failed startupv001 lacked nvcc PATH. Directv002 INVALID old8parameter kernel/new
 9parameter host ABI after compile lease rejection; retained artifact. Source-hash

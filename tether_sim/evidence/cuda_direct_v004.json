@@ -1,0 +1,65 @@
+{
+  "status": "complete",
+  "control_mode": "direct_motor_policy",
+  "initial_throttle": 0.61,
+  "steps": 262144,
+  "training_seconds": 81.47331341300014,
+  "training_transitions_per_second": 3217.5443592327433,
+  "initial": {
+    "seed": 51011,
+    "mean_final_error_mm": 981.4596568850804,
+    "errors_mm": [
+      664.1632590004386,
+      712.0754368559122,
+      969.7015369046233,
+      722.5624570119393,
+      798.8323918409963,
+      1538.4960173666334,
+      1145.326494906652,
+      1300.5196611934496
+    ],
+    "crashes": 0,
+    "takeoffs": 8,
+    "peak_drone_height_m": [
+      2.555306911468506,
+      2.5455758571624756,
+      2.564427137374878,
+      2.541923999786377,
+      2.570624828338623,
+      2.7555534839630127,
+      2.5293262004852295,
+      2.617532253265381
+    ],
+    "scope": "Prototype five-second destination episode; not original navigation or sustained1mm benchmark"
+  },
+  "final": {
+    "seed": 51011,
+    "mean_final_error_mm": 1576.1646314762472,
+    "errors_mm": [
+      1532.9124224431646,
+      1751.8384656212265,
+      1509.3679010615451,
+      1444.9274760817807,
+      1773.08798059008,
+      1528.6164960448195,
+      1462.7032151591154,
+      1605.863094808245
+    ],
+    "crashes": 0,
+    "takeoffs": 0,
+    "peak_drone_height_m": [
+      0.1395171880722046,
+      0.13959753513336182,
+      0.13965535163879395,
+      0.13964460790157318,
+      0.13962997496128082,
+      0.13973881304264069,
+      0.13963744044303894,
+      0.139552503824234
+    ],
+    "scope": "Prototype five-second destination episode; not original navigation or sustained1mm benchmark"
+  },
+  "gpu": "NVIDIA GeForce GTX 1070 Ti",
+  "advantage_cuda": true,
+  "limitations": "Experimental particle tether; no MuJoCo parity, segment contact response, hardware calibration or original1mm success claim. PufferLib3 copies actions through CPU, but physics and learner are GPU; no CPU physics workers."
+}
