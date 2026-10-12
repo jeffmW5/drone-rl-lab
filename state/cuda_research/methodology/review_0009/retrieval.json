@@ -1,0 +1,22 @@
+{
+  "retrieved_at": "2026-10-12T05:28:56.121179+00:00",
+  "query": "quadrotor PPO learning rate stabilization curriculum",
+  "paper_ids": [
+    "2501.18490"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=quadrotor+PPO+learning+rate+stabilization+curriculum&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2501.18490",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2501.18490.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}

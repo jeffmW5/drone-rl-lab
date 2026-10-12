@@ -1,0 +1,158 @@
+[
+  {
+    "name": "cuda_auto_0079_takeoff",
+    "condition": "segment_contact_v1_16001_1",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0079_takeoff/result.json",
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 9291.59906783281
+    },
+    "periodic": {
+      "eval_32768.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 9748.433055967731
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 9291.59906783281
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0080_takeoff",
+    "condition": "segment_contact_v1_16001_2",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0080_takeoff/result.json",
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 9291.59906783281
+    },
+    "periodic": {
+      "eval_32768.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 9748.433055967731
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 9291.59906783281
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0081_takeoff",
+    "condition": "segment_contact_v1_16002_1",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0081_takeoff/result.json",
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 5923.057461032724
+    },
+    "periodic": {
+      "eval_32768.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5020.194334782191
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5923.057461032724
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0082_takeoff",
+    "condition": "segment_contact_v1_16002_2",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0082_takeoff/result.json",
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 5923.057461032724
+    },
+    "periodic": {
+      "eval_32768.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5020.194334782191
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5923.057461032724
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0083_takeoff",
+    "condition": "segment_contact_v1_16003_1",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0083_takeoff/result.json",
+    "final": {
+      "crashes": 2,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 2367.4583058752323
+    },
+    "periodic": {
+      "eval_32768.json": {
+        "crashes": 2,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5145.767667748775
+      },
+      "eval_65536.json": {
+        "crashes": 2,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2367.4583058752323
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0084_takeoff",
+    "condition": "segment_contact_v1_16003_2",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0084_takeoff/result.json",
+    "final": {
+      "crashes": 2,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 2372.038955044839
+    },
+    "periodic": {
+      "eval_32768.json": {
+        "crashes": 2,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5173.964936402878
+      },
+      "eval_65536.json": {
+        "crashes": 2,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2372.038955044839
+      }
+    }
+  }
+]
