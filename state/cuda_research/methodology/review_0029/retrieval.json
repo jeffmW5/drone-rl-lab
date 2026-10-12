@@ -1,0 +1,33 @@
+{
+  "retrieved_at": "2026-10-12T12:08:50.444073+00:00",
+  "query": "PPO contiguous rollout early bootstrapping GAE",
+  "paper_ids": [
+    "2006.05990",
+    "1506.02438"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=PPO+contiguous+rollout+early+bootstrapping+GAE&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2006.05990",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2006.05990.md",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/1506.02438",
+      "status": 200,
+      "file": "source_03.txt"
+    },
+    {
+      "url": "https://huggingface.co/papers/1506.02438.md",
+      "status": 200,
+      "file": "source_04.txt"
+    }
+  ]
+}

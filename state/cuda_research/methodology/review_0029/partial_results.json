@@ -1,0 +1,538 @@
+[
+  {
+    "trial": 236,
+    "plan": {
+      "name": "cuda_auto_0236_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 29001,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Longer contiguous rollout may reduce early critic bootstrap bias",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0179_takeoff/best.pt",
+      "physics_version": 1,
+      "methodology_trial": "rollout_length_v1_29001_32",
+      "learner_diagnostics": true,
+      "batch_size": 16384,
+      "value_gradient_version": 1,
+      "methodology_condition": "rollout_length_v1_32",
+      "training_region": null,
+      "bptt_horizon": 32,
+      "max_grad_norm": 0.5,
+      "vf_clip_coef": 0.2,
+      "methodology_review": "state/cuda_research/methodology/review_0028/review.md",
+      "gae_lambda": 0.95
+    },
+    "steps": 262144,
+    "best_step": 0,
+    "evaluations": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1379.7121562713517,
+        "last_drone_positions": [
+          [
+            0.5447369071247435,
+            0.9842661932202159,
+            1.44999315190994
+          ],
+          [
+            0.643091947636227,
+            0.9967385077433899,
+            1.453848924779126
+          ],
+          [
+            1.2823995259069003,
+            0.7238438889323907,
+            1.6167501573561118
+          ]
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2121.8144281019972,
+        "last_drone_positions": [
+          [
+            0.6266194899046151,
+            1.6967072402604702,
+            1.3983563965930383
+          ],
+          [
+            0.7678604138741119,
+            1.6693961608954373,
+            1.4042182647815042
+          ],
+          [
+            1.2515652302348614,
+            1.448050250759713,
+            1.5517896838964518
+          ]
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1456.2376063201361,
+        "last_drone_positions": [
+          [
+            -0.34554507518028943,
+            0.8373607549808963,
+            1.4452748779059024
+          ],
+          [
+            -0.20370773873212775,
+            0.7956534045933428,
+            1.4420354063795324
+          ],
+          [
+            0.26253790189148873,
+            0.6526152149616999,
+            1.6066752192782765
+          ]
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1696.2571093173376,
+        "last_drone_positions": [
+          [
+            0.9102299673933664,
+            -0.557154107605637,
+            1.4313258214498277
+          ],
+          [
+            1.0253390107728282,
+            -0.4285660320458894,
+            1.4152854364432172
+          ],
+          [
+            1.782419160337797,
+            -1.069620556748493,
+            1.6241157453295458
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "trial": 237,
+    "plan": {
+      "name": "cuda_auto_0237_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 29001,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Longer contiguous rollout may reduce early critic bootstrap bias",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0179_takeoff/best.pt",
+      "physics_version": 1,
+      "methodology_trial": "rollout_length_v1_29001_128",
+      "learner_diagnostics": true,
+      "batch_size": 16384,
+      "value_gradient_version": 1,
+      "methodology_condition": "rollout_length_v1_128",
+      "training_region": null,
+      "bptt_horizon": 128,
+      "max_grad_norm": 0.5,
+      "vf_clip_coef": 0.2,
+      "methodology_review": "state/cuda_research/methodology/review_0028/review.md",
+      "gae_lambda": 0.95
+    },
+    "steps": 262144,
+    "best_step": 0,
+    "evaluations": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2143.450019440507,
+        "last_drone_positions": [
+          [
+            0.5009215060902538,
+            1.7023257359347561,
+            1.41701656418671
+          ],
+          [
+            0.593068714028122,
+            1.804647505891873,
+            1.4470641381580374
+          ],
+          [
+            1.0977659558552002,
+            1.2282147959400447,
+            1.5828306346752208
+          ]
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2963.9358816814706,
+        "last_drone_positions": [
+          [
+            0.35059319346923584,
+            2.4360266096814462,
+            1.3724039301242925
+          ],
+          [
+            0.5213508702857087,
+            2.535235794705689,
+            1.389042413725934
+          ],
+          [
+            0.8571521197417601,
+            1.7656468602309272,
+            1.5328429565715516
+          ]
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2297.385916223455,
+        "last_drone_positions": [
+          [
+            -0.9361072093048834,
+            1.1738209093737526,
+            1.444148792399563
+          ],
+          [
+            -0.7461405204651935,
+            1.3122648230713607,
+            1.4406093778038662
+          ],
+          [
+            -0.46592020739846784,
+            0.5248783717029188,
+            1.5942949331184384
+          ]
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1444.6013458905193,
+        "last_drone_positions": [
+          [
+            0.9730082375313275,
+            -0.17436583850948503,
+            1.4318827498437594
+          ],
+          [
+            1.0810012874392427,
+            -0.03438483586423092,
+            1.4287699822509337
+          ],
+          [
+            1.811413218441518,
+            -0.7076316806420344,
+            1.6167462579812062
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "trial": 238,
+    "plan": {
+      "name": "cuda_auto_0238_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 29002,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Longer contiguous rollout may reduce early critic bootstrap bias",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0179_takeoff/best.pt",
+      "physics_version": 1,
+      "methodology_trial": "rollout_length_v1_29002_32",
+      "learner_diagnostics": true,
+      "batch_size": 16384,
+      "value_gradient_version": 1,
+      "methodology_condition": "rollout_length_v1_32",
+      "training_region": null,
+      "bptt_horizon": 32,
+      "max_grad_norm": 0.5,
+      "vf_clip_coef": 0.2,
+      "methodology_review": "state/cuda_research/methodology/review_0028/review.md",
+      "gae_lambda": 0.95
+    },
+    "steps": 262144,
+    "best_step": 0,
+    "evaluations": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1325.0922309062053,
+        "last_drone_positions": [
+          [
+            0.46303496707152986,
+            1.011627912780603,
+            1.4377898177736683
+          ],
+          [
+            0.5946889518626215,
+            1.1438362327747142,
+            1.4454998152014062
+          ],
+          [
+            1.011733442883567,
+            0.4792079323508781,
+            1.606807367670521
+          ]
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 3144.6526065969283,
+        "last_drone_positions": [
+          [
+            0.09024694645133535,
+            2.5382920025406124,
+            1.3927890140085508
+          ],
+          [
+            0.2499216060023021,
+            2.638717685383706,
+            1.4134391371823867
+          ],
+          [
+            0.5322293758710341,
+            1.9471021654001093,
+            1.5323218833804597
+          ]
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2202.2878407926696,
+        "last_drone_positions": [
+          [
+            0.7708281227412725,
+            1.8118860129964447,
+            1.426743803662526
+          ],
+          [
+            0.9091825291309666,
+            1.906250672846645,
+            1.4570651783333233
+          ],
+          [
+            1.2395016665878464,
+            1.213013691336915,
+            1.609743371598857
+          ]
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1787.7549228575601,
+        "last_drone_positions": [
+          [
+            -0.07767431596045703,
+            1.3031607002640138,
+            1.4543543298909396
+          ],
+          [
+            0.09875211355237355,
+            1.4961306202423246,
+            1.4648852611298246
+          ],
+          [
+            0.5438410297721794,
+            0.6391472650416599,
+            1.6117668961099403
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "trial": 239,
+    "plan": {
+      "name": "cuda_auto_0239_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 29002,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Longer contiguous rollout may reduce early critic bootstrap bias",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0179_takeoff/best.pt",
+      "physics_version": 1,
+      "methodology_trial": "rollout_length_v1_29002_128",
+      "learner_diagnostics": true,
+      "batch_size": 16384,
+      "value_gradient_version": 1,
+      "methodology_condition": "rollout_length_v1_128",
+      "training_region": null,
+      "bptt_horizon": 128,
+      "max_grad_norm": 0.5,
+      "vf_clip_coef": 0.2,
+      "methodology_review": "state/cuda_research/methodology/review_0028/review.md",
+      "gae_lambda": 0.95
+    },
+    "steps": 262144,
+    "best_step": 0,
+    "evaluations": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 957.4683530348874,
+        "last_drone_positions": [
+          [
+            0.6352326075887441,
+            0.020263257718942607,
+            1.4350669486329868
+          ],
+          [
+            0.8027981720047775,
+            0.17556318436799803,
+            1.4262428759049632
+          ],
+          [
+            1.108070063682502,
+            -0.4963236801831805,
+            1.6339643201328606
+          ]
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1647.6219638861974,
+        "last_drone_positions": [
+          [
+            1.025037020879794,
+            0.9728314844459428,
+            1.4632989695254943
+          ],
+          [
+            1.1949342764190394,
+            1.0914723684479828,
+            1.4667556529799675
+          ],
+          [
+            1.5925075858410496,
+            0.5533124800186825,
+            1.6460651467466205
+          ]
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2991.4346856950883,
+        "last_drone_positions": [
+          [
+            2.363495395848228,
+            0.3125216241965398,
+            1.4039718117954738
+          ],
+          [
+            2.540215012981625,
+            0.45090463877479825,
+            1.3996552697969777
+          ],
+          [
+            2.8883033050309113,
+            -0.209137098207088,
+            1.6344135345595003
+          ]
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1238.9645533047012,
+        "last_drone_positions": [
+          [
+            -0.18310221678917787,
+            0.6085383739657161,
+            1.467707568587897
+          ],
+          [
+            -0.026152439510359816,
+            0.7767775007120238,
+            1.4654724293039818
+          ],
+          [
+            0.42582673903793616,
+            0.11776768671211643,
+            1.6257610197046426
+          ]
+        ]
+      }
+    }
+  }
+]
