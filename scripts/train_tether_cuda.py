@@ -94,6 +94,13 @@ try:
     next_eval=plan.get('eval_every_steps',65536)
     while trainer.global_step<config['total_timesteps'] and time.monotonic()-started<plan.get('budget_seconds',120):
         trainer.evaluate();trainer.train();publish(vec,'PufferLib training',trainer.global_step)
+        if plan.get('learner_diagnostics'):
+            # Public cached Puffer metrics; logging may refresh them less often
+            # than each update. Retain repeated rows rather than invent freshness.
+            with (out/'learner_diagnostics.jsonl').open('a') as stream:
+                stream.write(json.dumps(dict(step=trainer.global_step,
+                    cached_losses=dict(trainer.losses),
+                    log_std=policy.log_std.detach().cpu().tolist()))+'\n')
         (out/'status.json').write_text(json.dumps(dict(status='training',steps=trainer.global_step,elapsed=time.monotonic()-started)))
         if plan and trainer.global_step>=next_eval:
             value=measured();(out/('eval_'+str(trainer.global_step)+'.json')).write_text(json.dumps(value,indent=2))

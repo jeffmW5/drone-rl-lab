@@ -1,0 +1,31 @@
+{
+  "retrieved_at": "2026-10-12T10:29:09.774734+00:00",
+  "query": "PPO approximate KL explained variance diagnostics",
+  "paper_ids": [
+    "2005.12729",
+    "2006.05990"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=PPO+approximate+KL+explained+variance+diagnostics&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2005.12729",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2005.12729.md",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2006.05990",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2006.05990.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}

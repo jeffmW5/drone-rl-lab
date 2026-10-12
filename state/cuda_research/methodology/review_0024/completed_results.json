@@ -1,0 +1,386 @@
+[
+  {
+    "trial": 184,
+    "plan": {
+      "name": "cuda_auto_0184_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 90,
+      "eval_every_steps": 32768,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 25001,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Learned checkpoint179 warm start may improve consistency over original initial weights",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_condition": "warm_start_v1_0005",
+      "physics_version": 1,
+      "gae_lambda": 0.95,
+      "value_gradient_version": 1,
+      "methodology_trial": "warm_start_v1_25001_0005",
+      "methodology_review": "state/cuda_research/methodology/review_0023/review.md",
+      "training_region": null,
+      "max_grad_norm": 0.5
+    },
+    "best_step": 0,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 2076.275270088698
+    },
+    "last_drone_positions": [
+      [
+        -0.7404294646300108,
+        1.1469238081268134,
+        1.4399381097161545
+      ],
+      [
+        -0.6603659728602814,
+        1.476809246626255,
+        1.4361432572724562
+      ],
+      [
+        0.15862470988949928,
+        0.3150560717623747,
+        1.5935965591915828
+      ]
+    ]
+  },
+  {
+    "trial": 185,
+    "plan": {
+      "name": "cuda_auto_0185_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 90,
+      "eval_every_steps": 32768,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 25001,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Learned checkpoint179 warm start may improve consistency over original initial weights",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0179_takeoff/best.pt",
+      "methodology_condition": "warm_start_v1_0179",
+      "physics_version": 1,
+      "gae_lambda": 0.95,
+      "value_gradient_version": 1,
+      "methodology_trial": "warm_start_v1_25001_0179",
+      "methodology_review": "state/cuda_research/methodology/review_0023/review.md",
+      "training_region": null,
+      "max_grad_norm": 0.5
+    },
+    "best_step": 0,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 943.6146138120297
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1069.2153839330192
+    },
+    "last_drone_positions": [
+      [
+        -0.09279574097865988,
+        0.41582570830227517,
+        1.4907917494849947
+      ],
+      [
+        -0.04707160238144026,
+        0.582982005001619,
+        1.4915017561384862
+      ],
+      [
+        0.7583084962732302,
+        0.026401843655463345,
+        1.6398547652330413
+      ]
+    ]
+  },
+  {
+    "trial": 186,
+    "plan": {
+      "name": "cuda_auto_0186_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 90,
+      "eval_every_steps": 32768,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 25002,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Learned checkpoint179 warm start may improve consistency over original initial weights",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_condition": "warm_start_v1_0005",
+      "physics_version": 1,
+      "gae_lambda": 0.95,
+      "value_gradient_version": 1,
+      "methodology_trial": "warm_start_v1_25002_0005",
+      "methodology_review": "state/cuda_research/methodology/review_0023/review.md",
+      "training_region": null,
+      "max_grad_norm": 0.5
+    },
+    "best_step": 0,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 2396.694612583276
+    },
+    "last_drone_positions": [
+      [
+        0.15416824232884602,
+        -1.031379528546096,
+        1.4653898314278115
+      ],
+      [
+        0.23035802671641845,
+        -0.6851242863109293,
+        1.4571398954674144
+      ],
+      [
+        1.015816325256276,
+        -2.37242251839239,
+        1.635737369303436
+      ]
+    ]
+  },
+  {
+    "trial": 187,
+    "plan": {
+      "name": "cuda_auto_0187_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 90,
+      "eval_every_steps": 32768,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 25002,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Learned checkpoint179 warm start may improve consistency over original initial weights",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0179_takeoff/best.pt",
+      "methodology_condition": "warm_start_v1_0179",
+      "physics_version": 1,
+      "gae_lambda": 0.95,
+      "value_gradient_version": 1,
+      "methodology_trial": "warm_start_v1_25002_0179",
+      "methodology_review": "state/cuda_research/methodology/review_0023/review.md",
+      "training_region": null,
+      "max_grad_norm": 0.5
+    },
+    "best_step": 0,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 943.6146138120297
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 2363.1515209954973
+    },
+    "last_drone_positions": [
+      [
+        0.4048922011522556,
+        -1.1958659536169582,
+        1.45986372181477
+      ],
+      [
+        0.4177526737449342,
+        -1.002562970384078,
+        1.4610022985184221
+      ],
+      [
+        1.3068476630429433,
+        -2.0509263711447714,
+        1.6614185993191692
+      ]
+    ]
+  },
+  {
+    "trial": 188,
+    "plan": {
+      "name": "cuda_auto_0188_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 90,
+      "eval_every_steps": 32768,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 25003,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Learned checkpoint179 warm start may improve consistency over original initial weights",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_condition": "warm_start_v1_0005",
+      "physics_version": 1,
+      "gae_lambda": 0.95,
+      "value_gradient_version": 1,
+      "methodology_trial": "warm_start_v1_25003_0005",
+      "methodology_review": "state/cuda_research/methodology/review_0023/review.md",
+      "training_region": null,
+      "max_grad_norm": 0.5
+    },
+    "best_step": 0,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1766.839503276509
+    },
+    "last_drone_positions": [
+      [
+        0.46830033763515627,
+        -0.5522566698088872,
+        1.4456380178305837
+      ],
+      [
+        0.5570589172538986,
+        -0.16174020621569218,
+        1.4498388368403547
+      ],
+      [
+        1.3264260173138847,
+        -1.830885581498719,
+        1.6055839880462415
+      ]
+    ]
+  },
+  {
+    "trial": 189,
+    "plan": {
+      "name": "cuda_auto_0189_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 90,
+      "eval_every_steps": 32768,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 25003,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Learned checkpoint179 warm start may improve consistency over original initial weights",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0179_takeoff/best.pt",
+      "methodology_condition": "warm_start_v1_0179",
+      "physics_version": 1,
+      "gae_lambda": 0.95,
+      "value_gradient_version": 1,
+      "methodology_trial": "warm_start_v1_25003_0179",
+      "methodology_review": "state/cuda_research/methodology/review_0023/review.md",
+      "training_region": null,
+      "max_grad_norm": 0.5
+    },
+    "best_step": 0,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 943.6146138120297
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1977.6013590118985
+    },
+    "last_drone_positions": [
+      [
+        0.971801966109636,
+        -0.8403652010593697,
+        1.4567865185687996
+      ],
+      [
+        1.0251189324150487,
+        -0.7141879846938111,
+        1.4547858603812251
+      ],
+      [
+        1.761884799063755,
+        -1.3765593725418943,
+        1.6603289896606115
+      ]
+    ]
+  }
+]
