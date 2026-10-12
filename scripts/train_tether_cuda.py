@@ -109,6 +109,11 @@ try:
             (out/'value_return_probe_source.py').write_bytes(Path('tether_sim/value_return_probe.py').read_bytes())
             (out/('value_return_probe_'+stage+'.json')).write_text(json.dumps(probe(policy,plan,seeds,config['gamma']),indent=2))
     initial=measured();torch.save(policy.state_dict(),out/'initial.pt')
+    if plan.get('collective_response_probe_version',0):
+        if plan['collective_response_probe_version']!=1:raise ValueError('Unsupported collective response probe')
+        from tether_sim.collective_response_probe import probe as collective_probe
+        (out/'collective_response_probe_source.py').write_bytes(Path('tether_sim/collective_response_probe.py').read_bytes())
+        (out/'collective_response_probe.json').write_text(json.dumps(collective_probe(policy,plan),indent=2))
     if plan.get('compiled_dynamics_probe_version',0):
         if plan['compiled_dynamics_probe_version']!=1:raise ValueError('Unsupported dynamics probe')
         from tether_sim.cuda_dynamics_probe import probe as dynamics_probe

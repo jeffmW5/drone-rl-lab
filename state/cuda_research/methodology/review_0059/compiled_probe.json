@@ -1,0 +1,24 @@
+{
+  "status": "pass",
+  "free_fall_z_m": -9.81023200896658e-06,
+  "expected_free_fall_z_m": -9.810000000000001e-06,
+  "upward_velocity_delta_m_s": 0.0007140219773802223,
+  "positive_channel_angular_rates_rad_s": [
+    [
+      0.0008030308526940644,
+      0.0,
+      0.0
+    ],
+    [
+      -5.960465454535324e-10,
+      0.0008030308526940644,
+      0.0
+    ],
+    [
+      -5.960465454535324e-10,
+      0.0,
+      9.4105169409886e-05
+    ]
+  ],
+  "scope": "Existing compiled CUDA kernel, five isolated one-substep domains; not tether contact fidelity, long-horizon stability, calibration or hardware accuracy"
+}
