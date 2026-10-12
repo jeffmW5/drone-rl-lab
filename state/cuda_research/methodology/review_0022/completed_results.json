@@ -1,0 +1,476 @@
+[
+  {
+    "trial": 161,
+    "plan": {
+      "name": "cuda_auto_0161_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 23001,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Critic updates to shared actor features may cause policy drift",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_review": "state/cuda_research/methodology/review_0020/review.md",
+      "max_grad_norm": 0.5,
+      "gae_lambda": 0.95,
+      "gradient_diagnostics": true,
+      "value_gradient_version": 1,
+      "methodology_trial": "value_gradient_v1_23001_1",
+      "physics_version": 2,
+      "training_region": null,
+      "methodology_condition": "value_gradient_v1_1"
+    },
+    "selection": {
+      "best_step": 0,
+      "promoted": false,
+      "phase": "takeoff"
+    },
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 3130.8861289572574
+    },
+    "last_drone_positions": [
+      [
+        -1.4251686728174644,
+        -1.1714814749634395,
+        1.3889176018510496
+      ],
+      [
+        -1.1259867919135518,
+        -0.8324376059373201,
+        1.4053364647300808
+      ],
+      [
+        -1.2065409198816155,
+        -1.130603708001971,
+        1.5345237467531432
+      ]
+    ]
+  },
+  {
+    "trial": 162,
+    "plan": {
+      "name": "cuda_auto_0162_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 23001,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Critic updates to shared actor features may cause policy drift",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_review": "state/cuda_research/methodology/review_0020/review.md",
+      "max_grad_norm": 0.5,
+      "gae_lambda": 0.95,
+      "gradient_diagnostics": true,
+      "value_gradient_version": 2,
+      "methodology_trial": "value_gradient_v1_23001_2",
+      "physics_version": 2,
+      "training_region": null,
+      "methodology_condition": "value_gradient_v1_2"
+    },
+    "selection": {
+      "best_step": 0,
+      "promoted": false,
+      "phase": "takeoff"
+    },
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 9135.247433056646
+    },
+    "last_drone_positions": [
+      [
+        -0.8376933709420171,
+        -6.892968965748345,
+        0.4960053801790756
+      ],
+      [
+        -0.5915542400793001,
+        -6.354213052017967,
+        0.574832580522919
+      ],
+      [
+        -0.5597160149790686,
+        -6.996542784895738,
+        0.9193421733626076
+      ]
+    ]
+  },
+  {
+    "trial": 163,
+    "plan": {
+      "name": "cuda_auto_0163_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 23002,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Critic updates to shared actor features may cause policy drift",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_review": "state/cuda_research/methodology/review_0020/review.md",
+      "max_grad_norm": 0.5,
+      "gae_lambda": 0.95,
+      "gradient_diagnostics": true,
+      "value_gradient_version": 1,
+      "methodology_trial": "value_gradient_v1_23002_1",
+      "physics_version": 2,
+      "training_region": null,
+      "methodology_condition": "value_gradient_v1_1"
+    },
+    "selection": {
+      "best_step": 0,
+      "promoted": false,
+      "phase": "takeoff"
+    },
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 1,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 7428.781775916822
+    },
+    "last_drone_positions": [
+      [
+        7.18798221212635,
+        -0.160571553971223,
+        0.23127165705939193
+      ],
+      [
+        7.460737809400844,
+        0.03260017234764347,
+        0.16182289314857964
+      ],
+      [
+        7.474262178213688,
+        -1.4130730862055825,
+        0.5357458159413419
+      ]
+    ]
+  },
+  {
+    "trial": 164,
+    "plan": {
+      "name": "cuda_auto_0164_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 23002,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Critic updates to shared actor features may cause policy drift",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_review": "state/cuda_research/methodology/review_0020/review.md",
+      "max_grad_norm": 0.5,
+      "gae_lambda": 0.95,
+      "gradient_diagnostics": true,
+      "value_gradient_version": 2,
+      "methodology_trial": "value_gradient_v1_23002_2",
+      "physics_version": 2,
+      "training_region": null,
+      "methodology_condition": "value_gradient_v1_2"
+    },
+    "selection": {
+      "best_step": 0,
+      "promoted": false,
+      "phase": "takeoff"
+    },
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 6194.6688279319
+    },
+    "last_drone_positions": [
+      [
+        -0.36809749719233675,
+        4.675922993735147,
+        1.1763076257583458
+      ],
+      [
+        -0.3308533064848957,
+        5.128782587212701,
+        1.1704400455600945
+      ],
+      [
+        0.8159833192775564,
+        3.276555367065796,
+        1.3142155925199703
+      ]
+    ]
+  },
+  {
+    "trial": 165,
+    "plan": {
+      "name": "cuda_auto_0165_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 23003,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Critic updates to shared actor features may cause policy drift",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_review": "state/cuda_research/methodology/review_0020/review.md",
+      "max_grad_norm": 0.5,
+      "gae_lambda": 0.95,
+      "gradient_diagnostics": true,
+      "value_gradient_version": 1,
+      "methodology_trial": "value_gradient_v1_23003_1",
+      "physics_version": 2,
+      "training_region": null,
+      "methodology_condition": "value_gradient_v1_1"
+    },
+    "selection": {
+      "best_step": 0,
+      "promoted": false,
+      "phase": "takeoff"
+    },
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 4,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 6918.014082044188
+    },
+    "last_drone_positions": [
+      [
+        4.1380674181988555,
+        4.781874282593486,
+        0.9027815035860549
+      ],
+      [
+        4.3849804913847885,
+        4.9600201072831736,
+        0.8994760021365266
+      ],
+      [
+        4.646154413428304,
+        3.2323625494059316,
+        1.204321411417499
+      ]
+    ]
+  },
+  {
+    "trial": 166,
+    "plan": {
+      "name": "cuda_auto_0166_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 23003,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Critic updates to shared actor features may cause policy drift",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_review": "state/cuda_research/methodology/review_0020/review.md",
+      "max_grad_norm": 0.5,
+      "gae_lambda": 0.95,
+      "gradient_diagnostics": true,
+      "value_gradient_version": 2,
+      "methodology_trial": "value_gradient_v1_23003_2",
+      "physics_version": 2,
+      "training_region": null,
+      "methodology_condition": "value_gradient_v1_2"
+    },
+    "selection": {
+      "best_step": 0,
+      "promoted": false,
+      "phase": "takeoff"
+    },
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 5807.010292440714
+    },
+    "last_drone_positions": [
+      [
+        4.450938723259653,
+        -0.1708253373529235,
+        1.0863168464737418
+      ],
+      [
+        4.580752463585459,
+        0.04645404746229968,
+        1.1214427994117855
+      ],
+      [
+        5.011053184999267,
+        -0.9594572102388128,
+        1.3255032512577216
+      ]
+    ]
+  },
+  {
+    "trial": 167,
+    "plan": {
+      "name": "cuda_auto_0167_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 90,
+      "eval_every_steps": 32768,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 1167,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Learned collective and limited differential authority may improve attitude stability without PD feedback",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt"
+    },
+    "selection": {
+      "best_step": 65536,
+      "promoted": true,
+      "phase": "takeoff"
+    },
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1007.2637148002194
+    },
+    "last_drone_positions": [
+      [
+        0.25663267555129066,
+        0.5290792231325777,
+        1.4790486200582396
+      ],
+      [
+        0.33860626339957456,
+        0.8014434266641213,
+        1.4895232422407987
+      ],
+      [
+        1.1120471765461024,
+        -0.3020199057488885,
+        1.6431659073830858
+      ]
+    ]
+  }
+]
