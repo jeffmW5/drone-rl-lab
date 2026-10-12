@@ -35,8 +35,20 @@ def drone_velocity_cost(velocity, reward_version):
     return .05*velocity[:,0].square().sum(1) if reward_version==6 else torch.zeros_like(velocity[:,0,0])
 
 
+def training_starts(start,version,phase):
+    if version not in (1,2):raise ValueError('Unsupported training reset version')
+    if version==1:return start
+    if phase not in ('takeoff','hover'):raise ValueError('Mixed starts require takeoff/hover phase')
+    result=start.clone()
+    result[1::2,:,0]=start[1::2,-1,0,None]
+    result[1::2,:,1]=start[1::2,-1,1,None]
+    height=.2 if phase=='takeoff' else .6
+    result[1::2,:,2]=height+.6-torch.arange(14,device=start.device,dtype=start.dtype)*.6/13
+    return result
+
+
 class CudaVector:
-    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None,physics_version=1):
+    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None,physics_version=1,training_reset_version=1):
         self.direct=direct
         self.training_region=training_region
         self.control_version=control_version
@@ -56,6 +68,7 @@ class CudaVector:
         if direct:
             self.start.zero_();self.start[:,:,0]=torch.arange(14,device='cuda')*.6/13
             self.start[:,:,2]=.025;self.start[:,0,2]=.05
+            self.start=training_starts(self.start,training_reset_version,phase)
         self.allocation=torch.tensor([[1,1,1,1],[.032,.032,-.032,-.032],[-.032,.032,.032,-.032],[-.006,.006,-.006,.006]],device='cuda')
 
     def async_reset(self,seed=41):

@@ -35,6 +35,7 @@ def publish(vec,mode,step):
 
 def evaluate(policy,seed):
     vec=CudaVector(8,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),physics_version=plan.get('physics_version',1));vec.async_reset(seed);collisions=0;peak_height=torch.zeros(8,device='cuda');hold=torch.zeros(8,device='cuda');peak_hold=hold.clone();trajectory=[]
+    acquisition_hold=torch.zeros(8,device='cuda');peak_acquisition=acquisition_hold.clone()
     for step in range(plan.get('evaluation_steps',250)):
         with torch.no_grad():distribution,_=policy(vec.obs());action=distribution.mean.cpu().numpy()
         vec.send(action)
@@ -43,18 +44,21 @@ def evaluate(policy,seed):
         distance=torch.linalg.vector_norm(vec.sim.position[:,-1]-vec.goal,dim=1)
         stable=(distance<.1)&(torch.linalg.vector_norm(vec.sim.velocity[:,-1],dim=1)<.2)&~vec.done
         hold=torch.where(stable,hold+.02,0);peak_hold=torch.maximum(peak_hold,hold)
+        acquiring=(distance<.25)&(torch.linalg.vector_norm(vec.sim.velocity[:,-1],dim=1)<.5)&~vec.done
+        acquisition_hold=torch.where(acquiring,acquisition_hold+.02,0)
+        peak_acquisition=torch.maximum(peak_acquisition,acquisition_hold)
         if step%10==0:publish(vec,'deterministic evaluation',step)
         if plan and step%25==0:
             trajectory.append(dict(step=step,positions=vec.sim.position[0].cpu().tolist(),velocities=vec.sim.velocity[0].cpu().tolist(),orientation=vec.sim.orientation[0].cpu().tolist(),motors=vec.sim.motors[0].cpu().tolist(),terminal=bool(vec.done[0])))
     error=torch.linalg.vector_norm(vec.sim.position[:,-1]-vec.goal,dim=1)
     return dict(seed=seed,mean_final_error_mm=float(error.mean()*1000),errors_mm=(error*1000).tolist(),crashes=collisions,takeoffs=int((peak_height>.3).sum()),hover_successes=int((peak_hold>=1).sum()),peak_hover_hold_s=peak_hold.cpu().tolist(),peak_drone_height_m=peak_height.cpu().tolist(),
-      trajectory=trajectory,scope='Prototype evaluation; not original obstacle navigation or sustained1mm benchmark')
+      acquisition_successes=int((peak_acquisition>=.5).sum()),peak_acquisition_hold_s=peak_acquisition.cpu().tolist(),acquisition_criteria=dict(distance_m=.25,speed_m_s=.5,hold_s=.5),trajectory=trajectory,scope='Prototype evaluation; not original obstacle navigation or sustained1mm benchmark')
 
 trainer=None
 try:
     from pufferlib.pufferl import PuffeRL,ADVANTAGE_CUDA
     if not ADVANTAGE_CUDA:raise RuntimeError('CUDA advantage kernel required')
-    vec=CudaVector(128,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),training_region=plan.get('training_region'),physics_version=plan.get('physics_version',1));policy=CudaPolicy().cuda()
+    vec=CudaVector(128,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),training_region=plan.get('training_region'),physics_version=plan.get('physics_version',1),training_reset_version=plan.get('training_reset_version',1));policy=CudaPolicy().cuda()
     if args.direct and args.initial_throttle!=.5:
         with torch.no_grad():policy.actor.bias.fill_(2*args.initial_throttle-1);policy.log_std.fill_(-4.)
     if plan.get('control_version',1)==2:
@@ -92,7 +96,7 @@ try:
         cpu_rng=torch.get_rng_state();gpu_rng=torch.cuda.get_rng_state()
         try:values=[evaluate(policy,seed) for seed in seeds]
         finally:torch.set_rng_state(cpu_rng);torch.cuda.set_rng_state(gpu_rng)
-        return dict(runs=values,crashes=sum(v['crashes'] for v in values),takeoffs=sum(v['takeoffs'] for v in values),hover_successes=sum(v['hover_successes'] for v in values),mean_final_error_mm=float(np.mean([v['mean_final_error_mm'] for v in values]))) if plan else values[0]
+        return dict(runs=values,crashes=sum(v['crashes'] for v in values),takeoffs=sum(v['takeoffs'] for v in values),hover_successes=sum(v['hover_successes'] for v in values),acquisition_successes=sum(v['acquisition_successes'] for v in values),mean_final_error_mm=float(np.mean([v['mean_final_error_mm'] for v in values]))) if plan else values[0]
     initial=measured();torch.save(policy.state_dict(),out/'initial.pt')
     best=initial;best_step=0;torch.save(policy.state_dict(),out/'best.pt')
     def rank(value):return (value['crashes'],-value.get('hover_successes',0),-value['takeoffs'],value['mean_final_error_mm'])

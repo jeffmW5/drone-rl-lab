@@ -1,0 +1,45 @@
+{
+  "retrieved_at": "2026-10-12T09:50:12.324046-04:00",
+  "query": "reinforcement learning reset curriculum quadrotor initial state hover",
+  "paper_ids": [
+    "2311.13081",
+    "1707.05110"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=reinforcement+learning+reset+curriculum+quadrotor+initial+state+hover&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2311.13081",
+      "status": 200,
+      "file": "source_01.txt"
+    },
+    {
+      "url": "https://huggingface.co/papers/2311.13081.md",
+      "status": 200,
+      "file": "source_02.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/1707.05110",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/1707.05110.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ],
+  "original_methods": [
+    {
+      "version": "v2",
+      "sections": "IV",
+      "url": "https://arxiv.org/html/2311.13081v2"
+    },
+    {
+      "version": "v1",
+      "sections": "III-B/IV-B",
+      "url": "https://arxiv.org/html/1707.05110v1"
+    }
+  ]
+}
