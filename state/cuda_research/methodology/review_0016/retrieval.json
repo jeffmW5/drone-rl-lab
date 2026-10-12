@@ -1,0 +1,39 @@
+{
+  "retrieved_at": "2026-10-12T07:49:26.799502+00:00",
+  "query": "quadrotor staged stabilization position reward curriculum",
+  "paper_ids": [
+    "2311.13081",
+    "2501.18490"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=quadrotor+staged+stabilization+position+reward+curriculum&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2311.13081",
+      "status": 200,
+      "file": "source_01.txt"
+    },
+    {
+      "url": "https://huggingface.co/papers/2311.13081.md",
+      "status": 200,
+      "file": "source_02.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2501.18490",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2501.18490.md",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://arxiv.org/html/2501.18490",
+      "status": 200,
+      "file": "source_arxiv_2501.18490.html",
+      "version": "v1"
+    }
+  ]
+}

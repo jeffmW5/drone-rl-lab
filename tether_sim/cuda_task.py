@@ -10,6 +10,14 @@ def bounded_reward(reward):
     return reward/(1+reward.abs())
 
 
+def position_reward_error(positions, goal, reward_version):
+    if reward_version == 4:
+        target = goal.clone()
+        target[:, 2] += .6
+        return torch.linalg.vector_norm(positions[:, 0] - target, dim=1)
+    return torch.linalg.vector_norm(positions[:, -1] - goal, dim=1)
+
+
 def configure_exploration(policy, log_std):
     if log_std is None:return
     if not np.isfinite(log_std) or not -6<=log_std<=0:
@@ -89,10 +97,11 @@ class CudaVector:
         self.reward=(-error-.02*residual.square().sum(1)).float()
         if self.direct:
             self.reward=(20*(self.previous_error-error)-.2*error-.002*s.orientation[:,4:].square().sum(1)-5*(s.failed!=0)).float()
-            if self.reward_version in (2,3):
+            if self.reward_version in (2,3,4):
                 speed=s.velocity[:,-1].square().sum(1)
                 upright=1-2*(s.orientation[:,1:3].square().sum(1))
-                self.reward=(.8*torch.exp(-4*error.square())+.2*upright-
+                reward_error=position_reward_error(s.position,self.goal,self.reward_version)
+                self.reward=(.8*torch.exp(-4*reward_error.square())+.2*upright-
                   .15*speed-.002*s.orientation[:,4:].square().sum(1)-
                   .8*(s.position[:,0,2]<.15)-5*(s.failed!=0)).float()
                 if self.reward_version==3:self.reward=bounded_reward(self.reward)

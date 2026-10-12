@@ -1,0 +1,554 @@
+[
+  {
+    "trial": 125,
+    "plan": {
+      "name": "cuda_auto_0125_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 20001,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Higher GAE lambda may improve delayed motor credit within unchanged 32-step rollout",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "training_region": null,
+      "gae_lambda": 0.95,
+      "methodology_trial": "gae_lambda_v1_20001_0.95",
+      "methodology_condition": "gae_lambda_v1_0.95",
+      "physics_version": 2,
+      "gradient_diagnostics": true,
+      "methodology_review": "state/cuda_research/methodology/review_0014/review.md",
+      "max_grad_norm": 0.5
+    },
+    "best_step": 0,
+    "checkpoints": {
+      "result.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8829.353308911188,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      },
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8680.526838987016,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8482.685941462905,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8829.353308911188,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8779.225019297806,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      }
+    }
+  },
+  {
+    "trial": 126,
+    "plan": {
+      "name": "cuda_auto_0126_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 20001,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Higher GAE lambda may improve delayed motor credit within unchanged 32-step rollout",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "training_region": null,
+      "gae_lambda": 0.99,
+      "methodology_trial": "gae_lambda_v1_20001_0.99",
+      "methodology_condition": "gae_lambda_v1_0.99",
+      "physics_version": 2,
+      "gradient_diagnostics": true,
+      "methodology_review": "state/cuda_research/methodology/review_0014/review.md",
+      "max_grad_norm": 0.5
+    },
+    "best_step": 0,
+    "checkpoints": {
+      "result.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8228.228194410774,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      },
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8213.783517812411,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8301.010447202192,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8228.228194410774,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8589.6681855356,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      }
+    }
+  },
+  {
+    "trial": 127,
+    "plan": {
+      "name": "cuda_auto_0127_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 20002,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Higher GAE lambda may improve delayed motor credit within unchanged 32-step rollout",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "training_region": null,
+      "gae_lambda": 0.95,
+      "methodology_trial": "gae_lambda_v1_20002_0.95",
+      "methodology_condition": "gae_lambda_v1_0.95",
+      "physics_version": 2,
+      "gradient_diagnostics": true,
+      "methodology_review": "state/cuda_research/methodology/review_0014/review.md",
+      "max_grad_norm": 0.5
+    },
+    "best_step": 0,
+    "checkpoints": {
+      "result.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 11188.20714899243,
+        "last_saved_drone_z": [
+          0.18414915089913145,
+          0.23636691354726977,
+          0.43625141629573877
+        ]
+      },
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 10806.19560394121,
+        "last_saved_drone_z": [
+          0.2842302970635719,
+          0.4011644037438903,
+          0.28992085698601777
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 11518.238706593902,
+        "last_saved_drone_z": [
+          0.2004850719565417,
+          0.2797236911183447,
+          0.3648305172072504
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 11188.20714899243,
+        "last_saved_drone_z": [
+          0.18414915089913145,
+          0.23636691354726977,
+          0.43625141629573877
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 9572.184024197015,
+        "last_saved_drone_z": [
+          0.16681361636899592,
+          0.2778927817153746,
+          0.11096723234168046
+        ]
+      }
+    }
+  },
+  {
+    "trial": 128,
+    "plan": {
+      "name": "cuda_auto_0128_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 20002,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Higher GAE lambda may improve delayed motor credit within unchanged 32-step rollout",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "training_region": null,
+      "gae_lambda": 0.99,
+      "methodology_trial": "gae_lambda_v1_20002_0.99",
+      "methodology_condition": "gae_lambda_v1_0.99",
+      "physics_version": 2,
+      "gradient_diagnostics": true,
+      "methodology_review": "state/cuda_research/methodology/review_0014/review.md",
+      "max_grad_norm": 0.5
+    },
+    "best_step": 0,
+    "checkpoints": {
+      "result.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 7811.624315722463,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      },
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8495.509398262535,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8267.913055764013,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 7811.624315722463,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8901.396862261498,
+        "last_saved_drone_z": [
+          0.05000000074505806,
+          0.05000000074505806,
+          0.05000000074505806
+        ]
+      }
+    }
+  },
+  {
+    "trial": 129,
+    "plan": {
+      "name": "cuda_auto_0129_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 20003,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Higher GAE lambda may improve delayed motor credit within unchanged 32-step rollout",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "training_region": null,
+      "gae_lambda": 0.95,
+      "methodology_trial": "gae_lambda_v1_20003_0.95",
+      "methodology_condition": "gae_lambda_v1_0.95",
+      "physics_version": 2,
+      "gradient_diagnostics": true,
+      "methodology_review": "state/cuda_research/methodology/review_0014/review.md",
+      "max_grad_norm": 0.5
+    },
+    "best_step": 0,
+    "checkpoints": {
+      "result.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 3845.7801532718895,
+        "last_saved_drone_z": [
+          1.4526266189876558,
+          1.451018246419358,
+          1.6655487437831917
+        ]
+      },
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 3111.4297555964185,
+        "last_saved_drone_z": [
+          1.4208609897087066,
+          1.4203036730294156,
+          1.5305508168995734
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 3729.0528845620393,
+        "last_saved_drone_z": [
+          1.3387353961212511,
+          1.2245244515629996,
+          1.640195490016382
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 3845.7801532718895,
+        "last_saved_drone_z": [
+          1.4526266189876558,
+          1.451018246419358,
+          1.6655487437831917
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 4834.94127136219,
+        "last_saved_drone_z": [
+          1.366904484841838,
+          1.4028606691532206,
+          1.4982402423798131
+        ]
+      }
+    }
+  },
+  {
+    "trial": 130,
+    "plan": {
+      "name": "cuda_auto_0130_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 20003,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Higher GAE lambda may improve delayed motor credit within unchanged 32-step rollout",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "training_region": null,
+      "gae_lambda": 0.99,
+      "methodology_trial": "gae_lambda_v1_20003_0.99",
+      "methodology_condition": "gae_lambda_v1_0.99",
+      "physics_version": 2,
+      "gradient_diagnostics": true,
+      "methodology_review": "state/cuda_research/methodology/review_0014/review.md",
+      "max_grad_norm": 0.5
+    },
+    "best_step": 0,
+    "checkpoints": {
+      "result.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 4383.86701124352,
+        "last_saved_drone_z": [
+          1.4173635994166633,
+          1.3300720516593023,
+          1.7684898032533158
+        ]
+      },
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 3238.849748925609,
+        "last_saved_drone_z": [
+          1.5016298301251894,
+          1.4872789164387357,
+          1.670692122451928
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 4055.9541637281595,
+        "last_saved_drone_z": [
+          1.3862180508745086,
+          1.26949899469448,
+          1.7444251003139601
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 4383.86701124352,
+        "last_saved_drone_z": [
+          1.4173635994166633,
+          1.3300720516593023,
+          1.7684898032533158
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 4117.193751047159,
+        "last_saved_drone_z": [
+          1.4643470116593142,
+          1.4731697391539766,
+          1.6442174177687747
+        ]
+      }
+    }
+  }
+]
