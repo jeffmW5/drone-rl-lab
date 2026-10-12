@@ -1,0 +1,802 @@
+[
+  {
+    "trial": "cuda_auto_0253_takeoff",
+    "plan": {
+      "name": "cuda_auto_0253_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 180,
+      "eval_every_steps": 16384,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.61,
+      "seed": 30001,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Fixed physical input scales with equivalent initial function may improve optimizer conditioning",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0242_takeoff/best.pt",
+      "methodology_trial": "input_conditioning_v1_30001_1",
+      "methodology_condition": "input_conditioning_v1_1",
+      "methodology_review": "state/cuda_research/methodology/review_0030/review.md",
+      "input_conditioning_version": 1,
+      "physics_version": 1,
+      "value_gradient_version": 1,
+      "batch_size": 4096,
+      "bptt_horizon": 32,
+      "gae_lambda": 0.95,
+      "max_grad_norm": 0.5,
+      "vf_clip_coef": 0.2,
+      "training_region": null,
+      "learner_diagnostics": true
+    },
+    "steps": 65536,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 822.2180538658141
+    },
+    "best": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 810.7784211018898
+    },
+    "best_step": 65536,
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 810.7784211018898
+    },
+    "trajectories": [
+      {
+        "seed": 51011,
+        "last_drone": [
+          0.5686754091695848,
+          0.08432124241383532,
+          1.411003885575649
+        ],
+        "last_payload": [
+          0.24923961747915635,
+          0.13988987862144786,
+          0.9062816591347973
+        ],
+        "peak_heights": [
+          1.4199169874191284,
+          1.4202566146850586,
+          1.4541321992874146,
+          1.425754427909851,
+          1.4510244131088257,
+          1.6544872522354126,
+          1.4072022438049316,
+          1.4524325132369995
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "seed": 51012,
+        "last_drone": [
+          0.597218242454521,
+          0.14753730139923923,
+          1.406742723966828
+        ],
+        "last_payload": [
+          0.2874045439662132,
+          0.24350073181353854,
+          0.9021161933469265
+        ],
+        "peak_heights": [
+          1.4178476333618164,
+          1.4684183597564697,
+          1.5268168449401855,
+          1.4185887575149536,
+          1.4551537036895752,
+          1.5302151441574097,
+          1.5326282978057861,
+          1.540479302406311
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "seed": 51013,
+        "last_drone": [
+          1.3659761365016325,
+          -0.10592116222537212,
+          1.6027025649568778
+        ],
+        "last_payload": [
+          1.0344215862467692,
+          -0.19170647530052903,
+          1.1105499847523184
+        ],
+        "peak_heights": [
+          1.6185705661773682,
+          1.4733953475952148,
+          1.4324580430984497,
+          1.5986515283584595,
+          1.4185969829559326,
+          1.6242488622665405,
+          1.6578232049942017,
+          1.4201710224151611
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ]
+  },
+  {
+    "trial": "cuda_auto_0254_takeoff",
+    "plan": {
+      "name": "cuda_auto_0254_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 180,
+      "eval_every_steps": 16384,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.61,
+      "seed": 30001,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Fixed physical input scales with equivalent initial function may improve optimizer conditioning",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0242_takeoff/best.pt",
+      "methodology_trial": "input_conditioning_v1_30001_2",
+      "methodology_condition": "input_conditioning_v1_2",
+      "methodology_review": "state/cuda_research/methodology/review_0030/review.md",
+      "input_conditioning_version": 2,
+      "physics_version": 1,
+      "value_gradient_version": 1,
+      "batch_size": 4096,
+      "bptt_horizon": 32,
+      "gae_lambda": 0.95,
+      "max_grad_norm": 0.5,
+      "vf_clip_coef": 0.2,
+      "training_region": null,
+      "learner_diagnostics": true
+    },
+    "steps": 65536,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 822.2179402244333
+    },
+    "best": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 783.6540609055868
+    },
+    "best_step": 65536,
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 783.6540609055868
+    },
+    "trajectories": [
+      {
+        "seed": 51011,
+        "last_drone": [
+          0.5198876114981882,
+          0.1799820674711756,
+          1.4100717126446372
+        ],
+        "last_payload": [
+          0.2030998196109797,
+          0.23543855388026397,
+          0.9036667628073528
+        ],
+        "peak_heights": [
+          1.4186019897460938,
+          1.4230446815490723,
+          1.4533700942993164,
+          1.423596978187561,
+          1.4381096363067627,
+          1.6520336866378784,
+          1.4078171253204346,
+          1.4624115228652954
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "seed": 51012,
+        "last_drone": [
+          0.5437522439768876,
+          0.24245957390429992,
+          1.4165840709723077
+        ],
+        "last_payload": [
+          0.23768898155048168,
+          0.33808288719184343,
+          0.909650593679297
+        ],
+        "peak_heights": [
+          1.4267325401306152,
+          1.466539740562439,
+          1.5332523584365845,
+          1.405026912689209,
+          1.4512180089950562,
+          1.5143928527832031,
+          1.5349146127700806,
+          1.5446094274520874
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "seed": 51013,
+        "last_drone": [
+          1.3148903285254123,
+          -0.017965182068821264,
+          1.6009873778509278
+        ],
+        "last_payload": [
+          0.984793159500713,
+          -0.10323880060948457,
+          1.1077697892997225
+        ],
+        "peak_heights": [
+          1.6158995628356934,
+          1.4676854610443115,
+          1.4333345890045166,
+          1.6000244617462158,
+          1.4187575578689575,
+          1.625205397605896,
+          1.6571763753890991,
+          1.4024689197540283
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ]
+  },
+  {
+    "trial": "cuda_auto_0255_takeoff",
+    "plan": {
+      "name": "cuda_auto_0255_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 180,
+      "eval_every_steps": 16384,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.61,
+      "seed": 30002,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Fixed physical input scales with equivalent initial function may improve optimizer conditioning",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0242_takeoff/best.pt",
+      "methodology_trial": "input_conditioning_v1_30002_1",
+      "methodology_condition": "input_conditioning_v1_1",
+      "methodology_review": "state/cuda_research/methodology/review_0030/review.md",
+      "input_conditioning_version": 1,
+      "physics_version": 1,
+      "value_gradient_version": 1,
+      "batch_size": 4096,
+      "bptt_horizon": 32,
+      "gae_lambda": 0.95,
+      "max_grad_norm": 0.5,
+      "vf_clip_coef": 0.2,
+      "training_region": null,
+      "learner_diagnostics": true
+    },
+    "steps": 65536,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 822.2180538658141
+    },
+    "best": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 822.2180538658141
+    },
+    "best_step": 0,
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 2639.6281950416374
+    },
+    "trajectories": [
+      {
+        "seed": 51011,
+        "last_drone": [
+          0.12002956703182678,
+          -1.7498202297252474,
+          1.3661855839747783
+        ],
+        "last_payload": [
+          -0.19424724075481192,
+          -1.681383484448204,
+          0.8596832181518288
+        ],
+        "peak_heights": [
+          1.3881564140319824,
+          1.4432703256607056,
+          1.4680310487747192,
+          1.4526667594909668,
+          1.4666764736175537,
+          1.688298225402832,
+          1.44903564453125,
+          1.4044461250305176
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "seed": 51012,
+        "last_drone": [
+          0.13530138463836347,
+          -1.7215676482917797,
+          1.3458418297096135
+        ],
+        "last_payload": [
+          -0.17183800934442914,
+          -1.610617677313921,
+          0.8426559002509989
+        ],
+        "peak_heights": [
+          1.3790879249572754,
+          1.5014442205429077,
+          1.4986828565597534,
+          1.437652826309204,
+          1.4781386852264404,
+          1.4927351474761963,
+          1.5304267406463623,
+          1.5101938247680664
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "seed": 51013,
+        "last_drone": [
+          0.8630215403254663,
+          -1.9417462444007798,
+          1.6346432420707442
+        ],
+        "last_payload": [
+          0.5321720860114924,
+          -2.016702255757518,
+          1.1402134316931558
+        ],
+        "peak_heights": [
+          1.6601788997650146,
+          1.4555171728134155,
+          1.3976835012435913,
+          1.5508472919464111,
+          1.4369994401931763,
+          1.5788909196853638,
+          1.624868392944336,
+          1.4111006259918213
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ]
+  },
+  {
+    "trial": "cuda_auto_0256_takeoff",
+    "plan": {
+      "name": "cuda_auto_0256_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 180,
+      "eval_every_steps": 16384,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 30002,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Fixed physical input scales with equivalent initial function may improve optimizer conditioning",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0242_takeoff/best.pt",
+      "methodology_trial": "input_conditioning_v1_30002_2",
+      "methodology_condition": "input_conditioning_v1_2",
+      "methodology_review": "state/cuda_research/methodology/review_0030/review.md",
+      "input_conditioning_version": 2,
+      "physics_version": 1,
+      "value_gradient_version": 1,
+      "batch_size": 4096,
+      "bptt_horizon": 32,
+      "gae_lambda": 0.95,
+      "max_grad_norm": 0.5,
+      "vf_clip_coef": 0.2,
+      "training_region": null,
+      "learner_diagnostics": true
+    },
+    "steps": 65536,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 822.2179402244333
+    },
+    "best": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 822.2179402244333
+    },
+    "best_step": 0,
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 2669.7442760151903
+    },
+    "trajectories": [
+      {
+        "seed": 51011,
+        "last_drone": [
+          0.13749770508828812,
+          -1.7814294702774305,
+          1.3783163146613069
+        ],
+        "last_payload": [
+          -0.17633613803809786,
+          -1.7125526340633708,
+          0.8717148267424858
+        ],
+        "peak_heights": [
+          1.4002432823181152,
+          1.4414362907409668,
+          1.4627423286437988,
+          1.4476559162139893,
+          1.4535911083221436,
+          1.6861944198608398,
+          1.4394205808639526,
+          1.4025330543518066
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "seed": 51012,
+        "last_drone": [
+          0.16925064361942982,
+          -1.7493698773627764,
+          1.3412046215632172
+        ],
+        "last_payload": [
+          -0.13861224290529262,
+          -1.6383185703907812,
+          0.8384728355905409
+        ],
+        "peak_heights": [
+          1.3752416372299194,
+          1.5057575702667236,
+          1.4996132850646973,
+          1.4358240365982056,
+          1.4757581949234009,
+          1.4885456562042236,
+          1.520806908607483,
+          1.5078829526901245
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "seed": 51013,
+        "last_drone": [
+          0.8830114207049123,
+          -1.9677558924452296,
+          1.6327747547575484
+        ],
+        "last_payload": [
+          0.5521951774024745,
+          -2.0427894356953797,
+          1.1383351910309407
+        ],
+        "peak_heights": [
+          1.6579277515411377,
+          1.4536164999008179,
+          1.406913161277771,
+          1.5497093200683594,
+          1.4410932064056396,
+          1.5769654512405396,
+          1.6229113340377808,
+          1.4091607332229614
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ]
+  },
+  {
+    "trial": "cuda_auto_0257_takeoff",
+    "plan": {
+      "name": "cuda_auto_0257_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 65536,
+      "budget_seconds": 180,
+      "eval_every_steps": 16384,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.6,
+      "seed": 30003,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Fixed physical input scales with equivalent initial function may improve optimizer conditioning",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0242_takeoff/best.pt",
+      "methodology_trial": "input_conditioning_v1_30003_1",
+      "methodology_condition": "input_conditioning_v1_1",
+      "methodology_review": "state/cuda_research/methodology/review_0030/review.md",
+      "input_conditioning_version": 1,
+      "physics_version": 1,
+      "value_gradient_version": 1,
+      "batch_size": 4096,
+      "bptt_horizon": 32,
+      "gae_lambda": 0.95,
+      "max_grad_norm": 0.5,
+      "vf_clip_coef": 0.2,
+      "training_region": null,
+      "learner_diagnostics": true
+    },
+    "steps": 65536,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 822.2180538658141
+    },
+    "best": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 822.2180538658141
+    },
+    "best_step": 0,
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1024.8568816269892
+    },
+    "trajectories": [
+      {
+        "seed": 51011,
+        "last_drone": [
+          0.8035045723729125,
+          0.22662679407158215,
+          1.4283454604301118
+        ],
+        "last_payload": [
+          0.4934462136186697,
+          0.2870617444449749,
+          0.9182072690412958
+        ],
+        "peak_heights": [
+          1.4342103004455566,
+          1.450095534324646,
+          1.4916069507598877,
+          1.4448879957199097,
+          1.4847227334976196,
+          1.6830694675445557,
+          1.42910635471344,
+          1.4739749431610107
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "seed": 51012,
+        "last_drone": [
+          0.7047684534854478,
+          0.24276785655659888,
+          1.4379697767443702
+        ],
+        "last_payload": [
+          0.41151663218841966,
+          0.3465759816972608,
+          0.9250517264120702
+        ],
+        "peak_heights": [
+          1.445784568786621,
+          1.4975014925003052,
+          1.5748056173324585,
+          1.4407262802124023,
+          1.4758113622665405,
+          1.569783091545105,
+          1.583275556564331,
+          1.5811814069747925
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "seed": 51013,
+        "last_drone": [
+          1.7601293653899082,
+          0.1474211258626292,
+          1.6261968024740663
+        ],
+        "last_payload": [
+          1.4343516463466421,
+          0.05904456788632985,
+          1.1306784344874672
+        ],
+        "peak_heights": [
+          1.6435469388961792,
+          1.5089120864868164,
+          1.4541950225830078,
+          1.6330419778823853,
+          1.4585744142532349,
+          1.6536985635757446,
+          1.696034550666809,
+          1.4361162185668945
+        ],
+        "holds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ]
+  }
+]
