@@ -137,6 +137,9 @@ class CudaPolicy(torch.nn.Module):
         self.actor=torch.nn.Linear(128,4);self.value=torch.nn.Linear(128,1)
         torch.nn.init.zeros_(self.actor.weight);torch.nn.init.zeros_(self.actor.bias)
         self.log_std=torch.nn.Parameter(torch.full((4,),-2.))
+        self.value_gradient_version=1
     def forward(self,obs,state=None):
-        h=self.body(obs);return torch.distributions.Normal(self.actor(h),self.log_std.exp()),self.value(h)
+        h=self.body(obs)
+        value_h=h.detach() if self.value_gradient_version==2 else h
+        return torch.distributions.Normal(self.actor(h),self.log_std.exp()),self.value(value_h)
     def forward_eval(self,obs,state=None):return self.forward(obs,state)
