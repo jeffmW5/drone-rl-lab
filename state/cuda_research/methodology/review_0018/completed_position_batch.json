@@ -1,0 +1,776 @@
+[
+  {
+    "trial": 136,
+    "best_step": 0,
+    "plan": {
+      "name": "cuda_auto_0136_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 21001,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Drone-position shaping may simplify early stabilization with tether dynamics preserved",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_condition": "position_target_v1_reward2",
+      "physics_version": 2,
+      "max_grad_norm": 0.5,
+      "methodology_review": "state/cuda_research/methodology/review_0016/review.md",
+      "training_region": null,
+      "gradient_diagnostics": true,
+      "methodology_trial": "position_target_v1_21001_2",
+      "gae_lambda": 0.95
+    },
+    "evaluations": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5410.680323462591,
+        "last_saved_drone_positions": [
+          [
+            -1.930415809878005,
+            -1.6331723498242725,
+            1.3144319213135411
+          ],
+          [
+            -1.2146125664353173,
+            -1.0208432864401011,
+            1.3658656619187264
+          ],
+          [
+            -3.4937597143928283,
+            -3.220254406396435,
+            1.1176245184447546
+          ]
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2079.7337994205977,
+        "last_saved_drone_positions": [
+          [
+            1.419965926170259,
+            0.8953608020551961,
+            1.3591995363155536
+          ],
+          [
+            2.0473548006634354,
+            1.4412820212487114,
+            1.2918854363389358
+          ],
+          [
+            -0.3135673948002951,
+            0.11873453065135832,
+            1.6154733056918318
+          ]
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 2,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 3397.7131118661396,
+        "last_saved_drone_positions": [
+          [
+            1.7732000552050575,
+            2.3875769931625554,
+            1.1243602959987669
+          ],
+          [
+            0.02453123824293568,
+            0.04413613135084728,
+            0.3887933336679297
+          ],
+          [
+            0.0032176225277159663,
+            1.9324578641368482,
+            1.4229027273780557
+          ]
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 6440.107871464225,
+        "last_saved_drone_positions": [
+          [
+            -3.9578538858484236,
+            1.2044150957795112,
+            1.2548738654768874
+          ],
+          [
+            -3.6191481606387663,
+            1.5464964560263792,
+            1.2873493742319193
+          ],
+          [
+            -4.027738152280509,
+            0.5421834502251295,
+            1.2465595622281251
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "trial": 137,
+    "best_step": 0,
+    "plan": {
+      "name": "cuda_auto_0137_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 4,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 21001,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Drone-position shaping may simplify early stabilization with tether dynamics preserved",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_condition": "position_target_v1_reward4",
+      "physics_version": 2,
+      "max_grad_norm": 0.5,
+      "methodology_review": "state/cuda_research/methodology/review_0016/review.md",
+      "training_region": null,
+      "gradient_diagnostics": true,
+      "methodology_trial": "position_target_v1_21001_4",
+      "gae_lambda": 0.95
+    },
+    "evaluations": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2752.504711354724,
+        "last_saved_drone_positions": [
+          [
+            0.9851719500808185,
+            -1.1657593450481205,
+            1.4724193030273547
+          ],
+          [
+            1.2692693579802963,
+            -0.6934114188384781,
+            1.4836280835128512
+          ],
+          [
+            1.41924581215019,
+            -2.3798993533884847,
+            1.6441520729537287
+          ]
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 9513.297137787577,
+        "last_saved_drone_positions": [
+          [
+            -5.237653279969834,
+            4.323551575360874,
+            0.6742937392471308
+          ],
+          [
+            -4.831285131271028,
+            4.903479846384819,
+            0.7031103037819203
+          ],
+          [
+            -4.835690171314753,
+            2.9943095846378993,
+            0.7792089716027438
+          ]
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 9754.28269348255,
+        "last_saved_drone_positions": [
+          [
+            -5.311297715095907,
+            6.77007282029004,
+            0.25212236719562103
+          ],
+          [
+            -5.046537978255973,
+            7.227586726514728,
+            0.2874783429611713
+          ],
+          [
+            -4.595915485684919,
+            5.658543051219606,
+            0.3862930017370295
+          ]
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5015.891138368723,
+        "last_saved_drone_positions": [
+          [
+            0.04998670470596549,
+            -3.102455926501692,
+            1.4204031152988985
+          ],
+          [
+            0.22624626930621483,
+            -2.7205084821501897,
+            1.4413102654373644
+          ],
+          [
+            0.6729598933312679,
+            -4.139484864039676,
+            1.6065878790784016
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "trial": 138,
+    "best_step": 0,
+    "plan": {
+      "name": "cuda_auto_0138_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 21002,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Drone-position shaping may simplify early stabilization with tether dynamics preserved",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_condition": "position_target_v1_reward2",
+      "physics_version": 2,
+      "max_grad_norm": 0.5,
+      "methodology_review": "state/cuda_research/methodology/review_0016/review.md",
+      "training_region": null,
+      "gradient_diagnostics": true,
+      "methodology_trial": "position_target_v1_21002_2",
+      "gae_lambda": 0.95
+    },
+    "evaluations": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 9355.354050202362,
+        "last_saved_drone_positions": [
+          [
+            1.1788796983487626,
+            -7.0301515151114815,
+            0.4174088366697116
+          ],
+          [
+            1.4787575280432932,
+            -6.675335530606515,
+            0.4174347655520843
+          ],
+          [
+            1.705801415306341,
+            -7.953383399254904,
+            0.6821347270060141
+          ]
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 10188.195567320772,
+        "last_saved_drone_positions": [
+          [
+            0.2524440742503061,
+            -7.827693110180331,
+            0.43315813562601774
+          ],
+          [
+            0.45299505979808646,
+            -7.653868958744709,
+            0.3795556479278289
+          ],
+          [
+            0.8621426462145108,
+            -7.998443770422758,
+            0.9156572572783789
+          ]
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 10314.457953500896,
+        "last_saved_drone_positions": [
+          [
+            0.1526246405328721,
+            -9.460997779811871,
+            0.05000000074505806
+          ],
+          [
+            0.49010931648942196,
+            -9.091858869946638,
+            0.05000000074505806
+          ],
+          [
+            0.11153396052835332,
+            -9.999135395680351,
+            0.44865743388197993
+          ]
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8663.625309969877,
+        "last_saved_drone_positions": [
+          [
+            0.7791742359344505,
+            -6.000356186201313,
+            0.6243385839399695
+          ],
+          [
+            1.0402179959878581,
+            -5.601818361657281,
+            0.6518823141082493
+          ],
+          [
+            1.16721888089674,
+            -6.973045432495503,
+            0.856635280925914
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "trial": 139,
+    "best_step": 0,
+    "plan": {
+      "name": "cuda_auto_0139_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 4,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 21002,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Drone-position shaping may simplify early stabilization with tether dynamics preserved",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_condition": "position_target_v1_reward4",
+      "physics_version": 2,
+      "max_grad_norm": 0.5,
+      "methodology_review": "state/cuda_research/methodology/review_0016/review.md",
+      "training_region": null,
+      "gradient_diagnostics": true,
+      "methodology_trial": "position_target_v1_21002_4",
+      "gae_lambda": 0.95
+    },
+    "evaluations": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 3666.0857303111225,
+        "last_saved_drone_positions": [
+          [
+            2.642024001961789,
+            0.9140763599393256,
+            1.2750498422009677
+          ],
+          [
+            2.9853571086761956,
+            1.3412616131369317,
+            1.2652645110361498
+          ],
+          [
+            3.110850039769808,
+            -0.627422180758028,
+            1.5032418922250712
+          ]
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2858.906713153678,
+        "last_saved_drone_positions": [
+          [
+            -0.7482089421832091,
+            -0.7671732645356754,
+            1.2497033058977194
+          ],
+          [
+            -0.4484176540429748,
+            -0.15555199128080696,
+            1.28107877210297
+          ],
+          [
+            -0.32374002727449525,
+            -2.727253931435214,
+            1.357433293880476
+          ]
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1611.2505018688528,
+        "last_saved_drone_positions": [
+          [
+            0.9754658172198524,
+            0.31573729606036893,
+            1.328107049686231
+          ],
+          [
+            1.3411119049927127,
+            0.9198459526474946,
+            1.3239789467902405
+          ],
+          [
+            0.6290399859253845,
+            -1.2091529553252873,
+            1.5333464137846358
+          ]
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2611.5481569923945,
+        "last_saved_drone_positions": [
+          [
+            1.9237516789528506,
+            0.8942769376788672,
+            1.4092139284221707
+          ],
+          [
+            2.105494063041116,
+            1.323423672039065,
+            1.4136837277649414
+          ],
+          [
+            2.434425308225144,
+            -0.25678420464555335,
+            1.6207314609982881
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "trial": 140,
+    "best_step": 0,
+    "plan": {
+      "name": "cuda_auto_0140_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 2,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 21003,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Drone-position shaping may simplify early stabilization with tether dynamics preserved",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_condition": "position_target_v1_reward2",
+      "physics_version": 2,
+      "max_grad_norm": 0.5,
+      "methodology_review": "state/cuda_research/methodology/review_0016/review.md",
+      "training_region": null,
+      "gradient_diagnostics": true,
+      "methodology_trial": "position_target_v1_21003_2",
+      "gae_lambda": 0.95
+    },
+    "evaluations": {
+      "eval_131072.json": {
+        "crashes": 12,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 6037.34816968183,
+        "last_saved_drone_positions": [
+          [
+            8.031281876603389,
+            4.289150028281929,
+            0.06108362073236843
+          ],
+          [
+            0.1622095400954314,
+            0.10393646389789252,
+            0.6369660211218029
+          ],
+          [
+            9.500672463004616,
+            3.3824120683316057,
+            0.05000000074505806
+          ]
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 13,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 7168.027460949419,
+        "last_saved_drone_positions": [
+          [
+            8.706128546969559,
+            5.112177038768578,
+            0.05067164822695672
+          ],
+          [
+            0.2363114153108208,
+            0.13319967546696712,
+            0.697278373694077
+          ],
+          [
+            9.35097734889393,
+            4.27595294063354,
+            0.17326969916994542
+          ]
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 17,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5626.394203993664,
+        "last_saved_drone_positions": [
+          [
+            9.628021283267794,
+            4.928977845249467,
+            0.050346285044795006
+          ],
+          [
+            0.4535352097670082,
+            0.2622751975518709,
+            0.8149180347105257
+          ],
+          [
+            11.54975811725317,
+            4.413751254632648,
+            0.07183655281353397
+          ]
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 12,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5038.577167441417,
+        "last_saved_drone_positions": [
+          [
+            0.1264443760515438,
+            0.0722829275305471,
+            0.6100504357963732
+          ],
+          [
+            0.3430894260565342,
+            0.2368292654280799,
+            0.8222330932018341
+          ],
+          [
+            0.10064989136719667,
+            -0.034307225051028095,
+            0.4566052121653822
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "trial": 141,
+    "best_step": 0,
+    "plan": {
+      "name": "cuda_auto_0141_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 4,
+      "steps": 262144,
+      "budget_seconds": 600,
+      "eval_every_steps": 65536,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 1e-05,
+      "initial_throttle": 0.61,
+      "seed": 21003,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "hypothesis": "Drone-position shaping may simplify early stabilization with tether dynamics preserved",
+      "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim.",
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+      "methodology_condition": "position_target_v1_reward4",
+      "physics_version": 2,
+      "max_grad_norm": 0.5,
+      "methodology_review": "state/cuda_research/methodology/review_0016/review.md",
+      "training_region": null,
+      "gradient_diagnostics": true,
+      "methodology_trial": "position_target_v1_21003_4",
+      "gae_lambda": 0.95
+    },
+    "evaluations": {
+      "eval_131072.json": {
+        "crashes": 12,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 4818.3037666480295,
+        "last_saved_drone_positions": [
+          [
+            0.01025190462163808,
+            0.011447003728913064,
+            0.1925794893853036
+          ],
+          [
+            4.303214581539858,
+            5.633333111336476,
+            0.5758727870831224
+          ],
+          [
+            4.944235280466337,
+            4.0464607385093165,
+            0.7912089331775142
+          ]
+        ]
+      },
+      "eval_196608.json": {
+        "crashes": 13,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 4505.838190236637,
+        "last_saved_drone_positions": [
+          [
+            0.22795076040223625,
+            0.09632270592338048,
+            0.7530866292221959
+          ],
+          [
+            0.2576456536004816,
+            0.15799108098814088,
+            0.7821714437344529
+          ],
+          [
+            6.245418862614905,
+            3.0738843473723105,
+            0.795359611442329
+          ]
+        ]
+      },
+      "eval_262144.json": {
+        "crashes": 11,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5760.206173404273,
+        "last_saved_drone_positions": [
+          [
+            6.957009007235406,
+            4.415696365905431,
+            0.40223744131090333
+          ],
+          [
+            7.020717000877495,
+            4.660598933011674,
+            0.4472144807451411
+          ],
+          [
+            7.94733362488481,
+            3.0251431195732357,
+            0.575380231028126
+          ]
+        ]
+      },
+      "eval_65536.json": {
+        "crashes": 14,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 4438.89275447787,
+        "last_saved_drone_positions": [
+          [
+            0.2744898138343242,
+            0.1815337084317115,
+            0.8493934552918844
+          ],
+          [
+            0.2892482641257878,
+            0.23927730660303007,
+            0.8499861371709326
+          ],
+          [
+            5.692947499228104,
+            4.355852509517004,
+            0.6682354820525133
+          ]
+        ]
+      }
+    }
+  }
+]
