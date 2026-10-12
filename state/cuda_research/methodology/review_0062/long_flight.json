@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "runs": [
+    {
+      "seed": 51011,
+      "time_s": 5.0,
+      "crash_resets": 0,
+      "payload_error_mm": 784.602995339637,
+      "drone_height_m": 1.4690113812524783,
+      "payload_height_m": 0.8703460857802889,
+      "payload_vertical_velocity_m_s": -0.0939338479364548
+    },
+    {
+      "seed": 51011,
+      "time_s": 10.0,
+      "crash_resets": 0,
+      "payload_error_mm": 3313.0691499532327,
+      "drone_height_m": 0.34207455334667003,
+      "payload_height_m": 0.031003045278012273,
+      "payload_vertical_velocity_m_s": 0.10193120978789975
+    },
+    {
+      "seed": 51011,
+      "time_s": 20.0,
+      "crash_resets": 0,
+      "payload_error_mm": 4315.240909421709,
+      "drone_height_m": 0.05000000074505806,
+      "payload_height_m": 0.02500000037252903,
+      "payload_vertical_velocity_m_s": 0.0
+    },
+    {
+      "seed": 51011,
+      "time_s": 30.0,
+      "crash_resets": 2,
+      "payload_error_mm": 4198.464119983124,
+      "drone_height_m": 0.2667388815278781,
+      "payload_height_m": 0.11150374444091064,
+      "payload_vertical_velocity_m_s": -0.025553680497570973
+    },
+    {
+      "seed": 51012,
+      "time_s": 5.0,
+      "crash_resets": 0,
+      "payload_error_mm": 789.1207262236828,
+      "drone_height_m": 1.4939536389597645,
+      "payload_height_m": 0.8956911931453733,
+      "payload_vertical_velocity_m_s": -0.06285412939655663
+    },
+    {
+      "seed": 51012,
+      "time_s": 10.0,
+      "crash_resets": 0,
+      "payload_error_mm": 3872.7559513275987,
+      "drone_height_m": 0.2250379379758214,
+      "payload_height_m": 0.025295962160542224,
+      "payload_vertical_velocity_m_s": -0.011782971871627683
+    },
+    {
+      "seed": 51012,
+      "time_s": 20.0,
+      "crash_resets": 1,
+      "payload_error_mm": 2955.9771604822963,
+      "drone_height_m": 0.22642503304721168,
+      "payload_height_m": 0.14132996931623498,
+      "payload_vertical_velocity_m_s": -0.03836173020339813
+    },
+    {
+      "seed": 51012,
+      "time_s": 30.0,
+      "crash_resets": 1,
+      "payload_error_mm": 3873.036127694119,
+      "drone_height_m": 0.059384025227395366,
+      "payload_height_m": 0.02500000037252903,
+      "payload_vertical_velocity_m_s": 0.0
+    },
+    {
+      "seed": 51013,
+      "time_s": 5.0,
+      "crash_resets": 0,
+      "payload_error_mm": 892.9304400341225,
+      "drone_height_m": 1.5416764259441773,
+      "payload_height_m": 0.9436975177276468,
+      "payload_vertical_velocity_m_s": -0.0490877200052631
+    },
+    {
+      "seed": 51013,
+      "time_s": 10.0,
+      "crash_resets": 0,
+      "payload_error_mm": 4953.1843493313545,
+      "drone_height_m": 0.15229341858895623,
+      "payload_height_m": 0.028659793945273883,
+      "payload_vertical_velocity_m_s": 0.10323069561510657
+    },
+    {
+      "seed": 51013,
+      "time_s": 20.0,
+      "crash_resets": 1,
+      "payload_error_mm": 4710.194484619635,
+      "drone_height_m": 0.06676808534268266,
+      "payload_height_m": 0.02500000037252903,
+      "payload_vertical_velocity_m_s": 0.0
+    },
+    {
+      "seed": 51013,
+      "time_s": 30.0,
+      "crash_resets": 1,
+      "payload_error_mm": 4892.864740635912,
+      "drone_height_m": 0.07289817518967648,
+      "payload_height_m": 0.02500000037252903,
+      "payload_vertical_velocity_m_s": 0.0
+    }
+  ],
+  "scope": "Separate deterministic30s no-timeout diagnostic, reused domains, physical crashes still reset and are counted; not comparable to frozen5s benchmark or hardware fidelity claim"
+}
