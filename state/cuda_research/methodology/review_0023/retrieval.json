@@ -1,0 +1,31 @@
+{
+  "retrieved_at": "2026-10-12T10:08:48.746198+00:00",
+  "query": "PPO warm start policy refinement evaluation seeds",
+  "paper_ids": [
+    "2006.05990",
+    "2005.12729"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=PPO+warm+start+policy+refinement+evaluation+seeds&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2006.05990",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2006.05990.md",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2005.12729",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2005.12729.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}
