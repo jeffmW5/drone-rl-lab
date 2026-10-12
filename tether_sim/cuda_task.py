@@ -6,8 +6,9 @@ from .cuda_backend import CudaTether
 
 
 class CudaVector:
-    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1):
+    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None):
         self.direct=direct
+        self.training_region=training_region
         self.control_version=control_version
         self.reward_version=reward_version;self.phase=phase
         self.num_agents=self.agents_per_batch=count
@@ -83,6 +84,10 @@ class CudaVector:
                   .8*(s.position[:,0,2]<.15)-5*(s.failed!=0)).float()
         self.previous_error=error
         self.truncated=self.steps>=500;self.done=(s.failed!=0)|self.truncated
+        if self.training_region is not None:
+            escaped=(torch.linalg.vector_norm(s.position[:,0,:2]-self.goal[:,:2],dim=1)>self.training_region['radius_m']) | (s.position[:,0,2]>self.training_region['ceiling_m'])
+            self.truncated=self.truncated|escaped
+            self.done=self.done|escaped
         # Preserve terminal reward before resetting failed/timed-out states.
         mask=self.done
         if bool(mask.any()):

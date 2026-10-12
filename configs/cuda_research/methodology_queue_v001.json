@@ -1,0 +1,77 @@
+[
+  {
+    "methodology_review": "state/cuda_research/methodology/review_0002/review.md",
+    "training_region": null,
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+    "learning_rate": 1E-05,
+    "initial_throttle": 0.61,
+    "methodology_trial": "region_v1_12001_baseline",
+    "hypothesis": "Training-only bounded-flight truncation; unchanged evaluation; paired replicate",
+    "seed": 12001,
+    "methodology_condition": "baseline"
+  },
+  {
+    "methodology_review": "state/cuda_research/methodology/review_0002/review.md",
+    "training_region": {
+      "ceiling_m": 1.6,
+      "radius_m": 1.0
+    },
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+    "learning_rate": 1E-05,
+    "initial_throttle": 0.61,
+    "methodology_trial": "region_v1_12001_region_v1",
+    "hypothesis": "Training-only bounded-flight truncation; unchanged evaluation; paired replicate",
+    "seed": 12001,
+    "methodology_condition": "region_v1"
+  },
+  {
+    "methodology_review": "state/cuda_research/methodology/review_0002/review.md",
+    "training_region": null,
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+    "learning_rate": 1E-05,
+    "initial_throttle": 0.61,
+    "methodology_trial": "region_v1_12002_baseline",
+    "hypothesis": "Training-only bounded-flight truncation; unchanged evaluation; paired replicate",
+    "seed": 12002,
+    "methodology_condition": "baseline"
+  },
+  {
+    "methodology_review": "state/cuda_research/methodology/review_0002/review.md",
+    "training_region": {
+      "ceiling_m": 1.6,
+      "radius_m": 1.0
+    },
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+    "learning_rate": 1E-05,
+    "initial_throttle": 0.61,
+    "methodology_trial": "region_v1_12002_region_v1",
+    "hypothesis": "Training-only bounded-flight truncation; unchanged evaluation; paired replicate",
+    "seed": 12002,
+    "methodology_condition": "region_v1"
+  },
+  {
+    "methodology_review": "state/cuda_research/methodology/review_0002/review.md",
+    "training_region": null,
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+    "learning_rate": 1E-05,
+    "initial_throttle": 0.61,
+    "methodology_trial": "region_v1_12003_baseline",
+    "hypothesis": "Training-only bounded-flight truncation; unchanged evaluation; paired replicate",
+    "seed": 12003,
+    "methodology_condition": "baseline"
+  },
+  {
+    "methodology_review": "state/cuda_research/methodology/review_0002/review.md",
+    "training_region": {
+      "ceiling_m": 1.6,
+      "radius_m": 1.0
+    },
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0005_takeoff/best.pt",
+    "learning_rate": 1E-05,
+    "initial_throttle": 0.61,
+    "methodology_trial": "region_v1_12003_region_v1",
+    "hypothesis": "Training-only bounded-flight truncation; unchanged evaluation; paired replicate",
+    "seed": 12003,
+    "methodology_condition": "region_v1"
+  }
+]

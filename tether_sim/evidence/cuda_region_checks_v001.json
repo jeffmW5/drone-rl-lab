@@ -1,0 +1,22 @@
+{
+  "baseline": {
+    "truncated": [
+      false,
+      false
+    ],
+    "physics_failed": [
+      0,
+      0
+    ]
+  },
+  "bounded": {
+    "truncated": [
+      true,
+      true
+    ],
+    "physics_failed": [
+      0,
+      0
+    ]
+  }
+}
