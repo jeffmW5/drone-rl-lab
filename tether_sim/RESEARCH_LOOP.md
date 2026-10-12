@@ -13,7 +13,9 @@ phase and provisional incumbent. Old MuJoCo plans below are archived references.
 Commands: python3 scripts/cuda_autoresearch.py status / pause / resume.
 Pause lets healthy active training finish and blocks subsequent launches.
 One daemon lock and the shared GPU lease prevent duplicate trainers/compilers.
-Each trial <=65536 transitions /90s elapsed learner budget plus finite evaluations,
+Default trials <=65536 transitions /90s elapsed learner budget plus finite evaluations;
+versioned methodology queuev003 tests65536 versus262144 transitions with a600s
+elapsed learner cap for both arms (including periodic evaluation).
 three reused validation seeds. Initial and periodic checkpoints are preserved.
 Promotion uses crashes, prototype sustained hover, takeoffs and destination error;
 prototype hover is <=10cm and <=0.2m/s for1s, not the original strict1mm criterion.

@@ -1,0 +1,194 @@
+[
+  {
+    "name": "cuda_auto_0036_takeoff",
+    "condition": "reward_compress_v1_13001_r2",
+    "source": "tmp/cuda-research/cuda_auto_0036_takeoff/result.json",
+    "best_step": 0,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1279.718617691218
+    },
+    "periodic": {
+      "eval_32768.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1823.6549657894884
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1279.718617691218
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0037_takeoff",
+    "condition": "reward_compress_v1_13001_r3",
+    "source": "tmp/cuda-research/cuda_auto_0037_takeoff/result.json",
+    "best_step": 0,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 3195.448416157566
+    },
+    "periodic": {
+      "eval_32768.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2342.653387118922
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 3195.448416157566
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0038_takeoff",
+    "condition": "reward_compress_v1_13002_r2",
+    "source": "tmp/cuda-research/cuda_auto_0038_takeoff/result.json",
+    "best_step": 0,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 9366.276273593774
+    },
+    "periodic": {
+      "eval_32768.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8966.3611731645
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 9366.276273593774
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0039_takeoff",
+    "condition": "reward_compress_v1_13002_r3",
+    "source": "tmp/cuda-research/cuda_auto_0039_takeoff/result.json",
+    "best_step": 0,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 9260.749083098885
+    },
+    "periodic": {
+      "eval_32768.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8396.766277437433
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 9260.749083098885
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0040_takeoff",
+    "condition": "reward_compress_v1_13003_r2",
+    "source": "tmp/cuda-research/cuda_auto_0040_takeoff/result.json",
+    "best_step": 0,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 8640.349735961667
+    },
+    "periodic": {
+      "eval_32768.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8812.081242665938
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8640.349735961667
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0041_takeoff",
+    "condition": "reward_compress_v1_13003_r3",
+    "source": "tmp/cuda-research/cuda_auto_0041_takeoff/result.json",
+    "best_step": 0,
+    "initial": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 1080.4868764428747
+    },
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 8570.790225441773
+    },
+    "periodic": {
+      "eval_32768.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8777.206166652972
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8570.790225441773
+      }
+    }
+  }
+]
