@@ -142,3 +142,6 @@ Queued v019: three seed pairs of raw versus fixed physical input conditioning, i
 
 ## 2026-10-12 13:28 UTC braking campaign review
 Queuev020 completed: reward2/6 final errors1757.800/1454.838,956.556/938.053,3327.988/3197.482mm. Added drone velocity cost helps relative errors3/3 pairs, but all finals regress from822.218mm initial, all best_step0 and zero sustained hovers. No promotion; no new coefficient sweep. Full frozen evidence and sources in review0034. Healthy serial daemon69922 continues; no original1mm or hardware success.
+
+## 2026-10-12 14:48 UTC channel exploration review
+Queuev022 complete; wider roll/pitch noise failed paired consistency and all final policies regressed. Ground takeoff evaluation still zero airborne acquisition and sustained hover. Periodic improvements789.848mm baseline307 and807.159mm treatment310 regressed at final; not convergence. No method promotion or new width sweep. Evidence/sources review0038, daemon69922 healthy/unpaused, audit seeds reserved.
