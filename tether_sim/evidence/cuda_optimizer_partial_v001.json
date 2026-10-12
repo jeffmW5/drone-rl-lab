@@ -1,0 +1,154 @@
+[
+  {
+    "name": "cuda_auto_0088_takeoff",
+    "condition": "optimizer_scale_v1_17001_low",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0088_takeoff/result.json",
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 8514.799249212067
+    },
+    "periodic": {
+      "eval_131072.json": {
+        "crashes": 9,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 7042.184617891823
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8514.799249212067
+      },
+      "eval_65536.json": {
+        "crashes": 6,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 7185.930351324899
+      },
+      "eval_196608.json": {
+        "crashes": 1,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 10020.564298994866
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0089_takeoff",
+    "condition": "optimizer_scale_v1_17001_standard",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0089_takeoff/result.json",
+    "final": {
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 4438.107809970096
+    },
+    "periodic": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 3185.820872007816
+      },
+      "eval_262144.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 4438.107809970096
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 4384.681321878808
+      },
+      "eval_196608.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 3807.0320815114665
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0090_takeoff",
+    "condition": "optimizer_scale_v1_17002_low",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0090_takeoff/result.json",
+    "final": {
+      "crashes": 1,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 5628.610522650971
+    },
+    "periodic": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 8770.40314648729
+      },
+      "eval_262144.json": {
+        "crashes": 1,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5628.610522650971
+      },
+      "eval_65536.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 9920.110671145783
+      },
+      "eval_196608.json": {
+        "crashes": 7,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 5999.771731905443
+      }
+    }
+  },
+  {
+    "name": "cuda_auto_0091_takeoff",
+    "condition": "optimizer_scale_v1_17002_standard",
+    "best_step": 0,
+    "source": "tmp/cuda-research/cuda_auto_0091_takeoff/result.json",
+    "final": {
+      "crashes": 31,
+      "takeoffs": 24,
+      "hover_successes": 0,
+      "mean_final_error_mm": 2100.5324547070663
+    },
+    "periodic": {
+      "eval_131072.json": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 4059.6256280506545
+      },
+      "eval_262144.json": {
+        "crashes": 31,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2100.5324547070663
+      },
+      "eval_65536.json": {
+        "crashes": 18,
+        "takeoffs": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 3049.1828313721508
+      },
+      "eval_196608.json": {
+        "crashes": 17,
+        "takeoffs": 0,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1563.3312557210454
+      }
+    }
+  }
+]

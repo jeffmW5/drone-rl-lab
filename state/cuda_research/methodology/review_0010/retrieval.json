@@ -1,0 +1,24 @@
+{
+  "retrieved_at": "2026-10-12T05:49:10.014404+00:00",
+  "query": "PPO actor critic gradient clipping value loss shared network",
+  "paper_ids": [
+    "2311.13081"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=PPO+actor+critic+gradient+clipping+value+loss+shared+network&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2311.13081",
+      "status": 200,
+      "file": "source_01.txt"
+    },
+    {
+      "url": "https://huggingface.co/papers/2311.13081.md",
+      "status": 200,
+      "file": "source_02.txt"
+    }
+  ]
+}
