@@ -138,8 +138,12 @@ class CudaPolicy(torch.nn.Module):
         torch.nn.init.zeros_(self.actor.weight);torch.nn.init.zeros_(self.actor.bias)
         self.log_std=torch.nn.Parameter(torch.full((4,),-2.))
         self.value_gradient_version=1
+    def enable_separate_value(self):
+        import copy
+        if not hasattr(self,'value_body'):self.value_body=copy.deepcopy(self.body)
+        self.value_gradient_version=3
     def forward(self,obs,state=None):
         h=self.body(obs)
-        value_h=h.detach() if self.value_gradient_version==2 else h
+        value_h=self.value_body(obs) if self.value_gradient_version==3 else (h.detach() if self.value_gradient_version==2 else h)
         return torch.distributions.Normal(self.actor(h),self.log_std.exp()),self.value(value_h)
     def forward_eval(self,obs,state=None):return self.forward(obs,state)
