@@ -62,11 +62,13 @@ try:
     if plan.get('resume'):
         weights=torch.load(plan['resume'],weights_only=True)
         if any(k.startswith('value_body.') for k in weights):policy.enable_separate_value()
+        weights.setdefault('obs_scale',policy.obs_scale)
         policy.load_state_dict(weights)
     configure_exploration(policy,plan.get('initial_log_std'))
     policy.value_gradient_version=plan.get('value_gradient_version',policy.value_gradient_version)
     if policy.value_gradient_version not in (1,2,3):raise ValueError('Unsupported value gradient version')
     if policy.value_gradient_version==3:policy.enable_separate_value()
+    policy.configure_input_conditioning(plan.get('input_conditioning_version',1))
     config=dict(env='cuda_tether_prototype_v001',seed=41,torch_deterministic=True,cpu_offload=False,device='cuda',optimizer='adam',anneal_lr=False,precision='float32',amp=False,total_timesteps=32768,learning_rate=3e-4,gamma=.995,gae_lambda=.95,update_epochs=3,clip_coef=.2,vf_coef=.5,vf_clip_coef=.2,max_grad_norm=.5,ent_coef=0.,adam_beta1=.9,adam_beta2=.999,adam_eps=1e-5,min_lr_ratio=1.,data_dir=str(out/'puffer'),checkpoint_interval=100,batch_size=4096,minibatch_size=1024,max_minibatch_size=1024,bptt_horizon=32,compile=False,compile_mode='default',compile_fullgraph=False,use_rnn=False,vtrace_rho_clip=1.,vtrace_c_clip=1.,prio_alpha=0.,prio_beta0=0.)
     if args.direct:config['total_timesteps']=args.steps
     config['control_mode']='direct_motor_policy' if args.direct else 'PD_plus_residual'

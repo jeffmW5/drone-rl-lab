@@ -135,3 +135,7 @@
 }
 
 Full rejected trials: state/cuda_research/loop.json. No hardware accuracy claim.
+
+## 2026-10-12 12:28 UTC methodology update
+Review0030 closes all three rollout-length pairs: no sustained hovers and all six final checkpoints worse than initial. The selected trial242 periodic step32768 reaches822.218mm (initial857.312), but its final regresses1295.322mm; provisional reused validation only. Pure learned takeoff remains unsolved for stable hover.
+Queued v019: three seed pairs of raw versus fixed physical input conditioning, identical initial functions via weight-column migration. CPU actual-checkpoint equivalence, shared/separate critic roundtrip and finite-gradient checks passed. GPU outcome pending; healthy serial daemon69922 retained, no compilation/restart. Scripts synced explicitly to native WSL; native checkout retains unrelated edits and is not a clean copy of Windows commit.

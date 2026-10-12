@@ -138,11 +138,26 @@ class CudaPolicy(torch.nn.Module):
         torch.nn.init.zeros_(self.actor.weight);torch.nn.init.zeros_(self.actor.bias)
         self.log_std=torch.nn.Parameter(torch.full((4,),-2.))
         self.value_gradient_version=1
+        self.register_buffer('obs_scale',torch.ones(98))
+    def configure_input_conditioning(self,version):
+        if version not in (1,2):raise ValueError('Unsupported input conditioning version')
+        scale=torch.ones_like(self.obs_scale)
+        if version==2:
+            scale[:42]=.6  # Relative particle positions, metres.
+            scale[88:91]=10  # Angular rates, radians/second.
+            scale[91:95]=.2  # Motor forces, newtons.
+        # Preserve the loaded initial function while changing optimizer geometry.
+        with torch.no_grad():
+            ratio=scale/self.obs_scale
+            self.body[0].weight.mul_(ratio)
+            if hasattr(self,'value_body'):self.value_body[0].weight.mul_(ratio)
+            self.obs_scale.copy_(scale)
     def enable_separate_value(self):
         import copy
         if not hasattr(self,'value_body'):self.value_body=copy.deepcopy(self.body)
         self.value_gradient_version=3
     def forward(self,obs,state=None):
+        obs=obs/self.obs_scale
         h=self.body(obs)
         value_h=self.value_body(obs) if self.value_gradient_version==3 else (h.detach() if self.value_gradient_version==2 else h)
         return torch.distributions.Normal(self.actor(h),self.log_std.exp()),self.value(value_h)
