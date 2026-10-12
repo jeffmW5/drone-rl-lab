@@ -1,0 +1,31 @@
+{
+  "retrieved_at": "2026-10-12T19:11:59.493883+00:00",
+  "query": "quadrotor reward position velocity hover",
+  "paper_ids": [
+    "2203.10519",
+    "1707.05110"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=quadrotor+reward+position+velocity+hover&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2203.10519",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2203.10519.md",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/1707.05110",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/1707.05110.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+[
+  {
+    "trial": 421,
+    "source": "//wsl.localhost/Ubuntu-Laya/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0421_takeoff/result.json",
+    "initial_error_mm": 822.2180538658141,
+    "final_error_mm": 9583.816242292052,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 422,
+    "source": "//wsl.localhost/Ubuntu-Laya/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0422_takeoff/result.json",
+    "initial_error_mm": 822.2180538658141,
+    "final_error_mm": 918.3251759897435,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 423,
+    "source": "//wsl.localhost/Ubuntu-Laya/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0423_takeoff/result.json",
+    "initial_error_mm": 822.2180538658141,
+    "final_error_mm": 2467.911420762537,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 424,
+    "source": "//wsl.localhost/Ubuntu-Laya/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0424_takeoff/result.json",
+    "initial_error_mm": 822.2180538658141,
+    "final_error_mm": 1731.2289482484073,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 425,
+    "source": "//wsl.localhost/Ubuntu-Laya/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0425_takeoff/result.json",
+    "initial_error_mm": 822.2180538658141,
+    "final_error_mm": 956.6174039414536,
+    "best_error_mm": 783.9173048702149,
+    "best_step": 49152,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 426,
+    "source": "//wsl.localhost/Ubuntu-Laya/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0426_takeoff/result.json",
+    "initial_error_mm": 822.2180538658141,
+    "final_error_mm": 2416.184396336059,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 427,
+    "source": "//wsl.localhost/Ubuntu-Laya/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0427_takeoff/result.json",
+    "initial_error_mm": 822.2180538658141,
+    "final_error_mm": 3180.8080187580276,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 428,
+    "source": "//wsl.localhost/Ubuntu-Laya/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0428_takeoff/result.json",
+    "initial_error_mm": 822.2180538658141,
+    "final_error_mm": 3380.24116981437,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  }
+]

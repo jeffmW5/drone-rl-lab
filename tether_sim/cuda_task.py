@@ -41,16 +41,21 @@ def angular_velocity_cost(angular_velocity,reward_version):
     return .002*angular_velocity.square().sum(1)
 
 
-def approach_stop_reward(positions, velocity, orientation, goal, failed):
+def approach_stop_reward(positions, velocity, orientation, goal, failed, reward_version=8):
     """Reward8: bounded distance + goal-directed velocity matching, no PID/actions."""
     delta=goal-positions[:,-1]
     distance=torch.linalg.vector_norm(delta,dim=1)
     desired_velocity=.5*delta/(.25+distance[:,None])
     velocity_error=(velocity[:,-1]-desired_velocity).square().sum(1)
     drone_speed=velocity[:,0].square().sum(1)
+    drone_bonus=.1/(1+4*drone_speed)
+    if reward_version==9:
+        drone_goal=goal.clone();drone_goal[:,2]+=.6
+        drone_error=(positions[:,0]-drone_goal).square().sum(1)
+        drone_bonus=.1/(1+4*drone_error)
     upright=1-2*orientation[:,1:3].square().sum(1)
     return (.45/(1+4*distance.square())+.35/(1+4*velocity_error)+
-        .1*upright+.1/(1+4*drone_speed)-.8*(positions[:,0,2]<.15)-5*(failed!=0)).float()
+        .1*upright+drone_bonus-.8*(positions[:,0,2]<.15)-5*(failed!=0)).float()
 
 def training_starts(start,version,phase):
     if version not in (1,2):raise ValueError('Unsupported training reset version')
@@ -147,8 +152,8 @@ class CudaVector:
                   .8*(s.position[:,0,2]<.15)-5*(s.failed!=0)).float()
                 self.reward-=drone_velocity_cost(s.velocity,self.reward_version).float()
                 if self.reward_version==3:self.reward=bounded_reward(self.reward)
-        if self.direct and self.reward_version==8:
-            self.reward=approach_stop_reward(s.position,s.velocity,s.orientation,self.goal,s.failed)
+        if self.direct and self.reward_version in (8,9):
+            self.reward=approach_stop_reward(s.position,s.velocity,s.orientation,self.goal,s.failed,self.reward_version)
         self.previous_error=error
         self.truncated=self.steps>=500;self.done=(s.failed!=0)|self.truncated
         if self.training_region is not None:
