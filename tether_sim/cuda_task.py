@@ -62,9 +62,14 @@ def navigation_priority_reward(positions,velocity,orientation,goal,failed,reward
     """Reward10: suppress pre-lift task reward; proximity and stopping dominate."""
     distance2=(positions[:,-1]-goal).square().sum(1)
     speed2=velocity[:,-1].square().sum(1)
+    if reward_version==12:
+        carrier_goal=goal.clone();carrier_goal[:,2]+=.6
+        delta=carrier_goal-positions[:,0]
+        desired=.5*delta/(.25+torch.linalg.vector_norm(delta,dim=1)[:,None])
+        speed2=(velocity[:,0]-desired).square().sum(1)
     # Smooth release after payload lifts from its 25mm ground-contact radius.
     flight_gate=((positions[:,-1,2]-.025)/.075).clamp(0,1)
-    proximity=1/(1+4*distance2) if reward_version==11 else torch.exp(-4*distance2)
+    proximity=1/(1+4*distance2) if reward_version in (11,12) else torch.exp(-4*distance2)
     navigation=.85*proximity*(.25+.75/(1+4*speed2))*flight_gate
     upright=1-2*orientation[:,1:3].square().sum(1)
     return (navigation+.05*upright-.8*(positions[:,0,2]<.15)-5*(failed!=0)).float()
@@ -200,7 +205,7 @@ class CudaVector:
                 if self.reward_version==3:self.reward=bounded_reward(self.reward)
         if self.direct and self.reward_version in (8,9):
             self.reward=approach_stop_reward(s.position,s.velocity,s.orientation,self.goal,s.failed,self.reward_version)
-        if self.direct and self.reward_version in (10,11):
+        if self.direct and self.reward_version in (10,11,12):
             self.reward=navigation_priority_reward(s.position,s.velocity,s.orientation,self.goal,s.failed,self.reward_version)
         if getattr(self,'landing_gate',None) is not None:
             premature=self.landing_gate.update(s.position,s.velocity,self.goal,s.failed)

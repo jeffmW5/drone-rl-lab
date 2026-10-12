@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "runs": [
+    {
+      "seed": 51011,
+      "collective_action_shift": -0.04,
+      "mean_unmodified_collective_action": 0.1999916285276413,
+      "final_payload_error_mm": 341.0535738742314,
+      "mean_drone_height_m": 0.59264808330679,
+      "mean_payload_height_m": 0.025000561559925673,
+      "crashes": 0
+    },
+    {
+      "seed": 51011,
+      "collective_action_shift": 0.0,
+      "mean_unmodified_collective_action": 0.19964268803596497,
+      "final_payload_error_mm": 784.602995339637,
+      "mean_drone_height_m": 1.4690113812524783,
+      "mean_payload_height_m": 0.8703460857802889,
+      "crashes": 0
+    },
+    {
+      "seed": 51011,
+      "collective_action_shift": 0.04,
+      "mean_unmodified_collective_action": 0.19920602440834045,
+      "final_payload_error_mm": 2972.6605206161407,
+      "mean_drone_height_m": 3.670610661871178,
+      "mean_payload_height_m": 3.1358311388809517,
+      "crashes": 0
+    },
+    {
+      "seed": 51012,
+      "collective_action_shift": -0.04,
+      "mean_unmodified_collective_action": 0.20001766085624695,
+      "final_payload_error_mm": 261.72458140684705,
+      "mean_drone_height_m": 0.5543574735871317,
+      "mean_payload_height_m": 0.026425540631907274,
+      "crashes": 0
+    },
+    {
+      "seed": 51012,
+      "collective_action_shift": 0.0,
+      "mean_unmodified_collective_action": 0.19968824088573456,
+      "final_payload_error_mm": 789.1207262236828,
+      "mean_drone_height_m": 1.4939536389597645,
+      "mean_payload_height_m": 0.8956911931453733,
+      "crashes": 0
+    },
+    {
+      "seed": 51012,
+      "collective_action_shift": 0.04,
+      "mean_unmodified_collective_action": 0.19924527406692505,
+      "final_payload_error_mm": 2966.812110026946,
+      "mean_drone_height_m": 3.663378158365716,
+      "mean_payload_height_m": 3.1341985446898826,
+      "crashes": 0
+    },
+    {
+      "seed": 51013,
+      "collective_action_shift": -0.04,
+      "mean_unmodified_collective_action": 0.20006704330444336,
+      "final_payload_error_mm": 333.64849411179733,
+      "mean_drone_height_m": 0.5590467024446717,
+      "mean_payload_height_m": 0.02632140086258343,
+      "crashes": 0
+    },
+    {
+      "seed": 51013,
+      "collective_action_shift": 0.0,
+      "mean_unmodified_collective_action": 0.19974437355995178,
+      "final_payload_error_mm": 892.9304400341225,
+      "mean_drone_height_m": 1.5416764259441773,
+      "mean_payload_height_m": 0.9436975177276468,
+      "crashes": 0
+    },
+    {
+      "seed": 51013,
+      "collective_action_shift": 0.04,
+      "mean_unmodified_collective_action": 0.1993168592453003,
+      "final_payload_error_mm": 3035.186391467833,
+      "mean_drone_height_m": 3.707651370082163,
+      "mean_payload_height_m": 3.1800734084285738,
+      "crashes": 0
+    }
+  ],
+  "scope": "Five-second deterministic offline perturbations on reused domains; action +/-0.04 means collective throttle +/-0.02 before clipping. No training, policy promotion, action-advantage ranking, hardware or long-horizon fidelity claim."
+}
