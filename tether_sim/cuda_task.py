@@ -26,9 +26,10 @@ def position_reward(error, reward_version):
 
 def configure_exploration(policy, log_std):
     if log_std is None:return
-    if not np.isfinite(log_std) or not -6<=log_std<=0:
-        raise ValueError('initial_log_std must be finite within [-6,0]')
-    with torch.no_grad():policy.log_std.fill_(log_std)
+    values=np.asarray(log_std,dtype=float)
+    if values.shape not in ((),(4,)) or not np.isfinite(values).all() or (values < -6).any() or (values > 0).any():
+        raise ValueError('initial_log_std must be a scalar or four finite values within [-6,0]')
+    with torch.no_grad():policy.log_std.copy_(torch.as_tensor(values,device=policy.log_std.device,dtype=policy.log_std.dtype).expand_as(policy.log_std))
 
 
 def drone_velocity_cost(velocity, reward_version):
