@@ -1,0 +1,5 @@
+{
+  "status": "pass",
+  "scope": "Scalar return specification only; no installed learner or GPU integration tested",
+  "checks": 8
+}
