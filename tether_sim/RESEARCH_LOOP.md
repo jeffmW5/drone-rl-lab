@@ -1,6 +1,11 @@
 # Local 1070 Ti research loop
 
 Current user objective: continuous C/CUDA pure learned takeoff/hover research.
+Methodology improvement now uses the official Hugging Face papers skill through
+the heartbeat research agent. Follow tether_sim/HF_METHODOLOGY_LOOP.md after each
+three completed trials or a novel failure; save sources, review and versioned
+hypotheses in state/cuda_research/methodology/. The GPU daemon executes trials;
+the agent reads methods and assesses evidence before changing experiments.
 scripts/cuda_autoresearch.py run is the active serial scheduler; it launches the
 next bounded trial immediately with no daily cap and no timed playback delay.
 state/cuda_research/loop.json records all trials; outbox/tether_cuda_loop.md reports
