@@ -79,6 +79,11 @@ try:
     best=initial;best_step=0;torch.save(policy.state_dict(),out/'best.pt')
     def rank(value):return (value['crashes'],-value.get('hover_successes',0),-value['takeoffs'],value['mean_final_error_mm'])
     trainer=PuffeRL(config,vec,policy)
+    diagnostic=None
+    if plan.get('gradient_diagnostics'):
+        from tether_sim.gradient_diagnostics import GradientDiagnostics
+        (out/'gradient_diagnostics_source.py').write_bytes(Path('tether_sim/gradient_diagnostics.py').read_bytes())
+        diagnostic=GradientDiagnostics(policy,trainer.optimizer)
     started=time.monotonic()
     next_eval=plan.get('eval_every_steps',65536)
     while trainer.global_step<config['total_timesteps'] and time.monotonic()-started<plan.get('budget_seconds',120):
@@ -90,6 +95,8 @@ try:
             if rank(value)<rank(best):best=value;best_step=trainer.global_step;torch.save(policy.state_dict(),out/'best.pt')
             next_eval+=plan.get('eval_every_steps',65536)
     torch.cuda.synchronize();elapsed=time.monotonic()-started
+    if diagnostic is not None:
+        (out/'gradient_diagnostics.json').write_text(json.dumps(diagnostic.summary(),indent=2));diagnostic.close()
     torch.save(policy.state_dict(),out/'policy.pt')
     final=measured()
     if rank(final)<rank(best):best=final;best_step=trainer.global_step;torch.save(policy.state_dict(),out/'best.pt')
