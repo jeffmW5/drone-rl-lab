@@ -195,7 +195,7 @@ def tick(root, plan, state, launch=True):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('action', choices=['tick', 'status', 'pause', 'resume', 'dry-run'])
-    parser.add_argument('--plan', default='configs/tether_research_1070ti_v001.json')
+    parser.add_argument('--plan', default='configs/tether_research_1070ti_v002.json')
     args = parser.parse_args()
     root = Path(__file__).resolve().parent.parent
     plan = read_json(root/args.plan)

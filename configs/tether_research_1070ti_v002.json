@@ -1,0 +1,46 @@
+{
+  "name": "tether_research_1070ti_v002",
+  "initial_run": "tmp/tether-runs/tether_puffer_precision_v001",
+  "base_config": "configs/tether_controller_base_v001.json",
+  "state_path": "state/tether_research/v002.json",
+  "report_path": "outbox/tether_research_1070ti_v002.md",
+  "validation_seeds": [
+    51001,
+    51002,
+    51003
+  ],
+  "audit_seeds": [
+    71001,
+    71002,
+    71003,
+    71004,
+    71005,
+    71006,
+    71007,
+    71008,
+    71009,
+    71010,
+    71011,
+    71012,
+    71013,
+    71014,
+    71015,
+    71016,
+    71017,
+    71018,
+    71019,
+    71020
+  ],
+  "trials": [
+    {
+      "name": "tether_controller_research_001",
+      "status": "queued",
+      "hypothesis": "Matched training with attitude gain .012 may improve residual settling after the paired frozen-policy controller diagnostic; separate 1ms benchmark",
+      "changes": {
+        "total_timesteps": 100000,
+        "budget_seconds": 600,
+        "learning_rate": 1e-05
+      }
+    }
+  ]
+}

@@ -5,6 +5,13 @@ heartbeat. One GPU trainer at a time, bounded individual trials, frozen artifact
 and review of failed runs remain required. Historical allowance dates below
 describe earlier decisions and no longer delay new trials.
 
+Active default plan is configs/tether_research_1070ti_v002.json, with separate
+state/tether_research/v002.json and outbox/tether_research_1070ti_v002.md.
+This bounded one-trial campaign tests matched residual training with opt-in
+attitude_gain=.012 and 1ms integration. Its parent validation is the corrected
+frozen-policy diagnosticv002 at the same settings, not the old2ms benchmark.
+Original v001 failed/queued trials remain preserved. Legacy gain defaults=.015.
+
 The original lab's pipeline.sh executes the inbox queue, trains, benchmarks,
 documents and publishes. Its run_job.py adds saved job steps, while the agent
 reviews results and queues hypotheses. This tether loop retains that division:

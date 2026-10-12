@@ -1,0 +1,37 @@
+{
+  "status": "queued",
+  "benchmark": "1ms integration, attitude gain .012; no promotion against original v001",
+  "incumbent": {
+    "run": "/home/n33du/ai/drone-rl-lab/tmp/tether-runs/tether_puffer_precision_v001",
+    "checkpoint": "best",
+    "evidence": "tether_sim/evidence/policy_controller_probe_v002.json:results.0.012.PPO_residual",
+    "validation": {
+      "crashes": 0,
+      "successes": 0,
+      "completed_routes": 3,
+      "mean_final_error_mm": 135.47798579314926,
+      "errors_mm": [
+        156.87507675921213,
+        104.19294403752377,
+        145.3659365827118
+      ],
+      "seeds": [
+        51001,
+        51002,
+        51003
+      ]
+    }
+  },
+  "trials": [
+    {
+      "name": "tether_controller_research_001",
+      "status": "queued",
+      "hypothesis": "Matched training with attitude gain .012 may improve residual settling after the paired frozen-policy controller diagnostic; separate 1ms benchmark",
+      "changes": {
+        "total_timesteps": 100000,
+        "budget_seconds": 600,
+        "learning_rate": 1e-05
+      }
+    }
+  ]
+}

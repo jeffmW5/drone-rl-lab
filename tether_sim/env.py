@@ -26,6 +26,7 @@ class Config:
     substep_collision_checks: bool = False
     drone_inertia: tuple = (.000025,.000025,.00004)
     linear_drag: float = .015
+    attitude_gain: float = .015
 
 
 def model_xml(c):
@@ -111,7 +112,7 @@ class TetherEnv(gym.Env):
         desired_z = acc / max(np.linalg.norm(acc), 1e-8)
         attitude_error = np.cross(R[:,2], desired_z)
         omega_world = R @ d.qvel[3:6]
-        torque = R.T @ (.015*attitude_error-.0012*omega_world)
+        torque = R.T @ (c.attitude_gain*attitude_error-.0012*omega_world)
         torque[2] = -.0002*d.qvel[5]
         force = total*np.dot(acc, R[:,2])
         allocation = np.array([[1,1,1,1],[.032,.032,-.032,-.032],[-.032,.032,.032,-.032],[.006,-.006,.006,-.006]])
