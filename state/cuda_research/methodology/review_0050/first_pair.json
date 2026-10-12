@@ -1,0 +1,30 @@
+{
+  "scope": "First matched seed only; reused validation seeds, provisional; no hardware accuracy claim",
+  "conclusion": "Reward8 regressed from inherited initial checkpoint and was worse than matched reward7 control. Do not promote. Remaining matched seeds running; diagnose before next reward version.",
+  "runs": [
+    {
+      "trial": 424,
+      "source": "tmp/cuda-research/cuda_auto_0424_takeoff/result.json",
+      "initial_error_mm": 822.2180538658141,
+      "final_error_mm": 1731.2289482484073,
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover": 0,
+      "airborne_acquisition": 0,
+      "steps": 65536,
+      "training_seconds": 107.40881123500003
+    },
+    {
+      "trial": 425,
+      "source": "tmp/cuda-research/cuda_auto_0425_takeoff/result.json",
+      "initial_error_mm": 822.2180538658141,
+      "final_error_mm": 956.6174039414536,
+      "crashes": 0,
+      "takeoffs": 24,
+      "hover": 0,
+      "airborne_acquisition": 0,
+      "steps": 65536,
+      "training_seconds": 107.40263643799699
+    }
+  ]
+}
