@@ -1,0 +1,11 @@
+{
+  "name": "tether_policy_controller_diagnostic_v002",
+  "base_config": "configs/tether_research_recovery_v001.json",
+  "source_run": "tmp/tether-runs/tether_puffer_precision_v001",
+  "source_checkpoint": "best",
+  "attitude_gains": [0.015, 0.012],
+  "angular_damping": 0.0012,
+  "seeds": [51001, 51002, 51003],
+  "budget_seconds": 600,
+  "scope": "Paired deterministic PD/PPO evaluation on 1ms model; weights and normalization frozen; no training or cross-benchmark promotion"
+}

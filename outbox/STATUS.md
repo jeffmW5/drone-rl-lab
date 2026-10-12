@@ -122,3 +122,12 @@ successes. Learned policy unchanged. Motor clipping on problem seed88.76%->0%.
 Next opt-in controller + matched residual-policy evaluation proposed, not yet
 trained. Rolling24h launch cap now enforced across recovery/campaign ledgers;
 6 harness checks pass. See tether_controller_diagnostic_v001.md.
+
+2026-10-12 controller-policy diagnosticv002 complete:12 deterministic episodes,
+1ms model, frozen precisionv001 weights/normalizer. Gain.015->.012 reduces PPO
+mean final error202.693->135.478mm (33.16%), all routes complete,0 crashes,
+0 strict successes. Two routes slightly worsen; improvement mainly one seed.
+PPO lower gain is only0.69% better than PD mean and worse on two routes.
+Diagnosticv001 invalid (reset discarded override); preserved and repaired in
+new version. No original2ms promotion or training launch. See
+tether_policy_controller_diagnostic.md for evidence/scope/next hypothesis.
