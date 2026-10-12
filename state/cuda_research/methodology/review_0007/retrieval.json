@@ -1,0 +1,31 @@
+{
+  "retrieved_at": "2026-10-12T04:49:12.327601+00:00",
+  "query": "rope compliant position based dynamics collision rigid body",
+  "paper_ids": [
+    "2202.09714",
+    "2301.01396"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=rope+compliant+position+based+dynamics+collision+rigid+body&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2202.09714",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2202.09714.md",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2301.01396",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2301.01396.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}

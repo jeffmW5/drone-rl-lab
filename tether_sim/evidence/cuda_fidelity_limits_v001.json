@@ -1,0 +1,12 @@
+{
+  "segment_midpoint_intersects_box": true,
+  "midpoint_crash_flag": 0,
+  "node_crash_flag": 1,
+  "angled_cable_centre_movement_m": 0.19718102373324609,
+  "angled_cable_angular_velocity_rad_s": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "scope": "Thin-obstacle counterexample and zero-offset centre attachment; no hardware calibration"
+}
