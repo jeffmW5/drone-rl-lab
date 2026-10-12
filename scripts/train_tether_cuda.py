@@ -101,7 +101,15 @@ try:
         try:values=[evaluate(policy,seed) for seed in seeds]
         finally:torch.set_rng_state(cpu_rng);torch.cuda.set_rng_state(gpu_rng)
         return dict(runs=values,crashes=sum(v['crashes'] for v in values),takeoffs=sum(v['takeoffs'] for v in values),hover_successes=sum(v['hover_successes'] for v in values),airborne_acquisition_successes=sum(v['airborne_acquisition_successes'] for v in values),acquisition_successes=sum(v['acquisition_successes'] for v in values),mean_final_error_mm=float(np.mean([v['mean_final_error_mm'] for v in values]))) if plan else values[0]
+    def value_return_probe(stage):
+        if plan.get('value_return_probe_version',0):
+            if plan['value_return_probe_version']!=1 or plan.get('timeout_bootstrap_version',0) or plan.get('potential_shaping_version',0) or not args.direct:
+                raise ValueError('Return probe requires direct baseline return version')
+            from tether_sim.value_return_probe import probe
+            (out/'value_return_probe_source.py').write_bytes(Path('tether_sim/value_return_probe.py').read_bytes())
+            (out/('value_return_probe_'+stage+'.json')).write_text(json.dumps(probe(policy,plan,seeds,config['gamma']),indent=2))
     initial=measured();torch.save(policy.state_dict(),out/'initial.pt')
+    value_return_probe('initial')
     best=initial;best_step=0;torch.save(policy.state_dict(),out/'best.pt')
     def rank(value):return (value['crashes'],-value.get('hover_successes',0),-value['takeoffs'],value['mean_final_error_mm'])
     if plan.get('terminal_diagnostics'):
@@ -171,6 +179,7 @@ try:
         (out/'gradient_diagnostics.json').write_text(json.dumps(diagnostic.summary(),indent=2));diagnostic.close()
     torch.save(policy.state_dict(),out/'policy.pt')
     final=measured()
+    value_return_probe('final')
     if rank(final)<rank(best):best=final;best_step=trainer.global_step;torch.save(policy.state_dict(),out/'best.pt')
     result=dict(status='complete',control_mode=config['control_mode'],initial_throttle=args.initial_throttle,steps=trainer.global_step,training_seconds=elapsed,training_transitions_per_second=trainer.global_step/elapsed,initial=initial,final=final,gpu=torch.cuda.get_device_name(0),advantage_cuda=ADVANTAGE_CUDA,
       limitations='Experimental particle tether; no MuJoCo parity, segment contact response, hardware calibration or original1mm success claim. PufferLib3 copies actions through CPU, but physics and learner are GPU; no CPU physics workers.')

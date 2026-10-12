@@ -1,0 +1,4 @@
+{
+  "status": "pass",
+  "scope": "CPU return folding with terminal resets, censored tails, summary zero/constant cases; GPU probe pending"
+}
