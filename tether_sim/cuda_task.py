@@ -57,6 +57,17 @@ def approach_stop_reward(positions, velocity, orientation, goal, failed, reward_
     return (.45/(1+4*distance.square())+.35/(1+4*velocity_error)+
         .1*upright+drone_bonus-.8*(positions[:,0,2]<.15)-5*(failed!=0)).float()
 
+
+def navigation_priority_reward(positions,velocity,orientation,goal,failed):
+    """Reward10: suppress pre-lift task reward; proximity and stopping dominate."""
+    distance2=(positions[:,-1]-goal).square().sum(1)
+    speed2=velocity[:,-1].square().sum(1)
+    # Smooth release after payload lifts from its 25mm ground-contact radius.
+    flight_gate=((positions[:,-1,2]-.025)/.075).clamp(0,1)
+    navigation=.85*torch.exp(-4*distance2)*(.25+.75/(1+4*speed2))*flight_gate
+    upright=1-2*orientation[:,1:3].square().sum(1)
+    return (navigation+.05*upright-.8*(positions[:,0,2]<.15)-5*(failed!=0)).float()
+
 def training_starts(start,version,phase):
     if version not in (1,2):raise ValueError('Unsupported training reset version')
     if version==1:return start
@@ -188,6 +199,8 @@ class CudaVector:
                 if self.reward_version==3:self.reward=bounded_reward(self.reward)
         if self.direct and self.reward_version in (8,9):
             self.reward=approach_stop_reward(s.position,s.velocity,s.orientation,self.goal,s.failed,self.reward_version)
+        if self.direct and self.reward_version==10:
+            self.reward=navigation_priority_reward(s.position,s.velocity,s.orientation,self.goal,s.failed)
         if getattr(self,'landing_gate',None) is not None:
             premature=self.landing_gate.update(s.position,s.velocity,self.goal,s.failed)
             self.reward=torch.where(premature,torch.full_like(self.reward,-1),self.reward)
