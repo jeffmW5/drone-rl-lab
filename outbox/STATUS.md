@@ -131,3 +131,5 @@ PPO lower gain is only0.69% better than PD mean and worse on two routes.
 Diagnosticv001 invalid (reset discarded override); preserved and repaired in
 new version. No original2ms promotion or training launch. See
 tether_policy_controller_diagnostic.md for evidence/scope/next hypothesis.
+
+2026-10-12 user removed daily training-launch cap. Runner and heartbeat updated; six harness checks pass, including readiness after twenty recent launches. One trainer at a time and failed-run review remain. Historical allowance dates no longer apply.

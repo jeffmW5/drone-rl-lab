@@ -70,14 +70,12 @@ def test_checkpoint_selection_includes_initial_and_numeric_ties(tmp_path):
     assert select_checkpoint(tmp_path, [1,2])['checkpoint'] == 'initial'
 
 
-def test_daily_allowance_counts_recovery_and_deduplicates_launches(tmp_path):
-    from .research_loop import launch_allowance
+def test_ready_trial_has_no_daily_launch_cap(tmp_path, monkeypatch):
+    import tether_sim.research_loop as module
+    monkeypatch.setattr(module, 'snapshot', lambda root: dict(processes=[]))
     folder = tmp_path/'state/tether_research'
     folder.mkdir(parents=True)
-    rows = [dict(run='one',launched_at=99990),dict(run='two',launched_at=99991)]
-    (folder/'v001.json').write_text(json.dumps(dict(trials=rows)))
-    (folder/'duplicate.json').write_text(json.dumps(dict(trials=rows)))
-    (folder/'recovery.json').write_text(json.dumps(dict(run='three',launched_at=99992)))
-    assert launch_allowance(tmp_path,100000)['remaining'] == 0
-    assert launch_allowance(tmp_path,100000)['next_allowed_at'] == 186390
-    assert launch_allowance(tmp_path,186390)['remaining'] == 1
+    (folder/'history.json').write_text(json.dumps(dict(trials=[
+        dict(run=str(i), launched_at=__import__('time').time()) for i in range(20)])))
+    state = dict(incumbent={'run': 'parent'}, trials=[dict(name='next',status='queued')])
+    assert tick(tmp_path, {}, state, launch=False)['status'] == 'ready to launch next'

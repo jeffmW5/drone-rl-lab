@@ -44,20 +44,6 @@ def rank(summary):
     return (summary['crashes'], -summary['successes'], summary['mean_final_error_mm'])
 
 
-def launch_allowance(root, now=None):
-    """Count unique launch intents across campaigns and recovery ledgers."""
-    now = time.time() if now is None else now
-    timestamps = set()
-    for path in (root/'state/tether_research').glob('*.json'):
-        ledger = read_json(path)
-        for row in [ledger]+ledger.get('trials', []):
-            timestamp = row.get('launched_at')
-            if row.get('run') and isinstance(timestamp, (int,float)) and timestamp > now-86400:
-                timestamps.add(timestamp)
-    return dict(remaining=max(0, 3-len(timestamps)),
-                next_allowed_at=min(timestamps)+86400 if len(timestamps)>=3 else None)
-
-
 def improves(candidate, incumbent, fraction=.05):
     """Small validation sets select provisional candidates, not scientific proof."""
     if candidate['crashes'] > incumbent['crashes']:
@@ -174,11 +160,6 @@ def tick(root, plan, state, launch=True):
             if promoted:
                 state['incumbent'] = candidate
         elif trial['status'] == 'queued':
-            allowance = launch_allowance(root)
-            if allowance['remaining'] == 0:
-                state.update(status='waiting for rolling 24-hour training allowance',
-                             next_launch_allowed_after=allowance['next_allowed_at'])
-                return state
             if not launch:
                 state['status'] = 'ready to launch '+trial['name']
                 return state

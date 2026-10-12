@@ -1,5 +1,10 @@
 # Local 1070 Ti research loop
 
+2026-10-12 user update: daily training-launch cap removed from the runner and
+heartbeat. One GPU trainer at a time, bounded individual trials, frozen artifacts
+and review of failed runs remain required. Historical allowance dates below
+describe earlier decisions and no longer delay new trials.
+
 The original lab's pipeline.sh executes the inbox queue, trains, benchmarks,
 documents and publishes. Its run_job.py adds saved job steps, while the agent
 reviews results and queues hypotheses. This tether loop retains that division:
