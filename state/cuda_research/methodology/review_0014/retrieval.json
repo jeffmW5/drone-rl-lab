@@ -1,0 +1,24 @@
+{
+  "retrieved_at": "2026-10-12T07:09:05.420746+00:00",
+  "query": "Generalized Advantage Estimation temporal credit continuous control",
+  "paper_ids": [
+    "1506.02438"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=Generalized+Advantage+Estimation+temporal+credit+continuous+control&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/1506.02438",
+      "status": 200,
+      "file": "source_01.txt"
+    },
+    {
+      "url": "https://huggingface.co/papers/1506.02438.md",
+      "status": 200,
+      "file": "source_02.txt"
+    }
+  ]
+}
