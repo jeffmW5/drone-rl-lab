@@ -109,6 +109,11 @@ try:
             (out/'value_return_probe_source.py').write_bytes(Path('tether_sim/value_return_probe.py').read_bytes())
             (out/('value_return_probe_'+stage+'.json')).write_text(json.dumps(probe(policy,plan,seeds,config['gamma']),indent=2))
     initial=measured();torch.save(policy.state_dict(),out/'initial.pt')
+    if plan.get('compiled_dynamics_probe_version',0):
+        if plan['compiled_dynamics_probe_version']!=1:raise ValueError('Unsupported dynamics probe')
+        from tether_sim.cuda_dynamics_probe import probe as dynamics_probe
+        (out/'cuda_dynamics_probe_source.py').write_bytes(Path('tether_sim/cuda_dynamics_probe.py').read_bytes())
+        (out/'cuda_dynamics_probe.json').write_text(json.dumps(dynamics_probe(),indent=2))
     value_return_probe('initial')
     best=initial;best_step=0;torch.save(policy.state_dict(),out/'best.pt')
     def rank(value):return (value['crashes'],-value.get('hover_successes',0),-value['takeoffs'],value['mean_final_error_mm'])
