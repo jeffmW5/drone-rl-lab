@@ -1,0 +1,255 @@
+{
+  "status": "complete",
+  "control_mode": "direct_motor_policy",
+  "initial_throttle": 0.61,
+  "steps": 65536,
+  "training_seconds": 67.21949023900015,
+  "training_transitions_per_second": 974.9553257096346,
+  "initial": {
+    "runs": [
+      {
+        "seed": 51011,
+        "mean_final_error_mm": 1977.3721611267238,
+        "errors_mm": [
+          1924.522959712785,
+          1881.2214817656104,
+          1903.3449096449433,
+          1931.3087069026215,
+          1904.4310825369669,
+          2210.6153308928388,
+          2017.72645448807,
+          2045.8063630699558
+        ],
+        "crashes": 0,
+        "takeoffs": 8,
+        "hover_successes": 0,
+        "peak_hover_hold_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "peak_drone_height_m": [
+          2.555306911468506,
+          2.5455758571624756,
+          2.564427137374878,
+          2.541923999786377,
+          2.570624828338623,
+          2.7555534839630127,
+          2.5293262004852295,
+          2.617532253265381
+        ],
+        "scope": "Prototype five-second destination episode; not original navigation or sustained1mm benchmark"
+      },
+      {
+        "seed": 51012,
+        "mean_final_error_mm": 1955.3084432855235,
+        "errors_mm": [
+          2019.610139672674,
+          2001.8925240803424,
+          1954.9593753439028,
+          1921.4920853173512,
+          1956.1191649348605,
+          1956.8923681667945,
+          1874.2919396195996,
+          1957.2099491486617
+        ],
+        "crashes": 0,
+        "takeoffs": 8,
+        "hover_successes": 0,
+        "peak_hover_hold_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "peak_drone_height_m": [
+          2.541623115539551,
+          2.618020534515381,
+          2.6554195880889893,
+          2.5390758514404297,
+          2.634330987930298,
+          2.653881072998047,
+          2.652323007583618,
+          2.6328861713409424
+        ],
+        "scope": "Prototype five-second destination episode; not original navigation or sustained1mm benchmark"
+      },
+      {
+        "seed": 51013,
+        "mean_final_error_mm": 2025.0984221001752,
+        "errors_mm": [
+          2184.5026208193003,
+          1956.456812989296,
+          1895.8025592756512,
+          2159.9990806631863,
+          1911.5312486668995,
+          2164.951246110548,
+          2066.0467157027115,
+          1861.4970925738082
+        ],
+        "crashes": 0,
+        "takeoffs": 8,
+        "hover_successes": 0,
+        "peak_hover_hold_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "peak_drone_height_m": [
+          2.7299206256866455,
+          2.647240161895752,
+          2.543764591217041,
+          2.7272350788116455,
+          2.545780897140503,
+          2.743102550506592,
+          2.7554852962493896,
+          2.5429530143737793
+        ],
+        "scope": "Prototype five-second destination episode; not original navigation or sustained1mm benchmark"
+      }
+    ],
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover_successes": 0,
+    "mean_final_error_mm": 1985.9263421708074
+  },
+  "final": {
+    "runs": [
+      {
+        "seed": 51011,
+        "mean_final_error_mm": 5913.810675832515,
+        "errors_mm": [
+          6822.670892887764,
+          6684.146433671058,
+          6732.784868327893,
+          6617.530669882719,
+          6669.861287814014,
+          7008.879206602749,
+          6589.770619274935,
+          184.84142819899284
+        ],
+        "crashes": 2,
+        "takeoffs": 8,
+        "hover_successes": 0,
+        "peak_hover_hold_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "peak_drone_height_m": [
+          1.330304741859436,
+          1.3633166551589966,
+          1.39296293258667,
+          1.3665684461593628,
+          1.369842290878296,
+          1.4663759469985962,
+          1.3776371479034424,
+          1.2362147569656372
+        ],
+        "scope": "Prototype five-second destination episode; not original navigation or sustained1mm benchmark"
+      },
+      {
+        "seed": 51012,
+        "mean_final_error_mm": 6041.910531107196,
+        "errors_mm": [
+          6890.280020629076,
+          6763.377900742087,
+          7032.159217324106,
+          6672.0557907531975,
+          6793.36373011311,
+          7031.816508494761,
+          6943.975252042133,
+          208.2558287590949
+        ],
+        "crashes": 2,
+        "takeoffs": 8,
+        "hover_successes": 0,
+        "peak_hover_hold_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "peak_drone_height_m": [
+          1.3065019845962524,
+          1.4122673273086548,
+          1.363834023475647,
+          1.37406587600708,
+          1.4084932804107666,
+          1.361632227897644,
+          1.390159249305725,
+          1.2078258991241455
+        ],
+        "scope": "Prototype five-second destination episode; not original navigation or sustained1mm benchmark"
+      },
+      {
+        "seed": 51013,
+        "mean_final_error_mm": 5279.674214596606,
+        "errors_mm": [
+          6941.2997064948095,
+          6993.564817887588,
+          6799.800504847002,
+          253.64292001931966,
+          6650.2650571541135,
+          7252.088313357861,
+          7139.913129205073,
+          206.81926780708366
+        ],
+        "crashes": 4,
+        "takeoffs": 8,
+        "hover_successes": 0,
+        "peak_hover_hold_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "peak_drone_height_m": [
+          1.461669921875,
+          1.360588550567627,
+          1.311232089996338,
+          1.2188395261764526,
+          1.3672761917114258,
+          1.3875452280044556,
+          1.428006649017334,
+          1.183714509010315
+        ],
+        "scope": "Prototype five-second destination episode; not original navigation or sustained1mm benchmark"
+      }
+    ],
+    "crashes": 8,
+    "takeoffs": 24,
+    "hover_successes": 0,
+    "mean_final_error_mm": 5745.131807178772
+  },
+  "gpu": "NVIDIA GeForce GTX 1070 Ti",
+  "advantage_cuda": true,
+  "limitations": "Experimental particle tether; no MuJoCo parity, segment contact response, hardware calibration or original1mm success claim. PufferLib3 copies actions through CPU, but physics and learner are GPU; no CPU physics workers."
+}

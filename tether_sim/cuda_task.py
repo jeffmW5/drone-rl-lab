@@ -6,8 +6,9 @@ from .cuda_backend import CudaTether
 
 
 class CudaVector:
-    def __init__(self,count=256,direct=False):
+    def __init__(self,count=256,direct=False,reward_version=1,phase='destination'):
         self.direct=direct
+        self.reward_version=reward_version;self.phase=phase
         self.num_agents=self.agents_per_batch=count
         self.single_observation_space=Box(-np.inf,np.inf,(98,),np.float32)
         self.single_action_space=self.action_space=Box(-1,1,(4,),np.float32)
@@ -35,6 +36,9 @@ class CudaVector:
         if self.direct:
             self.sim.position[:]=self.start;self.sim.motors.zero_()
             self.sim.boxes[:,:,:2]+=2  # Keep takeoff strip clear in first experiment.
+            if self.phase in ('takeoff','hover'):
+                self.goal[:,:2]=self.start[:,-1,:2]
+                self.goal[:,2]=.2 if self.phase=='takeoff' else .6
         self.previous_error=torch.linalg.vector_norm(self.sim.position[:,-1]-self.goal,dim=1)
 
     def obs(self):
@@ -58,11 +62,19 @@ class CudaVector:
         s=self.sim;residual=torch.as_tensor(actions,device='cuda',dtype=torch.float32)
         command=(.5*(residual+1)).clamp(0,1) if self.direct else self.baseline()+.03*residual
         s.step(command.contiguous())
+        if bool((s.failed==2).any()):
+            raise FloatingPointError('CUDA physics numerical failure; trial invalid')
         self.steps+=1
         error=torch.linalg.vector_norm(s.position[:,-1]-self.goal,dim=1)
         self.reward=(-error-.02*residual.square().sum(1)).float()
         if self.direct:
             self.reward=(20*(self.previous_error-error)-.2*error-.002*s.orientation[:,4:].square().sum(1)-5*(s.failed!=0)).float()
+            if self.reward_version==2:
+                speed=s.velocity[:,-1].square().sum(1)
+                upright=1-2*(s.orientation[:,1:3].square().sum(1))
+                self.reward=(.8*torch.exp(-4*error.square())+.2*upright-
+                  .15*speed-.002*s.orientation[:,4:].square().sum(1)-
+                  .8*(s.position[:,0,2]<.15)-5*(s.failed!=0)).float()
         self.previous_error=error
         self.truncated=self.steps>=500;self.done=(s.failed!=0)|self.truncated
         # Preserve terminal reward before resetting failed/timed-out states.

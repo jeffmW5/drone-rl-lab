@@ -1,5 +1,22 @@
 # Local 1070 Ti research loop
 
+Current user objective: continuous C/CUDA pure learned takeoff/hover research.
+scripts/cuda_autoresearch.py run is the active serial scheduler; it launches the
+next bounded trial immediately with no daily cap and no timed playback delay.
+state/cuda_research/loop.json records all trials; outbox/tether_cuda_loop.md reports
+phase and provisional incumbent. Old MuJoCo plans below are archived references.
+Commands: python3 scripts/cuda_autoresearch.py status / pause / resume.
+Pause lets healthy active training finish and blocks subsequent launches.
+One daemon lock and the shared GPU lease prevent duplicate trainers/compilers.
+Each trial <=65536 transitions /90s elapsed learner budget plus finite evaluations,
+three reused validation seeds. Initial and periodic checkpoints are preserved.
+Promotion uses crashes, prototype sustained hover, takeoffs and destination error;
+prototype hover is <=10cm and <=0.2m/s for1s, not the original strict1mm criterion.
+Automatic phases takeoff->hover->destination require zero crashes,>=18/24 hover
+successes and mean error<100mm. These are provisional curriculum gates. No
+hardware accuracy or original obstacle-route completion claim. Three consecutive
+process failures pause for review; an agent reviews batches via the heartbeat.
+
 2026-10-12 user update: daily training-launch cap removed from the runner and
 heartbeat. One GPU trainer at a time, bounded individual trials, frozen artifacts
 and review of failed runs remain required. Historical allowance dates below

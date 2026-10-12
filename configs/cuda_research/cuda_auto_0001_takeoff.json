@@ -1,0 +1,21 @@
+{
+  "name": "cuda_auto_0001_takeoff",
+  "direct": true,
+  "phase": "takeoff",
+  "reward_version": 2,
+  "steps": 65536,
+  "budget_seconds": 90,
+  "eval_every_steps": 32768,
+  "evaluation_steps": 250,
+  "validation_seeds": [
+    51011,
+    51012,
+    51013
+  ],
+  "learning_rate": 1e-05,
+  "initial_throttle": 0.61,
+  "seed": 1001,
+  "playback_seconds": 0,
+  "hypothesis": "Explicit takeoff/hover reward and restrained PPO updates may prevent ground collapse",
+  "limitations": "Reduced C CUDA particle tether; provisional validation only. No original1mm benchmark or hardware fidelity claim."
+}
