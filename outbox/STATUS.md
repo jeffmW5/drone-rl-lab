@@ -114,3 +114,11 @@ large vertical error after removing wind/motor imbalance; weaker attitude gain
 improves height/tilt but fails route completion and is rejected. Record includes
 counterevidence and next controller diagnostics. Daily launch allowance returns
 2026-10-12 22:48:33 UTC. Reserved audit seeds untouched in this review.
+
+2026-10-12 00:09 UTC: paired PD-only3-seed gain sweep (.015/.012/.010)
+completed9 episodes. .012 reduces mean final error211.579->136.424mm with3/3
+routes,0 crashes/numerical failures; improvements mainly one domain, no1mm
+successes. Learned policy unchanged. Motor clipping on problem seed88.76%->0%.
+Next opt-in controller + matched residual-policy evaluation proposed, not yet
+trained. Rolling24h launch cap now enforced across recovery/campaign ledgers;
+6 harness checks pass. See tether_controller_diagnostic_v001.md.

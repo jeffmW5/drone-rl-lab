@@ -1,0 +1,10 @@
+{
+  "name": "tether_controller_diagnostic_v001",
+  "base_config": "configs/tether_research_recovery_v001.json",
+  "seeds": [51001, 51002, 51003],
+  "attitude_gains": [0.015, 0.012, 0.010],
+  "angular_damping": 0.0012,
+  "scope": "Paired PD-only controller intervention in 1ms simulation; no training, policy promotion or hardware claim",
+  "hypothesis": "Intermediate attitude gains may reduce tilt and vertical error without losing route completion",
+  "budget_seconds": 600
+}

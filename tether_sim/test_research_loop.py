@@ -68,3 +68,16 @@ def test_checkpoint_selection_includes_initial_and_numeric_ties(tmp_path):
     assert chosen['evidence'].endswith('eval_40960.json')
     (tmp_path/'evaluation_initial.json').write_text(json.dumps(result([1,1])))
     assert select_checkpoint(tmp_path, [1,2])['checkpoint'] == 'initial'
+
+
+def test_daily_allowance_counts_recovery_and_deduplicates_launches(tmp_path):
+    from .research_loop import launch_allowance
+    folder = tmp_path/'state/tether_research'
+    folder.mkdir(parents=True)
+    rows = [dict(run='one',launched_at=99990),dict(run='two',launched_at=99991)]
+    (folder/'v001.json').write_text(json.dumps(dict(trials=rows)))
+    (folder/'duplicate.json').write_text(json.dumps(dict(trials=rows)))
+    (folder/'recovery.json').write_text(json.dumps(dict(run='three',launched_at=99992)))
+    assert launch_allowance(tmp_path,100000)['remaining'] == 0
+    assert launch_allowance(tmp_path,100000)['next_allowed_at'] == 186390
+    assert launch_allowance(tmp_path,186390)['remaining'] == 1
