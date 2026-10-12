@@ -75,6 +75,9 @@ class LandingBeforeSuccess:
         self.airborne=torch.zeros(count,device=device,dtype=torch.bool)
         self.success=torch.zeros_like(self.airborne)
         self.hold=torch.zeros(count,device=device,dtype=torch.int32)
+        self.penalized_steps=torch.zeros((),device=device,dtype=torch.int64)
+        self.takeoffs=torch.zeros_like(self.penalized_steps)
+        self.successes=torch.zeros_like(self.penalized_steps)
     def reset(self,mask=None):
         if mask is None:
             self.airborne.zero_();self.success.zero_();self.hold.zero_()
@@ -82,13 +85,19 @@ class LandingBeforeSuccess:
             self.airborne[mask]=False;self.success[mask]=False;self.hold[mask]=0
     def update(self,positions,velocity,goal,failed):
         height=positions[:,0,2]
+        self.takeoffs+=((height>.3)&~self.airborne).sum()
         self.airborne|=height>.3
         stable=(torch.linalg.vector_norm(positions[:,-1]-goal,dim=1)<.1)&(
             torch.linalg.vector_norm(velocity[:,-1],dim=1)<.2)&(
             height>.3)&(positions[:,-1,2]>.05)&(failed==0)
         self.hold=torch.where(stable,self.hold+1,0)
+        self.successes+=((self.hold>=50)&~self.success).sum()
         self.success|=self.hold>=50 # 1 second at 50 Hz, prototype criterion
-        return self.airborne&~self.success&(height<=.051)&(failed==0)
+        premature=self.airborne&~self.success&(height<=.051)&(failed==0)
+        self.penalized_steps+=premature.sum()
+        return premature
+    def diagnostics(self):
+        return dict(penalized_agent_steps=int(self.penalized_steps),episode_takeoffs=int(self.takeoffs),episode_successes=int(self.successes))
 
 
 class CudaVector:

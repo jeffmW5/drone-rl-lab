@@ -1,0 +1,31 @@
+{
+  "retrieved_at": "2026-10-12T20:12:15.041939+00:00",
+  "query": "reinforcement learning reward penalty instrumentation quadrotor",
+  "paper_ids": [
+    "1707.05110",
+    "1712.00378"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=reinforcement+learning+reward+penalty+instrumentation+quadrotor&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/1707.05110",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/1707.05110.md",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/1712.00378",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/1712.00378.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}

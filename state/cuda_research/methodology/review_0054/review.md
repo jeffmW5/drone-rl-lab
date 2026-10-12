@@ -1,0 +1,13 @@
+# Review0054: measure penalty activation before retuning
+
+Last reviewed completed trial index:451. Daemon69922 healthy/unpaused; trial452 active. No duplicate GPU job or CUDA compilation.
+
+Trials439/441/443 landing treatment all retain inherited initial checkpoint as best; third control444 also initialbest. No demonstrated sustained hover/airborne acquisition or replicated learned improvement. Third pair443/444 and continuations445-451 are preserved in results.json; baseline continuation remains unstable, including trial448 crashes2. No promotion from this review. Actual trajectories inspected in prior review showed drift in airborne states, not necessarily ground return. Existing runs do not contain activation counters, so whether the penalty meaningfully affected their stochastic training is unknown.
+
+Concrete diagnostic hypothesis: premature-ground events may be sparse, making the requested penalty irrelevant to the dominant drift failure. Queue a single identical seed41001/landing1 run with additive telemetry for penalized agent steps, episode takeoffs and episode successes. No reward, termination, physics, observation or optimizer change. Counters accumulate over the entire run while episode latches reset. Zero activations supports absence of exposure in this run, not general ineffectiveness; nonzero activations permit subsequent trajectory/credit analysis. Do not endlessly repeat seeds or change penalty magnitude before measuring this.
+
+CPU landing gate regression passed. No CUDA rebuild required; active process keeps its already-imported source. Future child writes landing_diagnostics.json each PPO update. Existing benchmark still evaluates unchanged dynamics and flight outcomes; diagnostic cannot itself establish improvement.
+
+Official HF skill retrieval/search saved in retrieval.json. Original-source fallback methods already read and retained in previous reviews: https://arxiv.org/html/1707.05110 header v1 III-B/C finite trajectories/MC values, IV-B/C gravity/PD and conservative learning (not transferable pure-motor success); author code link https://bitbucket.org/leggedrobotics/rai . https://arxiv.org/html/1712.00378v4 section3 eq5/6 distinguishes timeouts from failures, but does not require terminating on landing. Literature does not justify another reward coefficient here. Previously rejected bootstrap experiments remain counterevidence. No author code executed.
+
+Reserve audit/hardware seeds; reused validation remains provisional. Preserve rejected reward8/9 and landing comparisons. Strict sustained1mm obstacle/hardware success remains separate and unachieved. Next review should use actual diagnostic activation and trajectories to choose one justified reward adaptation; no silent restart or pause.

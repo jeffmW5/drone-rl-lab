@@ -1,0 +1,101 @@
+[
+  {
+    "trial": 443,
+    "source": "tmp/cuda-research/cuda_auto_0443_takeoff/result.json",
+    "final_error_mm": 3066.839275691547,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 444,
+    "source": "tmp/cuda-research/cuda_auto_0444_takeoff/result.json",
+    "final_error_mm": 2794.005330008662,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 445,
+    "source": "tmp/cuda-research/cuda_auto_0445_takeoff/result.json",
+    "final_error_mm": 8020.596980951246,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 446,
+    "source": "tmp/cuda-research/cuda_auto_0446_takeoff/result.json",
+    "final_error_mm": 1090.0440840438528,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 447,
+    "source": "tmp/cuda-research/cuda_auto_0447_takeoff/result.json",
+    "final_error_mm": 7507.0019446459455,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 448,
+    "source": "tmp/cuda-research/cuda_auto_0448_takeoff/result.json",
+    "final_error_mm": 3835.306199156686,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 2,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 449,
+    "source": "tmp/cuda-research/cuda_auto_0449_takeoff/result.json",
+    "final_error_mm": 1672.8390575524481,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 450,
+    "source": "tmp/cuda-research/cuda_auto_0450_takeoff/result.json",
+    "final_error_mm": 3889.841220601371,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  },
+  {
+    "trial": 451,
+    "source": "tmp/cuda-research/cuda_auto_0451_takeoff/result.json",
+    "final_error_mm": 6792.209582859847,
+    "best_error_mm": 822.2180538658141,
+    "best_step": 0,
+    "crashes": 0,
+    "takeoffs": 24,
+    "hover": 0,
+    "airborne": 0
+  }
+]

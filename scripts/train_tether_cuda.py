@@ -161,6 +161,8 @@ try:
             shaping.apply()
             (out/'potential_shaping_status.json').write_text(json.dumps(dict(version=1,applied=shaping.applied)))
         trainer.train();publish(vec,'PufferLib training',trainer.global_step)
+        if vec.landing_gate is not None:
+            (out/'landing_diagnostics.json').write_text(json.dumps(dict(version=1,training_step=trainer.global_step,**vec.landing_gate.diagnostics()),indent=2))
         if plan.get('learner_diagnostics'):
             # Public cached Puffer metrics; logging may refresh them less often
             # than each update. Retain repeated rows rather than invent freshness.
