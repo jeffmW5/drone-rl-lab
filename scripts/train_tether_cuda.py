@@ -104,6 +104,16 @@ try:
     initial=measured();torch.save(policy.state_dict(),out/'initial.pt')
     best=initial;best_step=0;torch.save(policy.state_dict(),out/'best.pt')
     def rank(value):return (value['crashes'],-value.get('hover_successes',0),-value['takeoffs'],value['mean_final_error_mm'])
+    if plan.get('terminal_diagnostics'):
+        def observe_terminal(obs,done,truncated,failed,reward):
+            with torch.no_grad():
+                _,terminal_value=policy(obs)
+                ids=torch.nonzero(done).flatten()
+                row=dict(ids=ids.cpu().tolist(),timeout_only=(truncated[ids]&(failed[ids]==0)).cpu().tolist(),
+                    failed=failed[ids].cpu().tolist(),pre_reset_value=terminal_value.flatten()[ids].cpu().tolist(),
+                    raw_reward=reward[ids].cpu().tolist(),clipped_reward=reward[ids].clamp(-1,1).cpu().tolist())
+            with (out/'terminal_diagnostics.jsonl').open('a') as stream:stream.write(json.dumps(row)+'\n')
+        vec.terminal_observer=observe_terminal
     trainer=PuffeRL(config,vec,policy)
     diagnostic=None
     if plan.get('gradient_diagnostics'):

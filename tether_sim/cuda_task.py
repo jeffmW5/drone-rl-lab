@@ -56,6 +56,7 @@ def training_starts(start,version,phase):
 class CudaVector:
     def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None,physics_version=1,training_reset_version=1):
         self.direct=direct
+        self.terminal_observer=None
         self.training_region=training_region
         self.control_version=control_version
         self.reward_version=reward_version;self.phase=phase
@@ -144,6 +145,8 @@ class CudaVector:
         # Preserve terminal reward before resetting failed/timed-out states.
         mask=self.done
         if bool(mask.any()):
+            if self.terminal_observer is not None:
+                self.terminal_observer(self.obs(),self.done,self.truncated,s.failed,self.reward)
             initial=self.start
             s.position[mask]=initial[mask];s.velocity[mask]=0;s.orientation[mask]=0;s.orientation[mask,0]=1
             s.motors[mask]=0 if self.direct else s.mass[mask].sum(1,keepdim=True)*9.81/4;s.failed[mask]=0;self.steps[mask]=0
