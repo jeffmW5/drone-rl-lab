@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><title>C CUDA Tether Viewer</title>
+<style>body{margin:0;background:#0a1421;color:#e2e8f0;font:16px Arial}header{padding:18px}canvas{width:100vw;height:75vh}small{color:#a4b3c5}</style>
+<header><b>C / CUDA Tether Lab</b> <span id="status">Connecting…</span><br><small>Live GPU state · experimental particle tether · drag to rotate · scroll to zoom</small></header><canvas id="view"></canvas>
+<script>
+var c=document.getElementById('view'),ctx=c.getContext('2d'),yaw=.7,zoom=180,last=null,drag=false,mx=0;
+c.onmousedown=function(e){drag=true;mx=e.clientX};window.onmouseup=function(){drag=false};c.onmousemove=function(e){if(drag){yaw+=(e.clientX-mx)*.01;mx=e.clientX;draw(last)}};c.onwheel=function(e){e.preventDefault();zoom*=e.deltaY>0?.9:1.1;draw(last)};
+function project(p){return [c.width/2+zoom*(p[0]*Math.cos(yaw)-p[1]*Math.sin(yaw)),c.height*.85-zoom*(p[2]+.35*(p[0]*Math.sin(yaw)+p[1]*Math.cos(yaw)))]}
+function line(a,b,color,width){a=project(a);b=project(b);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke()}
+function dot(p,color,r){p=project(p);ctx.fillStyle=color;ctx.beginPath();ctx.arc(p[0],p[1],r,0,Math.PI*2);ctx.fill()}
+function draw(s){if(!s)return;c.width=c.clientWidth;c.height=c.clientHeight;ctx.clearRect(0,0,c.width,c.height);for(var i=-3;i<=3;i++){line([i,-3,0],[i,3,0],'#26374d',1);line([-3,i,0],[3,i,0],'#26374d',1)}
+(s.boxes||[]).forEach(function(b){var points=[];for(var x=-1;x<=1;x+=2)for(var y=-1;y<=1;y+=2)for(var z=-1;z<=1;z+=2)points.push([b[0]+x*b[3],b[1]+y*b[4],b[2]+z*b[5]]);for(var i=0;i<8;i++)for(var j=i+1;j<8;j++)if((i^j)==1||(i^j)==2||(i^j)==4)line(points[i],points[j],'#687a93',1)});
+var p=s.positions||[];for(var i=1;i<p.length;i++){line(p[i-1],p[i],'#f2bf53',3);dot(p[i],'#f2bf53',2)}if(p.length){var d=p[0];line([d[0]-.07,d[1],d[2]],[d[0]+.07,d[1],d[2]],'#55d4f4',5);line([d[0],d[1]-.07,d[2]],[d[0],d[1]+.07,d[2]],'#55d4f4',5);dot(d,'#55d4f4',5);dot(p[p.length-1],'#ff7791',8)}if(s.goal)dot(s.goal,'#78f5a8',6);document.getElementById('status').textContent=s.mode+' · step '+s.step+' · '+s.gpu}
+setInterval(function(){fetch('/state').then(function(r){return r.json()}).then(function(s){last=s;draw(s)}).catch(function(){document.getElementById('status').textContent='Viewer disconnected'})},100);
+</script>

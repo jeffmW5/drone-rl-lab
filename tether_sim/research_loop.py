@@ -127,7 +127,7 @@ def report(path, state):
 
 def tick(root, plan, state, launch=True):
     active = [p for p in snapshot(root/'tmp/tether-runs')['processes']
-              if any(m in p['args'] for m in ('tether_sim.train','tether_sim.puffer_train'))]
+              if any(m in p['args'] for m in ('tether_sim.train','tether_sim.puffer_train','scripts/train_tether_cuda.py'))]
     if active:
         state['status'] = 'waiting for active training/evaluation'
         state['active_pids'] = [p['pid'] for p in active]

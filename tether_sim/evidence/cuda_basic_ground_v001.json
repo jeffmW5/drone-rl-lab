@@ -1,0 +1,12 @@
+{
+  "status": "basic checks passed",
+  "gpu": "NVIDIA GeForce GTX 1070 Ti",
+  "hover_1s_max_drift_m": 0.0002158538850975944,
+  "max_link_stretch_m": 2.0485249741249156e-05,
+  "freefall_100ms_m": 0.049540492591285706,
+  "collision_detection": true,
+  "batch": 1024,
+  "synchronized_control_transitions_per_second": 23032.922642172613,
+  "seconds": 0.8891620190006506,
+  "scope": "FP64 particle-tether prototype; throughput includes stepping only, no reset, rendering, inference or PPO. No MuJoCo trajectory parity or hardware calibration established."
+}

@@ -1,0 +1,41 @@
+{
+  "status": "complete",
+  "steps": 32768,
+  "training_seconds": 10.21549878100086,
+  "training_transitions_per_second": 3207.674994875734,
+  "initial": {
+    "seed": 51011,
+    "mean_final_error_mm": 55.055213572358205,
+    "errors_mm": [
+      53.95272945026571,
+      26.12090772061612,
+      61.787358873952485,
+      65.34288974419802,
+      16.73768809303468,
+      60.51074901898991,
+      86.2687118187415,
+      69.72067385906723
+    ],
+    "crashes": 0,
+    "scope": "Prototype five-second destination episode; not original navigation or sustained1mm benchmark"
+  },
+  "final": {
+    "seed": 51011,
+    "mean_final_error_mm": 54.200447769266106,
+    "errors_mm": [
+      53.66862336855197,
+      24.66304585788639,
+      60.16557589137439,
+      63.97080082704115,
+      15.182291437622125,
+      60.13678409754615,
+      84.69662875842837,
+      71.11983191567828
+    ],
+    "crashes": 0,
+    "scope": "Prototype five-second destination episode; not original navigation or sustained1mm benchmark"
+  },
+  "gpu": "NVIDIA GeForce GTX 1070 Ti",
+  "advantage_cuda": true,
+  "limitations": "Experimental particle tether; no MuJoCo parity, segment contact response, hardware calibration or original1mm success claim. PufferLib3 copies actions through CPU, but physics and learner are GPU; no CPU physics workers."
+}

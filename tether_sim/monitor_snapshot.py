@@ -18,7 +18,7 @@ def snapshot(root=Path('tmp/tether-runs')):
     for p in Path('/proc').glob('[0-9]*/cmdline'):
         try:
             args=p.read_bytes().decode().split('\0')
-            if any(module in args for module in ('tether_sim.train','tether_sim.puffer_train','tether_sim.viewer')):
+            if any(module in args for module in ('tether_sim.train','tether_sim.puffer_train','tether_sim.viewer','scripts/train_tether_cuda.py')):
                 processes.append({'pid':int(p.parent.name),'args':args})
         except (OSError, UnicodeError):
             pass
