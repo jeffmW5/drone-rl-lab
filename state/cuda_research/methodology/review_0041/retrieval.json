@@ -1,0 +1,31 @@
+{
+  "retrieved_at": "2026-10-12T16:09:00.817271+00:00",
+  "query": "reinforcement learning partial episode bootstrapping terminal value clipping",
+  "paper_ids": [
+    "1712.00378",
+    "2006.05990"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=reinforcement+learning+partial+episode+bootstrapping+terminal+value+clipping&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/1712.00378",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/1712.00378.md",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2006.05990",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2006.05990.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}
