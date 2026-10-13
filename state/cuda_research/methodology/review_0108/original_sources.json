@@ -1,0 +1,30 @@
+[
+  {
+    "url": "https://arxiv.org/pdf/1707.06347",
+    "version": "v2 (28 Aug2017, PDFp0)",
+    "sections_read": [
+      "2.1",
+      "3 Eq7",
+      "5 Eq9-12 and Algorithm1"
+    ],
+    "read_at": "2026-10-13T14:32:00.396474+00:00",
+    "hf_metadata": "source_01.txt",
+    "hf_markdown": "source_02.txt",
+    "author_code_metadata": null,
+    "author_code_executed": false
+  },
+  {
+    "url": "https://arxiv.org/html/1712.00378v1",
+    "version": "v1",
+    "sections_read": [
+      "3 Eq5-6",
+      "4"
+    ],
+    "retrieved_at": "2026-10-13T14:32:00.396474+00:00",
+    "author_project": "https://sites.google.com/view/time-limits-in-rl",
+    "author_code_executed": false,
+    "file": "source_arxiv_1712_00378_v1.html",
+    "sha256": "2182e4be9569310ed45f75002dd3e34de73f8fb51d03bfe5a7f429b2814c6db3",
+    "status": 200
+  }
+]

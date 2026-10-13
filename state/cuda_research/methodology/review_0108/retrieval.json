@@ -1,0 +1,33 @@
+{
+  "retrieved_at": "2026-10-13T14:29:44.637523+00:00",
+  "query": "PPO clipped surrogate multiple optimization epochs deterministic policy regression episodic failure time limits",
+  "paper_ids": [
+    "1707.06347",
+    "1712.00378"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=PPO+clipped+surrogate+multiple+optimization+epochs+deterministic+policy+regression+episodic+failure+time+limits&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/1707.06347",
+      "status": 200,
+      "file": "source_01.txt"
+    },
+    {
+      "url": "https://huggingface.co/papers/1707.06347.md",
+      "status": 200,
+      "file": "source_02.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/1712.00378",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/1712.00378.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}

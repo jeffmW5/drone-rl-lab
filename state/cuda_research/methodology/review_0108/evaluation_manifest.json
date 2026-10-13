@@ -1,0 +1,96 @@
+{
+  "collected_at": "2026-10-13T14:32:00.396474+00:00",
+  "last_reviewed_trial": 855,
+  "files": [
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0853_takeoff/result.json",
+      "bytes": 297665,
+      "sha256": "9f12d9b8f2586b3b6e5c9737afc964b1243bb280fc74545217c8559236d207ae"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0853_takeoff/selection.json",
+      "bytes": 148516,
+      "sha256": "1a03f3792abd7f38d6a634f97b36f8b2a9411d47e372242afeb6d92e5b3351d2"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0853_takeoff/config.json",
+      "bytes": 2948,
+      "sha256": "2890a537fe864263648a5e272018afd81f2935180588f0f767b1f6752bc77221"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0853_takeoff/status.json",
+      "bytes": 38,
+      "sha256": "766fceef18571281537dc1f19af05907597f7aa7b3ef85a41d60119507c6e075"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0853_takeoff/thrust_order_checks.json",
+      "bytes": 448,
+      "sha256": "c0de654c936945f63cc634b19ae05e5c7ecb34796069b78eb12110d120f67d00"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0853_takeoff/thrust_order_checks.sources.json",
+      "bytes": 414,
+      "sha256": "d08756811b8ca01d3f8db8d7e1a3170f387b171ed15cace72a39ab356a0fb197"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0854_takeoff/result.json",
+      "bytes": 297333,
+      "sha256": "ff24b81637e3bf8d6771107ded407f85e63967b0755c7dadedebf4c783994aa2"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0854_takeoff/selection.json",
+      "bytes": 148440,
+      "sha256": "0194420c57cd4d3ae7145ec3c5b430a36a12fa232aed296992188f94f6ef4cff"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0854_takeoff/config.json",
+      "bytes": 2952,
+      "sha256": "44f8010f6eb3f7415705f49523ce09718fb6fad4c508b3a4dfc7b3e83b21444f"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0854_takeoff/status.json",
+      "bytes": 39,
+      "sha256": "c8bd7c3f4540b56a79296eddf8b4aa642b9d2deb627e66c252f076f2713fd88a"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0854_takeoff/thrust_order_checks.json",
+      "bytes": 448,
+      "sha256": "c0de654c936945f63cc634b19ae05e5c7ecb34796069b78eb12110d120f67d00"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0854_takeoff/thrust_order_checks.sources.json",
+      "bytes": 414,
+      "sha256": "d08756811b8ca01d3f8db8d7e1a3170f387b171ed15cace72a39ab356a0fb197"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0855_takeoff/result.json",
+      "bytes": 296687,
+      "sha256": "f54ea7b5abb1ea9854c2ce6987259ba65206d89f79ba3b8208a66b60349982c4"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0855_takeoff/selection.json",
+      "bytes": 148516,
+      "sha256": "1a03f3792abd7f38d6a634f97b36f8b2a9411d47e372242afeb6d92e5b3351d2"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0855_takeoff/config.json",
+      "bytes": 2952,
+      "sha256": "75d3dae124bdd0376e9ab1bf9f47a405b7632156cd2568251f66d3079c9e8927"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0855_takeoff/status.json",
+      "bytes": 39,
+      "sha256": "c8bd7c3f4540b56a79296eddf8b4aa642b9d2deb627e66c252f076f2713fd88a"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0855_takeoff/thrust_order_checks.json",
+      "bytes": 448,
+      "sha256": "c0de654c936945f63cc634b19ae05e5c7ecb34796069b78eb12110d120f67d00"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0855_takeoff/thrust_order_checks.sources.json",
+      "bytes": 414,
+      "sha256": "d08756811b8ca01d3f8db8d7e1a3170f387b171ed15cace72a39ab356a0fb197"
+    }
+  ]
+}
