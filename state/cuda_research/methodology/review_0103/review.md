@@ -1,0 +1,9 @@
+# Review0103: unchanged failure pattern, no justified sweep
+
+Last reviewed completed trial index:830. Retrieved2026-10-13UTC. Daemon554137 healthy/unpaused;831 active at inspection. No restart/interruption/duplicate/compile.
+
+Completed824-830 finals all zero zonehover;824zero failures altitude231.380mm,825-83024zone escapes each with altitude387.554,76.343,48.891,48.784,295.573,750.000mm. Small endpoint after terminal/reset is not success. Initial/periodic/final trajectories and selected checkpoints preserved in results.json. Latest captured raw and source-reconstructed normalized advantages already favor stable cells over fast/outside; neither absent target-height exposure nor global inverted credit supported. No new novel physics or process failure observed, no milestone/promotion.
+
+HF search/2311.13081 metadata/markdown200;2006.05990 metadata/markdown404. Original https://arxiv.org/html/2006.05990v1 3.1 trust-region policy losses and3.2 architecture/output initialization, https://arxiv.org/html/2311.13081v2 IV state/reward and V behavioral assessment read. Published model/algorithm outcomes not local causal diagnosis. Earlier architecture/gain/rollout/reward failures remain counterevidence. No author code run or angular penalty restored.
+
+Decision: no additional parameter sweep or physics change justified by unchanged outcomes. A matched pre/post-update policy query on actually visited states would be more informative than another reward coefficient: inspect whether positive sampled credit increases action likelihood while changing collective/roll/pitch adversely elsewhere. This evidence is not yet collected, so no claim of that defect or speculative correction. Preserve serial continuous operation, reserve audit seeds and provisional reused/nonindependent stillair validation. Full tether material/contact/center attachment/shortened contour uncalibrated. No sustained hover,strict1mm navigation or hardware precision.
