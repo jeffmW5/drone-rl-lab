@@ -1,0 +1,33 @@
+{
+  "retrieved_at": "2026-10-13T10:33:06.272065+00:00",
+  "query": "quadrotor reinforcement learning horizontal braking reward",
+  "paper_ids": [
+    "2311.13081",
+    "1707.05110"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=quadrotor+reinforcement+learning+horizontal+braking+reward&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2311.13081",
+      "status": 200,
+      "file": "source_01.txt"
+    },
+    {
+      "url": "https://huggingface.co/papers/2311.13081.md",
+      "status": 200,
+      "file": "source_02.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/1707.05110",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/1707.05110.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}
