@@ -1,0 +1,76 @@
+[
+  {
+    "methodology_trial": "relative_collective_horizon_v003",
+    "methodology_condition": "read_only_horizontal_response",
+    "methodology_review": "state/cuda_research/methodology/review_0094/review.md",
+    "hypothesis": "Selected matched policy stability up to20s with explicit observation architecture, no reset recovery or promotion from transient altitude",
+    "seed": 70104,
+    "timeout_bootstrap_version": 0,
+    "pufferl_source_sha256": "efc5ea7537670bf89ac18347bdc97126dd6f282b9ede5598424eaeace6f8f5f4",
+    "reward_version": 14,
+    "physics_version": 5,
+    "training_reset_version": 3,
+    "input_conditioning_version": 1,
+    "value_gradient_version": 1,
+    "control_version": 2,
+    "learning_rate": 3e-06,
+    "initial_throttle": 0.62,
+    "steps": 4096,
+    "budget_seconds": 180,
+    "eval_every_steps": 4096,
+    "evaluation_steps": 250,
+    "validation_seeds": [
+      51011,
+      51012,
+      51013
+    ],
+    "batch_size": 4096,
+    "bptt_horizon": 32,
+    "gae_lambda": 0.95,
+    "playback_seconds": 0,
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0713_takeoff/best.pt",
+    "value_return_probe_version": 0,
+    "landing_penalty_version": 0,
+    "gradient_diagnostics": true,
+    "learner_diagnostics": true,
+    "diagnostic_zone_version": 1,
+    "integration_version": 1,
+    "selection_version": 2,
+    "evaluation_reset_version": 3,
+    "policy_response_probe_version": 0,
+    "policy_response_reference": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0242_takeoff/best.pt",
+    "collective_response_version": 1,
+    "optimizer_resume_version": 1,
+    "zone_horizon_probe_version": 3,
+    "zone_horizon_models": [
+      {
+        "checkpoint": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0758_takeoff/best.pt",
+        "collective_observation_version": 1
+      },
+      {
+        "checkpoint": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0759_takeoff/best.pt",
+        "collective_observation_version": 2
+      },
+      {
+        "checkpoint": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0760_takeoff/best.pt",
+        "collective_observation_version": 1
+      },
+      {
+        "checkpoint": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0761_takeoff/best.pt",
+        "collective_observation_version": 2
+      },
+      {
+        "checkpoint": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0762_takeoff/best.pt",
+        "collective_observation_version": 1
+      },
+      {
+        "checkpoint": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0763_takeoff/best.pt",
+        "collective_observation_version": 2
+      },
+      {
+        "checkpoint": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0713_takeoff/best.pt",
+        "collective_observation_version": 2
+      }
+    ]
+  }
+]

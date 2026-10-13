@@ -134,12 +134,14 @@ try:
     policy_response('initial')
     if plan.get('zone_horizon_probe_version',0):
         version=plan['zone_horizon_probe_version']
-        if version not in (1,2):raise ValueError('Unsupported zone horizon probe')
+        if version not in (1,2,3):raise ValueError('Unsupported zone horizon probe')
         if version==1:
             from tether_sim.zone_horizon_probe import probe
-        else:
+        elif version==2:
             from tether_sim.zone_horizon_probe_v002 import probe
-        source='tether_sim/zone_horizon_probe.py' if version==1 else 'tether_sim/zone_horizon_probe_v002.py'
+        else:
+            from tether_sim.zone_horizon_probe_v003 import probe
+        source='tether_sim/zone_horizon_probe.py' if version==1 else ('tether_sim/zone_horizon_probe_v002.py' if version==2 else 'tether_sim/zone_horizon_probe_v003.py')
         (out/'zone_horizon_source.py').write_bytes(Path(source).read_bytes())
         (out/'zone_horizon.json').write_text(json.dumps(probe(policy,plan),indent=2))
     if plan.get('tether_physics_probe_version',0):
