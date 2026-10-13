@@ -264,6 +264,13 @@ try:
                     step=trainer.global_step, version=1, shapes={k:list(v.shape) for k,v in snapshot.items()},
                     scope='Pre-train learner buffers after reward adapters; incoming reward and outgoing action must not be paired at the same index without alignment review. No actual PPO advantage snapshot.',
                     source_sha256=hashlib.sha256(Path(pufferlib.pufferl.__file__).read_bytes()).hexdigest()),indent=2))
+        update_query=None
+        if plan.get('policy_update_capture_version',0) and trainer.global_step>=config['total_timesteps']:
+            if plan['policy_update_capture_version']!=1:raise ValueError('Unsupported policy update capture')
+            from tether_sim.policy_update_capture import query
+            (out/'policy_update_source.py').write_bytes(Path('tether_sim/policy_update_capture.py').read_bytes())
+            update_query=(trainer.observations.detach().clone(),trainer.actions.detach().clone())
+            torch.save(query(policy,*update_query),out/'policy_update_before.pt')
         if plan.get('advantage_capture_version',0) and trainer.global_step>=config['total_timesteps']:
             version=plan['advantage_capture_version']
             if version not in (1,2):raise ValueError('Unsupported advantage capture')
@@ -276,6 +283,8 @@ try:
             capture_train(trainer,out,plan['pufferl_source_sha256'])
         else:
             trainer.train()
+        if update_query is not None:
+            torch.save(query(policy,*update_query),out/'policy_update_after.pt')
         publish(vec,'PufferLib training',trainer.global_step)
         if vec.landing_gate is not None:
             (out/'landing_diagnostics.json').write_text(json.dumps(dict(version=vec.landing_gate.version,training_step=trainer.global_step,**vec.landing_gate.diagnostics()),indent=2))
