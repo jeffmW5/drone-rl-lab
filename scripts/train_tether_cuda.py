@@ -116,7 +116,14 @@ try:
             from tether_sim.value_return_probe import probe
             (out/'value_return_probe_source.py').write_bytes(Path('tether_sim/value_return_probe.py').read_bytes())
             (out/('value_return_probe_'+stage+'.json')).write_text(json.dumps(probe(policy,plan,seeds,config['gamma']),indent=2))
+    def policy_response(stage):
+        if plan.get('policy_response_probe_version',0):
+            if plan['policy_response_probe_version']!=1:raise ValueError('Unsupported policy response probe')
+            from tether_sim.policy_response_probe import probe
+            (out/'policy_response_source.py').write_bytes(Path('tether_sim/policy_response_probe.py').read_bytes())
+            (out/('policy_response_'+stage+'.json')).write_text(json.dumps(probe(policy,plan),indent=2))
     initial=measured();torch.save(policy.state_dict(),out/'initial.pt')
+    policy_response('initial')
     if plan.get('tether_physics_probe_version',0):
         if plan['tether_physics_probe_version'] not in (1,2,3,4,5,6,7,8):raise ValueError('Unsupported tether physics probe')
         if plan['tether_physics_probe_version']==1:
@@ -253,6 +260,7 @@ try:
         (out/'gradient_diagnostics.json').write_text(json.dumps(diagnostic.summary(),indent=2));diagnostic.close()
     torch.save(policy.state_dict(),out/'policy.pt')
     final=measured()
+    policy_response('final')
     value_return_probe('final')
     if rank(final)<rank(best):best=final;best_step=trainer.global_step;torch.save(policy.state_dict(),out/'best.pt')
     result=dict(status='complete',control_mode=config['control_mode'],initial_throttle=args.initial_throttle,steps=trainer.global_step,training_seconds=elapsed,training_transitions_per_second=trainer.global_step/elapsed,initial=initial,final=final,gpu=torch.cuda.get_device_name(0),advantage_cuda=ADVANTAGE_CUDA,
