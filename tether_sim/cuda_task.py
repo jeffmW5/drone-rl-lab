@@ -321,6 +321,7 @@ class CudaPolicy(torch.nn.Module):
         torch.nn.init.zeros_(self.actor.weight);torch.nn.init.zeros_(self.actor.bias)
         self.log_std=torch.nn.Parameter(torch.full((4,),-2.))
         self.value_gradient_version=1
+        self.collective_observation_version=1
         self.register_buffer('obs_scale',torch.ones(98))
     def configure_input_conditioning(self,version):
         if version not in (1,2):raise ValueError('Unsupported input conditioning version')
@@ -339,9 +340,22 @@ class CudaPolicy(torch.nn.Module):
         import copy
         if not hasattr(self,'value_body'):self.value_body=copy.deepcopy(self.body)
         self.value_gradient_version=3
+    def configure_collective_observation(self,version):
+        if version not in (1,2):raise ValueError('Unsupported collective observation version')
+        self.collective_observation_version=version
     def forward(self,obs,state=None):
+        raw_obs=obs
         obs=obs/self.obs_scale
         h=self.body(obs)
         value_h=self.value_body(obs) if self.value_gradient_version==3 else (h.detach() if self.value_gradient_version==2 else h)
-        return torch.distributions.Normal(self.actor(h),self.log_std.exp()),self.value(value_h)
+        means=self.actor(h)
+        if self.collective_observation_version==2:
+            # Learned collective sees relative tether XY geometry/velocity,
+            # vertical state, attitude, rates and motors. Other outputs see full state.
+            relative=raw_obs.clone()
+            relative[...,:42].reshape(*raw_obs.shape[:-1],14,3)[...,:2]-=raw_obs[...,:42].reshape(*raw_obs.shape[:-1],14,3)[...,:1,:2]
+            relative[...,42:84].reshape(*raw_obs.shape[:-1],14,3)[...,:2]-=raw_obs[...,42:84].reshape(*raw_obs.shape[:-1],14,3)[...,:1,:2]
+            collective=self.actor(self.body(relative/self.obs_scale))[...,:1]
+            means=torch.cat((collective,means[...,1:]),dim=-1)
+        return torch.distributions.Normal(means,self.log_std.exp()),self.value(value_h)
     def forward_eval(self,obs,state=None):return self.forward(obs,state)

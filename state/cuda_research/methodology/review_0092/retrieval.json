@@ -1,0 +1,33 @@
+{
+  "retrieved_at": "2026-10-13T09:13:08.667756+00:00",
+  "query": "quadrotor learned motor control decoupled vertical horizontal observations",
+  "paper_ids": [
+    "2311.13081",
+    "2006.05990"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=quadrotor+learned+motor+control+decoupled+vertical+horizontal+observations&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2311.13081",
+      "status": 200,
+      "file": "source_01.txt"
+    },
+    {
+      "url": "https://huggingface.co/papers/2311.13081.md",
+      "status": 200,
+      "file": "source_02.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2006.05990",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2006.05990.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}
