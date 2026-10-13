@@ -37,7 +37,8 @@ def publish(vec,mode,step):
         snapshot.update(mode=mode+(' · direct learned motors' if args.direct else ' · PD + AI residual'),step=step,positions=s.position[0].cpu().tolist(),goal=vec.goal[0].cpu().tolist(),boxes=s.boxes[0].cpu().tolist(),failed=int(s.failed[0]),gpu=torch.cuda.get_device_name(0))
 
 def evaluate(policy,seed):
-    vec=CudaVector(8,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),physics_version=plan.get('physics_version',1));vec.async_reset(seed);collisions=0;peak_height=torch.zeros(8,device='cuda');hold=torch.zeros(8,device='cuda');peak_hold=hold.clone();trajectory=[]
+    vec=CudaVector(8,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),physics_version=plan.get('physics_version',1),diagnostic_zone_version=plan.get('diagnostic_zone_version',0),training_reset_version=plan.get('training_reset_version',1) if plan.get('diagnostic_zone_version',0) else 1);vec.async_reset(seed);collisions=0;peak_height=torch.zeros(8,device='cuda');hold=torch.zeros(8,device='cuda');peak_hold=hold.clone();trajectory=[]
+    zone_hold=hold.clone();peak_zone_hold=hold.clone()
     acquisition_hold=torch.zeros(8,device='cuda');peak_acquisition=acquisition_hold.clone()
     airborne_hold=acquisition_hold.clone();peak_airborne=acquisition_hold.clone()
     for step in range(plan.get('evaluation_steps',250)):
@@ -45,6 +46,10 @@ def evaluate(policy,seed):
         vec.send(action)
         peak_height=torch.maximum(peak_height,vec.sim.position[:,0,2].float())
         collisions+=int((vec.done&~vec.truncated).sum())
+        if vec.diagnostic_zone_version:
+            extent=(vec.sim.position[:,0,:2]-vec.start[:,0,:2]).abs().amax(1)
+            zone_stable=(extent<=1)&((vec.sim.position[:,0,2]-.8).abs()<.1)&(torch.linalg.vector_norm(vec.sim.velocity[:,0],dim=1)<.2)&~vec.done
+            zone_hold=torch.where(zone_stable,zone_hold+.02,0);peak_zone_hold=torch.maximum(peak_zone_hold,zone_hold)
         distance=torch.linalg.vector_norm(vec.sim.position[:,-1]-vec.goal,dim=1)
         stable=(distance<.1)&(torch.linalg.vector_norm(vec.sim.velocity[:,-1],dim=1)<.2)&~vec.done
         hold=torch.where(stable,hold+.02,0);peak_hold=torch.maximum(peak_hold,hold)
@@ -59,13 +64,13 @@ def evaluate(policy,seed):
             trajectory.append(dict(step=step,positions=vec.sim.position[0].cpu().tolist(),velocities=vec.sim.velocity[0].cpu().tolist(),orientation=vec.sim.orientation[0].cpu().tolist(),motors=vec.sim.motors[0].cpu().tolist(),terminal=bool(vec.done[0])))
     error=torch.linalg.vector_norm(vec.sim.position[:,-1]-vec.goal,dim=1)
     return dict(seed=seed,mean_final_error_mm=float(error.mean()*1000),errors_mm=(error*1000).tolist(),crashes=collisions,takeoffs=int((peak_height>.3).sum()),hover_successes=int((peak_hold>=1).sum()),peak_hover_hold_s=peak_hold.cpu().tolist(),peak_drone_height_m=peak_height.cpu().tolist(),
-      airborne_acquisition_successes=int((peak_airborne>=.5).sum()),peak_airborne_acquisition_hold_s=peak_airborne.cpu().tolist(),airborne_acquisition_criteria=dict(version=2,distance_m=.25,speed_m_s=.5,hold_s=.5,drone_height_min_m=.3,payload_height_min_m=.05),acquisition_successes=int((peak_acquisition>=.5).sum()),peak_acquisition_hold_s=peak_acquisition.cpu().tolist(),acquisition_criteria=dict(distance_m=.25,speed_m_s=.5,hold_s=.5),trajectory=trajectory,scope='Prototype evaluation; not original obstacle navigation or sustained1mm benchmark')
+      airborne_acquisition_successes=int((peak_airborne>=.5).sum()),peak_airborne_acquisition_hold_s=peak_airborne.cpu().tolist(),airborne_acquisition_criteria=dict(version=2,distance_m=.25,speed_m_s=.5,hold_s=.5,drone_height_min_m=.3,payload_height_min_m=.05),acquisition_successes=int((peak_acquisition>=.5).sum()),peak_acquisition_hold_s=peak_acquisition.cpu().tolist(),acquisition_criteria=dict(distance_m=.25,speed_m_s=.5,hold_s=.5),trajectory=trajectory,zone_hover_successes=int((peak_zone_hold>=1).sum()),zone_hover_hold_s=peak_zone_hold.cpu().tolist(),zone_hover_criteria=dict(xy_half_width_m=1,carrier_height_m=.8,height_tolerance_m=.1,speed_m_s=.2,hold_s=1),zone_diagnostics=vec.zone_counts,scope='Prototype evaluation; not original obstacle navigation or sustained1mm benchmark')
 
 trainer=None
 try:
     from pufferlib.pufferl import PuffeRL,ADVANTAGE_CUDA
     if not ADVANTAGE_CUDA:raise RuntimeError('CUDA advantage kernel required')
-    vec=CudaVector(128,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),training_region=plan.get('training_region'),physics_version=plan.get('physics_version',1),training_reset_version=plan.get('training_reset_version',1),landing_penalty_version=plan.get('landing_penalty_version',0));policy=CudaPolicy().cuda()
+    vec=CudaVector(128,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),training_region=plan.get('training_region'),physics_version=plan.get('physics_version',1),training_reset_version=plan.get('training_reset_version',1),landing_penalty_version=plan.get('landing_penalty_version',0),diagnostic_zone_version=plan.get('diagnostic_zone_version',0));policy=CudaPolicy().cuda()
     if args.direct and args.initial_throttle!=.5:
         with torch.no_grad():policy.actor.bias.fill_(2*args.initial_throttle-1);policy.log_std.fill_(-4.)
     if plan.get('control_version',1)==2:
@@ -113,16 +118,19 @@ try:
             (out/('value_return_probe_'+stage+'.json')).write_text(json.dumps(probe(policy,plan,seeds,config['gamma']),indent=2))
     initial=measured();torch.save(policy.state_dict(),out/'initial.pt')
     if plan.get('tether_physics_probe_version',0):
-        if plan['tether_physics_probe_version'] not in (1,2,3):raise ValueError('Unsupported tether physics probe')
+        if plan['tether_physics_probe_version'] not in (1,2,3,4):raise ValueError('Unsupported tether physics probe')
         if plan['tether_physics_probe_version']==1:
             from tether_sim.tether_physics_probe import probe as tether_probe
             probe_source='tether_sim/tether_physics_probe.py'
         elif plan['tether_physics_probe_version']==2:
             from tether_sim.tether_physics_probe_v002 import probe as tether_probe
             probe_source='tether_sim/tether_physics_probe_v002.py'
-        else:
+        elif plan['tether_physics_probe_version']==3:
             from tether_sim.tether_physics_probe_v003 import probe as tether_probe
             probe_source='tether_sim/tether_physics_probe_v003.py'
+        else:
+            from tether_sim.tether_physics_probe_v004 import probe as tether_probe
+            probe_source='tether_sim/tether_physics_probe_v004.py'
         (out/'tether_physics_probe_source.py').write_bytes(Path(probe_source).read_bytes())
         (out/'tether_physics_probe.json').write_text(json.dumps(tether_probe(),indent=2))
     if plan.get('long_flight_probe_version',0):
@@ -218,6 +226,7 @@ try:
                 stream.write(json.dumps(dict(step=trainer.global_step,
                     cached_losses=dict(trainer.losses),
                     log_std=policy.log_std.detach().cpu().tolist()))+'\n')
+        (out/'zone_diagnostics.json').write_text(json.dumps(vec.zone_counts))
         (out/'status.json').write_text(json.dumps(dict(status='training',steps=trainer.global_step,elapsed=time.monotonic()-started)))
         if plan and trainer.global_step>=next_eval:
             value=measured();(out/('eval_'+str(trainer.global_step)+'.json')).write_text(json.dumps(value,indent=2))

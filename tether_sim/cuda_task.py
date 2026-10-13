@@ -134,8 +134,27 @@ class LandingBeforeSuccess:
         return dict(penalized_agent_steps=int(self.penalized_steps),episode_takeoffs=int(self.takeoffs),episode_successes=int(self.successes))
 
 
+def zone_hover_reward(positions,velocity,orientation,center,failed):
+    """Diagnostic14: carrier hover, square XY bounds, preserved full tether."""
+    displacement=positions[:,0,:2]-center[:,:2]
+    extent=displacement.abs().amax(1)
+    escaped=extent>=2.
+    band=(extent>1.)&~escaped
+    height_error=positions[:,0,2]-.8
+    speed2=velocity[:,0].square().sum(1)
+    upright=1-2*orientation[:,1:3].square().sum(1)
+    airborne=((positions[:,0,2]-.05)/.25).clamp(0,1)
+    reward=airborne/(1+4*height_error.square()+2*speed2)+.05*upright-.8*(positions[:,0,2]<.15)
+    reward=torch.where(band,-torch.ones_like(reward),reward)
+    reward=torch.where(escaped|(failed!=0),-torch.ones_like(reward),reward)
+    return reward.float(),escaped,band
+
+
 class CudaVector:
-    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None,physics_version=1,training_reset_version=1,landing_penalty_version=0):
+    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None,physics_version=1,training_reset_version=1,landing_penalty_version=0,diagnostic_zone_version=0):
+        if diagnostic_zone_version not in (0,1):raise ValueError("Unsupported diagnostic zone")
+        self.diagnostic_zone_version=diagnostic_zone_version
+        self.zone_counts=dict(band_steps=0,escapes=0)
         self.direct=direct
         self.terminal_observer=None
         self.training_region=training_region
@@ -176,6 +195,11 @@ class CudaVector:
             if self.phase in ('takeoff','hover'):
                 self.goal[:,:2]=self.start[:,-1,:2]
                 self.goal[:,2]=.2 if self.phase=='takeoff' else .6
+        if self.diagnostic_zone_version:
+            self.sim.boxes=torch.empty(self.num_agents,0,6,device="cuda")
+            self.sim.wind.zero_()
+            self.goal[:,:2]=self.start[:,0,:2]
+            self.goal[:,2]=.2 # Carrier .8m, hanging payload .2m.
         self.previous_error=torch.linalg.vector_norm(self.sim.position[:,-1]-self.goal,dim=1)
 
     def obs(self):
@@ -227,6 +251,11 @@ class CudaVector:
         if getattr(self,'landing_gate',None) is not None:
             premature=self.landing_gate.update(s.position,s.velocity,self.goal,s.failed)
             self.reward=torch.where(premature,torch.full_like(self.reward,-1),self.reward)
+        if self.diagnostic_zone_version:
+            self.reward,escaped,band=zone_hover_reward(s.position,s.velocity,s.orientation,self.start[:,0],s.failed)
+            self.zone_counts["band_steps"]+=int(band.sum())
+            self.zone_counts["escapes"]+=int(escaped.sum())
+            s.failed=torch.where(escaped & (s.failed==0),torch.full_like(s.failed,3),s.failed)
         self.previous_error=error
         self.truncated=self.steps>=500;self.done=(s.failed!=0)|self.truncated
         if self.training_region is not None:
