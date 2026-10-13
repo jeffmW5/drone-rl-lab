@@ -108,6 +108,23 @@ def initial_motor_forces(mass,reset_version):
     return force
 
 
+def configure_collective_response(policy,version):
+    """Scale learned collective row once; preserve output at fixed hover anchor."""
+    if version not in (1,2):raise ValueError('Unsupported collective response version')
+    if version==1:return
+    device=policy.actor.weight.device;dtype=policy.actor.weight.dtype
+    positions=torch.zeros(14,3,device=device,dtype=dtype)
+    positions[:,2]=.6-torch.arange(14,device=device,dtype=dtype)*.6/13
+    motors=torch.full((4,),(.0434+.001+.005)*9.81/4,device=device,dtype=dtype)
+    q=torch.zeros(7,device=device,dtype=dtype);q[0]=1
+    anchor=torch.cat((positions.flatten(),torch.zeros(42,device=device,dtype=dtype),q,motors,torch.tensor([0,0,.2],device=device,dtype=dtype)))
+    with torch.no_grad():
+        h=policy.body(anchor[None]/policy.obs_scale)[0]
+        contribution=policy.actor.weight[0]@h
+        policy.actor.weight[0].mul_(64)
+        policy.actor.bias[0].add_(-63*contribution)
+
+
 class LandingBeforeSuccess:
     """Episode-local reward gate; does not terminate or control the drone."""
     def __init__(self,count,device,version=1):

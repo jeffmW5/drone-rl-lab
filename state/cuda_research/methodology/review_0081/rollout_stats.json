@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "samples": 4096,
+  "height_min_max": [
+    0.04999999701976776,
+    0.2233208417892456
+  ],
+  "height_quantiles": [
+    0.05000004917383194,
+    0.08023583889007568,
+    0.18082019686698914
+  ],
+  "vz_quantiles": [
+    4.1862665966618806e-05,
+    0.26000282168388367,
+    0.5153246521949768
+  ],
+  "collective_quantiles": [
+    0.5881577730178833,
+    0.6002486944198608,
+    0.6119376420974731
+  ],
+  "near_hover_fraction": 0.0,
+  "near_hover_low_speed_fraction": 0.0,
+  "reward_quantiles": [
+    -0.7499256730079651,
+    -0.7055363059043884,
+    0.219767227768898
+  ],
+  "scope": "Real pre-update first4096 rollout; sampled action and incoming reward are not same transition, no causal reward-action alignment inferred"
+}
