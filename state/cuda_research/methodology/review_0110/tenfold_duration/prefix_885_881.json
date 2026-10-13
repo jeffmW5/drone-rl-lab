@@ -1,0 +1,509 @@
+{
+  "created_at_utc": "2026-10-13T16:24:16Z",
+  "status": "passed",
+  "scope": "CPU-only existing immutable short881 final vs active tenfold885prefix at65536. CUDA_VISIBLE_DEVICES empty, OMP_NUM_THREADS1, CPU weights_only loads; no GPU/build/training/config/source/queue edits. Exact65kprefix proves matched start/early optimization only; future655360 outcome remains pending. No sustained-hover/hardware result inferred.",
+  "checks": {
+    "reference_path_sha_matches_long_plan": true,
+    "matched_seed70601_reward15_mask2": true,
+    "short65536_long655360": true,
+    "tenfold_budget1800": true,
+    "behavioral_configs_identical_except_duration_metadata": true,
+    "all_snapshot_sources_actual_equal_and_declared_verified": true,
+    "installed_puffer_source_matches_guard": true,
+    "all10_tensor_keys29931_elements": true,
+    "all_tensors_finite_exact_equal": true,
+    "checkpoint_crc_complete": true,
+    "all_evaluation_fields_and_traces_equal": true,
+    "all_legacy_evaluation_fields_equal": true
+  },
+  "configuration_sources": [
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff/config.json",
+      "bytes": 3379,
+      "mtime_ns": 1791907654151952140,
+      "sha256": "ac62db01ce01a4081f4e6a896747077f93b84e21e79e8ab6ff8158d72f8f1b8f",
+      "stable_during_read": true
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff/config.json",
+      "bytes": 3815,
+      "mtime_ns": 1791908370595883820,
+      "sha256": "bc8c5f41d73cf4c72e3bebbb81dc1b5a4dc26570ede18e4f2d1de8ca5a05d047",
+      "stable_during_read": true
+    }
+  ],
+  "short_reference_sha_in_plan": "f0ed60215c8822ca5d2fac743acd039dcf887d729f040d2f115bd81449d8a6e0",
+  "checkpoint_sources": [
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff/policy.pt",
+      "bytes": 123509,
+      "mtime_ns": 1791907791709280762,
+      "sha256": "f0ed60215c8822ca5d2fac743acd039dcf887d729f040d2f115bd81449d8a6e0",
+      "stable_during_read": true,
+      "zip_crc_complete": true,
+      "zip_members": 16,
+      "weights_only_load_complete": true,
+      "tensor_keys": 10,
+      "total_elements": 29931
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff/checkpoint_65536.pt",
+      "bytes": 124053,
+      "mtime_ns": 1791908508445841079,
+      "sha256": "6a075f588851167c4b9288784d62d226559418a95bc87d1f415a9774c5ee22cd",
+      "stable_during_read": true,
+      "zip_crc_complete": true,
+      "zip_members": 16,
+      "weights_only_load_complete": true,
+      "tensor_keys": 10,
+      "total_elements": 29931
+    }
+  ],
+  "keys_equal": true,
+  "all_tensor_equal": true,
+  "max_abs_delta": 0.0,
+  "tensor_comparison": [
+    {
+      "key": "log_std",
+      "shape": [
+        4
+      ],
+      "dtype_a": "torch.float32",
+      "dtype_b": "torch.float32",
+      "shape_equal": true,
+      "dtype_equal": true,
+      "equal": true,
+      "max_abs_delta": 0.0,
+      "finite_a": true,
+      "finite_b": true
+    },
+    {
+      "key": "obs_scale",
+      "shape": [
+        98
+      ],
+      "dtype_a": "torch.float32",
+      "dtype_b": "torch.float32",
+      "shape_equal": true,
+      "dtype_equal": true,
+      "equal": true,
+      "max_abs_delta": 0.0,
+      "finite_a": true,
+      "finite_b": true
+    },
+    {
+      "key": "body.0.weight",
+      "shape": [
+        128,
+        98
+      ],
+      "dtype_a": "torch.float32",
+      "dtype_b": "torch.float32",
+      "shape_equal": true,
+      "dtype_equal": true,
+      "equal": true,
+      "max_abs_delta": 0.0,
+      "finite_a": true,
+      "finite_b": true
+    },
+    {
+      "key": "body.0.bias",
+      "shape": [
+        128
+      ],
+      "dtype_a": "torch.float32",
+      "dtype_b": "torch.float32",
+      "shape_equal": true,
+      "dtype_equal": true,
+      "equal": true,
+      "max_abs_delta": 0.0,
+      "finite_a": true,
+      "finite_b": true
+    },
+    {
+      "key": "body.2.weight",
+      "shape": [
+        128,
+        128
+      ],
+      "dtype_a": "torch.float32",
+      "dtype_b": "torch.float32",
+      "shape_equal": true,
+      "dtype_equal": true,
+      "equal": true,
+      "max_abs_delta": 0.0,
+      "finite_a": true,
+      "finite_b": true
+    },
+    {
+      "key": "body.2.bias",
+      "shape": [
+        128
+      ],
+      "dtype_a": "torch.float32",
+      "dtype_b": "torch.float32",
+      "shape_equal": true,
+      "dtype_equal": true,
+      "equal": true,
+      "max_abs_delta": 0.0,
+      "finite_a": true,
+      "finite_b": true
+    },
+    {
+      "key": "actor.weight",
+      "shape": [
+        4,
+        128
+      ],
+      "dtype_a": "torch.float32",
+      "dtype_b": "torch.float32",
+      "shape_equal": true,
+      "dtype_equal": true,
+      "equal": true,
+      "max_abs_delta": 0.0,
+      "finite_a": true,
+      "finite_b": true
+    },
+    {
+      "key": "actor.bias",
+      "shape": [
+        4
+      ],
+      "dtype_a": "torch.float32",
+      "dtype_b": "torch.float32",
+      "shape_equal": true,
+      "dtype_equal": true,
+      "equal": true,
+      "max_abs_delta": 0.0,
+      "finite_a": true,
+      "finite_b": true
+    },
+    {
+      "key": "value.weight",
+      "shape": [
+        1,
+        128
+      ],
+      "dtype_a": "torch.float32",
+      "dtype_b": "torch.float32",
+      "shape_equal": true,
+      "dtype_equal": true,
+      "equal": true,
+      "max_abs_delta": 0.0,
+      "finite_a": true,
+      "finite_b": true
+    },
+    {
+      "key": "value.bias",
+      "shape": [
+        1
+      ],
+      "dtype_a": "torch.float32",
+      "dtype_b": "torch.float32",
+      "shape_equal": true,
+      "dtype_equal": true,
+      "equal": true,
+      "max_abs_delta": 0.0,
+      "finite_a": true,
+      "finite_b": true
+    }
+  ],
+  "core_config_differences_excluding_duration": {},
+  "plan_differences_excluding_duration_metadata": {},
+  "source_comparison": [
+    {
+      "kind": "daemon_core_source_snapshot",
+      "manifest_short": {
+        "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff.sources/hashes.json",
+        "bytes": 502,
+        "mtime_ns": 1791907652356944400,
+        "sha256": "e079236276f7f3619254e47da13c0c225d3d045210282e91d8284aab6141757f",
+        "stable_during_read": true
+      },
+      "manifest_long": {
+        "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff.sources/hashes.json",
+        "bytes": 502,
+        "mtime_ns": 1791908368774989433,
+        "sha256": "e079236276f7f3619254e47da13c0c225d3d045210282e91d8284aab6141757f",
+        "stable_during_read": true
+      },
+      "declared_manifests_equal": true,
+      "sources": [
+        {
+          "relative_source": "scripts/train_tether_cuda.py",
+          "short": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff.sources/train_tether_cuda.py",
+            "bytes": 31950,
+            "mtime_ns": 1791907652356250391,
+            "sha256": "28e8885c354e17a9fbd5a5b0ef26780e05e30686ad592566844867c034eedf79",
+            "stable_during_read": true
+          },
+          "long": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff.sources/train_tether_cuda.py",
+            "bytes": 31950,
+            "mtime_ns": 1791908368774387215,
+            "sha256": "28e8885c354e17a9fbd5a5b0ef26780e05e30686ad592566844867c034eedf79",
+            "stable_during_read": true
+          },
+          "actual_hash_equal": true,
+          "short_declared_hash_verified": true,
+          "long_declared_hash_verified": true
+        },
+        {
+          "relative_source": "tether_sim/cuda/host.c",
+          "short": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff.sources/host.c",
+            "bytes": 1033,
+            "mtime_ns": 1791907652356726347,
+            "sha256": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+            "stable_during_read": true
+          },
+          "long": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff.sources/host.c",
+            "bytes": 1033,
+            "mtime_ns": 1791908368774797151,
+            "sha256": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+            "stable_during_read": true
+          },
+          "actual_hash_equal": true,
+          "short_declared_hash_verified": true,
+          "long_declared_hash_verified": true
+        },
+        {
+          "relative_source": "tether_sim/cuda/physics_v005.cu",
+          "short": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff.sources/physics_v005.cu",
+            "bytes": 3081,
+            "mtime_ns": 1791907652356857547,
+            "sha256": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b",
+            "stable_during_read": true
+          },
+          "long": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff.sources/physics_v005.cu",
+            "bytes": 3081,
+            "mtime_ns": 1791908368774908934,
+            "sha256": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b",
+            "stable_during_read": true
+          },
+          "actual_hash_equal": true,
+          "short_declared_hash_verified": true,
+          "long_declared_hash_verified": true
+        },
+        {
+          "relative_source": "tether_sim/cuda_backend.py",
+          "short": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff.sources/cuda_backend.py",
+            "bytes": 3633,
+            "mtime_ns": 1791907652356580434,
+            "sha256": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+            "stable_during_read": true
+          },
+          "long": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff.sources/cuda_backend.py",
+            "bytes": 3633,
+            "mtime_ns": 1791908368774681839,
+            "sha256": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+            "stable_during_read": true
+          },
+          "actual_hash_equal": true,
+          "short_declared_hash_verified": true,
+          "long_declared_hash_verified": true
+        },
+        {
+          "relative_source": "tether_sim/cuda_task.py",
+          "short": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff.sources/cuda_task.py",
+            "bytes": 22044,
+            "mtime_ns": 1791907652356443512,
+            "sha256": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade",
+            "stable_during_read": true
+          },
+          "long": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff.sources/cuda_task.py",
+            "bytes": 22044,
+            "mtime_ns": 1791908368774560231,
+            "sha256": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade",
+            "stable_during_read": true
+          },
+          "actual_hash_equal": true,
+          "short_declared_hash_verified": true,
+          "long_declared_hash_verified": true
+        }
+      ]
+    },
+    {
+      "kind": "run_auxiliary_source_snapshots",
+      "sources": [
+        {
+          "source_name": "eval_terminal_trace_source.py",
+          "both_present": true,
+          "short": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff/eval_terminal_trace_source.py",
+            "bytes": 7319,
+            "mtime_ns": 1791907654152041244,
+            "sha256": "2afd2e5d6bb4f5b0f02972eb7555dbbe117963c43cde4d642993d513355b7b69",
+            "stable_during_read": true
+          },
+          "long": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff/eval_terminal_trace_source.py",
+            "bytes": 7319,
+            "mtime_ns": 1791908370595980057,
+            "sha256": "2afd2e5d6bb4f5b0f02972eb7555dbbe117963c43cde4d642993d513355b7b69",
+            "stable_during_read": true
+          },
+          "actual_hash_equal": true
+        },
+        {
+          "source_name": "gradient_diagnostics_source.py",
+          "both_present": true,
+          "short": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff/gradient_diagnostics_source.py",
+            "bytes": 2206,
+            "mtime_ns": 1791907677205416587,
+            "sha256": "96c3ae1abc2c78cb982fd7ee4be7e1d6fdf9c3835b0c46029a81b0242a803579",
+            "stable_during_read": true
+          },
+          "long": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff/gradient_diagnostics_source.py",
+            "bytes": 2206,
+            "mtime_ns": 1791908394000696481,
+            "sha256": "96c3ae1abc2c78cb982fd7ee4be7e1d6fdf9c3835b0c46029a81b0242a803579",
+            "stable_during_read": true
+          },
+          "actual_hash_equal": true
+        },
+        {
+          "source_name": "host.c",
+          "both_present": true,
+          "short": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff/host.c",
+            "bytes": 1033,
+            "mtime_ns": 1791907653561793447,
+            "sha256": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+            "stable_during_read": true
+          },
+          "long": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff/host.c",
+            "bytes": 1033,
+            "mtime_ns": 1791908370033447302,
+            "sha256": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+            "stable_during_read": true
+          },
+          "actual_hash_equal": true
+        },
+        {
+          "source_name": "learner_valid_mask_source.py",
+          "both_present": true,
+          "short": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff/learner_valid_mask_source.py",
+            "bytes": 3235,
+            "mtime_ns": 1791907677205050218,
+            "sha256": "61c296352904162041a782e26abf5fa78ba3ea3745963e1fd001a4b36bb448c4",
+            "stable_during_read": true
+          },
+          "long": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff/learner_valid_mask_source.py",
+            "bytes": 3235,
+            "mtime_ns": 1791908394000299726,
+            "sha256": "61c296352904162041a782e26abf5fa78ba3ea3745963e1fd001a4b36bb448c4",
+            "stable_during_read": true
+          },
+          "actual_hash_equal": true
+        },
+        {
+          "source_name": "physics_v001.cu",
+          "both_present": true,
+          "short": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff/physics_v001.cu",
+            "bytes": 2739,
+            "mtime_ns": 1791907653561728097,
+            "sha256": "73841638a1fc2bc087640c6c95d905f11cf41bac984b3a0ad9fc2dda03f1379c",
+            "stable_during_read": true
+          },
+          "long": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff/physics_v001.cu",
+            "bytes": 2739,
+            "mtime_ns": 1791908370033378535,
+            "sha256": "73841638a1fc2bc087640c6c95d905f11cf41bac984b3a0ad9fc2dda03f1379c",
+            "stable_during_read": true
+          },
+          "actual_hash_equal": true
+        },
+        {
+          "source_name": "physics_v005.cu",
+          "both_present": true,
+          "short": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff/physics_v005.cu",
+            "bytes": 3081,
+            "mtime_ns": 1791907653561660935,
+            "sha256": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b",
+            "stable_during_read": true
+          },
+          "long": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff/physics_v005.cu",
+            "bytes": 3081,
+            "mtime_ns": 1791908370033306429,
+            "sha256": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b",
+            "stable_during_read": true
+          },
+          "actual_hash_equal": true
+        },
+        {
+          "source_name": "thrust_order_check.py",
+          "both_present": true,
+          "short": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff/thrust_order_check.py",
+            "bytes": 4092,
+            "mtime_ns": 1791907653561583852,
+            "sha256": "887a16e89874ef12bcd59581ad83a6c48c439833ccba0de5a34cdd2903db46f9",
+            "stable_during_read": true
+          },
+          "long": {
+            "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff/thrust_order_check.py",
+            "bytes": 4092,
+            "mtime_ns": 1791908370033224499,
+            "sha256": "887a16e89874ef12bcd59581ad83a6c48c439833ccba0de5a34cdd2903db46f9",
+            "stable_during_read": true
+          },
+          "actual_hash_equal": true
+        }
+      ]
+    }
+  ],
+  "puffer_source": {
+    "path": "/home/n33du/ai/puffer-tether-venv/lib/python3.12/site-packages/pufferlib/pufferl.py",
+    "bytes": 46663,
+    "mtime_ns": 1791754099981753610,
+    "sha256": "efc5ea7537670bf89ac18347bdc97126dd6f282b9ede5598424eaeace6f8f5f4",
+    "stable_during_read": true
+  },
+  "evaluation_sources": [
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0881_takeoff/result.json",
+      "bytes": 301866,
+      "mtime_ns": 1791907813992794408,
+      "sha256": "e23c826eca156cadb906a31d02baa801f3c8fd94fc7a4b220d86b88845166540",
+      "stable_during_read": true
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0885_takeoff/eval_65536.json",
+      "bytes": 140109,
+      "mtime_ns": 1791908508445507107,
+      "sha256": "df19bfe72a6761062809b0fe4120e9b2952db7136335f5f7fb1ae480f4149197",
+      "stable_during_read": true
+    }
+  ],
+  "evaluation_short_final_field": "result.json.final",
+  "evaluation_full_equal": true,
+  "evaluation_legacy_equal": true,
+  "evaluation_prefix_outcome": {
+    "crashes": 0,
+    "takeoffs": 24,
+    "zone_hover_successes": 0,
+    "zone_hover_error_mm": 57.833887256880324,
+    "zone_escapes": 0,
+    "hover_successes": 0,
+    "mean_final_error_mm": 1899.2074828602908
+  },
+  "evaluation_max_zone_hold_s": 0.15999998152256012
+}
