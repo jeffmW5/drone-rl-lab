@@ -206,6 +206,12 @@ try:
         (out/'potential_shaping_source.py').write_bytes(Path('tether_sim/potential_shaping.py').read_bytes())
         shaping=PotentialShaping(vec,config['gamma'])
     trainer=PuffeRL(config,vec,policy)
+    if plan.get('optimizer_resume_version',1) not in (1,2):raise ValueError('Unsupported optimizer resume version')
+    if plan.get('optimizer_resume_version',1)==2:
+        if plan.get('collective_response_version',1)!=1 or plan.get('input_conditioning_version',1)!=1:raise ValueError('Optimizer restore disallows changed policy initialization')
+        from tether_sim.optimizer_resume import restore_optimizer
+        (out/'optimizer_resume_source.py').write_bytes(Path('tether_sim/optimizer_resume.py').read_bytes())
+        (out/'optimizer_resume.json').write_text(json.dumps(restore_optimizer(trainer.optimizer,policy,plan['optimizer_resume_path']),indent=2))
     if shaping is not None:shaping.trainer=trainer
     if bootstrap is not None:bootstrap.trainer=trainer
     diagnostic=None
@@ -261,6 +267,7 @@ try:
     if diagnostic is not None:
         (out/'gradient_diagnostics.json').write_text(json.dumps(diagnostic.summary(),indent=2));diagnostic.close()
     torch.save(policy.state_dict(),out/'policy.pt')
+    torch.save(dict(model_name='policy.pt',optimizer_state_dict=trainer.optimizer.state_dict(),global_step=trainer.global_step),out/'optimizer_final.pt')
     final=measured()
     policy_response('final')
     value_return_probe('final')

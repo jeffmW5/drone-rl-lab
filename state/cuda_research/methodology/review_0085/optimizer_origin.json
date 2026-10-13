@@ -1,0 +1,6 @@
+{
+  "state_path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0685_takeoff/puffer/179187093572/trainer_state.pt",
+  "model": "model_000016.pt",
+  "global_step": 65536,
+  "weights_match_best": true
+}
