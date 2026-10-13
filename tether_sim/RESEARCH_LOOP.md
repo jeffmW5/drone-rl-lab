@@ -104,3 +104,16 @@ never compare its1ms results as if they shared the original2ms benchmark.
 2026-10-13 user extension: continue serial loop with fixed-input physics tests and versioned simulator improvements alongside learning. After quaternion pairs, queueaaf runs obstacle-free still-air full-tether zone-hover, square±1m XY, negative band to±2m, true failure at±2m, carrier target0.8m. See state/cuda_research/methodology/zone_hover_v001.md. Probe4 tests corrected physics3 convergence before first zone training. Original benchmarks remain separate; failures alone do not establish incorrect physics.
 
 2026-10-13 continuation repair: default scheduler now fixed obstacle-free zone reward14/physics5/reset3/selection2, LR3e-6, bounded65536transitions/180s. Explicit research queues retain priority. Default chains final policy weights when no deterministic failure, otherwise retainedbest, starting685best. Adam state is not retained; weight continuation is not optimizer continuation. Zone incumbent ranking now uses zone metrics; no legacy phase promotion from zone data. See review0084 for old fallback counterevidence and graceful refresh verification.
+
+2026-10-13 user updates: reward16 adds continuous fine-distance shaping and removes
+the near-hover upper clipping plateau; reward14/15 remain frozen controls. The
+explicit tenfold-duration request is now queue
+configs/cuda_research/methodology_queue_v000_user_abca_0_tenfold_reward.json:
+655360 transitions/1800s per trial,128 parallel GPU environments,50Hz control,
+evaluation every16384 transitions and fresh Adam retained throughout each run.
+Three fixed-source reward15/16 pairs test duration without changing physics5,
+ground reset3,observation2,control2 or corrected learner mask2. Verify exact65k
+prefixes against short references; trial885's reward15 prefix passes. Remaining
+short and recovery plans are retained and healthy trainers drain naturally before
+queue priority changes. Review0110 closes882; report counterevidence and check
+current native loop.json rather than inferring dispatch from a trial counter.

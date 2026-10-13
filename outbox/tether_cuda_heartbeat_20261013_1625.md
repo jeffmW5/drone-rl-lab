@@ -1,0 +1,11 @@
+# Research heartbeat - 2026-10-13 16:25 UTC
+
+The serial daemon554137 remains healthy and unpaused with one GPU trainer. Trial885 is the user-requested long reward15 control:655360 transitions,1800s cap,128 parallel environments. No trainer was interrupted, restarted or duplicated. Its65536 checkpoint exactly reproduces the short881 weights and full evaluation. Reward16's long matched arm remains next.
+
+The second short pair883/884, seed70602, completed65536 transitions in107.90/108.45s. Both final policies retained24 takeoffs, zero counted failures and zero sustained hover. Reward15/16 peak holds were0.08/0.22s and endpoint altitude errors95.159/91.429mm. At the last4.52s sampled frame, speeds were0.837/0.791m/s and square extents1.195/1.032m: both were still drifting outside the accepted1m zone. These are five-second evaluations; zero counted failure does not establish indefinite survival. Reward16's selected16k altitude endpoint1.632mm had only0.24s peak hold, then regressed. It is not millimeter hover.
+
+This is counterevidence to treating the first seed's added reward16 escapes as a replicated effect: the second seed has none in either arm. Across the first two short seed pairs, reward16 has not established sustained hover or reliable improvement. Different reward magnitudes are not compared. All24 validation lanes still repeat one physical condition; hardware/audit seeds remain reserved.
+
+Partial long control885 now shows true zone failures from checkpoint81920 onward in the reviewed prefix through278528, with zero sustained hover and peak hold at most0.18s. Status at capture was294912 transitions/464.13s. Its post-reset altitude endpoint is not convergence. This is the known drift/escape mode, not a novel process or physics failure. The user-requested healthy long trial continues unchanged; its final outcome and long reward16 comparison are pending.
+
+Review0110's last formally reviewed completed index remains882. Only883/884 have since completed, so the next completed trial triggers the next methodology review. This heartbeat preserves the second-pair and partial-prefix evidence without silently advancing that review index. No new reward, learner or physics modification is justified mid-campaign. Original strict1mm obstacle navigation and hardware accuracy remain unachieved in this uncalibrated simulation.
