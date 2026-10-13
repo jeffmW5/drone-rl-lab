@@ -132,9 +132,14 @@ try:
     initial=measured();torch.save(policy.state_dict(),out/'initial.pt')
     policy_response('initial')
     if plan.get('zone_horizon_probe_version',0):
-        if plan['zone_horizon_probe_version']!=1:raise ValueError('Unsupported zone horizon probe')
-        from tether_sim.zone_horizon_probe import probe
-        (out/'zone_horizon_source.py').write_bytes(Path('tether_sim/zone_horizon_probe.py').read_bytes())
+        version=plan['zone_horizon_probe_version']
+        if version not in (1,2):raise ValueError('Unsupported zone horizon probe')
+        if version==1:
+            from tether_sim.zone_horizon_probe import probe
+        else:
+            from tether_sim.zone_horizon_probe_v002 import probe
+        source='tether_sim/zone_horizon_probe.py' if version==1 else 'tether_sim/zone_horizon_probe_v002.py'
+        (out/'zone_horizon_source.py').write_bytes(Path(source).read_bytes())
         (out/'zone_horizon.json').write_text(json.dumps(probe(policy,plan),indent=2))
     if plan.get('tether_physics_probe_version',0):
         if plan['tether_physics_probe_version'] not in (1,2,3,4,5,6,7,8):raise ValueError('Unsupported tether physics probe')
