@@ -265,9 +265,14 @@ try:
                     scope='Pre-train learner buffers after reward adapters; incoming reward and outgoing action must not be paired at the same index without alignment review. No actual PPO advantage snapshot.',
                     source_sha256=hashlib.sha256(Path(pufferlib.pufferl.__file__).read_bytes()).hexdigest()),indent=2))
         if plan.get('advantage_capture_version',0) and trainer.global_step>=config['total_timesteps']:
-            if plan['advantage_capture_version']!=1:raise ValueError('Unsupported advantage capture')
-            from tether_sim.advantage_capture import capture_train
-            (out/'advantage_capture_source.py').write_bytes(Path('tether_sim/advantage_capture.py').read_bytes())
+            version=plan['advantage_capture_version']
+            if version not in (1,2):raise ValueError('Unsupported advantage capture')
+            if version==1:
+                from tether_sim.advantage_capture import capture_train
+            else:
+                from tether_sim.advantage_capture_v002 import capture_train
+            source='tether_sim/advantage_capture.py' if version==1 else 'tether_sim/advantage_capture_v002.py'
+            (out/'advantage_capture_source.py').write_bytes(Path(source).read_bytes())
             capture_train(trainer,out,plan['pufferl_source_sha256'])
         else:
             trainer.train()
