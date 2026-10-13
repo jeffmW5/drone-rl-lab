@@ -164,8 +164,9 @@ class LandingBeforeSuccess:
         return dict(penalized_agent_steps=int(self.penalized_steps),episode_takeoffs=int(self.takeoffs),episode_successes=int(self.successes))
 
 
-def zone_hover_reward(positions,velocity,orientation,center,failed):
+def zone_hover_reward(positions,velocity,orientation,center,failed,version=1):
     """Diagnostic14: carrier hover, square XY bounds, preserved full tether."""
+    if version not in (1,2):raise ValueError('Unsupported zone reward version')
     displacement=positions[:,0,:2]-center[:,:2]
     extent=displacement.abs().amax(1)
     escaped=extent>=2.
@@ -174,7 +175,8 @@ def zone_hover_reward(positions,velocity,orientation,center,failed):
     speed2=velocity[:,0].square().sum(1)
     upright=1-2*orientation[:,1:3].square().sum(1)
     airborne=((positions[:,0,2]-.05)/.25).clamp(0,1)
-    reward=airborne/(1+4*height_error.square()+2*speed2)+.05*upright-.8*(positions[:,0,2]<.15)
+    xy_cost=displacement.square().sum(1) if version==2 else torch.zeros_like(speed2)
+    reward=airborne/(1+4*height_error.square()+2*speed2+xy_cost)+.05*upright-.8*(positions[:,0,2]<.15)
     reward=torch.where(band,-torch.ones_like(reward),reward)
     reward=torch.where(escaped|(failed!=0),-torch.ones_like(reward),reward)
     return reward.float(),escaped,band
@@ -285,7 +287,7 @@ class CudaVector:
             premature=self.landing_gate.update(s.position,s.velocity,self.goal,s.failed)
             self.reward=torch.where(premature,torch.full_like(self.reward,-1),self.reward)
         if self.diagnostic_zone_version:
-            self.reward,escaped,band=zone_hover_reward(s.position,s.velocity,s.orientation,self.start[:,0],s.failed)
+            self.reward,escaped,band=zone_hover_reward(s.position,s.velocity,s.orientation,self.start[:,0],s.failed,version=2 if self.reward_version==15 else 1)
             self.zone_counts["band_steps"]+=int(band.sum())
             self.zone_counts["escapes"]+=int(escaped.sum())
             s.failed=torch.where(escaped & (s.failed==0),torch.full_like(s.failed,3),s.failed)

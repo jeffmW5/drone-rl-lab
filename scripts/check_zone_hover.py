@@ -16,3 +16,11 @@ assert reward[0]>0 and reward[1]>0 and reward[7]>0
 p[0,0,2]=.05
 assert zone_hover_reward(p,v,q,torch.zeros(8,3),torch.zeros(8,dtype=torch.int32))[0][0]<0
 print('Passed production zone signs, square corners, exact1m/2m boundaries and ground reward checks')
+
+p[:,0,2]=.8
+new=zone_hover_reward(p,v,q,torch.zeros(8,3),torch.zeros(8,dtype=torch.int32),version=2)[0]
+old=zone_hover_reward(p,v,q,torch.zeros(8,3),torch.zeros(8,dtype=torch.int32),version=1)[0]
+assert old[0]==old[1] and new[0]>new[1] and new[0]>new[7]
+assert bool((new[2:7]==-1).all())
+assert new[0]==old[0]
+print('Reward15 grades horizontal offset inside zone; reward14/center and negative band/failure preserved')
