@@ -1,0 +1,374 @@
+[
+  {
+    "file": "advantages_65536_00.pt",
+    "finite": true,
+    "groups": {
+      "stable_instant": {
+        "n": 61,
+        "mean": 8.61414909362793,
+        "positive_fraction": 0.9672130942344666
+      },
+      "height_vicinity": {
+        "n": 1550,
+        "mean": 0.07051477581262589,
+        "positive_fraction": 0.5109677314758301
+      },
+      "fast": {
+        "n": 1306,
+        "mean": -6.5783371925354,
+        "positive_fraction": 0.06738131493330002
+      },
+      "outside1m": {
+        "n": 1052,
+        "mean": -7.376886367797852,
+        "positive_fraction": 0.0038022813387215137
+      },
+      "ground": {
+        "n": 676,
+        "mean": -3.6200287342071533,
+        "positive_fraction": 0.11982248723506927
+      }
+    }
+  },
+  {
+    "file": "advantages_65536_02.pt",
+    "finite": true,
+    "groups": {
+      "stable_instant": {
+        "n": 61,
+        "mean": 8.61414909362793,
+        "positive_fraction": 0.9672130942344666
+      },
+      "height_vicinity": {
+        "n": 1550,
+        "mean": 0.07051477581262589,
+        "positive_fraction": 0.5109677314758301
+      },
+      "fast": {
+        "n": 1306,
+        "mean": -6.5783371925354,
+        "positive_fraction": 0.06738131493330002
+      },
+      "outside1m": {
+        "n": 1052,
+        "mean": -7.376886367797852,
+        "positive_fraction": 0.0038022813387215137
+      },
+      "ground": {
+        "n": 676,
+        "mean": -3.6200287342071533,
+        "positive_fraction": 0.11982248723506927
+      }
+    }
+  },
+  {
+    "file": "advantages_65536_04.pt",
+    "finite": true,
+    "groups": {
+      "stable_instant": {
+        "n": 61,
+        "mean": 8.608968734741211,
+        "positive_fraction": 0.9672130942344666
+      },
+      "height_vicinity": {
+        "n": 1550,
+        "mean": 0.07374714314937592,
+        "positive_fraction": 0.5109677314758301
+      },
+      "fast": {
+        "n": 1306,
+        "mean": -6.567615509033203,
+        "positive_fraction": 0.06738131493330002
+      },
+      "outside1m": {
+        "n": 1052,
+        "mean": -7.364802837371826,
+        "positive_fraction": 0.0038022813387215137
+      },
+      "ground": {
+        "n": 676,
+        "mean": -3.6197614669799805,
+        "positive_fraction": 0.11982248723506927
+      }
+    }
+  },
+  {
+    "file": "advantages_65536_06.pt",
+    "finite": true,
+    "groups": {
+      "stable_instant": {
+        "n": 61,
+        "mean": 8.587177276611328,
+        "positive_fraction": 0.9672130942344666
+      },
+      "height_vicinity": {
+        "n": 1550,
+        "mean": 0.0801333338022232,
+        "positive_fraction": 0.5109677314758301
+      },
+      "fast": {
+        "n": 1306,
+        "mean": -6.550327301025391,
+        "positive_fraction": 0.06738131493330002
+      },
+      "outside1m": {
+        "n": 1052,
+        "mean": -7.34686279296875,
+        "positive_fraction": 0.0038022813387215137
+      },
+      "ground": {
+        "n": 676,
+        "mean": -3.6163063049316406,
+        "positive_fraction": 0.11982248723506927
+      }
+    }
+  },
+  {
+    "file": "advantages_65536_08.pt",
+    "finite": true,
+    "groups": {
+      "stable_instant": {
+        "n": 61,
+        "mean": 8.57588005065918,
+        "positive_fraction": 0.9672130942344666
+      },
+      "height_vicinity": {
+        "n": 1550,
+        "mean": 0.08116277307271957,
+        "positive_fraction": 0.5109677314758301
+      },
+      "fast": {
+        "n": 1306,
+        "mean": -6.535539150238037,
+        "positive_fraction": 0.06738131493330002
+      },
+      "outside1m": {
+        "n": 1052,
+        "mean": -7.334804534912109,
+        "positive_fraction": 0.0038022813387215137
+      },
+      "ground": {
+        "n": 676,
+        "mean": -3.6125974655151367,
+        "positive_fraction": 0.11982248723506927
+      }
+    }
+  },
+  {
+    "file": "advantages_65536_10.pt",
+    "finite": true,
+    "groups": {
+      "stable_instant": {
+        "n": 61,
+        "mean": 8.557332992553711,
+        "positive_fraction": 0.9672130942344666
+      },
+      "height_vicinity": {
+        "n": 1550,
+        "mean": 0.09706271439790726,
+        "positive_fraction": 0.5109677314758301
+      },
+      "fast": {
+        "n": 1306,
+        "mean": -6.499431133270264,
+        "positive_fraction": 0.06738131493330002
+      },
+      "outside1m": {
+        "n": 1052,
+        "mean": -7.293669700622559,
+        "positive_fraction": 0.0038022813387215137
+      },
+      "ground": {
+        "n": 676,
+        "mean": -3.6105754375457764,
+        "positive_fraction": 0.11982248723506927
+      }
+    }
+  },
+  {
+    "file": "advantages_65536_12.pt",
+    "finite": true,
+    "groups": {
+      "stable_instant": {
+        "n": 61,
+        "mean": 8.557332992553711,
+        "positive_fraction": 0.9672130942344666
+      },
+      "height_vicinity": {
+        "n": 1550,
+        "mean": 0.10319683700799942,
+        "positive_fraction": 0.5109677314758301
+      },
+      "fast": {
+        "n": 1306,
+        "mean": -6.471462726593018,
+        "positive_fraction": 0.06738131493330002
+      },
+      "outside1m": {
+        "n": 1052,
+        "mean": -7.264481067657471,
+        "positive_fraction": 0.0038022813387215137
+      },
+      "ground": {
+        "n": 676,
+        "mean": -3.608713388442993,
+        "positive_fraction": 0.11834319680929184
+      }
+    }
+  },
+  {
+    "file": "advantages_65536_14.pt",
+    "finite": true,
+    "groups": {
+      "stable_instant": {
+        "n": 61,
+        "mean": 8.553794860839844,
+        "positive_fraction": 0.9672130942344666
+      },
+      "height_vicinity": {
+        "n": 1550,
+        "mean": 0.12904463708400726,
+        "positive_fraction": 0.5122580528259277
+      },
+      "fast": {
+        "n": 1306,
+        "mean": -6.423941135406494,
+        "positive_fraction": 0.06738131493330002
+      },
+      "outside1m": {
+        "n": 1052,
+        "mean": -7.2159423828125,
+        "positive_fraction": 0.0038022813387215137
+      },
+      "ground": {
+        "n": 676,
+        "mean": -3.605583906173706,
+        "positive_fraction": 0.11834319680929184
+      }
+    }
+  },
+  {
+    "file": "advantages_65536_16.pt",
+    "finite": true,
+    "groups": {
+      "stable_instant": {
+        "n": 61,
+        "mean": 8.546418190002441,
+        "positive_fraction": 0.9672130942344666
+      },
+      "height_vicinity": {
+        "n": 1550,
+        "mean": 0.13157615065574646,
+        "positive_fraction": 0.5122580528259277
+      },
+      "fast": {
+        "n": 1306,
+        "mean": -6.398632526397705,
+        "positive_fraction": 0.06738131493330002
+      },
+      "outside1m": {
+        "n": 1052,
+        "mean": -7.195285797119141,
+        "positive_fraction": 0.0038022813387215137
+      },
+      "ground": {
+        "n": 676,
+        "mean": -3.6045103073120117,
+        "positive_fraction": 0.11834319680929184
+      }
+    }
+  },
+  {
+    "file": "advantages_65536_18.pt",
+    "finite": true,
+    "groups": {
+      "stable_instant": {
+        "n": 61,
+        "mean": 8.512800216674805,
+        "positive_fraction": 0.9672130942344666
+      },
+      "height_vicinity": {
+        "n": 1550,
+        "mean": 0.13419650495052338,
+        "positive_fraction": 0.5122580528259277
+      },
+      "fast": {
+        "n": 1306,
+        "mean": -6.362439155578613,
+        "positive_fraction": 0.06738131493330002
+      },
+      "outside1m": {
+        "n": 1052,
+        "mean": -7.1606764793396,
+        "positive_fraction": 0.0038022813387215137
+      },
+      "ground": {
+        "n": 676,
+        "mean": -3.5999391078948975,
+        "positive_fraction": 0.11834319680929184
+      }
+    }
+  },
+  {
+    "file": "advantages_65536_20.pt",
+    "finite": true,
+    "groups": {
+      "stable_instant": {
+        "n": 61,
+        "mean": 8.499387741088867,
+        "positive_fraction": 0.9672130942344666
+      },
+      "height_vicinity": {
+        "n": 1550,
+        "mean": 0.14626149833202362,
+        "positive_fraction": 0.5122580528259277
+      },
+      "fast": {
+        "n": 1306,
+        "mean": -6.310400485992432,
+        "positive_fraction": 0.06814701110124588
+      },
+      "outside1m": {
+        "n": 1052,
+        "mean": -7.089181423187256,
+        "positive_fraction": 0.0038022813387215137
+      },
+      "ground": {
+        "n": 676,
+        "mean": -3.5966649055480957,
+        "positive_fraction": 0.11834319680929184
+      }
+    }
+  },
+  {
+    "file": "advantages_65536_22.pt",
+    "finite": true,
+    "groups": {
+      "stable_instant": {
+        "n": 61,
+        "mean": 8.49000358581543,
+        "positive_fraction": 0.9672130942344666
+      },
+      "height_vicinity": {
+        "n": 1550,
+        "mean": 0.1427893191576004,
+        "positive_fraction": 0.5122580528259277
+      },
+      "fast": {
+        "n": 1306,
+        "mean": -6.299421310424805,
+        "positive_fraction": 0.06814701110124588
+      },
+      "outside1m": {
+        "n": 1052,
+        "mean": -7.075728416442871,
+        "positive_fraction": 0.0038022813387215137
+      },
+      "ground": {
+        "n": 676,
+        "mean": -3.596784830093384,
+        "positive_fraction": 0.11834319680929184
+      }
+    }
+  }
+]
