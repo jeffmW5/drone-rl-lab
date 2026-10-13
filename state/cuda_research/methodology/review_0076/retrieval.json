@@ -1,0 +1,12 @@
+{
+  "retrieved_at": "2026-10-13T03:53:08.245921+00:00",
+  "query": "position based dynamics contact solver convergence tether",
+  "paper_ids": [],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=position+based+dynamics+contact+solver+convergence+tether&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    }
+  ]
+}

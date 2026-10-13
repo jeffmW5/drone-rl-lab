@@ -118,7 +118,7 @@ try:
             (out/('value_return_probe_'+stage+'.json')).write_text(json.dumps(probe(policy,plan,seeds,config['gamma']),indent=2))
     initial=measured();torch.save(policy.state_dict(),out/'initial.pt')
     if plan.get('tether_physics_probe_version',0):
-        if plan['tether_physics_probe_version'] not in (1,2,3,4,5,6,7):raise ValueError('Unsupported tether physics probe')
+        if plan['tether_physics_probe_version'] not in (1,2,3,4,5,6,7,8):raise ValueError('Unsupported tether physics probe')
         if plan['tether_physics_probe_version']==1:
             from tether_sim.tether_physics_probe import probe as tether_probe
             probe_source='tether_sim/tether_physics_probe.py'
@@ -137,9 +137,12 @@ try:
         elif plan['tether_physics_probe_version']==6:
             from tether_sim.tether_physics_probe_v006 import probe as tether_probe
             probe_source='tether_sim/tether_physics_probe_v006.py'
-        else:
+        elif plan['tether_physics_probe_version']==7:
             from tether_sim.tether_physics_probe_v007 import probe as tether_probe
             probe_source='tether_sim/tether_physics_probe_v007.py'
+        else:
+            from tether_sim.tether_physics_probe_v008 import probe as tether_probe
+            probe_source='tether_sim/tether_physics_probe_v008.py'
         (out/'tether_physics_probe_source.py').write_bytes(Path(probe_source).read_bytes())
         (out/'tether_physics_probe.json').write_text(json.dumps(tether_probe(),indent=2))
     if plan.get('long_flight_probe_version',0):
