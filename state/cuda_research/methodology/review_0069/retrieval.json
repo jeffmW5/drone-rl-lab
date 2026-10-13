@@ -1,0 +1,12 @@
+{
+  "retrieved_at": "2026-10-13T01:33:03.248905+00:00",
+  "query": "position based dynamics constraint substeps numerical stability tether simulation",
+  "paper_ids": [],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=position+based+dynamics+constraint+substeps+numerical+stability+tether+simulation&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    }
+  ]
+}

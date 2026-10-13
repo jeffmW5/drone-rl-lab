@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "physics_version": 3,
+  "max_impulse_error_ns": 3.643386111161109e-11,
+  "zero_rotation_baseline_difference_m": 0.0,
+  "checks": "Positive/negative roll and pitch, yaw, quaternion normalization, updated-axis total impulse, no-rotation baseline",
+  "scope": "One-substep full-tether regression; not learned navigation success or numerical convergence"
+}
