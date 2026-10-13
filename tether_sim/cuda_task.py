@@ -110,7 +110,7 @@ def initial_motor_forces(mass,reset_version):
 
 def configure_collective_response(policy,version):
     """Scale learned collective row once; preserve output at fixed hover anchor."""
-    if version not in (1,2):raise ValueError('Unsupported collective response version')
+    if version not in (1,2,3):raise ValueError('Unsupported collective response version')
     if version==1:return
     device=policy.actor.weight.device;dtype=policy.actor.weight.dtype
     positions=torch.zeros(14,3,device=device,dtype=dtype)
@@ -120,9 +120,11 @@ def configure_collective_response(policy,version):
     anchor=torch.cat((positions.flatten(),torch.zeros(42,device=device,dtype=dtype),q,motors,torch.tensor([0,0,.2],device=device,dtype=dtype)))
     with torch.no_grad():
         h=policy.body(anchor[None]/policy.obs_scale)[0]
-        contribution=policy.actor.weight[0]@h
-        policy.actor.weight[0].mul_(64)
-        policy.actor.bias[0].add_(-63*contribution)
+        rows=(0,) if version==2 else (1,2)
+        for row in rows:
+            contribution=policy.actor.weight[row]@h
+            policy.actor.weight[row].mul_(64)
+            policy.actor.bias[row].add_(-63*contribution)
 
 
 class LandingBeforeSuccess:

@@ -15,3 +15,11 @@ assert torch.allclose(after[:,0]-after[0,0],64*(before[:,0]-before[0,0]),atol=1e
 assert torch.equal(after[:,1:],before[:,1:]) and torch.equal(p(x)[1].detach(),values)
 assert torch.equal(p.log_std,old.log_std)
 print('Production collective initialization preserves anchor, differential means, critic and noise; scales only collective state-response64x')
+
+attitude=copy.deepcopy(old);configure_collective_response(attitude,3)
+y=attitude(x)[0].mean.detach()
+assert torch.equal(y[:,0],before[:,0]) and torch.equal(y[:,3],before[:,3])
+assert torch.allclose(y[0,1:3],before[0,1:3],atol=1e-6)
+assert torch.allclose(y[:,1:3]-y[0,1:3],64*(before[:,1:3]-before[0,1:3]),atol=1e-6)
+assert torch.equal(attitude(x)[1].detach(),values)
+print('Attitude-only initialization preserves collective/yaw/anchor/value while scaling learned roll/pitch rows')
