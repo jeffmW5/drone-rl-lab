@@ -79,8 +79,15 @@ def navigation_priority_reward(positions,velocity,orientation,goal,failed,reward
     return base
 
 def training_starts(start,version,phase):
-    if version not in (1,2):raise ValueError('Unsupported training reset version')
+    if version not in (1,2,3):raise ValueError('Unsupported training reset version')
     if version==1:return start
+    if version==3:
+        if phase not in ('takeoff','hover'):raise ValueError('Valid ground reset requires takeoff/hover phase')
+        result=start.clone()
+        fraction=torch.arange(14,device=start.device,dtype=start.dtype)/13
+        result[:,:,0]=fraction*((.6*.6-.025*.025)**.5)
+        result[:,:,2]=.05-fraction*.025
+        return result
     if phase not in ('takeoff','hover'):raise ValueError('Mixed starts require takeoff/hover phase')
     result=start.clone()
     result[1::2,:,0]=start[1::2,-1,0,None]

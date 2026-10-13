@@ -1,0 +1,38 @@
+[
+  {
+    "methodology_trial": "tether_physics_motor_start_v3_54003",
+    "methodology_condition": "tether_physics_motor_start_v3",
+    "methodology_review": "state/cuda_research/methodology/physics_equilibrium_v001/review.md",
+    "hypothesis": "Repeat ground geometry comparison with actual motors-off reset and retained25ms lag",
+    "seed": 54003,
+    "timeout_bootstrap_version": 0,
+    "pufferl_source_sha256": "efc5ea7537670bf89ac18347bdc97126dd6f282b9ede5598424eaeace6f8f5f4",
+    "reward_version": 12,
+    "physics_version": 1,
+    "training_reset_version": 1,
+    "input_conditioning_version": 1,
+    "value_gradient_version": 1,
+    "control_version": 2,
+    "learning_rate": 3E-06,
+    "initial_throttle": 0.62,
+    "steps": 4096,
+    "budget_seconds": 180,
+    "eval_every_steps": 4096,
+    "evaluation_steps": 250,
+    "validation_seeds": [
+      51011,
+      51012,
+      51013
+    ],
+    "batch_size": 4096,
+    "bptt_horizon": 32,
+    "gae_lambda": 0.95,
+    "playback_seconds": 0,
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0242_takeoff/best.pt",
+    "value_return_probe_version": 0,
+    "landing_penalty_version": 1,
+    "gradient_diagnostics": true,
+    "learner_diagnostics": true,
+    "tether_physics_probe_version": 3
+  }
+]
