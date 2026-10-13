@@ -71,3 +71,9 @@ One falsifiable reward17 adaptation is frozen: score horizontal velocity against
 
 Actual frozen trial937 is velocity_reference_reward17_seed70601. Daemon554137 remains active/unpaused with one trainer; no restart, healthy interruption, duplicate GPU work or concurrent compilation occurred. Its leased physics checks passed; backend/physics/host hashes and all10 initial policy tensors match the immutable886 control. Actual initial physical metrics remain pending in the final result, not inferred from weights alone. Sources, versioned review and queue are in state/cuda_research/methodology/review_0112 and configs/cuda_research/methodology_queue_v000_user_abca_00_velocity_reference.json. Fresh official HF retrieval and original-method fallbacks motivate the hypothesis but are not simulator results. Hardware/audit seeds remain reserved; original strict1mm obstacle navigation and hardware accuracy remain unachieved.
 
+
+## Explicit user pause — 2026-10-13 21:21 UTC
+
+User requested pausing both the loop and active training. The canonical paused flag is true. Daemon554137 and trainer670520 (trial938, reward17 seed70602) are both SIGSTOP-suspended; Linux stopped states were verified. Last saved trainer progress was229376 transitions. Live process memory/optimizer and GPU lease are retained; no trial was terminated, overwritten or relabeled. The recurring1070-ti-drone-research heartbeat was also set PAUSED. Do not resume any component without a new explicit user request.
+
+Pause evidence: state/cuda_research/user_pauses/pause_20261013T212107015746Z.json. The suspended trainer's monotonic elapsed-budget timer includes pause duration, so a future resume must address that fact explicitly rather than claim uninterrupted training or silently accept budget censoring. This pause is a user instruction, not an experiment/process failure. No additional training or physics work is authorized while paused.

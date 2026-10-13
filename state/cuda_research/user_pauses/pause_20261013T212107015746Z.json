@@ -1,0 +1,43 @@
+{
+  "created_at_utc": "2026-10-13T21:21:07.016165+00:00",
+  "reason": "Explicit human request: pause the loop and pause training for now",
+  "paused_flag": true,
+  "processes": [
+    {
+      "pid": 554137,
+      "kind": "daemon",
+      "state": "State:\tT (stopped)",
+      "command": [
+        "/usr/bin/python3",
+        "scripts/cuda_autoresearch.py",
+        "run",
+        ""
+      ]
+    },
+    {
+      "pid": 670520,
+      "kind": "trainer",
+      "state": "State:\tT (stopped)",
+      "command": [
+        "/home/n33du/ai/puffer-tether-venv/bin/python",
+        "-u",
+        "scripts/train_tether_cuda.py",
+        "--plan",
+        "/home/n33du/ai/drone-rl-lab/configs/cuda_research/cuda_auto_0938_takeoff.json",
+        "--output",
+        "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0938_takeoff",
+        "--port",
+        "8768",
+        ""
+      ]
+    }
+  ],
+  "active_trial": "cuda_auto_0938_takeoff",
+  "trainer_status_before_suspend": {
+    "status": "training",
+    "steps": 229376,
+    "elapsed": 354.5093797869922
+  },
+  "mechanism": "SIGSTOP preserves live process memory and GPU lease; new scheduling disabled. No process terminated, checkpoint overwritten or trial relabeled.",
+  "resume_caveat": "Active trainer elapsed wall-clock budget continues while suspended; account for this explicitly before any future user-authorized resume. Do not auto-resume or treat pause duration as ordinary training."
+}
