@@ -79,9 +79,9 @@ def navigation_priority_reward(positions,velocity,orientation,goal,failed,reward
     return base
 
 def training_starts(start,version,phase):
-    if version not in (1,2,3,4,5):raise ValueError('Unsupported training reset version')
+    if version not in (1,2,3,4,5,6):raise ValueError('Unsupported training reset version')
     if version==1:return start
-    if version in (4,5):
+    if version in (4,5,6):
         result=training_starts(start,3,phase)
         result[1::2,:,0]=0;result[1::2,:,1]=0
         result[1::2,:,2]=.8-torch.arange(14,device=start.device,dtype=start.dtype)*.6/13
@@ -104,7 +104,7 @@ def training_starts(start,version,phase):
 
 def initial_motor_forces(mass,reset_version):
     force=torch.zeros((mass.shape[0],4),device=mass.device,dtype=mass.dtype)
-    if reset_version==5:force[1::2]=mass[1::2].sum(1,keepdim=True)*9.81/4
+    if reset_version in (5,6):force[1::2]=mass[1::2].sum(1,keepdim=True)*9.81/4
     return force
 
 
@@ -166,7 +166,10 @@ class LandingBeforeSuccess:
 
 def zone_hover_reward(positions,velocity,orientation,center,failed,version=1):
     """Diagnostic14: carrier hover, square XY bounds, preserved full tether."""
-    if version not in (1,2):raise ValueError('Unsupported zone reward version')
+    if version not in (1,2,3):raise ValueError('Unsupported zone reward version')
+    if version==3:
+        from tether_sim.fine_zone_reward import fine_zone_reward
+        return fine_zone_reward(positions,velocity,orientation,center,failed)
     displacement=positions[:,0,:2]-center[:,:2]
     extent=displacement.abs().amax(1)
     escaped=extent>=2.
@@ -215,6 +218,10 @@ class CudaVector:
             self.start[:,:,2]=.025;self.start[:,0,2]=.05
             self.start=training_starts(self.start,training_reset_version,phase)
         self.reset_motor_forces=initial_motor_forces(self.sim.mass,training_reset_version)
+        self.reset_orientation=None
+        if training_reset_version==6:
+            from tether_sim.recovery_reset import initial_orientations
+            self.reset_orientation=initial_orientations(self.start,6)
         self.allocation=torch.tensor([[1,1,1,1],[.032,.032,-.032,-.032],[-.032,.032,.032,-.032],[-.006,.006,-.006,.006]],device='cuda')
 
     def async_reset(self,seed=41):
@@ -228,6 +235,7 @@ class CudaVector:
         self.sim.wind[:,:2]=(torch.rand(self.num_agents,2,device='cuda')-.5)*.012
         if self.direct:
             self.sim.position[:]=self.start;self.sim.motors[:]=self.reset_motor_forces
+            if self.reset_orientation is not None:self.sim.orientation[:]=self.reset_orientation
             self.sim.boxes[:,:,:2]+=2  # Keep takeoff strip clear in first experiment.
             if self.phase in ('takeoff','hover'):
                 self.goal[:,:2]=self.start[:,-1,:2]
@@ -289,7 +297,8 @@ class CudaVector:
             premature=self.landing_gate.update(s.position,s.velocity,self.goal,s.failed)
             self.reward=torch.where(premature,torch.full_like(self.reward,-1),self.reward)
         if self.diagnostic_zone_version:
-            self.reward,escaped,band=zone_hover_reward(s.position,s.velocity,s.orientation,self.start[:,0],s.failed,version=2 if self.reward_version==15 else 1)
+            zone_reward_version=3 if self.reward_version==16 else 2 if self.reward_version==15 else 1
+            self.reward,escaped,band=zone_hover_reward(s.position,s.velocity,s.orientation,self.start[:,0],s.failed,version=zone_reward_version)
             self.zone_counts["band_steps"]+=int(band.sum())
             self.zone_counts["escapes"]+=int(escaped.sum())
             s.failed=torch.where(escaped & (s.failed==0),torch.full_like(s.failed,3),s.failed)
@@ -309,6 +318,7 @@ class CudaVector:
             if getattr(self,'landing_gate',None) is not None:self.landing_gate.reset(mask)
             initial=self.start
             s.position[mask]=initial[mask];s.velocity[mask]=0;s.orientation[mask]=0;s.orientation[mask,0]=1
+            if getattr(self,'reset_orientation',None) is not None:s.orientation[mask]=self.reset_orientation[mask]
             s.motors[mask]=self.reset_motor_forces[mask] if self.direct else s.mass[mask].sum(1,keepdim=True)*9.81/4;s.failed[mask]=0;self.steps[mask]=0
             self.previous_error[mask]=torch.linalg.vector_norm(s.position[mask,-1]-self.goal[mask],dim=1)
 

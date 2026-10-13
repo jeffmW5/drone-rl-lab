@@ -1,0 +1,332 @@
+{
+  "scope": "CPU-only production pure reward helpers; no simulator initialization, GPU, training, configuration or review edits. Exact unchanged old reward15 compared with new fine reward16 candidate. Fine resolution near hover does not establish learned hover or hardware precision. Ground band can still clip below-1.",
+  "created_at_utc": "2026-10-13T15:54:26.246553+00:00",
+  "checks_passed": [
+    "x_millimetre_centimetre_gradation_and_signs",
+    "y_millimetre_centimetre_gradation_and_signs",
+    "height_millimetre_centimetre_gradation_and_signs",
+    "actual_production15_upper_clip_plateau_demonstrated",
+    "speed_penalty_and_metres_units",
+    "square_corners_band_signs_and_true_failure_boundary",
+    "airborne_boundary_continuity",
+    "negative_ground_and_real_failure_override",
+    "upright_retained_and_angular_rate_penalty_zero",
+    "finite_dtype_translation_and_input_immutability",
+    "independent_scalar_formula_parity"
+  ],
+  "graded_distance": {
+    "x": {
+      "distance_m": [
+        0.0,
+        0.001,
+        0.002,
+        0.005,
+        0.01,
+        0.02,
+        0.05,
+        0.1
+      ],
+      "raw_reward": [
+        1.0,
+        0.9989526867866516,
+        0.9978122711181641,
+        0.9938855767250061,
+        0.9861204028129578,
+        0.968632698059082,
+        0.9144630432128906,
+        0.8290449380874634
+      ],
+      "clipped_reward": [
+        1.0,
+        0.9989526867866516,
+        0.9978122711181641,
+        0.9938855767250061,
+        0.9861204028129578,
+        0.968632698059082,
+        0.9144630432128906,
+        0.8290449380874634
+      ]
+    },
+    "y": {
+      "distance_m": [
+        0.0,
+        0.001,
+        0.002,
+        0.005,
+        0.01,
+        0.02,
+        0.05,
+        0.1
+      ],
+      "raw_reward": [
+        1.0,
+        0.9989526867866516,
+        0.9978122711181641,
+        0.9938855767250061,
+        0.9861204028129578,
+        0.968632698059082,
+        0.9144630432128906,
+        0.8290449380874634
+      ],
+      "clipped_reward": [
+        1.0,
+        0.9989526867866516,
+        0.9978122711181641,
+        0.9938855767250061,
+        0.9861204028129578,
+        0.968632698059082,
+        0.9144630432128906,
+        0.8290449380874634
+      ]
+    },
+    "height": {
+      "distance_m": [
+        0.0,
+        0.001,
+        0.002,
+        0.005,
+        0.01,
+        0.02,
+        0.05,
+        0.1
+      ],
+      "raw_reward": [
+        1.0,
+        0.999810516834259,
+        0.9992480278015137,
+        0.9955357909202576,
+        0.984516441822052,
+        0.9552423357963562,
+        0.8661786913871765,
+        0.7475062012672424
+      ],
+      "clipped_reward": [
+        1.0,
+        0.999810516834259,
+        0.9992480278015137,
+        0.9955357909202576,
+        0.984516441822052,
+        0.9552423357963562,
+        0.8661786913871765,
+        0.7475062012672424
+      ]
+    }
+  },
+  "production_reward15_plateau": {
+    "x": {
+      "distance_m": [
+        0.0,
+        0.001,
+        0.005,
+        0.01
+      ],
+      "raw_reward": [
+        1.0499999523162842,
+        1.0499989986419678,
+        1.049975037574768,
+        1.0499000549316406
+      ],
+      "clipped_reward": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "y": {
+      "distance_m": [
+        0.0,
+        0.001,
+        0.005,
+        0.01
+      ],
+      "raw_reward": [
+        1.0499999523162842,
+        1.0499989986419678,
+        1.049975037574768,
+        1.0499000549316406
+      ],
+      "clipped_reward": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "height": {
+      "distance_m": [
+        0.0,
+        0.001,
+        0.005,
+        0.01
+      ],
+      "raw_reward": [
+        1.0499999523162842,
+        1.049996018409729,
+        1.0499000549316406,
+        1.0496001243591309
+      ],
+      "clipped_reward": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "speed_m_s": [
+    0.0,
+    0.01,
+    0.05,
+    0.1,
+    0.2,
+    0.5,
+    1.0
+  ],
+  "speed_reward": [
+    1.0,
+    0.9998100399971008,
+    0.9952736496925354,
+    0.9813725352287292,
+    0.9296296238899231,
+    0.6833333373069763,
+    0.36666667461395264
+  ],
+  "square_xy_m": [
+    [
+      0.0,
+      0.0
+    ],
+    [
+      1.0,
+      0.0
+    ],
+    [
+      -1.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0
+    ],
+    [
+      0.9,
+      0.9
+    ],
+    [
+      1.0,
+      1.0
+    ],
+    [
+      1.0001,
+      0.0
+    ],
+    [
+      -1.5,
+      0.0
+    ],
+    [
+      0.0,
+      1.9999
+    ],
+    [
+      2.0,
+      0.0
+    ],
+    [
+      -2.0,
+      0.0
+    ],
+    [
+      0.0,
+      2.0
+    ],
+    [
+      2.0,
+      2.0
+    ]
+  ],
+  "square_rewards": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.03917129710316658,
+    0.0,
+    -9.999999747378752e-05,
+    -0.5,
+    -0.9998999834060669,
+    -1.0,
+    -1.0,
+    -1.0,
+    -1.0
+  ],
+  "square_escaped": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    true
+  ],
+  "square_band": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+  ],
+  "airborne_boundary_rewards": [
+    5.27375163983379e-07,
+    0.0,
+    -9.999999974752427e-07,
+    -0.9999989867210388,
+    -1.0,
+    -1.0
+  ],
+  "ground_rewards": [
+    -0.75,
+    -0.7950000166893005,
+    -1.2999999523162842,
+    -1.7999000549316406,
+    -1.0
+  ],
+  "scalar_reference_rewards": [
+    1.0,
+    0.9625679374864631,
+    0.035953983308264006,
+    -0.30000000000000004,
+    -1.1,
+    -1.0,
+    -1.0
+  ],
+  "scalar_production_rewards": [
+    1.0,
+    0.962567925453186,
+    0.035953983664512634,
+    -0.30000001192092896,
+    -1.100000023841858,
+    -1.0,
+    -1.0
+  ],
+  "sources": {
+    "tether_sim/fine_zone_reward.py": "7a5ffcf71231c15d2b9abb7fed2dce996d4de67d1acad67f221d6a5f8a4b251d",
+    "tether_sim/cuda_task.py": "24832cc34d1a193195dcb1906f27d12b466994db2666a029470b7adf7ccdac13",
+    "scripts/check_fine_zone_reward.py": "38f60de2641d768f0876336fdf06780b2130dd3d2e93f65835d822bd16f78904"
+  }
+}

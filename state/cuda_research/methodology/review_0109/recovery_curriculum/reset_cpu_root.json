@@ -1,0 +1,114 @@
+{
+  "scope": "CPU helper and actual production reset logic with no-op physics; no CUDA, dynamics or learned flight test.",
+  "cuda_visible_devices": "",
+  "cuda_initialized": false,
+  "helper_sha256": "563c4631af8fb000ec3c7f4755baefe9cbab14be3d0845359b24eeccc057f828",
+  "task_sha256": "24832cc34d1a193195dcb1906f27d12b466994db2666a029470b7adf7ccdac13",
+  "pre_reset6_task_sha256": "5493230dc04011b4d93f19da378e8b98bddd4e7e8b646badd956158d18fc51f4",
+  "test_sha256": "49073d5cddf17746b5cc50a5e0a2e336644585481ee8a890f11e53d4e923cfe3",
+  "passed": true,
+  "warm_case_counts_by_num_agents": {
+    "1": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "2": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "3": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "7": [
+      1,
+      1,
+      1,
+      0
+    ],
+    "8": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "9": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "128": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "129": [
+      16,
+      16,
+      16,
+      16
+    ]
+  },
+  "old_versions_regression": [
+    {
+      "version": 1,
+      "initial_states_equal": true,
+      "rng_equal": true,
+      "failure_timeout_reset_states_equal": true
+    },
+    {
+      "version": 2,
+      "initial_states_equal": true,
+      "rng_equal": true,
+      "failure_timeout_reset_states_equal": true
+    },
+    {
+      "version": 3,
+      "initial_states_equal": true,
+      "rng_equal": true,
+      "failure_timeout_reset_states_equal": true
+    },
+    {
+      "version": 4,
+      "initial_states_equal": true,
+      "rng_equal": true,
+      "failure_timeout_reset_states_equal": true
+    },
+    {
+      "version": 5,
+      "initial_states_equal": true,
+      "rng_equal": true,
+      "failure_timeout_reset_states_equal": true
+    }
+  ],
+  "version5_6_geometry_motors_rng_equal": true,
+  "reset6_orientation_only": true,
+  "reset6_failure_timeout_lanes": [
+    0,
+    1,
+    3,
+    5,
+    7
+  ],
+  "checks": [
+    "unit quaternions and signed roll/pitch axes",
+    "balanced four-case warm coverage",
+    "FP32 orientation with start-device allocation",
+    "finite state and no input mutation/RNG",
+    "old versions1..5 initial and failure/timeout reset parity",
+    "full taut-chain geometry and motor parity5vs6",
+    "pre-reset callback followed by restored orientation and zero rates",
+    "only done lanes reset",
+    "async reset restores all lanes"
+  ],
+  "counterevidence": "Review0080 rejected warm motor initialization: worse three ground-evaluation pairs, zero hover. Reset6 separately tests signed orientation exposure, not a proven fix.",
+  "missing_evidence": "Real GPU training/evaluation, perturbation recovery and longer uninterrupted ground-flight outcomes remain pending."
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "path": "scripts\\train_tether_cuda.py",
+    "sha256": "28e8885c354e17a9fbd5a5b0ef26780e05e30686ad592566844867c034eedf79"
+  },
+  {
+    "path": "tether_sim\\cuda_task.py",
+    "sha256": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade"
+  },
+  {
+    "path": "tether_sim\\fine_zone_reward.py",
+    "sha256": "4e468a9713dca4b512b43bad6ea714e0a0379316239ab60ed0b1cec547e8afe9"
+  },
+  {
+    "path": "tether_sim\\recovery_reset.py",
+    "sha256": "563c4631af8fb000ec3c7f4755baefe9cbab14be3d0845359b24eeccc057f828"
+  },
+  {
+    "path": "tether_sim\\recovery_probe_v002.py",
+    "sha256": "951ca5163bb58c7f0c9a383b2683d3c27198f50415c2caca89771b0e38eec362"
+  },
+  {
+    "path": "scripts\\check_fine_zone_reward.py",
+    "sha256": "a6934352d31eaa83ed4acf7cef68cb7b191a269b353e6a06e28af4ce53db24f8"
+  },
+  {
+    "path": "scripts\\check_recovery_reset.py",
+    "sha256": "49073d5cddf17746b5cc50a5e0a2e336644585481ee8a890f11e53d4e923cfe3"
+  },
+  {
+    "path": "scripts\\check_recovery_probe_v002.py",
+    "sha256": "529ecce99feaadd7a8763a7baf4e010a455761306228fd33ebaf1651186b32d7"
+  },
+  {
+    "path": "configs\\cuda_research\\methodology_queue_v000_user_abca_fine_reward.json",
+    "sha256": "8733af7752e86e9705a904e31238d7dc57e5e8b2cd09a17667a9d1d842ed2daf"
+  },
+  {
+    "path": "configs\\cuda_research\\methodology_queue_v000_user_abd_attitude_recovery.json",
+    "sha256": "2785c7feeb6c5a5cc95277e6595d5d185afe5a88853c1f3483a7cf148d1fc445"
+  }
+]

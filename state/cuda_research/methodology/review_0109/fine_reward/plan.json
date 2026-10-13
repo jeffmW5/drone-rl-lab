@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-13T15:59:20.746493+00:00",
+  "queue": "configs/cuda_research/methodology_queue_v000_user_abca_fine_reward.json",
+  "queued_trials": 6,
+  "source_checkpoint": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0759_takeoff/best.pt",
+  "source_sha256": "6517016ffa4002c5307f05828c2e20f20a7f8a7e2186ddb688add878f431e404",
+  "queue_sha256": "8733af7752e86e9705a904e31238d7dc57e5e8b2cd09a17667a9d1d842ed2daf",
+  "pair_difference": [
+    "reward_version",
+    "methodology_trial",
+    "methodology_condition"
+  ],
+  "reward_definition": "s(d)=sqrt(d*d+0.01**2)-0.01; C=4*s(z-0.8)+s(dx)+s(dy)+2*speed**2; core=0.95*A/(1+C)+0.05*upright. Inside square: (1-D)*core-ground_cost. In 1<D<2 band: -(D-1)-ground_cost. At true failure: -1.",
+  "units": "positions/distances in metres; speeds in metres per second; each reward is paid at 50 Hz",
+  "scope": "No controller, action, physics, benchmark or angular-rate-penalty change. New queue has priority after the current healthy reset6 arm; remaining frozen recovery arms are retained.",
+  "hypothesis": "Clipping and squared metre errors hid fine position differences. Removing that plateau and using a 1 cm smooth absolute scale may provide a useful learning signal; this does not prove PPO can learn stabilizing feedback.",
+  "rejection_rule": "Reject without replicated improvement in genuine ground-start sustained hover or motion/hold with no added true failures and no lost takeoffs. Initial or auto-reset endpoint altitude and larger reward are not progress. Reused identical validation is provisional.",
+  "missing_evidence": "CPU reward invariants do not establish learned hover or hardware accuracy. Three validation seeds repeat one identical physical condition; audit seeds stay reserved."
+}

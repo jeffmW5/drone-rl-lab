@@ -1,0 +1,11 @@
+{
+  "reference": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0850_takeoff/result.json",
+  "reference_sha256": "2d4e18bab2100565e9d63e4586f51ef552decc24a7c7f0bb398915824563a460",
+  "stage": "initial_fixed_source_policy",
+  "legacy_fields_exactly_equal": true,
+  "terminal_count": 24,
+  "recorded_physical_failures": 24,
+  "expected_crashes": 24,
+  "observed_crashes": 24,
+  "scope": "Equality of every old aggregate/run metric and sparse trajectory; new decoded pre-reset evidence is additional. No learning-benefit claim."
+}

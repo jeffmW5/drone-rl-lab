@@ -1,0 +1,7 @@
+# Queue dispatch clarification - 2026-10-13 UTC
+
+Review0109 closes completed trials through879. By the time the fine reward queue was created at15:59:20 UTC, the serial daemon had already launched trial880: attitude_recovery_reset5_seed70502, reward15/reset5,262144 requested transitions. An early parent status interpretation incorrectly assumed880 would be the new65536-transition ground reward control; inspection of its immutable config corrected this before any reward result was attributed to it. No frozen config, running process or source artifact was changed to relabel the trial.
+
+The queue methodology_queue_v000_user_abca_fine_reward.json sorts before the existing abd recovery queue. The first pending entry is fine_distance_reward15_seed70601, followed by reward16 at the same seed; actual trial names must be read from the daemon's frozen intent when launched. The expected next two indices are881/882, subject to actual dispatch. The new queue drains after the already healthy880 trial. Remaining recovery entries are retained unchanged and will continue after the six reward arms.
+
+This clarifies the earlier queue plan's current-reset6 wording: its described current process had advanced to reset5 before file creation. The new reward pair definition, same-source hash, six frozen entries and one-factor comparison are unaffected. The first recovery seed878/879 already failed sustained hover. Neither880 nor pending reward trials are included in review0109's completed findings. No reward16 GPU outcome is inferred from CPU tests or queue preparation.

@@ -1,0 +1,207 @@
+{
+  "created_at_utc": "2026-10-13T16:04:53.245344+00:00",
+  "scope": "CPU calls to frozen productionhelper; mathematicalstatecounterexamples/constantfieldprofiles only. No GPUphysics, rolloutgeneration, controller/reward/queue edit. Quaternionvalidity is a sourcecontract; tests do not claim encounteredinvalidstates.",
+  "one_m_airborne_boundary": {
+    "values": [
+      5.280935511109419e-06,
+      0.0,
+      -1.0013580322265625e-05
+    ],
+    "left_difference_slope": -0.5280935511109419,
+    "right_difference_slope": -1.0013580322265625,
+    "conclusion": "C0 continuous, slopes differ"
+  },
+  "two_m_ground_boundary": {
+    "x_m": [
+      1.99999,
+      2,
+      2.00001
+    ],
+    "raw": [
+      -1.799989938735962,
+      -1.0,
+      -1.0
+    ],
+    "clipped": [
+      -1.0,
+      -1.0,
+      -1.0
+    ],
+    "escaped": [
+      false,
+      true,
+      true
+    ],
+    "band": [
+      true,
+      false,
+      false
+    ]
+  },
+  "flipped_highspeed": {
+    "x_m": [
+      0,
+      0.5,
+      0.9,
+      1,
+      1.1
+    ],
+    "raw": [
+      -0.01274509821087122,
+      -0.006723809987306595,
+      -0.001400159439072013,
+      -0.0,
+      -0.10000002384185791
+    ],
+    "clipped": [
+      -0.01274509821087122,
+      -0.006723809987306595,
+      -0.001400159439072013,
+      -0.0,
+      -0.10000002384185791
+    ],
+    "escaped": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "band": [
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "invalid_qx5": {
+    "x_m": [
+      0,
+      0.5,
+      0.9,
+      1
+    ],
+    "raw": [
+      -1.5,
+      -0.9062294363975525,
+      -0.19473697245121002,
+      -0.0
+    ],
+    "clipped": [
+      -1.0,
+      -0.9062294363975525,
+      -0.19473697245121002,
+      -0.0
+    ],
+    "escaped": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "band": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "nan_q_failed0_reward_finite": false,
+  "nan_q_failed2_override_reward": [
+    -1.0
+  ],
+  "observed_state_profiles": [
+    {
+      "source_trial": 860,
+      "source_sha256": "04e815d2711382323df8be458ec05e99e4ba2a6b1ab6d7056d2524de78021a57",
+      "source_time_s": 4.34,
+      "source_height_m": 0.7242371588945389,
+      "source_speed_m_s": 1.6941901793630258,
+      "source_qnorm": 0.9999999613679934,
+      "source_tilt_deg": 10.30384311943857,
+      "extent_m": [
+        0.0,
+        0.001,
+        0.1,
+        0.5,
+        0.9,
+        1.0,
+        1.1,
+        1.99,
+        2.0
+      ],
+      "core": [
+        0.18478705612279714,
+        0.1847860329005513,
+        0.18274850808354653,
+        0.17404345281378977,
+        0.16637874070339628,
+        0.16460699160079967,
+        0.16288794979144736,
+        0.1495793503629168,
+        0.14944748738441918
+      ],
+      "reward": [
+        0.18478704988956451,
+        0.18460124731063843,
+        0.16447365283966064,
+        0.08702172338962555,
+        0.016637874767184258,
+        0.0,
+        -0.10000000149011612,
+        -0.9900000095367432,
+        -1.0
+      ],
+      "scope": "Observedterminalheight/velocity/quaternionheldconstant; horizontaldisplacementvaried andfailedflagcleared. Counterfactualrewardprofile, not newobservedflightstates."
+    },
+    {
+      "source_trial": 861,
+      "source_sha256": "3fd6f9ecc000b03394e2f6fdf1b636ca7ab20f355fe34323a91321f4437b2bae",
+      "source_time_s": 4.36,
+      "source_height_m": 0.8434252291917801,
+      "source_speed_m_s": 1.6601975061841925,
+      "source_qnorm": 1.0000000026020393,
+      "source_tilt_deg": 10.36578297698217,
+      "extent_m": [
+        0.0,
+        0.001,
+        0.1,
+        0.5,
+        0.9,
+        1.0,
+        1.1,
+        1.99,
+        2.0
+      ],
+      "core": [
+        0.19202480413577316,
+        0.19202372977183851,
+        0.19007832643968853,
+        0.18186876771406002,
+        0.17450122338417717,
+        0.17278384410669317,
+        0.17111260709229772,
+        0.15801106957584593,
+        0.15787981332342915
+      ],
+      "reward": [
+        0.19202479720115662,
+        0.19183170795440674,
+        0.17107050120830536,
+        0.0909343808889389,
+        0.0174501221626997,
+        0.0,
+        -0.10000000149011612,
+        -0.9900000095367432,
+        -1.0
+      ],
+      "scope": "Observedterminalheight/velocity/quaternionheldconstant; horizontaldisplacementvaried andfailedflagcleared. Counterfactualrewardprofile, not newobservedflightstates."
+    }
+  ],
+  "source_sha256": {
+    "/home/n33du/ai/drone-rl-lab/tether_sim/fine_zone_reward.py": "4e468a9713dca4b512b43bad6ea714e0a0379316239ab60ed0b1cec547e8afe9",
+    "/home/n33du/ai/drone-rl-lab/tether_sim/cuda_task.py": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade",
+    "/home/n33du/ai/puffer-tether-venv/lib/python3.12/site-packages/pufferlib/pufferl.py": "efc5ea7537670bf89ac18347bdc97126dd6f282b9ede5598424eaeace6f8f5f4"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "checks": [
+    "Strict diagnostic context and model metadata",
+    "Current-policy architecture/weights preserved; checkpoint version explicit",
+    "Signed2degree quaternion cases and all v1 cases",
+    "Visited slow/fast filtering excludes terminal/nonfinite states",
+    "Pre-reset failure retained; inactive reset lanes cannot earn recovery",
+    "Truncation distinct from true failure",
+    "Diagnostic20s bound/timeouts",
+    "CPU and injected CUDA RNG restored on success and exception"
+  ],
+  "scope": "Actual recovery2 orchestration with CPU toy-vector and CUDA RNG doubles. No CUDA context, physics execution, learned stability or hardware claim.",
+  "source_sha256": {
+    "tether_sim/recovery_probe_v002.py": "951ca5163bb58c7f0c9a383b2683d3c27198f50415c2caca89771b0e38eec362",
+    "scripts/check_recovery_probe_v002.py": "21edf913be7fb668b4f073095646958c36b56bea086dbd47f890a6397127eeac"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "queue": "methodology_queue_v000_user_abd_attitude_recovery.json",
+  "queue_sha256": "2785c7feeb6c5a5cc95277e6595d5d185afe5a88853c1f3483a7cf148d1fc445",
+  "source_sha256": {
+    "scripts/train_tether_cuda.py": "33bea978af314f245d0d664e6c8c76789d4b48faac59da7ee71646a5e50a9385",
+    "tether_sim/cuda_task.py": "24832cc34d1a193195dcb1906f27d12b466994db2666a029470b7adf7ccdac13",
+    "tether_sim/recovery_reset.py": "563c4631af8fb000ec3c7f4755baefe9cbab14be3d0845359b24eeccc057f828",
+    "tether_sim/recovery_probe_v002.py": "951ca5163bb58c7f0c9a383b2683d3c27198f50415c2caca89771b0e38eec362"
+  },
+  "single_changed_factor": "warm-lane initial orientation",
+  "tilt_degrees": 2,
+  "training_seeds": [
+    70501,
+    70502,
+    70503
+  ],
+  "ground_evaluation_reset": 3,
+  "mask": 2,
+  "ground_metrics_unchanged": true,
+  "artificial_recovery_cases": "2degree cases reuse training states;10degree/rate/velocity cases are fixed transfer diagnostics, not hardware/audit holdout",
+  "cpu_tests": [
+    "recovery_reset_cpu_test_v002.json",
+    "recovery_v002_cpu_checks_root_v003.json"
+  ],
+  "gpu_results": "pending"
+}

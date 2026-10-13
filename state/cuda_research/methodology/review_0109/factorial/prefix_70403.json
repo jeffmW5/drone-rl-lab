@@ -1,0 +1,374 @@
+{
+  "scope": "CPU-only immutable checkpoint reads with CUDA_VISIBLE_DEVICES empty, CPU map_location. Explicit matchedseed70403short856/857 final versuslong858/859prefix65536, masks1/2 respectively. No GPU/build/training/production or immutable review mutations. Serialization bytes can differ while tensors match exactly.",
+  "created_at_utc": "2026-10-13T14:48:51Z",
+  "comparisons": [
+    {
+      "seed": 70403,
+      "mask_version": 1,
+      "short_index": 856,
+      "long_index": 858,
+      "short_total_timesteps": 65536,
+      "long_total_timesteps": 262144,
+      "files": [
+        {
+          "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0856_takeoff/policy.pt",
+          "bytes": 123509,
+          "mtime_ns": 1791901764750075931,
+          "sha256": "72312fd6ee8d72d23c474aa13343a0365f7ee5d92e52a5ef372e52a068ee1814",
+          "zip_crc_complete": true,
+          "zip_members": 16,
+          "weights_only_load_complete": true,
+          "stable_during_read": true,
+          "tensor_keys": 10,
+          "total_elements": 29931
+        },
+        {
+          "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0858_takeoff/checkpoint_65536.pt",
+          "bytes": 124053,
+          "mtime_ns": 1791902120927006000,
+          "sha256": "e6336a75dc5cd8150b367e7297bff3ed68e864b577c539f95ebda1561466f671",
+          "zip_crc_complete": true,
+          "zip_members": 16,
+          "weights_only_load_complete": true,
+          "stable_during_read": true,
+          "tensor_keys": 10,
+          "total_elements": 29931
+        }
+      ],
+      "keys_equal": true,
+      "all_tensor_equal": true,
+      "max_abs_delta": 0.0,
+      "all_finite": true,
+      "tensor_comparison": [
+        {
+          "key": "log_std",
+          "shape": [
+            4
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "obs_scale",
+          "shape": [
+            98
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "body.0.weight",
+          "shape": [
+            128,
+            98
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "body.0.bias",
+          "shape": [
+            128
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "body.2.weight",
+          "shape": [
+            128,
+            128
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "body.2.bias",
+          "shape": [
+            128
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "actor.weight",
+          "shape": [
+            4,
+            128
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "actor.bias",
+          "shape": [
+            4
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "value.weight",
+          "shape": [
+            1,
+            128
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "value.bias",
+          "shape": [
+            1
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        }
+      ]
+    },
+    {
+      "seed": 70403,
+      "mask_version": 2,
+      "short_index": 857,
+      "long_index": 859,
+      "short_total_timesteps": 65536,
+      "long_total_timesteps": 262144,
+      "files": [
+        {
+          "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0857_takeoff/policy.pt",
+          "bytes": 123509,
+          "mtime_ns": 1791901942862095526,
+          "sha256": "f91586315b91abb15a63a4cce991f3f5bfd25c22803b9faa958a477faf2c206d",
+          "zip_crc_complete": true,
+          "zip_members": 16,
+          "weights_only_load_complete": true,
+          "stable_during_read": true,
+          "tensor_keys": 10,
+          "total_elements": 29931
+        },
+        {
+          "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0859_takeoff/checkpoint_65536.pt",
+          "bytes": 124053,
+          "mtime_ns": 1791902640979272512,
+          "sha256": "e339844ca565b2eac9961a56452a9f60db3f5099de50aa1f779ec514375be013",
+          "zip_crc_complete": true,
+          "zip_members": 16,
+          "weights_only_load_complete": true,
+          "stable_during_read": true,
+          "tensor_keys": 10,
+          "total_elements": 29931
+        }
+      ],
+      "keys_equal": true,
+      "all_tensor_equal": true,
+      "max_abs_delta": 0.0,
+      "all_finite": true,
+      "tensor_comparison": [
+        {
+          "key": "log_std",
+          "shape": [
+            4
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "obs_scale",
+          "shape": [
+            98
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "body.0.weight",
+          "shape": [
+            128,
+            98
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "body.0.bias",
+          "shape": [
+            128
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "body.2.weight",
+          "shape": [
+            128,
+            128
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "body.2.bias",
+          "shape": [
+            128
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "actor.weight",
+          "shape": [
+            4,
+            128
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "actor.bias",
+          "shape": [
+            4
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "value.weight",
+          "shape": [
+            1,
+            128
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        },
+        {
+          "key": "value.bias",
+          "shape": [
+            1
+          ],
+          "dtype_a": "torch.float32",
+          "dtype_b": "torch.float32",
+          "shape_equal": true,
+          "dtype_equal": true,
+          "equal": true,
+          "max_abs_delta": 0.0,
+          "finite_a": true,
+          "finite_b": true
+        }
+      ]
+    }
+  ]
+}

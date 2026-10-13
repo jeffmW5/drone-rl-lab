@@ -1,0 +1,26 @@
+[
+  {
+    "trial": 860,
+    "reference": 850,
+    "independent_legacy_structural_value_equality": true,
+    "manifest_reference_hash_matches": true,
+    "initial_event_count": 24,
+    "all_events_valid_zone_first_failures": true,
+    "unique_first_times_s": [
+      4.34
+    ],
+    "scope": "Independent fullaggregate/run/trajectory dictionary comparison after removingonlynewtracefield; flag3boundary checkedagainst decodedposition."
+  },
+  {
+    "trial": 861,
+    "reference": 851,
+    "independent_legacy_structural_value_equality": true,
+    "manifest_reference_hash_matches": true,
+    "initial_event_count": 24,
+    "all_events_valid_zone_first_failures": true,
+    "unique_first_times_s": [
+      4.36
+    ],
+    "scope": "Independent fullaggregate/run/trajectory dictionary comparison after removingonlynewtracefield; flag3boundary checkedagainst decodedposition."
+  }
+]

@@ -18,6 +18,10 @@ lease=acquire_training_lease();torch.set_num_threads(1);torch.manual_seed(41)
 if plan.get("physics_version",1) in (3,4,5,6):
     from tether_sim.thrust_order_check import prepare_and_check
     prepare_and_check(out/"thrust_order_checks.json",plan["physics_version"])
+if plan.get('training_reset_version',1)==6:
+    (out/'recovery_reset_source.py').write_bytes(Path('tether_sim/recovery_reset.py').read_bytes())
+if plan.get('reward_version',1)==16:
+    (out/'fine_zone_reward_source.py').write_bytes(Path('tether_sim/fine_zone_reward.py').read_bytes())
 snapshot={'mode':'initializing','positions':[]};guard=threading.Lock()
 class Handler(BaseHTTPRequestHandler):
     def log_message(self,*args): pass
@@ -153,10 +157,15 @@ try:
             expected_crashes=expected['crashes'],observed_crashes=initial['crashes'],scope='Equality of every old aggregate/run metric and sparse trajectory; new decoded pre-reset evidence is additional. No learning-benefit claim.')
         (out/'eval_terminal_trace_comparison.json').write_text(json.dumps(comparison,indent=2))
     if plan.get('recovery_probe_version',0):
-        if plan['recovery_probe_version']!=1:raise ValueError('Unsupported recovery probe')
-        from tether_sim.recovery_probe import probe
-        (out/'recovery_probe_source.py').write_bytes(Path('tether_sim/recovery_probe.py').read_bytes())
-        (out/'recovery_probe.json').write_text(json.dumps(probe(policy,plan),indent=2))
+        if plan['recovery_probe_version'] not in (1,2):raise ValueError('Unsupported recovery probe')
+        if plan['recovery_probe_version']==1:
+            from tether_sim.recovery_probe import probe as recovery_diagnostic
+            recovery_source='tether_sim/recovery_probe.py';recovery_initial='recovery_probe.json'
+        else:
+            from tether_sim.recovery_probe_v002 import probe as recovery_diagnostic
+            recovery_source='tether_sim/recovery_probe_v002.py';recovery_initial='recovery_probe_initial.json'
+        (out/'recovery_probe_source.py').write_bytes(Path(recovery_source).read_bytes())
+        (out/recovery_initial).write_text(json.dumps(recovery_diagnostic(policy,plan),indent=2))
     policy_response('initial')
     if plan.get('zone_horizon_probe_version',0):
         version=plan['zone_horizon_probe_version']
@@ -339,6 +348,8 @@ try:
     torch.save(policy.state_dict(),out/'policy.pt')
     torch.save(dict(model_name='policy.pt',optimizer_state_dict=trainer.optimizer.state_dict(),global_step=trainer.global_step),out/'optimizer_final.pt')
     final=measured()
+    if plan.get('recovery_probe_version',0)==2:
+        (out/'recovery_probe_final.json').write_text(json.dumps(recovery_diagnostic(policy,plan),indent=2))
     policy_response('final')
     value_return_probe('final')
     if rank(final)<rank(best):best=final;best_step=trainer.global_step;torch.save(policy.state_dict(),out/'best.pt')
