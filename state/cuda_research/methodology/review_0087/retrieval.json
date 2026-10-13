@@ -1,0 +1,35 @@
+{
+  "retrieved_at": "2026-10-13T07:34:54.468977+00:00",
+  "query": "reinforcement learning quadrotor evaluation trajectory settling error",
+  "paper_ids": [
+    "2311.13081",
+    "1412.6980"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=reinforcement+learning+quadrotor+evaluation+trajectory+settling+error&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2311.13081",
+      "status": 200,
+      "file": "source_01.txt"
+    },
+    {
+      "url": "https://huggingface.co/papers/2311.13081.md",
+      "status": 200,
+      "file": "source_02.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/1412.6980",
+      "status": 200,
+      "file": "source_03.txt"
+    },
+    {
+      "url": "https://huggingface.co/papers/1412.6980.md",
+      "status": 200,
+      "file": "source_04.txt"
+    }
+  ]
+}
