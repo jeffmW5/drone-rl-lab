@@ -264,7 +264,14 @@ try:
                     step=trainer.global_step, version=1, shapes={k:list(v.shape) for k,v in snapshot.items()},
                     scope='Pre-train learner buffers after reward adapters; incoming reward and outgoing action must not be paired at the same index without alignment review. No actual PPO advantage snapshot.',
                     source_sha256=hashlib.sha256(Path(pufferlib.pufferl.__file__).read_bytes()).hexdigest()),indent=2))
-        trainer.train();publish(vec,'PufferLib training',trainer.global_step)
+        if plan.get('advantage_capture_version',0) and trainer.global_step>=config['total_timesteps']:
+            if plan['advantage_capture_version']!=1:raise ValueError('Unsupported advantage capture')
+            from tether_sim.advantage_capture import capture_train
+            (out/'advantage_capture_source.py').write_bytes(Path('tether_sim/advantage_capture.py').read_bytes())
+            capture_train(trainer,out,plan['pufferl_source_sha256'])
+        else:
+            trainer.train()
+        publish(vec,'PufferLib training',trainer.global_step)
         if vec.landing_gate is not None:
             (out/'landing_diagnostics.json').write_text(json.dumps(dict(version=vec.landing_gate.version,training_step=trainer.global_step,**vec.landing_gate.diagnostics()),indent=2))
         if plan.get('learner_diagnostics'):
