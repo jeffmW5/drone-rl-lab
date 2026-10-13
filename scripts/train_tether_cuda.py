@@ -120,9 +120,14 @@ try:
             (out/('value_return_probe_'+stage+'.json')).write_text(json.dumps(probe(policy,plan,seeds,config['gamma']),indent=2))
     def policy_response(stage):
         if plan.get('policy_response_probe_version',0):
-            if plan['policy_response_probe_version']!=1:raise ValueError('Unsupported policy response probe')
-            from tether_sim.policy_response_probe import probe
-            (out/'policy_response_source.py').write_bytes(Path('tether_sim/policy_response_probe.py').read_bytes())
+            version=plan['policy_response_probe_version']
+            if version not in (1,2):raise ValueError('Unsupported policy response probe')
+            if version==1:
+                from tether_sim.policy_response_probe import probe
+            else:
+                from tether_sim.policy_response_probe_v002 import probe
+            source='tether_sim/policy_response_probe.py' if version==1 else 'tether_sim/policy_response_probe_v002.py'
+            (out/'policy_response_source.py').write_bytes(Path(source).read_bytes())
             (out/('policy_response_'+stage+'.json')).write_text(json.dumps(probe(policy,plan),indent=2))
     initial=measured();torch.save(policy.state_dict(),out/'initial.pt')
     policy_response('initial')
