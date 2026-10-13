@@ -1,0 +1,24 @@
+{
+  "retrieved_at": "2026-10-13T02:13:25.092638+00:00",
+  "query": "physics simulation substeps damping convergence reinforcement learning",
+  "paper_ids": [
+    "2311.13081"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=physics+simulation+substeps+damping+convergence+reinforcement+learning&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2311.13081",
+      "status": 200,
+      "file": "source_01.txt"
+    },
+    {
+      "url": "https://huggingface.co/papers/2311.13081.md",
+      "status": 200,
+      "file": "source_02.txt"
+    }
+  ]
+}

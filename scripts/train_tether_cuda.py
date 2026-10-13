@@ -37,7 +37,7 @@ def publish(vec,mode,step):
         snapshot.update(mode=mode+(' · direct learned motors' if args.direct else ' · PD + AI residual'),step=step,positions=s.position[0].cpu().tolist(),goal=vec.goal[0].cpu().tolist(),boxes=s.boxes[0].cpu().tolist(),failed=int(s.failed[0]),gpu=torch.cuda.get_device_name(0))
 
 def evaluate(policy,seed):
-    vec=CudaVector(8,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),physics_version=plan.get('physics_version',1),diagnostic_zone_version=plan.get('diagnostic_zone_version',0),training_reset_version=plan.get('training_reset_version',1) if plan.get('diagnostic_zone_version',0) else 1);vec.async_reset(seed);collisions=0;peak_height=torch.zeros(8,device='cuda');hold=torch.zeros(8,device='cuda');peak_hold=hold.clone();trajectory=[]
+    vec=CudaVector(8,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),physics_version=plan.get('physics_version',1),integration_version=plan.get('integration_version',1),diagnostic_zone_version=plan.get('diagnostic_zone_version',0),training_reset_version=plan.get('training_reset_version',1) if plan.get('diagnostic_zone_version',0) else 1);vec.async_reset(seed);collisions=0;peak_height=torch.zeros(8,device='cuda');hold=torch.zeros(8,device='cuda');peak_hold=hold.clone();trajectory=[]
     zone_hold=hold.clone();peak_zone_hold=hold.clone()
     acquisition_hold=torch.zeros(8,device='cuda');peak_acquisition=acquisition_hold.clone()
     airborne_hold=acquisition_hold.clone();peak_airborne=acquisition_hold.clone()
@@ -64,13 +64,13 @@ def evaluate(policy,seed):
             trajectory.append(dict(step=step,positions=vec.sim.position[0].cpu().tolist(),velocities=vec.sim.velocity[0].cpu().tolist(),orientation=vec.sim.orientation[0].cpu().tolist(),motors=vec.sim.motors[0].cpu().tolist(),terminal=bool(vec.done[0])))
     error=torch.linalg.vector_norm(vec.sim.position[:,-1]-vec.goal,dim=1)
     return dict(seed=seed,mean_final_error_mm=float(error.mean()*1000),errors_mm=(error*1000).tolist(),crashes=collisions,takeoffs=int((peak_height>.3).sum()),hover_successes=int((peak_hold>=1).sum()),peak_hover_hold_s=peak_hold.cpu().tolist(),peak_drone_height_m=peak_height.cpu().tolist(),
-      airborne_acquisition_successes=int((peak_airborne>=.5).sum()),peak_airborne_acquisition_hold_s=peak_airborne.cpu().tolist(),airborne_acquisition_criteria=dict(version=2,distance_m=.25,speed_m_s=.5,hold_s=.5,drone_height_min_m=.3,payload_height_min_m=.05),acquisition_successes=int((peak_acquisition>=.5).sum()),peak_acquisition_hold_s=peak_acquisition.cpu().tolist(),acquisition_criteria=dict(distance_m=.25,speed_m_s=.5,hold_s=.5),trajectory=trajectory,zone_hover_successes=int((peak_zone_hold>=1).sum()),zone_hover_hold_s=peak_zone_hold.cpu().tolist(),zone_hover_criteria=dict(xy_half_width_m=1,carrier_height_m=.8,height_tolerance_m=.1,speed_m_s=.2,hold_s=1),zone_diagnostics=vec.zone_counts,scope='Prototype evaluation; not original obstacle navigation or sustained1mm benchmark')
+      airborne_acquisition_successes=int((peak_airborne>=.5).sum()),peak_airborne_acquisition_hold_s=peak_airborne.cpu().tolist(),airborne_acquisition_criteria=dict(version=2,distance_m=.25,speed_m_s=.5,hold_s=.5,drone_height_min_m=.3,payload_height_min_m=.05),acquisition_successes=int((peak_acquisition>=.5).sum()),peak_acquisition_hold_s=peak_acquisition.cpu().tolist(),acquisition_criteria=dict(distance_m=.25,speed_m_s=.5,hold_s=.5),trajectory=trajectory,zone_hover_error_mm=float((vec.sim.position[:,0,2]-.8).abs().mean()*1000),zone_hover_successes=int((peak_zone_hold>=1).sum()),zone_hover_hold_s=peak_zone_hold.cpu().tolist(),zone_hover_criteria=dict(xy_half_width_m=1,carrier_height_m=.8,height_tolerance_m=.1,speed_m_s=.2,hold_s=1),zone_diagnostics=vec.zone_counts,scope='Prototype evaluation; not original obstacle navigation or sustained1mm benchmark')
 
 trainer=None
 try:
     from pufferlib.pufferl import PuffeRL,ADVANTAGE_CUDA
     if not ADVANTAGE_CUDA:raise RuntimeError('CUDA advantage kernel required')
-    vec=CudaVector(128,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),training_region=plan.get('training_region'),physics_version=plan.get('physics_version',1),training_reset_version=plan.get('training_reset_version',1),landing_penalty_version=plan.get('landing_penalty_version',0),diagnostic_zone_version=plan.get('diagnostic_zone_version',0));policy=CudaPolicy().cuda()
+    vec=CudaVector(128,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),training_region=plan.get('training_region'),physics_version=plan.get('physics_version',1),training_reset_version=plan.get('training_reset_version',1),landing_penalty_version=plan.get('landing_penalty_version',0),diagnostic_zone_version=plan.get('diagnostic_zone_version',0),integration_version=plan.get('integration_version',1));policy=CudaPolicy().cuda()
     if args.direct and args.initial_throttle!=.5:
         with torch.no_grad():policy.actor.bias.fill_(2*args.initial_throttle-1);policy.log_std.fill_(-4.)
     if plan.get('control_version',1)==2:
@@ -108,7 +108,7 @@ try:
         cpu_rng=torch.get_rng_state();gpu_rng=torch.cuda.get_rng_state()
         try:values=[evaluate(policy,seed) for seed in seeds]
         finally:torch.set_rng_state(cpu_rng);torch.cuda.set_rng_state(gpu_rng)
-        return dict(runs=values,crashes=sum(v['crashes'] for v in values),takeoffs=sum(v['takeoffs'] for v in values),hover_successes=sum(v['hover_successes'] for v in values),airborne_acquisition_successes=sum(v['airborne_acquisition_successes'] for v in values),acquisition_successes=sum(v['acquisition_successes'] for v in values),mean_final_error_mm=float(np.mean([v['mean_final_error_mm'] for v in values]))) if plan else values[0]
+        return dict(zone_hover_successes=sum(v.get('zone_hover_successes',0) for v in values),zone_hover_error_mm=float(np.mean([v.get('zone_hover_error_mm',0) for v in values])),zone_escapes=sum(v.get('zone_diagnostics',{}).get('escapes',0) for v in values),runs=values,crashes=sum(v['crashes'] for v in values),takeoffs=sum(v['takeoffs'] for v in values),hover_successes=sum(v['hover_successes'] for v in values),airborne_acquisition_successes=sum(v['airborne_acquisition_successes'] for v in values),acquisition_successes=sum(v['acquisition_successes'] for v in values),mean_final_error_mm=float(np.mean([v['mean_final_error_mm'] for v in values]))) if plan else values[0]
     def value_return_probe(stage):
         if plan.get('value_return_probe_version',0):
             if plan['value_return_probe_version']!=1 or plan.get('timeout_bootstrap_version',0) or plan.get('potential_shaping_version',0) or not args.direct:
@@ -153,7 +153,10 @@ try:
         (out/'cuda_dynamics_probe.json').write_text(json.dumps(dynamics_probe(),indent=2))
     value_return_probe('initial')
     best=initial;best_step=0;torch.save(policy.state_dict(),out/'best.pt')
-    def rank(value):return (value['crashes'],-value.get('hover_successes',0),-value['takeoffs'],value['mean_final_error_mm'])
+    def rank(value):
+        if plan.get('selection_version',1)==2:
+            return (value['crashes'],-value['zone_hover_successes'],-value['takeoffs'],value['zone_hover_error_mm'])
+        return (value['crashes'],-value.get('hover_successes',0),-value['takeoffs'],value['mean_final_error_mm'])
     if plan.get('terminal_diagnostics'):
         def observe_terminal(obs,done,truncated,failed,reward):
             with torch.no_grad():

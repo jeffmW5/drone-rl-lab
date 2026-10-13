@@ -151,8 +151,10 @@ def zone_hover_reward(positions,velocity,orientation,center,failed):
 
 
 class CudaVector:
-    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None,physics_version=1,training_reset_version=1,landing_penalty_version=0,diagnostic_zone_version=0):
+    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None,physics_version=1,training_reset_version=1,landing_penalty_version=0,diagnostic_zone_version=0,integration_version=1):
         if diagnostic_zone_version not in (0,1):raise ValueError("Unsupported diagnostic zone")
+        if integration_version not in (1,2):raise ValueError("Unsupported integration version")
+        self.integration_version=integration_version
         self.diagnostic_zone_version=diagnostic_zone_version
         self.zone_counts=dict(band_steps=0,escapes=0)
         self.direct=direct
@@ -227,7 +229,7 @@ class CudaVector:
             # No state-feedback controller; all four channels come from policy.
             mix=torch.tensor([[1,-1,-1],[1,1,1],[-1,1,-1],[-1,-1,1]],device='cuda',dtype=torch.float32)
             command=(.5*(residual[:,0:1]+1)+.02*(residual[:,1:]@mix.T)).clamp(0,1)
-        s.step(command.contiguous())
+        s.step(command.contiguous(),dt=.001 if self.integration_version==1 else .0005,substeps=20 if self.integration_version==1 else 40)
         if bool((s.failed==2).any()):
             raise FloatingPointError('CUDA physics numerical failure; trial invalid')
         self.steps+=1
