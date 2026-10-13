@@ -1,0 +1,10 @@
+[
+  {
+    "path": "\\\\wsl.localhost\\Ubuntu-Laya\\home\\n33du\\ai\\drone-rl-lab\\tmp\\cuda-research\\cuda_auto_0791_takeoff\\rollout_65536.pt",
+    "sha256": "fd0968e5e56cdffbdd044797a2e6625e35426cbfaca4300c4cd35f78185bfd7b"
+  },
+  {
+    "path": "\\\\wsl.localhost\\Ubuntu-Laya\\home\\n33du\\ai\\drone-rl-lab\\tmp\\cuda-research\\cuda_auto_0791_takeoff\\rollout_4096.pt",
+    "sha256": "967ac99023f1c3c4382ffb0f0eaa0fae0640f735cdf685ab3878492442dada9c"
+  }
+]

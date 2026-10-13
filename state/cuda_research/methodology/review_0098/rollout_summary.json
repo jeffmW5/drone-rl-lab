@@ -1,0 +1,102 @@
+[
+  {
+    "file": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0791_takeoff/rollout_4096.pt",
+    "shapes": {
+      "observations": [
+        128,
+        32,
+        98
+      ],
+      "actions": [
+        128,
+        32,
+        4
+      ],
+      "values": [
+        128,
+        32
+      ],
+      "logprobs": [
+        128,
+        32
+      ],
+      "rewards": [
+        128,
+        32
+      ],
+      "terminals": [
+        128,
+        32
+      ],
+      "truncations": [
+        128,
+        32
+      ]
+    },
+    "height_range": [
+      0.04999999701976776,
+      0.27122262120246887
+    ],
+    "altitude_vicinity_fraction": 0.0,
+    "stable_state_fraction": 0.0,
+    "ground_fraction": 0.713134765625,
+    "speed_quantiles": [
+      0.0,
+      0.3441397249698639,
+      0.6375828385353088,
+      0.7280768156051636
+    ],
+    "terminal_count": 0,
+    "truncation_count": 0
+  },
+  {
+    "file": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0791_takeoff/rollout_65536.pt",
+    "shapes": {
+      "observations": [
+        128,
+        32,
+        98
+      ],
+      "actions": [
+        128,
+        32,
+        4
+      ],
+      "values": [
+        128,
+        32
+      ],
+      "logprobs": [
+        128,
+        32
+      ],
+      "rewards": [
+        128,
+        32
+      ],
+      "terminals": [
+        128,
+        32
+      ],
+      "truncations": [
+        128,
+        32
+      ]
+    },
+    "height_range": [
+      0.04999999701976776,
+      1.071492314338684
+    ],
+    "altitude_vicinity_fraction": 0.325439453125,
+    "stable_state_fraction": 0.00390625,
+    "ground_fraction": 0.13720703125,
+    "speed_quantiles": [
+      0.0,
+      0.7472968697547913,
+      1.815943717956543,
+      3.590311288833618
+    ],
+    "terminal_count": 31,
+    "truncation_count": 0
+  }
+]
