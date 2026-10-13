@@ -37,3 +37,7 @@ GPU work remains serial. Healthy training was not interrupted. Reserved audit se
 No reliable takeoff-to-hover result, original strict 1 mm obstacle navigation, or hardware accuracy has been demonstrated. The tether’s material, contact, attachment and shortened-contour model remain uncalibrated. The boundary correction is real; its contribution to hover failure still needs the paired training results.
 
 An opt-in termination version also makes physical failures take priority over simultaneous timeouts. It passed a mixed-batch production-logic test with GPU visibility disabled. The training factorial retains the old termination version to keep its two factors separate.
+
+## First training comparison
+
+The first short original/corrected pair completed on GPU with zero sustained hover in both arms. Final altitude errors were 59.83 and 56.99 mm; that small difference is not a success claim. The longer original-learner run has passed its 65k prefix: all checkpoint tensors match the short run exactly. Longer outcomes and the remaining training seeds are still pending.

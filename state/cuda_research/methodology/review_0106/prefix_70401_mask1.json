@@ -1,0 +1,47 @@
+{
+  "short": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0848_takeoff/policy.pt",
+  "long_prefix": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0850_takeoff/checkpoint_65536.pt",
+  "all_tensors_equal": true,
+  "tensors": {
+    "log_std": {
+      "equal": true,
+      "max_abs_delta": 0.0
+    },
+    "obs_scale": {
+      "equal": true,
+      "max_abs_delta": 0.0
+    },
+    "body.0.weight": {
+      "equal": true,
+      "max_abs_delta": 0.0
+    },
+    "body.0.bias": {
+      "equal": true,
+      "max_abs_delta": 0.0
+    },
+    "body.2.weight": {
+      "equal": true,
+      "max_abs_delta": 0.0
+    },
+    "body.2.bias": {
+      "equal": true,
+      "max_abs_delta": 0.0
+    },
+    "actor.weight": {
+      "equal": true,
+      "max_abs_delta": 0.0
+    },
+    "actor.bias": {
+      "equal": true,
+      "max_abs_delta": 0.0
+    },
+    "value.weight": {
+      "equal": true,
+      "max_abs_delta": 0.0
+    },
+    "value.bias": {
+      "equal": true,
+      "max_abs_delta": 0.0
+    }
+  }
+}
