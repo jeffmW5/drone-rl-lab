@@ -15,7 +15,7 @@ for key in ('initial_throttle','steps','direct'):
 if not 0<args.initial_throttle<1 or not 4096<=args.steps<=1048576:parser.error('Invalid bounded experiment settings')
 out=Path(args.output);out.mkdir(parents=True,exist_ok=False)
 lease=acquire_training_lease();torch.set_num_threads(1);torch.manual_seed(41)
-if plan.get("physics_version",1) in (3,4):
+if plan.get("physics_version",1) in (3,4,5):
     from tether_sim.thrust_order_check import prepare_and_check
     prepare_and_check(out/"thrust_order_checks.json",plan["physics_version"])
 snapshot={'mode':'initializing','positions':[]};guard=threading.Lock()
@@ -118,7 +118,7 @@ try:
             (out/('value_return_probe_'+stage+'.json')).write_text(json.dumps(probe(policy,plan,seeds,config['gamma']),indent=2))
     initial=measured();torch.save(policy.state_dict(),out/'initial.pt')
     if plan.get('tether_physics_probe_version',0):
-        if plan['tether_physics_probe_version'] not in (1,2,3,4,5):raise ValueError('Unsupported tether physics probe')
+        if plan['tether_physics_probe_version'] not in (1,2,3,4,5,6):raise ValueError('Unsupported tether physics probe')
         if plan['tether_physics_probe_version']==1:
             from tether_sim.tether_physics_probe import probe as tether_probe
             probe_source='tether_sim/tether_physics_probe.py'
@@ -131,9 +131,12 @@ try:
         elif plan['tether_physics_probe_version']==4:
             from tether_sim.tether_physics_probe_v004 import probe as tether_probe
             probe_source='tether_sim/tether_physics_probe_v004.py'
-        else:
+        elif plan['tether_physics_probe_version']==5:
             from tether_sim.tether_physics_probe_v005 import probe as tether_probe
             probe_source='tether_sim/tether_physics_probe_v005.py'
+        else:
+            from tether_sim.tether_physics_probe_v006 import probe as tether_probe
+            probe_source='tether_sim/tether_physics_probe_v006.py'
         (out/'tether_physics_probe_source.py').write_bytes(Path(probe_source).read_bytes())
         (out/'tether_physics_probe.json').write_text(json.dumps(tether_probe(),indent=2))
     if plan.get('long_flight_probe_version',0):

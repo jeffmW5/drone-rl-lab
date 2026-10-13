@@ -5,7 +5,7 @@ import torch
 from .cuda_backend import CudaTether
 
 def prepare_and_check(output,physics_version=3):
-    if physics_version not in (3,4):raise ValueError("Unsupported checked physics")
+    if physics_version not in (3,4,5):raise ValueError("Unsupported checked physics")
     sources=('tether_sim/thrust_order_check.py',f'tether_sim/cuda/physics_v{physics_version:03d}.cu','tether_sim/cuda/physics_v001.cu','tether_sim/cuda/host.c')
     manifest={p:hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in sources}
     for p in sources: Path(output).parent.joinpath(Path(p).name).write_bytes(Path(p).read_bytes())
@@ -42,8 +42,18 @@ def prepare_and_check(output,physics_version=3):
     old=CudaTether(1);old.params[:,3]=0
     old.step(actions[:1].contiguous(),substeps=1)
     stationary=float((old.position[0]-sim.position[0]).abs().max())
-    assert stationary<1e-12,stationary
-    result=dict(status='passed',physics_version=physics_version,max_impulse_error_ns=error,zero_rotation_baseline_difference_m=stationary,checks='Positive/negative roll and pitch, yaw, quaternion normalization, updated-axis total impulse, no-rotation baseline',scope='One-substep full-tether regression; not learned navigation success or numerical convergence')
+    if physics_version<=4:assert stationary<1e-12,stationary
+    if physics_version==5:
+        slack=CudaTether(1,library=str(build/"libtether.so"))
+        slack.position[:,:,2]=2-torch.arange(14,device="cuda").double()*.3/13
+        slack.velocity.zero_();slack.motors.zero_();slack.params[:,3]=0
+        before=slack.position.clone()
+        slack.step(torch.zeros(1,4,device="cuda"),substeps=1)
+        expected=before.clone();expected[:,:,2]-=9.81*.001**2
+        slack_error=float((slack.position-expected).abs().max())
+        assert slack_error<1e-10,slack_error
+        assert not bool(slack.failed.any())
+    result=dict(status='passed',physics_version=physics_version,max_impulse_error_ns=error,zero_rotation_baseline_difference_m=stationary,checks='Positive/negative roll and pitch, yaw, quaternion normalization, updated-axis total impulse, no-rotation baseline',slack_freefall_error_m=slack_error if physics_version==5 else None,scope='One-substep full-tether regression; not learned navigation success or numerical convergence')
     Path(output).write_text(json.dumps(result,indent=2))
     return result
 

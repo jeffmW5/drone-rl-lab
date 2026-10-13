@@ -165,7 +165,7 @@ class CudaVector:
         self.num_agents=self.agents_per_batch=count
         self.single_observation_space=Box(-np.inf,np.inf,(98,),np.float32)
         self.single_action_space=self.action_space=Box(-1,1,(4,),np.float32)
-        if physics_version not in (1,2,3,4):raise ValueError('Unsupported physics version')
+        if physics_version not in (1,2,3,4,5):raise ValueError('Unsupported physics version')
         self.sim=CudaTether(count,library=f'tmp/cuda-tether-v{physics_version:03d}/libtether.so')
         if landing_penalty_version not in (0,1,2):raise ValueError('Unsupported landing penalty version')
         self.landing_gate=LandingBeforeSuccess(count,'cuda',landing_penalty_version) if landing_penalty_version else None

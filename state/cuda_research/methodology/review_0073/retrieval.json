@@ -1,0 +1,12 @@
+{
+  "retrieved_at": "2026-10-13T02:53:18.332438+00:00",
+  "query": "position based dynamics rope unilateral distance inequality constraints slack",
+  "paper_ids": [],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=position+based+dynamics+rope+unilateral+distance+inequality+constraints+slack&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    }
+  ]
+}
