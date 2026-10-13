@@ -4,18 +4,19 @@ from pathlib import Path
 import torch
 from .cuda_backend import CudaTether
 
-def prepare_and_check(output):
-    sources=('tether_sim/thrust_order_check.py','tether_sim/cuda/physics_v003.cu','tether_sim/cuda/physics_v001.cu','tether_sim/cuda/host.c')
+def prepare_and_check(output,physics_version=3):
+    if physics_version not in (3,4):raise ValueError("Unsupported checked physics")
+    sources=('tether_sim/thrust_order_check.py',f'tether_sim/cuda/physics_v{physics_version:03d}.cu','tether_sim/cuda/physics_v001.cu','tether_sim/cuda/host.c')
     manifest={p:hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in sources}
     for p in sources: Path(output).parent.joinpath(Path(p).name).write_bytes(Path(p).read_bytes())
     Path(output).with_suffix('.sources.json').write_text(json.dumps(manifest,indent=2))
-    build=Path('tmp/cuda-tether-v003')
+    build=Path(f'tmp/cuda-tether-v{physics_version:03d}')
     if not build.exists():
         build.mkdir()
         cuda=os.environ.get('CUDA_HOME','/home/n33du/ai/cuda-12.6-puffer')
-        subprocess.run([cuda+'/bin/nvcc','-O3','-arch=sm_61','--cubin','tether_sim/cuda/physics_v003.cu','-o',str(build/'physics.cubin')],check=True)
+        subprocess.run([cuda+'/bin/nvcc','-O3','-arch=sm_61','--cubin',f'tether_sim/cuda/physics_v{physics_version:03d}.cu','-o',str(build/'physics.cubin')],check=True)
         subprocess.run(['gcc','-O3','-std=c11','-Wall','-Wextra','-Werror','-shared','-fPIC','-I'+cuda+'/include','tether_sim/cuda/host.c','-L/usr/lib/wsl/lib','-Wl,-rpath,/usr/lib/wsl/lib','-lcuda','-o',str(build/'libtether.so')],check=True)
-        (build/'sources.sha256').write_text(''.join(hashlib.sha256(Path(p).read_bytes()).hexdigest()+'  '+p+'\n' for p in ('tether_sim/cuda/physics_v003.cu','tether_sim/cuda/host.c')))
+        (build/'sources.sha256').write_text(''.join(hashlib.sha256(Path(p).read_bytes()).hexdigest()+'  '+p+'\n' for p in (f'tether_sim/cuda/physics_v{physics_version:03d}.cu','tether_sim/cuda/host.c')))
     sim=CudaTether(7,library=str(build/'libtether.so'))
     sim.params[:,3]=0
     sim.orientation[1,4]=10;sim.orientation[2,4]=-10
@@ -42,7 +43,7 @@ def prepare_and_check(output):
     old.step(actions[:1].contiguous(),substeps=1)
     stationary=float((old.position[0]-sim.position[0]).abs().max())
     assert stationary<1e-12,stationary
-    result=dict(status='passed',physics_version=3,max_impulse_error_ns=error,zero_rotation_baseline_difference_m=stationary,checks='Positive/negative roll and pitch, yaw, quaternion normalization, updated-axis total impulse, no-rotation baseline',scope='One-substep full-tether regression; not learned navigation success or numerical convergence')
+    result=dict(status='passed',physics_version=physics_version,max_impulse_error_ns=error,zero_rotation_baseline_difference_m=stationary,checks='Positive/negative roll and pitch, yaw, quaternion normalization, updated-axis total impulse, no-rotation baseline',scope='One-substep full-tether regression; not learned navigation success or numerical convergence')
     Path(output).write_text(json.dumps(result,indent=2))
     return result
 

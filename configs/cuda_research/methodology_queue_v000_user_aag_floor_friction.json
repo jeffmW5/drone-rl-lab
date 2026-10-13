@@ -1,0 +1,39 @@
+[
+  {
+    "methodology_trial": "time_scaled_floor_friction_v1",
+    "methodology_condition": "time_scaled_floor_friction_v1",
+    "methodology_review": "state/cuda_research/methodology/review_0070/review.md",
+    "hypothesis": "Time-scaled floor damping removes substep-dependent contact-friction confound; fixed-input convergence diagnostic compared with frozen596 probe4, learning not promotion",
+    "seed": 58001,
+    "timeout_bootstrap_version": 0,
+    "pufferl_source_sha256": "efc5ea7537670bf89ac18347bdc97126dd6f282b9ede5598424eaeace6f8f5f4",
+    "reward_version": 14,
+    "physics_version": 4,
+    "training_reset_version": 3,
+    "input_conditioning_version": 1,
+    "value_gradient_version": 1,
+    "control_version": 2,
+    "learning_rate": 3e-06,
+    "initial_throttle": 0.62,
+    "steps": 4096,
+    "budget_seconds": 180,
+    "eval_every_steps": 16384,
+    "evaluation_steps": 250,
+    "validation_seeds": [
+      51011,
+      51012,
+      51013
+    ],
+    "batch_size": 4096,
+    "bptt_horizon": 32,
+    "gae_lambda": 0.95,
+    "playback_seconds": 0,
+    "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0242_takeoff/best.pt",
+    "value_return_probe_version": 0,
+    "landing_penalty_version": 0,
+    "gradient_diagnostics": true,
+    "learner_diagnostics": true,
+    "diagnostic_zone_version": 1,
+    "tether_physics_probe_version": 5
+  }
+]
