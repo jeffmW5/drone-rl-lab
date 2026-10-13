@@ -37,7 +37,14 @@ def publish(vec,mode,step):
         snapshot.update(mode=mode+(' · direct learned motors' if args.direct else ' · PD + AI residual'),step=step,positions=s.position[0].cpu().tolist(),goal=vec.goal[0].cpu().tolist(),boxes=s.boxes[0].cpu().tolist(),failed=int(s.failed[0]),gpu=torch.cuda.get_device_name(0))
 
 def evaluate(policy,seed):
+    trace_version=plan.get('evaluation_trace_version',0)
+    if trace_version not in (0,1):raise ValueError('Unsupported evaluation trace version')
     vec=CudaVector(8,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),physics_version=plan.get('physics_version',1),termination_version=plan.get('termination_version',1),integration_version=plan.get('integration_version',1),diagnostic_zone_version=plan.get('diagnostic_zone_version',0),training_reset_version=plan.get('evaluation_reset_version',plan.get('training_reset_version',1)) if plan.get('diagnostic_zone_version',0) else 1);vec.async_reset(seed);collisions=0;peak_height=torch.zeros(8,device='cuda');hold=torch.zeros(8,device='cuda');peak_hold=hold.clone();trajectory=[]
+    trace=None
+    if trace_version:
+        from tether_sim.eval_terminal_trace import EvalTerminalTrace
+        trace=EvalTerminalTrace(8,plan.get('evaluation_steps',250))
+        vec.terminal_observer=lambda obs,done,truncated,failed,reward:trace.record(obs,done,truncated,failed,reward,absolute_step=step+1,episode_steps=vec.steps)
     zone_hold=hold.clone();peak_zone_hold=hold.clone()
     acquisition_hold=torch.zeros(8,device='cuda');peak_acquisition=acquisition_hold.clone()
     airborne_hold=acquisition_hold.clone();peak_airborne=acquisition_hold.clone()
@@ -63,8 +70,9 @@ def evaluate(policy,seed):
         if plan and step%25==0:
             trajectory.append(dict(step=step,positions=vec.sim.position[0].cpu().tolist(),velocities=vec.sim.velocity[0].cpu().tolist(),orientation=vec.sim.orientation[0].cpu().tolist(),motors=vec.sim.motors[0].cpu().tolist(),terminal=bool(vec.done[0])))
     error=torch.linalg.vector_norm(vec.sim.position[:,-1]-vec.goal,dim=1)
+    trace_fields={'evaluation_terminal_trace':trace.as_dict()} if trace is not None else {}
     return dict(seed=seed,mean_final_error_mm=float(error.mean()*1000),errors_mm=(error*1000).tolist(),crashes=collisions,takeoffs=int((peak_height>.3).sum()),hover_successes=int((peak_hold>=1).sum()),peak_hover_hold_s=peak_hold.cpu().tolist(),peak_drone_height_m=peak_height.cpu().tolist(),
-      airborne_acquisition_successes=int((peak_airborne>=.5).sum()),peak_airborne_acquisition_hold_s=peak_airborne.cpu().tolist(),airborne_acquisition_criteria=dict(version=2,distance_m=.25,speed_m_s=.5,hold_s=.5,drone_height_min_m=.3,payload_height_min_m=.05),acquisition_successes=int((peak_acquisition>=.5).sum()),peak_acquisition_hold_s=peak_acquisition.cpu().tolist(),acquisition_criteria=dict(distance_m=.25,speed_m_s=.5,hold_s=.5),trajectory=trajectory,zone_hover_error_mm=float((vec.sim.position[:,0,2]-.8).abs().mean()*1000),zone_hover_successes=int((peak_zone_hold>=1).sum()),zone_hover_hold_s=peak_zone_hold.cpu().tolist(),zone_hover_criteria=dict(xy_half_width_m=1,carrier_height_m=.8,height_tolerance_m=.1,speed_m_s=.2,hold_s=1),zone_diagnostics=vec.zone_counts,scope='Prototype evaluation; not original obstacle navigation or sustained1mm benchmark')
+      airborne_acquisition_successes=int((peak_airborne>=.5).sum()),peak_airborne_acquisition_hold_s=peak_airborne.cpu().tolist(),airborne_acquisition_criteria=dict(version=2,distance_m=.25,speed_m_s=.5,hold_s=.5,drone_height_min_m=.3,payload_height_min_m=.05),acquisition_successes=int((peak_acquisition>=.5).sum()),peak_acquisition_hold_s=peak_acquisition.cpu().tolist(),acquisition_criteria=dict(distance_m=.25,speed_m_s=.5,hold_s=.5),trajectory=trajectory,zone_hover_error_mm=float((vec.sim.position[:,0,2]-.8).abs().mean()*1000),zone_hover_successes=int((peak_zone_hold>=1).sum()),zone_hover_hold_s=peak_zone_hold.cpu().tolist(),zone_hover_criteria=dict(xy_half_width_m=1,carrier_height_m=.8,height_tolerance_m=.1,speed_m_s=.2,hold_s=1),zone_diagnostics=vec.zone_counts,scope='Prototype evaluation; not original obstacle navigation or sustained1mm benchmark',**trace_fields)
 
 trainer=None
 try:
@@ -107,6 +115,8 @@ try:
     config['research_plan']=plan
     (out/'config.json').write_text(json.dumps(config,indent=2))
     seeds=plan.get('validation_seeds',[51011])
+    if plan.get('evaluation_trace_version',0)==1:
+        (out/'eval_terminal_trace_source.py').write_bytes(Path('tether_sim/eval_terminal_trace.py').read_bytes())
     def measured():
         cpu_rng=torch.get_rng_state();gpu_rng=torch.cuda.get_rng_state()
         try:values=[evaluate(policy,seed) for seed in seeds]
@@ -131,6 +141,17 @@ try:
             (out/'policy_response_source.py').write_bytes(Path(source).read_bytes())
             (out/('policy_response_'+stage+'.json')).write_text(json.dumps(probe(policy,plan),indent=2))
     initial=measured();torch.save(policy.state_dict(),out/'initial.pt')
+    if plan.get('evaluation_trace_reference'):
+        if plan.get('evaluation_trace_version',0)!=1:raise ValueError('Trace reference requires trace version1')
+        import hashlib
+        reference_path=Path(plan['evaluation_trace_reference']);reference_bytes=reference_path.read_bytes()
+        reference_sha256=hashlib.sha256(reference_bytes).hexdigest()
+        if reference_sha256!=plan.get('evaluation_trace_reference_sha256'):raise RuntimeError('Trace reference source changed')
+        expected=json.loads(reference_bytes)['final'];observed={**initial,'runs':[{k:v for k,v in run.items() if k!='evaluation_terminal_trace'} for run in initial['runs']]}
+        comparison=dict(reference=str(reference_path),reference_sha256=reference_sha256,stage='initial_fixed_source_policy',legacy_fields_exactly_equal=observed==expected,
+            terminal_count=sum(run['evaluation_terminal_trace']['terminal_count'] for run in initial['runs']),recorded_physical_failures=sum(event['failed']!=0 for run in initial['runs'] for event in run['evaluation_terminal_trace']['terminals']),
+            expected_crashes=expected['crashes'],observed_crashes=initial['crashes'],scope='Equality of every old aggregate/run metric and sparse trajectory; new decoded pre-reset evidence is additional. No learning-benefit claim.')
+        (out/'eval_terminal_trace_comparison.json').write_text(json.dumps(comparison,indent=2))
     if plan.get('recovery_probe_version',0):
         if plan['recovery_probe_version']!=1:raise ValueError('Unsupported recovery probe')
         from tether_sim.recovery_probe import probe

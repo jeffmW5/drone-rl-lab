@@ -1,0 +1,35 @@
+{
+  "files": [
+    {
+      "native_equal": true,
+      "path": "scripts/train_tether_cuda.py",
+      "sha256": "49136C7BFEBC9504D79E95A156DD8609D69DFFF7384C1ACDB85D8258318D2849"
+    },
+    {
+      "native_equal": true,
+      "path": "scripts/check_eval_terminal_trace.py",
+      "sha256": "B166534E7DCB19EE57EE04A1F1017C7598095B42BA83FD3673B82C9F4264DC53"
+    },
+    {
+      "native_equal": true,
+      "path": "tether_sim/eval_terminal_trace.py",
+      "sha256": "2AFD2E5D6BB4F5B0F02972EB7555DBBE117963C43CDE4D642993D513355B7B69"
+    },
+    {
+      "native_equal": true,
+      "path": "configs/cuda_research/methodology_queue_v000_user_abc_terminal_trace.json",
+      "sha256": "0D4E5CF69EB9098D066DC0A95F1D27579FFA10DA5F5DF0CA3D2258B0915E0569"
+    },
+    {
+      "native_equal": true,
+      "path": "outbox/tether_deep_audit_20261013.md",
+      "sha256": "FCCE50DF1AAA7E64633CF668881F8E47DE2D853049958EA9BDC7CEB47F8E7ED1"
+    }
+  ],
+  "latest_cpu_evidence": "terminal_trace/eval_terminal_trace_cpu_test_v006.json",
+  "gpu_trace_equality": "pending after frozen factorial",
+  "active_trainer": "cuda_auto_0855_takeoff",
+  "paused": false,
+  "checked_at_utc": "2026-10-13T14:23:30.2112521Z",
+  "healthy_daemon_pid": 554137
+}

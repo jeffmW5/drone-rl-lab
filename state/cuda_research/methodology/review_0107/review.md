@@ -1,0 +1,30 @@
+# Review 0107: first duration/mask factorial seed and terminal-state evidence
+
+Last reviewed completed trial index: 852. Review date: 2026-10-13 UTC. Review0106 ended at849;850-852 are the next three completed trials. Daemon554137 remains healthy and unpaused, with one serial trainer. The remaining frozen seed arms continue from their specified759 source; no training parameters or physics changed during this batch.
+
+## Observations and counterevidence
+
+The complete first seed70401 2x2 experiment has no sustained zone hover. Short original/corrected finals have0 escapes,24 takeoffs,0 hover, altitude errors59.834/56.991mm, and peak holds0.36/0.30s. Both 262144-transition runs completed within their600s caps (436.43/434.04s) and ended with24 escapes,24 takeoffs,0 hover, altitude errors522.991/534.253mm and holds0.24/0.06s. Both retainedbest_step0. These altitude endpoints include post-failure reset behavior and cannot describe the failure state. The checkpoint tensors at65536 exactly match the respective short finals for BOTH masks; corrected comparison covers10 tensors/29931 elements, finite full loads and stable-file CRC checks. Thus the duration arms actually continue their matching short optimization prefixes.
+
+The corrected learner temporarily reduced escapes at163840,180224,196608,212992 and229376, where the original had24. This is preserved positive counterevidence to an assertion of no behavioral effect. Its final regression prevents a reliability/hover claim. At4.52s in the65k trajectories, carrier speeds0.501/0.646m/s exceed the0.2m/s criterion even though carrier height is near0.8m. Exact failure timestamps and physical terminal states are absent from the sparse saved trajectories: every savedterminal flag isfalse despite24 counted escapes. Source inspection confirms trajectory sampling happens after send() automatically resets failed state.
+
+Second seed70402 short original trial852 final has0 escapes,0 hover,9.411mm altitudeerror; its selected32768 checkpoint has0.286mm altitudeerror but only0.14s peak hold. This is an intermediate altitude improvement, not sustained hover or millimeter navigation. Final regressed from that intermediate. All24 validation outcomes per checkpoint still represent one identical physical reset condition, not24 independent domains. Reserved hardware/audit seeds remain unused.
+
+Evidence: results.json contains850-852 initial, periodic manifest, selected and final data; evaluation_manifest.json hashes complete artifacts. trajectory/ retains an independent per-checkpoint analysis and reproducible source. Review0106 retains both prefix equality proofs and full long finals. Historical rejected outcomes remain intact.
+
+## Original methods read
+
+HF search,2311.13081 metadata and markdown succeeded;2006.05990 metadata/markdown returned404, which is preserved. Original URLs,versions,retrieval dates and source files are in original_sources.json/retrieval.json.
+
+- [What Matters In On-Policy Reinforcement Learning? v1](https://arxiv.org/html/2006.05990v1), sections3.2,3.3,3.5,3.6: optimization, architecture and temporal data handling interact; shortened experience fragments and bootstrap handling deserve controlled experiments. Applicability is methodological. Their locomotion results do not establish this simulator's best architecture, noise or duration. Existing critic-decoupling/horizon failures remain counterevidence to blindly repeating those changes.
+- [Learning to Fly in Seconds v2](https://arxiv.org/html/2311.13081v2), sectionsII,IV,V,VI: motor delay, diverse recovery states and curriculum enter the method, while episode survival is assessed alongside return. Their TD3, untethered RPM control and asymmetric observations differ from our PPO, full-state motor-force observation and particle tether. Action-history need is not established here because our actor already observes actuator state. Published success is not our result. [Author code](https://github.com/arplaboratory/learning-to-fly) was identified but not executed. Their angular-rate penalty is not restored; the user's removal remains honored.
+
+## Falsifiable adaptation and decision
+
+Finish the frozen12-arm factorial before promotion or a new learner/reward adaptation. Longer training and the valid-cell correction have not solved the first seed, but complete the remaining seed replications rather than infer causality from one.
+
+Add an opt-in evaluation_trace_version1 observer that captures the98-dimensional raw terminal state immediately BEFORE automatic reset, with exact1-based evaluation step, per-lane episode step, flags and terminal reward. Keep legacy scoring/ranking and trace0 behavior unchanged. Hypothesis: existing low post-reset velocities conceal the actual escape state in saved evidence; true terminal capture will reveal extent/height/velocity at the counted escape and its exact time. This is an evidence-quality adaptation, not a policy improvement or physics fix.
+
+Validation/rejection: CPU mixed-batch and production evaluator-hook tests must show pre-reset capture, no mutation/RNG consumption, bounded complete chronology and exact equality of every old result field. After the frozen factor arms, reevaluate the850/851 final checkpoints under trace1 with otherwise identical250-step settings through the same GPU lease. Require their initial evaluation old metrics and sparse trajectories to reproduce the preserved source-final artifacts, while new terminal records correspond to counted failures. Reject or investigate mismatches before interpreting terminal-state causes. Treat its4096-transition plumbing updates as such, not learned progress. GPU trace evidence remains pending until those queued trials execute.
+
+No new navigation claim, helper controller or angular-rate penalty. Signed motor/thrust, advantage timing and masked-gradient invariants passed in review0105; poor training alone does not prove incorrect physics. Tether contact/material/attachment fidelity and simulator calibration remain unresolved.

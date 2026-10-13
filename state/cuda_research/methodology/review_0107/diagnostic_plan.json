@@ -1,0 +1,14 @@
+{
+  "adaptation": "evaluation_trace_version1",
+  "queue": "/home/n33du/ai/drone-rl-lab/configs/cuda_research/methodology_queue_v000_user_abc_terminal_trace.json",
+  "queue_sha256": "0d4e5cf69eb9098d066dc0a95f1d27579ffa10da5f5df0ca3d2258b0915e0569",
+  "execution_order": "after existing abb12armfactorial, before default continuation",
+  "cpu_evidence": "terminal_trace/eval_terminal_trace_cpu_test_v005.json",
+  "gpu_evidence": "pending queued lease-owned trials",
+  "one_gpu_trainer": true,
+  "sources": {
+    "scripts/train_tether_cuda.py": "49136c7bfebc9504d79e95a156dd8609d69dfff7384c1acdb85d8258318d2849",
+    "scripts/check_eval_terminal_trace.py": "b37571abf426b0758957e08b385d83acd88d7f7be5a025a290ae98fa8ee33cca",
+    "tether_sim/eval_terminal_trace.py": "2afd2e5d6bb4f5b0f02972eb7555dbbe117963c43cde4d642993d513355b7b69"
+  }
+}

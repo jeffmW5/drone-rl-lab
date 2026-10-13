@@ -1,0 +1,66 @@
+{
+  "collected_at": "2026-10-13T14:12:07.113720+00:00",
+  "last_reviewed_trial": 852,
+  "files": [
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0850_takeoff/result.json",
+      "bytes": 296566,
+      "sha256": "2d4e18bab2100565e9d63e4586f51ef552decc24a7c7f0bb398915824563a460"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0850_takeoff/selection.json",
+      "bytes": 148516,
+      "sha256": "1a03f3792abd7f38d6a634f97b36f8b2a9411d47e372242afeb6d92e5b3351d2"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0850_takeoff/config.json",
+      "bytes": 2952,
+      "sha256": "ff88851fde78696da470f166a388b5b5b0f5a9df5290111900eaf58247c43d82"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0850_takeoff/status.json",
+      "bytes": 39,
+      "sha256": "c8bd7c3f4540b56a79296eddf8b4aa642b9d2deb627e66c252f076f2713fd88a"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0851_takeoff/result.json",
+      "bytes": 297333,
+      "sha256": "89246b68b7aab3c2b98845e31f20bc47268fef2944616ad3338cedfd424c9afe"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0851_takeoff/selection.json",
+      "bytes": 148516,
+      "sha256": "1a03f3792abd7f38d6a634f97b36f8b2a9411d47e372242afeb6d92e5b3351d2"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0851_takeoff/config.json",
+      "bytes": 2952,
+      "sha256": "20fe992a4f993ff815679f643d3982a6310e44f7fd30324f24fd403400a709a3"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0851_takeoff/status.json",
+      "bytes": 39,
+      "sha256": "c8bd7c3f4540b56a79296eddf8b4aa642b9d2deb627e66c252f076f2713fd88a"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0852_takeoff/result.json",
+      "bytes": 297377,
+      "sha256": "1ebbd5b2e0e90a01ef6917738e281d9511ad6f25f5adaa6e61398dbada78b06c"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0852_takeoff/selection.json",
+      "bytes": 148440,
+      "sha256": "0194420c57cd4d3ae7145ec3c5b430a36a12fa232aed296992188f94f6ef4cff"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0852_takeoff/config.json",
+      "bytes": 2948,
+      "sha256": "3016aef6bb598420d6deb71aeb335e3791067cea436d90ab5e9c3f82099019de"
+    },
+    {
+      "path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0852_takeoff/status.json",
+      "bytes": 38,
+      "sha256": "766fceef18571281537dc1f19af05907597f7aa7b3ef85a41d60119507c6e075"
+    }
+  ]
+}

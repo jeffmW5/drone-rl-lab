@@ -1,0 +1,31 @@
+[
+  {
+    "url": "https://arxiv.org/html/2006.05990v1",
+    "version": "v1",
+    "sections_read": [
+      "3.2",
+      "3.3",
+      "3.5",
+      "3.6"
+    ],
+    "retrieved_at": "2026-10-13T14:12:07.113720+00:00",
+    "file": "source_arxiv_2006_05990_v1.html",
+    "sha256": "51ad32da9355ee52bc5bd82c2fa941fff37f75340908dd30bf948d8c9a9636d1",
+    "status": 200
+  },
+  {
+    "url": "https://arxiv.org/html/2311.13081v2",
+    "version": "v2",
+    "sections_read": [
+      "II",
+      "IV",
+      "V",
+      "VI"
+    ],
+    "read_at": "2026-10-13T14:12:07.113720+00:00",
+    "hf_markdown": "source_04.txt",
+    "hf_metadata": "source_03.txt",
+    "author_code": "https://github.com/arplaboratory/learning-to-fly",
+    "author_code_executed": false
+  }
+]
