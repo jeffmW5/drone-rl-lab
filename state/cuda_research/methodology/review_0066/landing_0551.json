@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "training_step": 65536,
+  "penalized_agent_steps": 15752,
+  "episode_takeoffs": 140,
+  "episode_successes": 0
+}

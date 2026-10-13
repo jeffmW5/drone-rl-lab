@@ -23,3 +23,18 @@ p[0,0,2]=.05
 assert not step().any() # successful landing exempt from new term
 gate.reset();assert not gate.success.any() and not gate.airborne.any()
 print(json.dumps(dict(status='pass',scope='CPU per-agent takeoff/landing latch, interrupted hold, 1s airborne prototype success, reset and initial/post-success exemptions')))
+# Version2 caps premature landing override once per episode, independently per agent.
+gate=LandingBeforeSuccess(2,'cpu',version=2);p.zero_();v.zero_();p[:,0,2]=.05
+assert not step().any()
+p[:,0,2]=.4;step();p[:,0,2]=.05
+assert step().tolist()==[True,True]
+assert not step().any()
+p[:,0,2]=.4;step();p[:,0,2]=.05
+assert not step().any() # no bouncing to earn another penalty
+mask=torch.tensor([True,False]);gate.reset(mask);p[0,0,2]=.4;step();p[0,0,2]=.05
+assert step().tolist()==[True,False]
+gate.reset();p[:,0,2]=.8;p[:,-1,2]=.2
+for _ in range(50):step()
+p[:,0,2]=.05
+assert not step().any() # success exemption unchanged
+print(json.dumps(dict(status='pass',version=2,scope='One penalty per episode, independent masked reset, no bounce retrigger, initial ground and success exemptions')))

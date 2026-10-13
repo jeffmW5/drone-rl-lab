@@ -194,7 +194,7 @@ try:
                     source_sha256=hashlib.sha256(Path(pufferlib.pufferl.__file__).read_bytes()).hexdigest()),indent=2))
         trainer.train();publish(vec,'PufferLib training',trainer.global_step)
         if vec.landing_gate is not None:
-            (out/'landing_diagnostics.json').write_text(json.dumps(dict(version=1,training_step=trainer.global_step,**vec.landing_gate.diagnostics()),indent=2))
+            (out/'landing_diagnostics.json').write_text(json.dumps(dict(version=vec.landing_gate.version,training_step=trainer.global_step,**vec.landing_gate.diagnostics()),indent=2))
         if plan.get('learner_diagnostics'):
             # Public cached Puffer metrics; logging may refresh them less often
             # than each update. Retain repeated rows rather than invent freshness.

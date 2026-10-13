@@ -1,0 +1,31 @@
+{
+  "retrieved_at": "2026-10-13T00:13:01.667233+00:00",
+  "query": "reinforcement learning termination penalty reward shaping landing quadrotor",
+  "paper_ids": [
+    "2006.05990",
+    "1712.00378"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=reinforcement+learning+termination+penalty+reward+shaping+landing+quadrotor&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2006.05990",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2006.05990.md",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/1712.00378",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/1712.00378.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}

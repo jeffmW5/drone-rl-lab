@@ -1,0 +1,50 @@
+[
+  {
+    "file": "tmp/cuda-research/cuda_auto_0551_takeoff/rollout_4096.pt",
+    "sha256": "5b561ea6d99c86b5244ef1585b2ba58d9d0eb777ce29e7825a476138d2f8435a",
+    "finite": true,
+    "eligible_reward_cells": 3968,
+    "reward_formula_max_abs_error": 5.960464477539063e-08,
+    "reward_min": -0.7500233054161072,
+    "reward_max": 0.05000000447034836,
+    "reward_mean": -0.5531275272369385,
+    "negative_one_cells": 0,
+    "terminal_cells": 0,
+    "approaching": {
+      "count": 0,
+      "mean_advantage": null,
+      "positive_fraction": null
+    },
+    "receding": {
+      "count": 3922,
+      "mean_advantage": -4.790284633636475,
+      "positive_fraction": 0.22641509771347046
+    },
+    "reconstructed_first_minibatch_advantage_mean": -4.806426048278809,
+    "scope": "Incoming reward matches current observation; outgoing action at t uses reward t+1 in installed recurrence. CPU reconstruction is initial-ratio first-minibatch only, not saved actual advantages; observational groups are not causal action rankings."
+  },
+  {
+    "file": "tmp/cuda-research/cuda_auto_0551_takeoff/rollout_65536.pt",
+    "sha256": "70216815631e190046a375466455c23d531b0f68f6c0539aae45b8f6f69973d6",
+    "finite": true,
+    "eligible_reward_cells": 1827,
+    "reward_formula_max_abs_error": 5.960464477539063e-08,
+    "reward_min": -1.0,
+    "reward_max": 0.19418130815029144,
+    "reward_mean": -0.8022416830062866,
+    "negative_one_cells": 2238,
+    "terminal_cells": 118,
+    "approaching": {
+      "count": 1774,
+      "mean_advantage": -7.33888053894043,
+      "positive_fraction": 0.03833145275712013
+    },
+    "receding": {
+      "count": 2040,
+      "mean_advantage": -4.06718635559082,
+      "positive_fraction": 0.12843137979507446
+    },
+    "reconstructed_first_minibatch_advantage_mean": -5.4707746505737305,
+    "scope": "Incoming reward matches current observation; outgoing action at t uses reward t+1 in installed recurrence. CPU reconstruction is initial-ratio first-minibatch only, not saved actual advantages; observational groups are not causal action rankings."
+  }
+]
