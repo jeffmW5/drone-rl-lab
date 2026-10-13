@@ -1,0 +1,11 @@
+# Review0097: spatial cue interaction rejected; capture actual late rollout
+
+Last reviewed completed trial index:789. Retrieved2026-10-13UTC. Daemon554137 healthy/unpaused;790 active at inspection. No restart/interruption/compile.
+
+Completed778-783 reward14/15 pairs final altitude(mm):652.323/652.288 failures24both;10.291/7.809 failures0both;608.887/596.936 failures24both. All24takeoffs,zero sustained hover; selected0/0,32768/32768,16384/16384. Initial6.660mm; all final altitude errors worse than initial, failed reset metrics not success. Spatial cue does not demonstrate claimed hover improvement, reject promotion and coefficient sweeps. Initial/periodic/final third treatment and continuation784-789 trajectories/selection in results.json; previouspairs review0096. Previous observation1 reward15 failure and longer architecture2 failures preserved.
+
+HF search/2311.13081 metadata/markdown200;2006.05990 metadata/markdown404 preserved. Read original https://arxiv.org/html/2006.05990v1 3.5 temporal chunks/parallelization/bootstrapping and3.6 timestep handling, and https://arxiv.org/html/2311.13081v2 IV diverse initial state/reward and V behavior evaluation. Neither proves local temporal defect or prescribes this diagnosis. Published MuJoCo/untethered outcomes not tethered PPO evidence. No author code executed or angular penalty restored.
+
+Next falsifiable diagnostic: existing audited rollout_capture_version1 saves actual first4096 and final65536 pre-training buffers without altering reward/learner/RNG.128agents x32step firstbuffer only0.64s launch; finalbuffer must be inspected for carrier height/speed/XY/near-hover occupancy, resets/true terminals/truncations and action distributions. Hypothesis training misses target-vicinity states remains unproven; reject it if latebuffer has substantial vicinity coverage. Incoming reward/terminal and outgoing action timing differ; do not naively pair sameindex. Source hash guard preserved. One frozen reward15/observation2/physics5/reset3 run from759best atseed70301,65536 transitions/180s; no new reward/gain/physics change. Captured outcomes are diagnostic, not replication/promotion.
+
+Reused validation seeds provisional/nonindependent; audit seeds untouched. Full tether attachment/contact/material/shortened contour uncalibrated. No sustained hover,strict1mm navigation or hardware precision.
