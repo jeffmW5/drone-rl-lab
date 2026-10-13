@@ -131,6 +131,11 @@ try:
             (out/'policy_response_source.py').write_bytes(Path(source).read_bytes())
             (out/('policy_response_'+stage+'.json')).write_text(json.dumps(probe(policy,plan),indent=2))
     initial=measured();torch.save(policy.state_dict(),out/'initial.pt')
+    if plan.get('recovery_probe_version',0):
+        if plan['recovery_probe_version']!=1:raise ValueError('Unsupported recovery probe')
+        from tether_sim.recovery_probe import probe
+        (out/'recovery_probe_source.py').write_bytes(Path('tether_sim/recovery_probe.py').read_bytes())
+        (out/'recovery_probe.json').write_text(json.dumps(probe(policy,plan),indent=2))
     policy_response('initial')
     if plan.get('zone_horizon_probe_version',0):
         version=plan['zone_horizon_probe_version']
@@ -224,6 +229,11 @@ try:
         (out/'potential_shaping_source.py').write_bytes(Path('tether_sim/potential_shaping.py').read_bytes())
         shaping=PotentialShaping(vec,config['gamma'])
     trainer=PuffeRL(config,vec,policy)
+    from tether_sim.learner_valid_mask import enable as enable_valid_mask
+    mask_manifest=enable_valid_mask(trainer,plan.get('learner_valid_mask_version',1))
+    if plan.get('learner_valid_mask_version',1)==2:
+        (out/'learner_valid_mask_source.py').write_bytes(Path('tether_sim/learner_valid_mask.py').read_bytes())
+        (out/'learner_valid_mask.json').write_text(json.dumps(mask_manifest,indent=2))
     if plan.get('optimizer_resume_version',1) not in (1,2):raise ValueError('Unsupported optimizer resume version')
     if plan.get('optimizer_resume_version',1)==2:
         if plan.get('collective_response_version',1)!=1 or plan.get('input_conditioning_version',1)!=1 or plan.get('collective_observation_version',1)!=1:raise ValueError('Optimizer restore disallows changed policy initialization')

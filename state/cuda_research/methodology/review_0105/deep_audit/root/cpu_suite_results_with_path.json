@@ -1,0 +1,98 @@
+[
+  {
+    "script": "scripts/check_cuda_logic.py",
+    "sha256": "13b1811e157f33c2daa93ba090157620390b6b7e5add91c8ef6437d4c87d8f8d",
+    "exit": 1,
+    "elapsed_s": 1.77294921875,
+    "stdout": "",
+    "stderr": "/home/n33du/ai/crazyflie-tether-venv/lib/python3.12/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.\n  import pynvml  # type: ignore[import]\nTraceback (most recent call last):\n  File \"/home/n33du/ai/drone-rl-lab/scripts/check_cuda_logic.py\", line 65, in <module>\n    vec.send(np.zeros((1, 4)))\n  File \"/home/n33du/ai/drone-rl-lab/tether_sim/cuda_task.py\", line 265, in send\n    s.step(command.contiguous(),dt=.001 if self.integration_version==1 else .0005,substeps=20 if self.integration_version==1 else 40)\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'CudaVector' object has no attribute 'integration_version'\n"
+  },
+  {
+    "script": "scripts/check_ground_geometry.py",
+    "sha256": "ff39ef57c48bcbe2da15d23a61145171cedf82353a822d38398b6c756fcd00eb",
+    "exit": 0,
+    "elapsed_s": 2.3476169109344482,
+    "stdout": "{\"status\": \"pass\", \"scope\": \"Version3 valid rest lengths, carrier/payload floor heights; legacy and mixed starts preserved, input not mutated\"}\n",
+    "stderr": "/home/n33du/ai/crazyflie-tether-venv/lib/python3.12/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.\n  import pynvml  # type: ignore[import]\n"
+  },
+  {
+    "script": "scripts/check_hover_motor_starts.py",
+    "sha256": "b5d9f1992c89e1315687f743a6a51247acb9beea60fce217dcffe53112443093",
+    "exit": 0,
+    "elapsed_s": 1.7912623882293701,
+    "stdout": "Matched mixed geometry, exact links, ground motors-off and airborne total-weight motor initialization passed\n",
+    "stderr": "/home/n33du/ai/crazyflie-tether-venv/lib/python3.12/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.\n  import pynvml  # type: ignore[import]\n"
+  },
+  {
+    "script": "scripts/check_zone_hover.py",
+    "sha256": "f92eb32091d1c871315f44f77213feb2e70831347f88d0a31ef75ad470c3a337",
+    "exit": 0,
+    "elapsed_s": 1.5972998142242432,
+    "stdout": "Passed production zone signs, square corners, exact1m/2m boundaries and ground reward checks\nReward15 grades horizontal offset inside zone; reward14/center and negative band/failure preserved\n",
+    "stderr": "/home/n33du/ai/crazyflie-tether-venv/lib/python3.12/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.\n  import pynvml  # type: ignore[import]\n"
+  },
+  {
+    "script": "scripts/check_collective_response.py",
+    "sha256": "1e2060c96707f203489a10df58547de10e4f298a3517fb189e30ad0eeb362d82",
+    "exit": 0,
+    "elapsed_s": 1.5727777481079102,
+    "stdout": "Production collective initialization preserves anchor, differential means, critic and noise; scales only collective state-response64x\nAttitude-only initialization preserves collective/yaw/anchor/value while scaling learned roll/pitch rows\n",
+    "stderr": "/home/n33du/ai/crazyflie-tether-venv/lib/python3.12/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.\n  import pynvml  # type: ignore[import]\n"
+  },
+  {
+    "script": "scripts/check_collective_observation.py",
+    "sha256": "f1f645aba53291510be54b1cfb97237d0c33d043406a70b90ae0b1c9b1d74cc5",
+    "exit": 0,
+    "elapsed_s": 1.6911461353302002,
+    "stdout": "Actual713 weights: collective uniform XY/velocity invariance; full-state other means/value/noise unchanged; finite gradients; version1 unchanged\nBatched temporal shapes verified\n",
+    "stderr": "/home/n33du/ai/crazyflie-tether-venv/lib/python3.12/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.\n  import pynvml  # type: ignore[import]\n"
+  },
+  {
+    "script": "scripts/check_landing_penalty.py",
+    "sha256": "8985b65b930ddde869b437fa466fd495477d51e9c0eeae217b70affb672c2c99",
+    "exit": 0,
+    "elapsed_s": 1.570136308670044,
+    "stdout": "{\"status\": \"pass\", \"scope\": \"CPU per-agent takeoff/landing latch, interrupted hold, 1s airborne prototype success, reset and initial/post-success exemptions\"}\n{\"status\": \"pass\", \"version\": 2, \"scope\": \"One penalty per episode, independent masked reset, no bounce retrigger, initial ground and success exemptions\"}\n",
+    "stderr": "/home/n33du/ai/crazyflie-tether-venv/lib/python3.12/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.\n  import pynvml  # type: ignore[import]\n"
+  },
+  {
+    "script": "scripts/check_optimizer_resume.py",
+    "sha256": "77d546d00c43355ba7fac325a38bab5b8d03f4c15a8ab353a582427cb45a69b1",
+    "exit": 0,
+    "elapsed_s": 2.73065447807312,
+    "stdout": "Actual matched685 Adam state restored192steps/9slots; mismatched policy rejected\n",
+    "stderr": "/home/n33du/ai/crazyflie-tether-venv/lib/python3.12/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.\n  import pynvml  # type: ignore[import]\n"
+  },
+  {
+    "script": "scripts/check_timeout_bootstrap_buffers.py",
+    "sha256": "28b5cc1360a693bfe78269906cee6e84f1d9dd96217b08b286e94a284a24f002",
+    "exit": 0,
+    "elapsed_s": 1.629084825515747,
+    "stdout": "{\n  \"status\": \"pass\",\n  \"scope\": \"CPU real hook and simulated Puffer buffer lifecycle; GPU learner end-to-end still pending\",\n  \"applied_before_failure\": 3\n}\n",
+    "stderr": "/home/n33du/ai/crazyflie-tether-venv/lib/python3.12/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.\n  import pynvml  # type: ignore[import]\n"
+  },
+  {
+    "script": "scripts/check_policy_update_capture.py",
+    "sha256": "6199ea0497056ca7d76a85fe88e0fa36feca32b5aae262e49a311b626dbd4849",
+    "exit": 0,
+    "elapsed_s": 1.6698288917541504,
+    "stdout": "Actual759 version2 queries preserve weights/RNG/no-grad; matched shapes and finite output\n",
+    "stderr": "/home/n33du/ai/crazyflie-tether-venv/lib/python3.12/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.\n  import pynvml  # type: ignore[import]\n"
+  },
+  {
+    "script": "scripts/check_advantage_capture.py",
+    "sha256": "035e5578f3d699de1c24a96e90d3d1e0c26caa818baf81912a7e1209f814c181",
+    "exit": 0,
+    "elapsed_s": 3.578758955001831,
+    "stdout": "Capture preserves return identity, input tensors, CPU RNG and restores callable; captures detached actual result\n",
+    "stderr": "/home/n33du/ai/crazyflie-tether-venv/lib/python3.12/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.\n  import pynvml  # type: ignore[import]\nGym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.\nPlease upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.\nUsers of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.\nSee the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.\n"
+  },
+  {
+    "script": "scripts/check_advantage_capture_v002.py",
+    "sha256": "1cd98b88ed0d2111746f5a74b8431126648fa8ac025c3ecca2085be15e55088d",
+    "exit": 0,
+    "elapsed_s": 2.3051347732543945,
+    "stdout": "Capture preserves return identity, input tensors, CPU RNG and restores callable; captures detached actual result\n",
+    "stderr": "/home/n33du/ai/crazyflie-tether-venv/lib/python3.12/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.\n  import pynvml  # type: ignore[import]\nGym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.\nPlease upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.\nUsers of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.\nSee the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.\n"
+  }
+]

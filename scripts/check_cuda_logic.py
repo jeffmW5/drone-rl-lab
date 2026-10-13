@@ -32,7 +32,7 @@ class FakePhysics:
         self.motors = torch.zeros(1, 4)
         self.failed = torch.zeros(1, dtype=torch.int32)
         self.crash = False
-    def step(self, command):
+    def step(self, command, dt=.001, substeps=20):
         self.command = command.clone()
         if self.crash:
             self.failed[:] = 1
@@ -40,6 +40,9 @@ class FakePhysics:
 def vector():
     vec = object.__new__(CudaVector)
     vec.sim = FakePhysics()
+    vec.integration_version = 1
+    vec.diagnostic_zone_version = 0
+    vec.reset_motor_forces = torch.zeros(1,4)
     vec.direct = True
     vec.control_version = 2
     vec.reward_version = 8

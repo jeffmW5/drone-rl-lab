@@ -1,0 +1,234 @@
+{
+  "scope": "CPU-only existing839immutable buffers. Query difference is last12-minibatch update. Corrected credit reflects captured even globaladvantage calls used by learner; oddcalls computed then discarded. Groupstates from98observations: carrierZ=relativeZ+.2; velocitycarrier slots42:45. Diagnostic correlation not causal flight guarantee.",
+  "source_sha256": "efc5ea7537670bf89ac18347bdc97126dd6f282b9ede5598424eaeace6f8f5f4",
+  "groups": {
+    "all": {
+      "unique_cells": 3904,
+      "sampled_occurrences": 12288,
+      "normalized_credit_weighted_mean": 3.1044085080367267e-09,
+      "likelihood_delta_mean": -0.0005119841662235558,
+      "likelihood_delta_credit_dot_weighted": 0.0007096909102983773,
+      "positive_credit_increased_likelihood_fraction": 0.5004677176475525,
+      "negative_credit_decreased_likelihood_fraction": 0.5130237936973572,
+      "mean_action_delta": [
+        2.662471160874702e-05,
+        -9.973840496968478e-05,
+        2.8077000024495646e-05,
+        -0.00015082414029166102
+      ],
+      "mean_abs_action_delta": [
+        8.501030970364809e-05,
+        0.00010021745401900262,
+        0.00012398598482832313,
+        0.0001663361326791346
+      ]
+    },
+    "stable": {
+      "unique_cells": 19,
+      "sampled_occurrences": 84,
+      "normalized_credit_weighted_mean": 1.8811607360839844,
+      "likelihood_delta_mean": 0.0002482313720975071,
+      "likelihood_delta_credit_dot_weighted": -0.001561428769491613,
+      "positive_credit_increased_likelihood_fraction": 0.42105263471603394,
+      "negative_credit_decreased_likelihood_fraction": null,
+      "mean_action_delta": [
+        9.439179848413914e-05,
+        -9.11062306840904e-05,
+        -7.783914043102413e-05,
+        -0.00013187172589823604
+      ],
+      "mean_abs_action_delta": [
+        9.439179848413914e-05,
+        9.11062306840904e-05,
+        8.055425860220566e-05,
+        0.00013187172589823604
+      ]
+    },
+    "near_height_fast": {
+      "unique_cells": 945,
+      "sampled_occurrences": 3140,
+      "normalized_credit_weighted_mean": 0.37217578291893005,
+      "likelihood_delta_mean": -0.001109915436245501,
+      "likelihood_delta_credit_dot_weighted": 2.6249999791616574e-05,
+      "positive_credit_increased_likelihood_fraction": 0.48545175790786743,
+      "negative_credit_decreased_likelihood_fraction": 0.5376712083816528,
+      "mean_action_delta": [
+        0.00010354009282309562,
+        -0.00011860985250677913,
+        3.000142351083923e-05,
+        -0.00019828158838208765
+      ],
+      "mean_abs_action_delta": [
+        0.00012865733879152685,
+        0.00011993532825727016,
+        0.00014579991693608463,
+        0.00021521584130823612
+      ]
+    },
+    "outside": {
+      "unique_cells": 1199,
+      "sampled_occurrences": 3968,
+      "normalized_credit_weighted_mean": -0.9311315417289734,
+      "likelihood_delta_mean": -0.001801693462766707,
+      "likelihood_delta_credit_dot_weighted": 0.002227739430963993,
+      "positive_credit_increased_likelihood_fraction": 0.41237112879753113,
+      "negative_credit_decreased_likelihood_fraction": 0.5263158082962036,
+      "mean_action_delta": [
+        5.555007010116242e-05,
+        -0.00013751040387433022,
+        7.198454113677144e-05,
+        -0.00017806646064855158
+      ],
+      "mean_abs_action_delta": [
+        0.00010947816917905584,
+        0.00013905797095503658,
+        0.00023153059009928256,
+        0.00021275499602779746
+      ]
+    },
+    "ground": {
+      "unique_cells": 574,
+      "sampled_occurrences": 1805,
+      "normalized_credit_weighted_mean": -0.2527947425842285,
+      "likelihood_delta_mean": 4.4858414185000584e-05,
+      "likelihood_delta_credit_dot_weighted": 0.00018730024748947471,
+      "positive_credit_increased_likelihood_fraction": 0.5181347131729126,
+      "negative_credit_decreased_likelihood_fraction": 0.5013123154640198,
+      "mean_action_delta": [
+        -3.517426739563234e-05,
+        -6.74792390782386e-05,
+        2.4012009816942737e-05,
+        -9.417861292604357e-05
+      ],
+      "mean_abs_action_delta": [
+        3.517426739563234e-05,
+        6.74792390782386e-05,
+        2.4386348741245456e-05,
+        9.417861292604357e-05
+      ]
+    },
+    "last_column": {
+      "unique_cells": 122,
+      "sampled_occurrences": 384,
+      "normalized_credit_weighted_mean": 0.23252719640731812,
+      "likelihood_delta_mean": -0.0005405222764238715,
+      "likelihood_delta_credit_dot_weighted": 3.7845911720069125e-05,
+      "positive_credit_increased_likelihood_fraction": 0.5163934230804443,
+      "negative_credit_decreased_likelihood_fraction": null,
+      "mean_action_delta": [
+        2.141693767043762e-05,
+        -9.297887299908325e-05,
+        9.796186532184947e-06,
+        -0.00014226157509256154
+      ],
+      "mean_abs_action_delta": [
+        8.064942085184157e-05,
+        9.377985406899825e-05,
+        0.00011092591739725322,
+        0.00015408183389808983
+      ]
+    }
+  },
+  "sampling_unseen_rows": 6,
+  "last_column": [
+    {
+      "i": 0,
+      "raw_last_maxabs": 0.0,
+      "norm_last_mean": 0.10307882726192474,
+      "raw_mean": -0.6991690993309021,
+      "raw_std": 6.7828593254089355
+    },
+    {
+      "i": 1,
+      "raw_last_maxabs": 0.0,
+      "norm_last_mean": 0.26491108536720276,
+      "raw_mean": -1.8659061193466187,
+      "raw_std": 7.04351806640625
+    },
+    {
+      "i": 2,
+      "raw_last_maxabs": 0.0,
+      "norm_last_mean": 0.3135576546192169,
+      "raw_mean": -2.0595834255218506,
+      "raw_std": 6.568436145782471
+    },
+    {
+      "i": 3,
+      "raw_last_maxabs": 0.0,
+      "norm_last_mean": 0.27423855662345886,
+      "raw_mean": -1.7125409841537476,
+      "raw_std": 6.2447123527526855
+    },
+    {
+      "i": 4,
+      "raw_last_maxabs": 0.0,
+      "norm_last_mean": 0.1631595492362976,
+      "raw_mean": -1.0637412071228027,
+      "raw_std": 6.5196380615234375
+    },
+    {
+      "i": 5,
+      "raw_last_maxabs": 0.0,
+      "norm_last_mean": 0.3189423084259033,
+      "raw_mean": -2.108142614364624,
+      "raw_std": 6.609792709350586
+    },
+    {
+      "i": 6,
+      "raw_last_maxabs": 0.0,
+      "norm_last_mean": 0.38486674427986145,
+      "raw_mean": -2.4491076469421387,
+      "raw_std": 6.363520622253418
+    },
+    {
+      "i": 7,
+      "raw_last_maxabs": 0.0,
+      "norm_last_mean": 0.21927212178707123,
+      "raw_mean": -1.5041892528533936,
+      "raw_std": 6.859920501708984
+    },
+    {
+      "i": 8,
+      "raw_last_maxabs": 0.0,
+      "norm_last_mean": 0.26101788878440857,
+      "raw_mean": -1.6797207593917847,
+      "raw_std": 6.4352707862854
+    },
+    {
+      "i": 9,
+      "raw_last_maxabs": 0.0,
+      "norm_last_mean": 0.29500067234039307,
+      "raw_mean": -1.9418524503707886,
+      "raw_std": 6.582535743713379
+    },
+    {
+      "i": 10,
+      "raw_last_maxabs": 0.0,
+      "norm_last_mean": 0.12448210269212723,
+      "raw_mean": -0.8317880630493164,
+      "raw_std": 6.681988716125488
+    },
+    {
+      "i": 11,
+      "raw_last_maxabs": 0.0,
+      "norm_last_mean": 0.06779858469963074,
+      "raw_mean": -0.47254449129104614,
+      "raw_std": 6.969828128814697
+    }
+  ],
+  "captured_before_logprob_maxdiff_from_behavior": 4.291534423828125e-06,
+  "captured_before_value_maxdiff_from_buffer": 1.043081283569336e-07,
+  "final_mean_action_delta_maxabs": 0.0005372051382437348,
+  "last_log_std_before": [
+    -4.000133037567139,
+    -3.9996869564056396,
+    -4.00018310546875,
+    -3.999804973602295
+  ],
+  "last_log_std_after": [
+    -4.000120639801025,
+    -3.9996988773345947,
+    -4.000150680541992,
+    -3.999797821044922
+  ]
+}

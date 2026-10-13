@@ -1,0 +1,21 @@
+{
+  "scope": "CPU installedC recurrence and exactGaussian PPO likelihood-ratio actor-loss equation. Non-simulation analytic gradient invariant, nothoverresult.",
+  "arriving_transition_advantages": [
+    [
+      1.0,
+      0.0
+    ],
+    [
+      -1.0,
+      0.0
+    ]
+  ],
+  "actor_loss_mean_gradient": -0.7071067690849304,
+  "positive_credit_action_logprob_change": 0.007046103477478027,
+  "negative_credit_action_logprob_change": -0.007095932960510254,
+  "passed": true,
+  "actual_configuration_gamma_lambda": 0.9452499999999999,
+  "credit_exponential_time_constant_seconds": 0.35520279678639505,
+  "credit_weight_at_31steps": 0.17456101844770652,
+  "sampling_expected_unique_rows_128_12draws32": 123.94542694091797
+}

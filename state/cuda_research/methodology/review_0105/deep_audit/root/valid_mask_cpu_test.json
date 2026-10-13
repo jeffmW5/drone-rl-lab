@@ -1,0 +1,47 @@
+{
+  "scope": "Independent CPU-only actual copied source guarded by exact installed hash, one analytic-table loss/update. This is a learner invariant test, not simulated flight or production training. No package/source change.",
+  "mask_manifest": {
+    "version": 2,
+    "enabled": true,
+    "source_sha256": "efc5ea7537670bf89ac18347bdc97126dd6f282b9ede5598424eaeace6f8f5f4",
+    "patch_sha256": "57bda27cad91fdea55c58c7ecf21832360399cccbacbe84103151e587dc1b67d",
+    "scope": "Finalcolumn retained for nextvalue bootstrap but excluded from normalization and policy/value/entropy loss and loss diagnostics. Sampler/priority/returns/value refresh/optimizer unchanged."
+  },
+  "baseline_last_actor_weights": [
+    0.009999043308198452,
+    0.009999043308198452
+  ],
+  "masked_last_actor_weights": [
+    0.0,
+    0.0
+  ],
+  "masked_last_critic_weights": [
+    0.0,
+    0.0
+  ],
+  "reference_valid_cell_actor_maxdiff": 0.0,
+  "reference_valid_cell_critic_maxdiff": 0.0,
+  "baseline_losses": {
+    "policy_loss": 0.0,
+    "value_loss": 0.23810502886772156,
+    "entropy": 1.4189385175704956,
+    "old_approx_kl": 0.0,
+    "approx_kl": 0.0,
+    "clipfrac": 0.0,
+    "importance": 1.0,
+    "explained_variance": 0.0
+  },
+  "masked_losses": {
+    "policy_loss": 3.973643103449831e-08,
+    "value_loss": 0.3174733817577362,
+    "entropy": 1.4189385175704956,
+    "old_approx_kl": 0.0,
+    "approx_kl": 0.0,
+    "clipfrac": 0.0,
+    "importance": 1.0,
+    "explained_variance": 0.0
+  },
+  "independent_equations_match_pass": true,
+  "baseline_synthetic_no_credit_cells_changed": true,
+  "candidate_synthetic_no_credit_cells_unchanged": true
+}

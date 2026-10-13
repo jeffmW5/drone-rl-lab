@@ -1,0 +1,98 @@
+{
+  "version": "experimental_design_suggestion_v001",
+  "scope": "Audit suggestion only; parentownsproductionqueue/review105",
+  "source_checkpoint": "tmp/cuda-research/cuda_auto_0759_takeoff/best.pt",
+  "factors": {
+    "total_transitions": [
+      65536,
+      262144
+    ],
+    "valid_cell_mask_version": [
+      1,
+      2
+    ]
+  },
+  "fixed": {
+    "direct": true,
+    "phase": "takeoff",
+    "reward_version": 15,
+    "physics_version": 5,
+    "training_reset_version": 3,
+    "evaluation_reset_version": 3,
+    "diagnostic_zone_version": 1,
+    "selection_version": 2,
+    "collective_observation_version": 2,
+    "collective_response_version": 1,
+    "control_version": 2,
+    "integration_version": 1,
+    "learning_rate": 3e-06,
+    "batch_size": 4096,
+    "bptt_horizon": 32,
+    "agents": 128,
+    "eval_every_steps": 16384,
+    "evaluation_steps": 250,
+    "budget_seconds": 600,
+    "optimizer_resume_version": 1,
+    "training_seeds": [
+      70401,
+      70402,
+      70403
+    ],
+    "validation_seeds": [
+      51011,
+      51012,
+      51013
+    ]
+  },
+  "factor_definitions": {
+    "mask1": "Existingbaselineincludesall32cellsinadvantagenormalizationandpolicy/value loss. Lastadvantagecomputedzero bykernelbootstrapcell.",
+    "mask2": "Exclude finalcolumn fromnormalization/policy/value reductions;retainlastvaluesforbootstrappingandunchangedCkernel."
+  },
+  "primary_hypotheses": [
+    "Correctingbootstrappingcelllearningimprovesbehaviorversusmask1atasamefixedlength.",
+    "Fourtimesuninterruptedexperienceimprovesbehaviorversus65kprefixwithinsamevalidcellversion.",
+    "Lengthandmaskmayinteract;useall4cellsratherthanconfoundchangesinonecandidate."
+  ],
+  "exposure": {
+    "short": {
+      "seconds_per_lane": 10.24,
+      "maxlength_episodes": 1,
+      "update_batches": 16
+    },
+    "long": {
+      "seconds_per_lane": 40.96,
+      "maxlength_episodes": 4,
+      "update_batches": 64
+    },
+    "mask2_fraction_excluded": 0.03125
+  },
+  "rejection_rules": [
+    "Trialprocess/sourcehashmaskassertionfailureinvalidatesarm,notflightfailure;preserveartifactsanddonot silentlyrestart/overwrite.",
+    "If600secendslongarmbefore262144,reportactualstepsandbudgetcensored;do notinterpretasplanned4xlengthcomparison.",
+    "No promotionfromrewardmagnitude,altitudeendpoint,initialbestorafterresetstate.",
+    "Rejectnewmilestoneifno1szonehoverunderunchangedbounds/speedcriteriaorifaddedfailures/losttakeoffs.",
+    "Requirematchedinitialfunctionandcheckpointversion;compareeachmasklengthcelltoseedpairedcontrolandowninitial.",
+    "Treatthreevalidationseedsx8agentsasoneidenticalenvironmentdomain,not24independenttrials.",
+    "Any5sappearanceofhoverrequiresfirstfailurestopping20svalidationwithplanobs2;preservenohoverandlaterregressions.",
+    "Reusedtrainingseedpairs70401..03provisional;reserveaudithardwareseedsunchanged."
+  ],
+  "required_evidence": [
+    "Initial,each16384periodic,final,selectedcheckpointmetricspluscarrier3Dspeed/XY/heightandpreterminalfailuretime.",
+    "Proveactualmask2exclusion(normalization/reductioncellcount3968=128x31)andlastvaluebootstrapuntouched.",
+    "Compare65kshortfinalmodeltothecorrespondinglong65536checkpointforeachmask/seed;hashorfulltensorcomparison.Donotassumeprefixequalitywithoutcheckinglearnerannealing/RNG/configeffect.",
+    "Frozenplans,core/installedlearnersourcehashesandpatchversion.",
+    "Storebothfinalandbest;reportbest_step0asinitialfunctionretention,notlearning.",
+    "Useequalwallbudget600yetreportactualtrainingseconds/evaloverhead;longarmtestsbudgetofupdates,notsingleparameterrewardchange."
+  ],
+  "counterevidence": [
+    "Review0028/queuev018previouslongfragment32vs128 usedreward2/physics1 and262144;Review0044/queuev026durationusedreward7/physics1.Theseareevidencenotuniversalhorizon/durationcure,notcurrentreward15/obs2/physics5 comparison.",
+    "Review0085-87freshvsrestoredAdam65kcandidatesmixedandnohover;thisfactorialdoesnotclaimfreshAdamcausesfailureanddoesnotrestoreoptimizer.",
+    "Reviews0098-0102actualnearheightcoverageanddirectionallysensibleadvantagesruleoutsimpleabsentcoverage/globalsign explanations."
+  ],
+  "limits": [
+    "Fourepisodesperlaneisstillshortforlearningandnotconvergenceproof.",
+    "Maskbugexistencealonewillnotguaranteelearnedhover.",
+    "Groundresetgeometryandstableenvironmentareunchanged;thereisnophysicsvaliditytestinthisfactorial.",
+    "Thislearnermodelremainspureandfullytethered;noPDhelper/angularpenalty/hardwareclaim."
+  ]
+}

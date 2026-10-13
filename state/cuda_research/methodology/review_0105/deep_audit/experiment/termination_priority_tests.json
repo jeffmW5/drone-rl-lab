@@ -1,0 +1,260 @@
+{
+  "scope": "CPU proposed helper specification only, production unchanged. This tests flag logic, not physics.",
+  "source_sha256": "68f48fe25556a961e8c268186fabb36e8d2d35f1e961c9b0d3a8af3f64cfb421",
+  "cases": [
+    {
+      "step": 0,
+      "failed": 0,
+      "v1": {
+        "done": false,
+        "truncated": false,
+        "counted_failure": false
+      },
+      "v2": {
+        "done": false,
+        "truncated": false,
+        "counted_failure": false
+      }
+    },
+    {
+      "step": 0,
+      "failed": 1,
+      "v1": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      },
+      "v2": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      }
+    },
+    {
+      "step": 0,
+      "failed": 3,
+      "v1": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      },
+      "v2": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      }
+    },
+    {
+      "step": 249,
+      "failed": 0,
+      "v1": {
+        "done": false,
+        "truncated": false,
+        "counted_failure": false
+      },
+      "v2": {
+        "done": false,
+        "truncated": false,
+        "counted_failure": false
+      }
+    },
+    {
+      "step": 249,
+      "failed": 1,
+      "v1": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      },
+      "v2": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      }
+    },
+    {
+      "step": 249,
+      "failed": 3,
+      "v1": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      },
+      "v2": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      }
+    },
+    {
+      "step": 250,
+      "failed": 0,
+      "v1": {
+        "done": false,
+        "truncated": false,
+        "counted_failure": false
+      },
+      "v2": {
+        "done": false,
+        "truncated": false,
+        "counted_failure": false
+      }
+    },
+    {
+      "step": 250,
+      "failed": 1,
+      "v1": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      },
+      "v2": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      }
+    },
+    {
+      "step": 250,
+      "failed": 3,
+      "v1": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      },
+      "v2": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      }
+    },
+    {
+      "step": 499,
+      "failed": 0,
+      "v1": {
+        "done": false,
+        "truncated": false,
+        "counted_failure": false
+      },
+      "v2": {
+        "done": false,
+        "truncated": false,
+        "counted_failure": false
+      }
+    },
+    {
+      "step": 499,
+      "failed": 1,
+      "v1": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      },
+      "v2": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      }
+    },
+    {
+      "step": 499,
+      "failed": 3,
+      "v1": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      },
+      "v2": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      }
+    },
+    {
+      "step": 500,
+      "failed": 0,
+      "v1": {
+        "done": true,
+        "truncated": true,
+        "counted_failure": false
+      },
+      "v2": {
+        "done": true,
+        "truncated": true,
+        "counted_failure": false
+      }
+    },
+    {
+      "step": 500,
+      "failed": 1,
+      "v1": {
+        "done": true,
+        "truncated": true,
+        "counted_failure": false
+      },
+      "v2": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      }
+    },
+    {
+      "step": 500,
+      "failed": 3,
+      "v1": {
+        "done": true,
+        "truncated": true,
+        "counted_failure": false
+      },
+      "v2": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      }
+    },
+    {
+      "step": 501,
+      "failed": 0,
+      "v1": {
+        "done": true,
+        "truncated": true,
+        "counted_failure": false
+      },
+      "v2": {
+        "done": true,
+        "truncated": true,
+        "counted_failure": false
+      }
+    },
+    {
+      "step": 501,
+      "failed": 1,
+      "v1": {
+        "done": true,
+        "truncated": true,
+        "counted_failure": false
+      },
+      "v2": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      }
+    },
+    {
+      "step": 501,
+      "failed": 3,
+      "v1": {
+        "done": true,
+        "truncated": true,
+        "counted_failure": false
+      },
+      "v2": {
+        "done": true,
+        "truncated": false,
+        "counted_failure": true
+      }
+    }
+  ],
+  "all_assertions_passed": true,
+  "current_standard250step_evaluation_affected": false
+}

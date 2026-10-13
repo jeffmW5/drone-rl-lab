@@ -1,0 +1,48 @@
+{
+  "scope": "CPU-only installed C advantage operator and independent actor-loss gradient invariant, plus839existingartifact reads. No simulator/trainer/GPU launched. Boundaryissue is definite missingcredit/normalizationartifact; 3.125%scope does not establish hovercausality.",
+  "c_kernel_alignment_pass": true,
+  "terminal_bootstrap_stop_pass": true,
+  "first_reward_ignored_as_arriving_previous_action_pass": true,
+  "expected_advantages": [
+    [
+      0.10650243610143661,
+      -0.9452499747276306,
+      -1.0,
+      0.0
+    ],
+    [
+      0.10650243610143661,
+      -0.9452499747276306,
+      -1.0,
+      0.0
+    ]
+  ],
+  "actual_advantages": [
+    [
+      0.1065024733543396,
+      -0.9452499747276306,
+      -1.0,
+      0.0
+    ],
+    [
+      0.1065024733543396,
+      -0.9452499747276306,
+      -1.0,
+      0.0
+    ]
+  ],
+  "uncredited_final_cell_normalized_credit": 1.1618950366973877,
+  "uncredited_final_cell_actor_gradient": -0.2904737591743469,
+  "mask_final_cell_actor_gradient": -0.0,
+  "839_actions_outside_unit_bounds_fraction": 0.0,
+  "839_actions_std_per_channel": [
+    0.05380392074584961,
+    0.018296856433153152,
+    0.018528856337070465,
+    0.018706487491726875
+  ],
+  "839_optimizer_steps": [
+    192.0
+  ],
+  "c_source_sha256": "3efbfd62a5b2875451cc77bbb5cdb70a48001400e43cb3a4bbb724a926ee9a53"
+}
