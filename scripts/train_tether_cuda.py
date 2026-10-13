@@ -15,6 +15,9 @@ for key in ('initial_throttle','steps','direct'):
 if not 0<args.initial_throttle<1 or not 4096<=args.steps<=1048576:parser.error('Invalid bounded experiment settings')
 out=Path(args.output);out.mkdir(parents=True,exist_ok=False)
 lease=acquire_training_lease();torch.set_num_threads(1);torch.manual_seed(41)
+if plan.get("physics_version",1)==3:
+    from tether_sim.thrust_order_check import prepare_and_check
+    prepare_and_check(out/"thrust_order_checks.json")
 snapshot={'mode':'initializing','positions':[]};guard=threading.Lock()
 class Handler(BaseHTTPRequestHandler):
     def log_message(self,*args): pass
