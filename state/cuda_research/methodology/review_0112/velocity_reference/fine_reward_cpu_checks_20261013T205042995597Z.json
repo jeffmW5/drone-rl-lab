@@ -1,0 +1,476 @@
+{
+  "integration": {
+    "scope": "Exact current CudaVector.send/obs/recv on CPU fake backend, device-only tensor redirection. No CUDA constructor, physics integration or learned flight. Frozen reference AST extraction executes only pure old reward function.",
+    "frozen_reference": {
+      "path": "/home/n33du/ai/drone-rl-lab/state/cuda_research/methodology/review_0109/recovery_curriculum/cuda_task_before_reset6_source.py",
+      "sha256": "5493230dc04011b4d93f19da378e8b98bddd4e7e8b646badd956158d18fc51f4"
+    },
+    "legacy_reward_function_exact": {
+      "1": true,
+      "2": true
+    },
+    "legacy_vector_dispatch_exact": {
+      "14": true,
+      "15": true
+    },
+    "fine_zoneversion3_helper_exact": true,
+    "invalid_zone_versions_rejected": [
+      -1,
+      0,
+      99
+    ],
+    "numerical_failure_rejected": true,
+    "reward16_vector_rewards": [
+      0.9936988949775696,
+      0.0,
+      -0.30000001192092896,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      0.7689642906188965
+    ],
+    "reward16_vector_done": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false
+    ],
+    "reward16_vector_truncated": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "terminal_pre_reset_failed": [
+      0,
+      0,
+      0,
+      3,
+      3,
+      3,
+      1,
+      0
+    ],
+    "terminal_pre_reset_carrier_xy": [
+      [
+        0.004999999888241291,
+        -0.0020000000949949026
+      ],
+      [
+        1.0,
+        0.0
+      ],
+      [
+        1.2999999523162842,
+        0.0
+      ],
+      [
+        2.0,
+        0.0
+      ],
+      [
+        -2.0,
+        0.0
+      ],
+      [
+        0.0,
+        2.0
+      ],
+      [
+        0.009999999776482582,
+        0.009999999776482582
+      ],
+      [
+        0.10000000149011612,
+        0.10000000149011612
+      ]
+    ],
+    "reset_carrier_positions": [
+      [
+        0.005,
+        -0.002,
+        0.8
+      ],
+      [
+        1.0,
+        0.0,
+        0.8
+      ],
+      [
+        1.3,
+        0.0,
+        0.8
+      ],
+      [
+        0.0,
+        0.0,
+        0.05
+      ],
+      [
+        0.0,
+        0.0,
+        0.05
+      ],
+      [
+        0.0,
+        0.0,
+        0.05
+      ],
+      [
+        0.0,
+        0.0,
+        0.05
+      ],
+      [
+        0.1,
+        0.1,
+        0.8
+      ]
+    ],
+    "zone_counts": {
+      "band_steps": 1,
+      "escapes": 3
+    },
+    "timeout_preservation_pass": true
+  },
+  "scope": "CPU-only production pure reward helpers; no simulator initialization, GPU, training, configuration or review edits. Exact unchanged old reward15 compared with new fine reward16 candidate. Fine resolution near hover does not establish learned hover or hardware precision. Ground band can still clip below-1.",
+  "created_at_utc": "2026-10-13T20:50:42.995152+00:00",
+  "checks_passed": [
+    "x_millimetre_centimetre_gradation_and_signs",
+    "y_millimetre_centimetre_gradation_and_signs",
+    "height_millimetre_centimetre_gradation_and_signs",
+    "actual_production15_upper_clip_plateau_demonstrated",
+    "speed_penalty_and_metres_units",
+    "square_corners_band_signs_and_true_failure_boundary",
+    "airborne_boundary_continuity",
+    "negative_ground_and_real_failure_override",
+    "upright_retained_and_angular_rate_penalty_zero",
+    "finite_dtype_translation_and_input_immutability",
+    "independent_scalar_formula_parity",
+    "production_R14_R15_frozen_preservation_R16_dispatch_true_failure_and_autoreset"
+  ],
+  "graded_distance": {
+    "x": {
+      "distance_m": [
+        0.0,
+        0.001,
+        0.002,
+        0.005,
+        0.01,
+        0.02,
+        0.05,
+        0.1
+      ],
+      "raw_reward": [
+        1.0,
+        0.9989526867866516,
+        0.9978122711181641,
+        0.9938855767250061,
+        0.9861204028129578,
+        0.968632698059082,
+        0.9144630432128906,
+        0.8290449380874634
+      ],
+      "clipped_reward": [
+        1.0,
+        0.9989526867866516,
+        0.9978122711181641,
+        0.9938855767250061,
+        0.9861204028129578,
+        0.968632698059082,
+        0.9144630432128906,
+        0.8290449380874634
+      ]
+    },
+    "y": {
+      "distance_m": [
+        0.0,
+        0.001,
+        0.002,
+        0.005,
+        0.01,
+        0.02,
+        0.05,
+        0.1
+      ],
+      "raw_reward": [
+        1.0,
+        0.9989526867866516,
+        0.9978122711181641,
+        0.9938855767250061,
+        0.9861204028129578,
+        0.968632698059082,
+        0.9144630432128906,
+        0.8290449380874634
+      ],
+      "clipped_reward": [
+        1.0,
+        0.9989526867866516,
+        0.9978122711181641,
+        0.9938855767250061,
+        0.9861204028129578,
+        0.968632698059082,
+        0.9144630432128906,
+        0.8290449380874634
+      ]
+    },
+    "height": {
+      "distance_m": [
+        0.0,
+        0.001,
+        0.002,
+        0.005,
+        0.01,
+        0.02,
+        0.05,
+        0.1
+      ],
+      "raw_reward": [
+        1.0,
+        0.999810516834259,
+        0.9992480278015137,
+        0.9955357909202576,
+        0.984516441822052,
+        0.9552423357963562,
+        0.8661786913871765,
+        0.7475062012672424
+      ],
+      "clipped_reward": [
+        1.0,
+        0.999810516834259,
+        0.9992480278015137,
+        0.9955357909202576,
+        0.984516441822052,
+        0.9552423357963562,
+        0.8661786913871765,
+        0.7475062012672424
+      ]
+    }
+  },
+  "production_reward15_plateau": {
+    "x": {
+      "distance_m": [
+        0.0,
+        0.001,
+        0.005,
+        0.01
+      ],
+      "raw_reward": [
+        1.0499999523162842,
+        1.0499989986419678,
+        1.049975037574768,
+        1.0499000549316406
+      ],
+      "clipped_reward": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "y": {
+      "distance_m": [
+        0.0,
+        0.001,
+        0.005,
+        0.01
+      ],
+      "raw_reward": [
+        1.0499999523162842,
+        1.0499989986419678,
+        1.049975037574768,
+        1.0499000549316406
+      ],
+      "clipped_reward": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "height": {
+      "distance_m": [
+        0.0,
+        0.001,
+        0.005,
+        0.01
+      ],
+      "raw_reward": [
+        1.0499999523162842,
+        1.049996018409729,
+        1.0499000549316406,
+        1.0496001243591309
+      ],
+      "clipped_reward": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "speed_m_s": [
+    0.0,
+    0.01,
+    0.05,
+    0.1,
+    0.2,
+    0.5,
+    1.0
+  ],
+  "speed_reward": [
+    1.0,
+    0.9998100399971008,
+    0.9952736496925354,
+    0.9813725352287292,
+    0.9296296238899231,
+    0.6833333373069763,
+    0.36666667461395264
+  ],
+  "square_xy_m": [
+    [
+      0.0,
+      0.0
+    ],
+    [
+      1.0,
+      0.0
+    ],
+    [
+      -1.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0
+    ],
+    [
+      0.9,
+      0.9
+    ],
+    [
+      1.0,
+      1.0
+    ],
+    [
+      1.0001,
+      0.0
+    ],
+    [
+      -1.5,
+      0.0
+    ],
+    [
+      0.0,
+      1.9999
+    ],
+    [
+      2.0,
+      0.0
+    ],
+    [
+      -2.0,
+      0.0
+    ],
+    [
+      0.0,
+      2.0
+    ],
+    [
+      2.0,
+      2.0
+    ]
+  ],
+  "square_rewards": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.03917129710316658,
+    0.0,
+    -9.999999747378752e-05,
+    -0.5,
+    -0.9998999834060669,
+    -1.0,
+    -1.0,
+    -1.0,
+    -1.0
+  ],
+  "square_escaped": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    true
+  ],
+  "square_band": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+  ],
+  "airborne_boundary_rewards": [
+    5.27375163983379e-07,
+    0.0,
+    -9.999999974752427e-07,
+    -0.9999989867210388,
+    -1.0,
+    -1.0
+  ],
+  "ground_rewards": [
+    -0.75,
+    -0.7950000166893005,
+    -1.2999999523162842,
+    -1.7999000549316406,
+    -1.0
+  ],
+  "scalar_reference_rewards": [
+    1.0,
+    0.9625679374864631,
+    0.035953983308264006,
+    -0.30000000000000004,
+    -1.1,
+    -1.0,
+    -1.0
+  ],
+  "scalar_production_rewards": [
+    1.0,
+    0.962567925453186,
+    0.035953983664512634,
+    -0.30000001192092896,
+    -1.100000023841858,
+    -1.0,
+    -1.0
+  ],
+  "sources": {
+    "tether_sim/fine_zone_reward.py": "4e468a9713dca4b512b43bad6ea714e0a0379316239ab60ed0b1cec547e8afe9",
+    "tether_sim/cuda_task.py": "cb769e329a6b59f74e0ed833631028ebff8dcef84074f9cde7d76bdf88535b39",
+    "scripts/check_fine_zone_reward.py": "6a64c3d4318d4d3cd3181e4688842ad244f34777d76272bc7bea678aeb0e8243"
+  }
+}

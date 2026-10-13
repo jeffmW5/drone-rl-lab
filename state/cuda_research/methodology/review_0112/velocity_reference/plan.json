@@ -1,0 +1,14 @@
+{
+  "created_at": "2026-10-13T20:53:25.833765+00:00",
+  "queue": "configs/cuda_research/methodology_queue_v000_user_abca_00_velocity_reference.json",
+  "queue_sha256": "93e5570a63d31c0c10ece4af4da548a173fe8962be15e60861b62619c27660da",
+  "trials": 3,
+  "requested_transitions": 655360,
+  "wall_clock_cap_seconds": 1800,
+  "parallel_environments": 128,
+  "controls": "Immutable completed reward16 trials 886,888,890 at the same seeds, source weights, learner and simulator settings; no redundant baseline rerun.",
+  "only_behavior_change": "Horizontal speed cost becomes 2*||vXY-v_ref||^2, with v_ref=-displacementXY*(1/s), vector norm capped at0.5m/s. Vertical speed cost and all reward16 distance/ground/band/failure/upright terms stay fixed. Reference affects reward only; the learned policy selects all motor actions.",
+  "required_validation": "CPU old14/15/16 parity, direction/cap/boundary/sign/dispatch and reset checks; GPU initial physical metric equivalence to matched controls; source snapshots preserved.",
+  "rejection_rule": "Reject without replicated improvement in actual ground sustained hover or braking/hold without increased true failures or lost takeoffs. Existing R16 controls are reused immutable controls, not new independent validation. Verify identical initial physical metrics and unchanged simulator/learner/action settings; no reward-magnitude or post-reset endpoint promotion.",
+  "scope": "A falsifiable next hypothesis from partial survival gains and persistent drift. No demonstrated hover, calibrated physics or hardware precision claim."
+}

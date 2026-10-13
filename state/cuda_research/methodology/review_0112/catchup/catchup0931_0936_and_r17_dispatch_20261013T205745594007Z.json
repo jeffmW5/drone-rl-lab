@@ -1,0 +1,1918 @@
+{
+  "kind": "Immutable931\u2013936catch-up andactualR17dispatchaddendum",
+  "retrieved_at_utc": "2026-10-13T20:57:45.714703+00:00",
+  "main_review_catchup_closed_through": 930,
+  "addendum_completed_reviewed_indices": [
+    931,
+    932,
+    933,
+    934,
+    935,
+    936
+  ],
+  "last_completed_artifact_reviewed": 936,
+  "review_md_or_loop_index_edited": false,
+  "completed_trials": [
+    {
+      "index": 931,
+      "frozen_plan": {
+        "name": "cuda_auto_0931_takeoff",
+        "direct": true,
+        "phase": "takeoff",
+        "reward_version": 14,
+        "steps": 65536,
+        "budget_seconds": 180,
+        "eval_every_steps": 16384,
+        "evaluation_steps": 250,
+        "validation_seeds": [
+          51011,
+          51012,
+          51013
+        ],
+        "learning_rate": 3e-06,
+        "initial_throttle": 0.62,
+        "seed": 1931,
+        "playback_seconds": 0,
+        "control_version": 2,
+        "physics_version": 5,
+        "training_reset_version": 3,
+        "evaluation_reset_version": 3,
+        "diagnostic_zone_version": 1,
+        "selection_version": 2,
+        "integration_version": 1,
+        "collective_response_version": 1,
+        "continuation_version": 1,
+        "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0930_takeoff/best.pt",
+        "hypothesis": "Continue bounded learned zone weight optimization with fixed settings; not another parameter sweep",
+        "limitations": "Uncalibrated full particle tether; optimizer resets between bounded runs; no hover/hardware precision claim."
+      },
+      "methodology_trial": null,
+      "actual_steps": 65536,
+      "training_seconds": 105.85532126200269,
+      "budget_censored": false,
+      "initial": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 322.1922592665558,
+        "zone_escapes": 0,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1556.1899003194496,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "periodic": [
+        {
+          "step": 16384,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 26.57446782518291,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 64.02116814980944,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 32768,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 26.012879356081317,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 196.13683911567878,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 49152,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 61.614521303607226,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 251.81483230698572,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 65536,
+          "metrics": {
+            "crashes": 0,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 1061.6062183610898,
+            "zone_escapes": 0,
+            "hover_successes": 0,
+            "mean_final_error_mm": 2004.8017431988371,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        }
+      ],
+      "final": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 1061.6062183610898,
+        "zone_escapes": 0,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2004.8017431988371,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "selection": {
+        "best_step": 0,
+        "promoted": false,
+        "phase": "takeoff"
+      },
+      "selected": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 322.1922592665558,
+        "zone_escapes": 0,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1556.1899003194496,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "frozen_core_source_hashes": {
+        "scripts/train_tether_cuda.py": "28e8885c354e17a9fbd5a5b0ef26780e05e30686ad592566844867c034eedf79",
+        "tether_sim/cuda_task.py": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade",
+        "tether_sim/cuda_backend.py": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+        "tether_sim/cuda/host.c": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+        "tether_sim/cuda/physics_v005.cu": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b"
+      }
+    },
+    {
+      "index": 932,
+      "frozen_plan": {
+        "name": "cuda_auto_0932_takeoff",
+        "direct": true,
+        "phase": "takeoff",
+        "reward_version": 14,
+        "steps": 65536,
+        "budget_seconds": 180,
+        "eval_every_steps": 16384,
+        "evaluation_steps": 250,
+        "validation_seeds": [
+          51011,
+          51012,
+          51013
+        ],
+        "learning_rate": 3e-06,
+        "initial_throttle": 0.62,
+        "seed": 1932,
+        "playback_seconds": 0,
+        "control_version": 2,
+        "physics_version": 5,
+        "training_reset_version": 3,
+        "evaluation_reset_version": 3,
+        "diagnostic_zone_version": 1,
+        "selection_version": 2,
+        "integration_version": 1,
+        "collective_response_version": 1,
+        "continuation_version": 1,
+        "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0931_takeoff/policy.pt",
+        "hypothesis": "Continue bounded learned zone weight optimization with fixed settings; not another parameter sweep",
+        "limitations": "Uncalibrated full particle tether; optimizer resets between bounded runs; no hover/hardware precision claim."
+      },
+      "methodology_trial": null,
+      "actual_steps": 65536,
+      "training_seconds": 106.46306587199797,
+      "budget_censored": false,
+      "initial": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 1061.6062183610898,
+        "zone_escapes": 0,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2004.8017431988371,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "periodic": [
+        {
+          "step": 16384,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 28.79528758268624,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 49.47612774505463,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 32768,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 181.66393420072245,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 253.9859939976608,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 49152,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 234.9918103913886,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 315.15836557678085,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 65536,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 185.50765662690029,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 232.54589038706445,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        }
+      ],
+      "final": {
+        "crashes": 24,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 185.50765662690029,
+        "zone_escapes": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 232.54589038706445,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "selection": {
+        "best_step": 0,
+        "promoted": false,
+        "phase": "takeoff"
+      },
+      "selected": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 1061.6062183610898,
+        "zone_escapes": 0,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2004.8017431988371,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "frozen_core_source_hashes": {
+        "scripts/train_tether_cuda.py": "28e8885c354e17a9fbd5a5b0ef26780e05e30686ad592566844867c034eedf79",
+        "tether_sim/cuda_task.py": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade",
+        "tether_sim/cuda_backend.py": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+        "tether_sim/cuda/host.c": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+        "tether_sim/cuda/physics_v005.cu": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b"
+      }
+    },
+    {
+      "index": 933,
+      "frozen_plan": {
+        "name": "cuda_auto_0933_takeoff",
+        "direct": true,
+        "phase": "takeoff",
+        "reward_version": 14,
+        "steps": 65536,
+        "budget_seconds": 180,
+        "eval_every_steps": 16384,
+        "evaluation_steps": 250,
+        "validation_seeds": [
+          51011,
+          51012,
+          51013
+        ],
+        "learning_rate": 3e-06,
+        "initial_throttle": 0.62,
+        "seed": 1933,
+        "playback_seconds": 0,
+        "control_version": 2,
+        "physics_version": 5,
+        "training_reset_version": 3,
+        "evaluation_reset_version": 3,
+        "diagnostic_zone_version": 1,
+        "selection_version": 2,
+        "integration_version": 1,
+        "collective_response_version": 1,
+        "continuation_version": 1,
+        "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0932_takeoff/best.pt",
+        "hypothesis": "Continue bounded learned zone weight optimization with fixed settings; not another parameter sweep",
+        "limitations": "Uncalibrated full particle tether; optimizer resets between bounded runs; no hover/hardware precision claim."
+      },
+      "methodology_trial": null,
+      "actual_steps": 65536,
+      "training_seconds": 106.49233145397739,
+      "budget_censored": false,
+      "initial": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 1061.6062183610898,
+        "zone_escapes": 0,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2004.8017431988371,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "periodic": [
+        {
+          "step": 16384,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 156.13896875186683,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 284.7599553859787,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 32768,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 152.46413061474905,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 279.60374014400503,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 49152,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 19.89605994040322,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 197.21349309105355,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 65536,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 113.09979629791765,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 242.43489829001945,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        }
+      ],
+      "final": {
+        "crashes": 24,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 113.09979629791765,
+        "zone_escapes": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 242.43489829001945,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "selection": {
+        "best_step": 0,
+        "promoted": false,
+        "phase": "takeoff"
+      },
+      "selected": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 1061.6062183610898,
+        "zone_escapes": 0,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2004.8017431988371,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "frozen_core_source_hashes": {
+        "scripts/train_tether_cuda.py": "28e8885c354e17a9fbd5a5b0ef26780e05e30686ad592566844867c034eedf79",
+        "tether_sim/cuda_task.py": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade",
+        "tether_sim/cuda_backend.py": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+        "tether_sim/cuda/host.c": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+        "tether_sim/cuda/physics_v005.cu": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b"
+      }
+    },
+    {
+      "index": 934,
+      "frozen_plan": {
+        "name": "cuda_auto_0934_takeoff",
+        "direct": true,
+        "phase": "takeoff",
+        "reward_version": 14,
+        "steps": 65536,
+        "budget_seconds": 180,
+        "eval_every_steps": 16384,
+        "evaluation_steps": 250,
+        "validation_seeds": [
+          51011,
+          51012,
+          51013
+        ],
+        "learning_rate": 3e-06,
+        "initial_throttle": 0.62,
+        "seed": 1934,
+        "playback_seconds": 0,
+        "control_version": 2,
+        "physics_version": 5,
+        "training_reset_version": 3,
+        "evaluation_reset_version": 3,
+        "diagnostic_zone_version": 1,
+        "selection_version": 2,
+        "integration_version": 1,
+        "collective_response_version": 1,
+        "continuation_version": 1,
+        "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0933_takeoff/best.pt",
+        "hypothesis": "Continue bounded learned zone weight optimization with fixed settings; not another parameter sweep",
+        "limitations": "Uncalibrated full particle tether; optimizer resets between bounded runs; no hover/hardware precision claim."
+      },
+      "methodology_trial": null,
+      "actual_steps": 65536,
+      "training_seconds": 106.17812727901037,
+      "budget_censored": false,
+      "initial": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 1061.6062183610898,
+        "zone_escapes": 0,
+        "hover_successes": 0,
+        "mean_final_error_mm": 2004.8017431988371,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "periodic": [
+        {
+          "step": 16384,
+          "metrics": {
+            "crashes": 0,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 102.45758830812746,
+            "zone_escapes": 0,
+            "hover_successes": 0,
+            "mean_final_error_mm": 1155.5783998182274,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 32768,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 62.527498845057586,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 34.96017694995474,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 49152,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 84.83259745968941,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 270.33705306884616,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 65536,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 231.5137536389424,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 367.688572144179,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        }
+      ],
+      "final": {
+        "crashes": 24,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 231.5137536389424,
+        "zone_escapes": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 367.688572144179,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "selection": {
+        "best_step": 16384,
+        "promoted": true,
+        "phase": "takeoff"
+      },
+      "selected": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 102.45758830812746,
+        "zone_escapes": 0,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1155.5783998182274,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "frozen_core_source_hashes": {
+        "scripts/train_tether_cuda.py": "28e8885c354e17a9fbd5a5b0ef26780e05e30686ad592566844867c034eedf79",
+        "tether_sim/cuda_task.py": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade",
+        "tether_sim/cuda_backend.py": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+        "tether_sim/cuda/host.c": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+        "tether_sim/cuda/physics_v005.cu": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b"
+      }
+    },
+    {
+      "index": 935,
+      "frozen_plan": {
+        "name": "cuda_auto_0935_takeoff",
+        "direct": true,
+        "phase": "takeoff",
+        "reward_version": 14,
+        "steps": 65536,
+        "budget_seconds": 180,
+        "eval_every_steps": 16384,
+        "evaluation_steps": 250,
+        "validation_seeds": [
+          51011,
+          51012,
+          51013
+        ],
+        "learning_rate": 3e-06,
+        "initial_throttle": 0.62,
+        "seed": 1935,
+        "playback_seconds": 0,
+        "control_version": 2,
+        "physics_version": 5,
+        "training_reset_version": 3,
+        "evaluation_reset_version": 3,
+        "diagnostic_zone_version": 1,
+        "selection_version": 2,
+        "integration_version": 1,
+        "collective_response_version": 1,
+        "continuation_version": 1,
+        "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0934_takeoff/best.pt",
+        "hypothesis": "Continue bounded learned zone weight optimization with fixed settings; not another parameter sweep",
+        "limitations": "Uncalibrated full particle tether; optimizer resets between bounded runs; no hover/hardware precision claim."
+      },
+      "methodology_trial": null,
+      "actual_steps": 65536,
+      "training_seconds": 106.09508597600507,
+      "budget_censored": false,
+      "initial": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 102.45758830812746,
+        "zone_escapes": 0,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1155.5783998182274,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "periodic": [
+        {
+          "step": 16384,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 98.71746802977587,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 138.7909048319247,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 32768,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 47.29589993163452,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 38.75798189828541,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 49152,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 66.8167031409197,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 41.48274389374013,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 65536,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 131.29165910156237,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 233.55116253868812,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        }
+      ],
+      "final": {
+        "crashes": 24,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 131.29165910156237,
+        "zone_escapes": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 233.55116253868812,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "selection": {
+        "best_step": 0,
+        "promoted": false,
+        "phase": "takeoff"
+      },
+      "selected": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 102.45758830812746,
+        "zone_escapes": 0,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1155.5783998182274,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "frozen_core_source_hashes": {
+        "scripts/train_tether_cuda.py": "28e8885c354e17a9fbd5a5b0ef26780e05e30686ad592566844867c034eedf79",
+        "tether_sim/cuda_task.py": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade",
+        "tether_sim/cuda_backend.py": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+        "tether_sim/cuda/host.c": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+        "tether_sim/cuda/physics_v005.cu": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b"
+      }
+    },
+    {
+      "index": 936,
+      "frozen_plan": {
+        "name": "cuda_auto_0936_takeoff",
+        "direct": true,
+        "phase": "takeoff",
+        "reward_version": 14,
+        "steps": 65536,
+        "budget_seconds": 180,
+        "eval_every_steps": 16384,
+        "evaluation_steps": 250,
+        "validation_seeds": [
+          51011,
+          51012,
+          51013
+        ],
+        "learning_rate": 3e-06,
+        "initial_throttle": 0.62,
+        "seed": 1936,
+        "playback_seconds": 0,
+        "control_version": 2,
+        "physics_version": 5,
+        "training_reset_version": 3,
+        "evaluation_reset_version": 3,
+        "diagnostic_zone_version": 1,
+        "selection_version": 2,
+        "integration_version": 1,
+        "collective_response_version": 1,
+        "continuation_version": 1,
+        "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0935_takeoff/best.pt",
+        "hypothesis": "Continue bounded learned zone weight optimization with fixed settings; not another parameter sweep",
+        "limitations": "Uncalibrated full particle tether; optimizer resets between bounded runs; no hover/hardware precision claim."
+      },
+      "methodology_trial": null,
+      "actual_steps": 65536,
+      "training_seconds": 106.37647326401202,
+      "budget_censored": false,
+      "initial": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 102.45758830812746,
+        "zone_escapes": 0,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1155.5783998182274,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "periodic": [
+        {
+          "step": 16384,
+          "metrics": {
+            "crashes": 0,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 1125.1104921762596,
+            "zone_escapes": 0,
+            "hover_successes": 0,
+            "mean_final_error_mm": 1518.882070561067,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 32768,
+          "metrics": {
+            "crashes": 0,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 304.3737007430625,
+            "zone_escapes": 0,
+            "hover_successes": 0,
+            "mean_final_error_mm": 1754.6322494649546,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 49152,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 73.32084375386894,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 52.88621754552367,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        },
+        {
+          "step": 65536,
+          "metrics": {
+            "crashes": 24,
+            "takeoffs": 24,
+            "zone_hover_successes": 0,
+            "zone_hover_error_mm": 8.626080952457649,
+            "zone_escapes": 24,
+            "hover_successes": 0,
+            "mean_final_error_mm": 198.98943109055713,
+            "maximum_hold_s": 0.0,
+            "trace_runs": [
+              {
+                "seed": 51011,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51012,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              },
+              {
+                "seed": 51013,
+                "pre_reset_trace_available": false,
+                "first_failures": [],
+                "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+              }
+            ]
+          }
+        }
+      ],
+      "final": {
+        "crashes": 24,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 8.626080952457649,
+        "zone_escapes": 24,
+        "hover_successes": 0,
+        "mean_final_error_mm": 198.98943109055713,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "selection": {
+        "best_step": 0,
+        "promoted": false,
+        "phase": "takeoff"
+      },
+      "selected": {
+        "crashes": 0,
+        "takeoffs": 24,
+        "zone_hover_successes": 0,
+        "zone_hover_error_mm": 102.45758830812746,
+        "zone_escapes": 0,
+        "hover_successes": 0,
+        "mean_final_error_mm": 1155.5783998182274,
+        "maximum_hold_s": 0.0,
+        "trace_runs": [
+          {
+            "seed": 51011,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51012,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          },
+          {
+            "seed": 51013,
+            "pre_reset_trace_available": false,
+            "first_failures": [],
+            "missing_evidence": "Noimmutablepre-resettracewasrecorded; sparsepost-resettrajectorycannotestablishexactterminaltime/state."
+          }
+        ]
+      },
+      "frozen_core_source_hashes": {
+        "scripts/train_tether_cuda.py": "93516a0029c8b419e0269233654c1f8837794506a13aa7aabe15e1346bb312fd",
+        "tether_sim/cuda_task.py": "cb769e329a6b59f74e0ed833631028ebff8dcef84074f9cde7d76bdf88535b39",
+        "tether_sim/cuda_backend.py": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+        "tether_sim/cuda/host.c": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+        "tether_sim/cuda/physics_v005.cu": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b"
+      }
+    }
+  ],
+  "current_dispatch_snapshot": {
+    "pid": 664455,
+    "plan_path": "/home/n33du/ai/drone-rl-lab/configs/cuda_research/cuda_auto_0937_takeoff.json",
+    "run_path": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0937_takeoff",
+    "frozen_plan": {
+      "name": "cuda_auto_0937_takeoff",
+      "direct": true,
+      "phase": "takeoff",
+      "reward_version": 17,
+      "steps": 655360,
+      "budget_seconds": 1800,
+      "eval_every_steps": 16384,
+      "evaluation_steps": 250,
+      "validation_seeds": [
+        51011,
+        51012,
+        51013
+      ],
+      "learning_rate": 3e-06,
+      "initial_throttle": 0.62,
+      "seed": 70601,
+      "playback_seconds": 0,
+      "control_version": 2,
+      "physics_version": 5,
+      "training_reset_version": 3,
+      "evaluation_reset_version": 3,
+      "diagnostic_zone_version": 1,
+      "selection_version": 2,
+      "integration_version": 1,
+      "collective_response_version": 1,
+      "resume": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0759_takeoff/best.pt",
+      "hypothesis": "Reward-only horizontal velocity reference distinguishes inward motion from equal-speed outward drift, then requests zero velocity at the hover center. Test braking and sustained hover, keeping physics and all motor control unchanged.",
+      "limitations": "Uncalibrated full particle tether; optimizer resets between bounded runs; no hover/hardware precision claim.",
+      "methodology_trial": "velocity_reference_reward17_seed70601",
+      "methodology_condition": "velocity_reference_reward17",
+      "methodology_review": "state/cuda_research/methodology/review_0112/review.md",
+      "timeout_bootstrap_version": 0,
+      "pufferl_source_sha256": "efc5ea7537670bf89ac18347bdc97126dd6f282b9ede5598424eaeace6f8f5f4",
+      "input_conditioning_version": 1,
+      "value_gradient_version": 1,
+      "batch_size": 4096,
+      "bptt_horizon": 32,
+      "gae_lambda": 0.95,
+      "value_return_probe_version": 0,
+      "landing_penalty_version": 0,
+      "gradient_diagnostics": true,
+      "learner_diagnostics": true,
+      "policy_response_probe_version": 0,
+      "policy_response_reference": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0242_takeoff/best.pt",
+      "optimizer_resume_version": 1,
+      "collective_observation_version": 2,
+      "learner_valid_mask_version": 2,
+      "recovery_probe_version": 0,
+      "evaluation_trace_version": 1,
+      "rejection_rule": "Reject without replicated improvement in actual ground sustained hover or braking/hold without increased true failures or lost takeoffs. Existing R16 controls are reused immutable controls, not new independent validation. Verify identical initial physical metrics and unchanged simulator/learner/action settings; no reward-magnitude or post-reset endpoint promotion.",
+      "velocity_reference_version": 1,
+      "matched_control_trial": "cuda_auto_0886_takeoff",
+      "matched_control_plan": "/home/n33du/ai/drone-rl-lab/configs/cuda_research/cuda_auto_0886_takeoff.json",
+      "matched_control_plan_sha256": "eb85c7fdf0e179073039c9e667c721a1a7c574d0861d32936ad45adeb8530f37",
+      "matched_control_result": "/home/n33du/ai/drone-rl-lab/tmp/cuda-research/cuda_auto_0886_takeoff/result.json",
+      "matched_control_result_sha256": "ada64060e188756796a5a8f41852853398db18c31983b82f40e11d5a24378c72"
+    },
+    "actual_methodology_trial": "velocity_reference_reward17_seed70601",
+    "status_snapshot": {
+      "status": "training",
+      "steps": 126976,
+      "elapsed": 192.69438663500478
+    },
+    "lease": {
+      "path": "tmp/tether-training.lock",
+      "inode": 261212,
+      "matching_os_lock_records": [
+        "11: FLOCK  ADVISORY  WRITE 664455 08:30:261212 0 EOF"
+      ],
+      "owned_by_active_trainer": true
+    },
+    "physics_check": {
+      "status": "passed",
+      "physics_version": 5,
+      "max_impulse_error_ns": 3.644658783648897e-11,
+      "zero_rotation_baseline_difference_m": 3.511333446226672e-10,
+      "checks": "Positive/negative roll and pitch, yaw, quaternion normalization, updated-axis total impulse, no-rotation baseline",
+      "slack_freefall_error_m": 1.1237677455255835e-12,
+      "scope": "One-substep full-tether regression; not learned navigation success or numerical convergence"
+    },
+    "frozen_core_source_hashes": {
+      "scripts/train_tether_cuda.py": "93516a0029c8b419e0269233654c1f8837794506a13aa7aabe15e1346bb312fd",
+      "tether_sim/cuda_task.py": "cb769e329a6b59f74e0ed833631028ebff8dcef84074f9cde7d76bdf88535b39",
+      "tether_sim/cuda_backend.py": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+      "tether_sim/cuda/host.c": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+      "tether_sim/cuda/physics_v005.cu": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b"
+    },
+    "matched_immutable_control": {
+      "trial": "cuda_auto_0886_takeoff",
+      "plan_hash_matches": true,
+      "result_hash_matches": true,
+      "control_reward_version": 16,
+      "same_physics_source_hashes": {
+        "tether_sim/cuda_backend.py": true,
+        "tether_sim/cuda/host.c": true,
+        "tether_sim/cuda/physics_v005.cu": true
+      }
+    },
+    "initial_weight_tensors_exactly_equal_control": true,
+    "initial_tensor_count": 10,
+    "stored_initial_metric_json_files": [],
+    "completed_result_available": false,
+    "physical_initial_metric_equivalence": "Pending: main initialmetricsareonlystoredinfinalresult.json; noGPUevaluationperformed andno fullcampaignwait."
+  },
+  "active_trainer_count": 1,
+  "source_sha256": {
+    "configs/cuda_research/cuda_auto_0931_takeoff.json": "b88497f9747d331a241ac9c1b4f25730b043027d5a4b420aa98b7e947e9ae740",
+    "tmp/cuda-research/cuda_auto_0931_takeoff/result.json": "3766e7c684526966bf2d6bbba8faacd6b8ccdd7941bc3c93d84e355fcf883490",
+    "tmp/cuda-research/cuda_auto_0931_takeoff/selection.json": "e5f965f85157e7c1c62792653d3f3c0f0fbe2b19c51b12bf3d3a79866abbc63d",
+    "tmp/cuda-research/cuda_auto_0931_takeoff.sources/hashes.json": "e079236276f7f3619254e47da13c0c225d3d045210282e91d8284aab6141757f",
+    "tmp/cuda-research/cuda_auto_0931_takeoff.sources/train_tether_cuda.py": "28e8885c354e17a9fbd5a5b0ef26780e05e30686ad592566844867c034eedf79",
+    "tmp/cuda-research/cuda_auto_0931_takeoff.sources/cuda_task.py": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade",
+    "tmp/cuda-research/cuda_auto_0931_takeoff.sources/cuda_backend.py": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+    "tmp/cuda-research/cuda_auto_0931_takeoff.sources/host.c": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+    "tmp/cuda-research/cuda_auto_0931_takeoff.sources/physics_v005.cu": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b",
+    "tmp/cuda-research/cuda_auto_0931_takeoff/eval_16384.json": "bd0c32354ffdb67dc5420178c5f4dd4b92e9887616b8421f027d569bc5460b7a",
+    "tmp/cuda-research/cuda_auto_0931_takeoff/eval_32768.json": "a5f8fa97fb56ce607f984f5730c759c776d6c31dd27df1317ec95dd7fed935b8",
+    "tmp/cuda-research/cuda_auto_0931_takeoff/eval_49152.json": "4f52ffb0a9ebb9617cd85bf0ba60cb07ccbb0a80b89bf85c9a279acc8b758e70",
+    "tmp/cuda-research/cuda_auto_0931_takeoff/eval_65536.json": "668ea74e548a02f8bb20db89bdd051b66a3f2fcaf8c02c7d948b437a157295a0",
+    "tmp/cuda-research/cuda_auto_0931_takeoff/config.json": "f7680eca068c30db307b69ac864b7a434d8fe2c43cb7040a124e51cc472b7e07",
+    "tmp/cuda-research/cuda_auto_0931_takeoff/status.json": "766fceef18571281537dc1f19af05907597f7aa7b3ef85a41d60119507c6e075",
+    "tmp/cuda-research/cuda_auto_0931_takeoff/initial.pt": "e712a86fec86f1d20b6a7d01ab59056187b85fa366856ee2c545637278a8c6d5",
+    "tmp/cuda-research/cuda_auto_0931_takeoff/policy.pt": "870b3f2a13bc49163d7136cad777781ac75221e00fb83e4bafafcc98003ecaa0",
+    "tmp/cuda-research/cuda_auto_0931_takeoff/best.pt": "3a10f0bbf5dd33c10a46cb3e686f4780b85fbf4c2c99070ce35675a690bb9ac6",
+    "tmp/cuda-research/cuda_auto_0931_takeoff/thrust_order_checks.json": "c0de654c936945f63cc634b19ae05e5c7ecb34796069b78eb12110d120f67d00",
+    "tmp/cuda-research/cuda_auto_0931_takeoff/thrust_order_checks.sources.json": "d08756811b8ca01d3f8db8d7e1a3170f387b171ed15cace72a39ab356a0fb197",
+    "configs/cuda_research/cuda_auto_0932_takeoff.json": "5e0e60934b0ab5a508e528c2a4e428984849aa35debc9e49dbcdd331a358375e",
+    "tmp/cuda-research/cuda_auto_0932_takeoff/result.json": "3a05c988ef2bc7e8b95b976fb25c2e6f7fe1952f0e5aea6f56e1a153026cb339",
+    "tmp/cuda-research/cuda_auto_0932_takeoff/selection.json": "460778f97add445459575c3e8eebde578295525ae5d25a89bbd4fd4dd1a2f2e9",
+    "tmp/cuda-research/cuda_auto_0932_takeoff.sources/hashes.json": "e079236276f7f3619254e47da13c0c225d3d045210282e91d8284aab6141757f",
+    "tmp/cuda-research/cuda_auto_0932_takeoff.sources/train_tether_cuda.py": "28e8885c354e17a9fbd5a5b0ef26780e05e30686ad592566844867c034eedf79",
+    "tmp/cuda-research/cuda_auto_0932_takeoff.sources/cuda_task.py": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade",
+    "tmp/cuda-research/cuda_auto_0932_takeoff.sources/cuda_backend.py": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+    "tmp/cuda-research/cuda_auto_0932_takeoff.sources/host.c": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+    "tmp/cuda-research/cuda_auto_0932_takeoff.sources/physics_v005.cu": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b",
+    "tmp/cuda-research/cuda_auto_0932_takeoff/eval_16384.json": "62ce93054b6025b366f7a2e4de2bd3387e88d973e7461d84a6704ee8075c4c66",
+    "tmp/cuda-research/cuda_auto_0932_takeoff/eval_32768.json": "46778aee2d1c9ac6d541436aac90769adc7aa750553623cf4fa4a991d6f1a6b7",
+    "tmp/cuda-research/cuda_auto_0932_takeoff/eval_49152.json": "ea116e33f1ab41385fb9f7d4e7319c4ee671ba7316d687c95b390f08daaf42d0",
+    "tmp/cuda-research/cuda_auto_0932_takeoff/eval_65536.json": "312bf9dc13c25739ba6352c18592d99b8425135ba34f491486b936f12ebb18bf",
+    "tmp/cuda-research/cuda_auto_0932_takeoff/config.json": "1cb782fcf4eba2c9ce4005d4b49c158f6723f7a4e5f014ddd2508ca24d75132e",
+    "tmp/cuda-research/cuda_auto_0932_takeoff/status.json": "766fceef18571281537dc1f19af05907597f7aa7b3ef85a41d60119507c6e075",
+    "tmp/cuda-research/cuda_auto_0932_takeoff/initial.pt": "6c81acf533bc120919c929ae86da2f3f46a2511aade02ebe4a8a0c22863542a0",
+    "tmp/cuda-research/cuda_auto_0932_takeoff/policy.pt": "785e82d4d5514f702836c4b0c405771f4bf4eb828fbe5804de1b231128f98a6f",
+    "tmp/cuda-research/cuda_auto_0932_takeoff/best.pt": "366abab5c59ca9c7dc8eb1a084597864d1dc188145c058b18403429325a83562",
+    "tmp/cuda-research/cuda_auto_0932_takeoff/thrust_order_checks.json": "c0de654c936945f63cc634b19ae05e5c7ecb34796069b78eb12110d120f67d00",
+    "tmp/cuda-research/cuda_auto_0932_takeoff/thrust_order_checks.sources.json": "d08756811b8ca01d3f8db8d7e1a3170f387b171ed15cace72a39ab356a0fb197",
+    "configs/cuda_research/cuda_auto_0933_takeoff.json": "30fc44d70d185cb21956eaac2f4d8e3ef086fc60141af5d0d813ff6bc0452943",
+    "tmp/cuda-research/cuda_auto_0933_takeoff/result.json": "d54f2554fce2239b7ec032cebf512a9f69efd19f23edb89672e0e3d4fdbaa4fe",
+    "tmp/cuda-research/cuda_auto_0933_takeoff/selection.json": "460778f97add445459575c3e8eebde578295525ae5d25a89bbd4fd4dd1a2f2e9",
+    "tmp/cuda-research/cuda_auto_0933_takeoff.sources/hashes.json": "e079236276f7f3619254e47da13c0c225d3d045210282e91d8284aab6141757f",
+    "tmp/cuda-research/cuda_auto_0933_takeoff.sources/train_tether_cuda.py": "28e8885c354e17a9fbd5a5b0ef26780e05e30686ad592566844867c034eedf79",
+    "tmp/cuda-research/cuda_auto_0933_takeoff.sources/cuda_task.py": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade",
+    "tmp/cuda-research/cuda_auto_0933_takeoff.sources/cuda_backend.py": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+    "tmp/cuda-research/cuda_auto_0933_takeoff.sources/host.c": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+    "tmp/cuda-research/cuda_auto_0933_takeoff.sources/physics_v005.cu": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b",
+    "tmp/cuda-research/cuda_auto_0933_takeoff/eval_16384.json": "068a5975f544a79ade8f745e55e6a2633a8ffa277fac4dac5b8f863d2f3ad6aa",
+    "tmp/cuda-research/cuda_auto_0933_takeoff/eval_32768.json": "3e9788564130f19a34d6cedc22f0e88317472ca93e96fd16f997a92d187947a7",
+    "tmp/cuda-research/cuda_auto_0933_takeoff/eval_49152.json": "9161b8eb0971d64b1d7cd0c41035f7941a9ced2bf61ecc4fbb4b862beb403886",
+    "tmp/cuda-research/cuda_auto_0933_takeoff/eval_65536.json": "a375352ef371ba02863836b17e54777607057f707bd2584a542652cd7184ad1e",
+    "tmp/cuda-research/cuda_auto_0933_takeoff/config.json": "20a6566eb80cbc1ce5b391075cf09a82a23ad871c8b20ccaca954684ca321035",
+    "tmp/cuda-research/cuda_auto_0933_takeoff/status.json": "766fceef18571281537dc1f19af05907597f7aa7b3ef85a41d60119507c6e075",
+    "tmp/cuda-research/cuda_auto_0933_takeoff/initial.pt": "6c81acf533bc120919c929ae86da2f3f46a2511aade02ebe4a8a0c22863542a0",
+    "tmp/cuda-research/cuda_auto_0933_takeoff/policy.pt": "958649f51a4de4944294d86edb0a5a012ff7b04532e7e7c4e54447efc1b65788",
+    "tmp/cuda-research/cuda_auto_0933_takeoff/best.pt": "366abab5c59ca9c7dc8eb1a084597864d1dc188145c058b18403429325a83562",
+    "tmp/cuda-research/cuda_auto_0933_takeoff/thrust_order_checks.json": "c0de654c936945f63cc634b19ae05e5c7ecb34796069b78eb12110d120f67d00",
+    "tmp/cuda-research/cuda_auto_0933_takeoff/thrust_order_checks.sources.json": "d08756811b8ca01d3f8db8d7e1a3170f387b171ed15cace72a39ab356a0fb197",
+    "configs/cuda_research/cuda_auto_0934_takeoff.json": "b9c56a84e2c8914d7b366d80e75ae753cf8ea6a5bff7031693bd55d6e1888276",
+    "tmp/cuda-research/cuda_auto_0934_takeoff/result.json": "635005237a114357eac8da3770a1c6a3de99722b7d2b4d0c4b195c453f176924",
+    "tmp/cuda-research/cuda_auto_0934_takeoff/selection.json": "32d81f0c48e2c92986a86e2ec542f4c4a4c0e1659d69e4c2866c9ce28240cefa",
+    "tmp/cuda-research/cuda_auto_0934_takeoff.sources/hashes.json": "e079236276f7f3619254e47da13c0c225d3d045210282e91d8284aab6141757f",
+    "tmp/cuda-research/cuda_auto_0934_takeoff.sources/train_tether_cuda.py": "28e8885c354e17a9fbd5a5b0ef26780e05e30686ad592566844867c034eedf79",
+    "tmp/cuda-research/cuda_auto_0934_takeoff.sources/cuda_task.py": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade",
+    "tmp/cuda-research/cuda_auto_0934_takeoff.sources/cuda_backend.py": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+    "tmp/cuda-research/cuda_auto_0934_takeoff.sources/host.c": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+    "tmp/cuda-research/cuda_auto_0934_takeoff.sources/physics_v005.cu": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b",
+    "tmp/cuda-research/cuda_auto_0934_takeoff/eval_16384.json": "79fd88ad2e2bb554c33a4570110006a57f25fa0dbd3f0d855524c0b446876be2",
+    "tmp/cuda-research/cuda_auto_0934_takeoff/eval_32768.json": "64543b1ff33e06c420428b17e2029578c900072de34bbc1d8667786d37daa0c8",
+    "tmp/cuda-research/cuda_auto_0934_takeoff/eval_49152.json": "6a2318fccb6c84177a340f299287b7c437439d272a1460679fed9dd6b869b94e",
+    "tmp/cuda-research/cuda_auto_0934_takeoff/eval_65536.json": "17b7ccfce257afc88e90f1a38c0c2010e7c85f9ffcdbbd9afd77324aab14765d",
+    "tmp/cuda-research/cuda_auto_0934_takeoff/config.json": "355da9b2d65725e0d3e257bf68965beead3039679b4096931f6c1798410578b3",
+    "tmp/cuda-research/cuda_auto_0934_takeoff/status.json": "766fceef18571281537dc1f19af05907597f7aa7b3ef85a41d60119507c6e075",
+    "tmp/cuda-research/cuda_auto_0934_takeoff/initial.pt": "6c81acf533bc120919c929ae86da2f3f46a2511aade02ebe4a8a0c22863542a0",
+    "tmp/cuda-research/cuda_auto_0934_takeoff/policy.pt": "279578d086e83303860829c70b0650e38f55422cffc069fe1a1c961440ae72de",
+    "tmp/cuda-research/cuda_auto_0934_takeoff/best.pt": "7aec973426705ea303ee30a4744937e45f19f522b874e76776a8fdbf894f7643",
+    "tmp/cuda-research/cuda_auto_0934_takeoff/thrust_order_checks.json": "c0de654c936945f63cc634b19ae05e5c7ecb34796069b78eb12110d120f67d00",
+    "tmp/cuda-research/cuda_auto_0934_takeoff/thrust_order_checks.sources.json": "d08756811b8ca01d3f8db8d7e1a3170f387b171ed15cace72a39ab356a0fb197",
+    "configs/cuda_research/cuda_auto_0935_takeoff.json": "39977279a61b4b9afb3fbf947ab16885cde8b46611062174354e3fc730b4bc6c",
+    "tmp/cuda-research/cuda_auto_0935_takeoff/result.json": "38419dc4e0e1e6203ae97768efd89911d68728b435c05eebbc6a173990fed034",
+    "tmp/cuda-research/cuda_auto_0935_takeoff/selection.json": "9c8606fcfdd5b0cfbd19a422344b4cc4f667c7d2e5cfe965d19e8095aad1d1b0",
+    "tmp/cuda-research/cuda_auto_0935_takeoff.sources/hashes.json": "e079236276f7f3619254e47da13c0c225d3d045210282e91d8284aab6141757f",
+    "tmp/cuda-research/cuda_auto_0935_takeoff.sources/train_tether_cuda.py": "28e8885c354e17a9fbd5a5b0ef26780e05e30686ad592566844867c034eedf79",
+    "tmp/cuda-research/cuda_auto_0935_takeoff.sources/cuda_task.py": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade",
+    "tmp/cuda-research/cuda_auto_0935_takeoff.sources/cuda_backend.py": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+    "tmp/cuda-research/cuda_auto_0935_takeoff.sources/host.c": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+    "tmp/cuda-research/cuda_auto_0935_takeoff.sources/physics_v005.cu": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b",
+    "tmp/cuda-research/cuda_auto_0935_takeoff/eval_16384.json": "da87beb5bf51f363ea43e4fc8c153200455184801a49c4dd68746e2773490fe3",
+    "tmp/cuda-research/cuda_auto_0935_takeoff/eval_32768.json": "fdb86555ca8092638eeb5135efc355cd6669e015ea77eba45b2e27c573a05b84",
+    "tmp/cuda-research/cuda_auto_0935_takeoff/eval_49152.json": "875b941454eb96a5e1af9ccdc823b799ac524659537410a2c396c22368347fab",
+    "tmp/cuda-research/cuda_auto_0935_takeoff/eval_65536.json": "abc4f23a9babb24394644f16fdb5d2a858e0beb9d4a7317a8ebbc3ce5a393e48",
+    "tmp/cuda-research/cuda_auto_0935_takeoff/config.json": "7cccb73804339814a2c6d98577440c413e0515d8739da4c79a4c07e4628208ee",
+    "tmp/cuda-research/cuda_auto_0935_takeoff/status.json": "766fceef18571281537dc1f19af05907597f7aa7b3ef85a41d60119507c6e075",
+    "tmp/cuda-research/cuda_auto_0935_takeoff/initial.pt": "3ffeb04ae6c4f3ab36cc22233e57abe7a5d34df8f6a545cd1c9dbdbc2b581ad0",
+    "tmp/cuda-research/cuda_auto_0935_takeoff/policy.pt": "51e562998b997b070e2104b416f1bc5736420c0eee7a7a734aa8e57796b81139",
+    "tmp/cuda-research/cuda_auto_0935_takeoff/best.pt": "7aec973426705ea303ee30a4744937e45f19f522b874e76776a8fdbf894f7643",
+    "tmp/cuda-research/cuda_auto_0935_takeoff/thrust_order_checks.json": "c0de654c936945f63cc634b19ae05e5c7ecb34796069b78eb12110d120f67d00",
+    "tmp/cuda-research/cuda_auto_0935_takeoff/thrust_order_checks.sources.json": "d08756811b8ca01d3f8db8d7e1a3170f387b171ed15cace72a39ab356a0fb197",
+    "configs/cuda_research/cuda_auto_0936_takeoff.json": "43661ef34a0159aafa1469f7b80bc41d3ea9e99fcaf10a8c609e35630ad5f159",
+    "tmp/cuda-research/cuda_auto_0936_takeoff/result.json": "3a6e316eb1ac5418c9c3fe5c7155a0be72d5109c6f9fce0c5ba5c664981048e3",
+    "tmp/cuda-research/cuda_auto_0936_takeoff/selection.json": "9c8606fcfdd5b0cfbd19a422344b4cc4f667c7d2e5cfe965d19e8095aad1d1b0",
+    "tmp/cuda-research/cuda_auto_0936_takeoff.sources/hashes.json": "2db7f5aecb99d54b990cb45adea561c57e1ca9e899f548be13a2dba4fe87bfe0",
+    "tmp/cuda-research/cuda_auto_0936_takeoff.sources/train_tether_cuda.py": "93516a0029c8b419e0269233654c1f8837794506a13aa7aabe15e1346bb312fd",
+    "tmp/cuda-research/cuda_auto_0936_takeoff.sources/cuda_task.py": "cb769e329a6b59f74e0ed833631028ebff8dcef84074f9cde7d76bdf88535b39",
+    "tmp/cuda-research/cuda_auto_0936_takeoff.sources/cuda_backend.py": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+    "tmp/cuda-research/cuda_auto_0936_takeoff.sources/host.c": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+    "tmp/cuda-research/cuda_auto_0936_takeoff.sources/physics_v005.cu": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b",
+    "tmp/cuda-research/cuda_auto_0936_takeoff/eval_16384.json": "9de173ccbc2e90d34da534b960b5f69b7af7812d6dfc8b3b10e8614d69f59d75",
+    "tmp/cuda-research/cuda_auto_0936_takeoff/eval_32768.json": "6ab7ce4e34520d95142ab8b1ffb98c2933b34926aeff354c702633f0e1679f88",
+    "tmp/cuda-research/cuda_auto_0936_takeoff/eval_49152.json": "423f38f5a780d8a260091ddd0d64b0b450de571e98a52f9be249ceaa3253fc25",
+    "tmp/cuda-research/cuda_auto_0936_takeoff/eval_65536.json": "552726b32ca579c417e56316fbfac2d967d11455404e3e04d02dd893636f6e46",
+    "tmp/cuda-research/cuda_auto_0936_takeoff/config.json": "dfd8d1fb5425133944016f0cf2e4ae388e5f2010a6c8d9526cf19511d5bbfa2e",
+    "tmp/cuda-research/cuda_auto_0936_takeoff/status.json": "766fceef18571281537dc1f19af05907597f7aa7b3ef85a41d60119507c6e075",
+    "tmp/cuda-research/cuda_auto_0936_takeoff/initial.pt": "3ffeb04ae6c4f3ab36cc22233e57abe7a5d34df8f6a545cd1c9dbdbc2b581ad0",
+    "tmp/cuda-research/cuda_auto_0936_takeoff/policy.pt": "b81a786e1625d899f327b16664beec432b9ecb151aedfb619d69b2fe1e347ebd",
+    "tmp/cuda-research/cuda_auto_0936_takeoff/best.pt": "7aec973426705ea303ee30a4744937e45f19f522b874e76776a8fdbf894f7643",
+    "tmp/cuda-research/cuda_auto_0936_takeoff/thrust_order_checks.json": "c0de654c936945f63cc634b19ae05e5c7ecb34796069b78eb12110d120f67d00",
+    "tmp/cuda-research/cuda_auto_0936_takeoff/thrust_order_checks.sources.json": "d08756811b8ca01d3f8db8d7e1a3170f387b171ed15cace72a39ab356a0fb197",
+    "configs/cuda_research/cuda_auto_0937_takeoff.json": "51dfd987e2d13a2273aeb49f9acbcb80b1d00d77575c66316c31c65b9540d1ba",
+    "tmp/cuda-research/cuda_auto_0937_takeoff/status.json": "ec6dc52f75e9e182fc6185dd860015ee65807252a9655d86abaa791bb300a19c",
+    "tmp/cuda-research/cuda_auto_0937_takeoff/thrust_order_checks.json": "c0de654c936945f63cc634b19ae05e5c7ecb34796069b78eb12110d120f67d00",
+    "tmp/cuda-research/cuda_auto_0937_takeoff.sources/hashes.json": "2db7f5aecb99d54b990cb45adea561c57e1ca9e899f548be13a2dba4fe87bfe0",
+    "tmp/cuda-research/cuda_auto_0937_takeoff.sources/train_tether_cuda.py": "93516a0029c8b419e0269233654c1f8837794506a13aa7aabe15e1346bb312fd",
+    "tmp/cuda-research/cuda_auto_0937_takeoff.sources/cuda_task.py": "cb769e329a6b59f74e0ed833631028ebff8dcef84074f9cde7d76bdf88535b39",
+    "tmp/cuda-research/cuda_auto_0937_takeoff.sources/cuda_backend.py": "6d76077e7df86d89463c5a6870303932fcc2adb0992a3f44d885d0b394e80a40",
+    "tmp/cuda-research/cuda_auto_0937_takeoff.sources/host.c": "b778ed6adf81989ffba78bc23fdccb61d57a7623b8d689a74e07d0346f555ff2",
+    "tmp/cuda-research/cuda_auto_0937_takeoff.sources/physics_v005.cu": "b767d74b4d6918757849b60012a09aebe22f2b23622a571acece52f94e416e4b",
+    "configs/cuda_research/cuda_auto_0886_takeoff.json": "eb85c7fdf0e179073039c9e667c721a1a7c574d0861d32936ad45adeb8530f37",
+    "tmp/cuda-research/cuda_auto_0886_takeoff/result.json": "ada64060e188756796a5a8f41852853398db18c31983b82f40e11d5a24378c72",
+    "tmp/cuda-research/cuda_auto_0886_takeoff.sources/hashes.json": "e079236276f7f3619254e47da13c0c225d3d045210282e91d8284aab6141757f",
+    "tmp/cuda-research/cuda_auto_0937_takeoff/initial.pt": "813087b81ff79ac654b414ee2bb5a7f20fae8e6678cd62312b46d7611109b285",
+    "tmp/cuda-research/cuda_auto_0886_takeoff/initial.pt": "813087b81ff79ac654b414ee2bb5a7f20fae8e6678cd62312b46d7611109b285",
+    "tmp/cuda-research/cuda_auto_0937_takeoff/velocity_reference_reward_source.py": "01c79e143d45b5ce86337f7f34eaab413412527c57e3c92fb21966e12b07a907",
+    "tmp/cuda-research/cuda_auto_0937_takeoff/fine_zone_reward_source.py": "4e468a9713dca4b512b43bad6ea714e0a0379316239ab60ed0b1cec547e8afe9"
+  },
+  "scope": "Read-onlycompleted931\u2013936andactualactivefrozenplan/PID/OSlease/existingphysicscheck. Noentireloopread,trajectoryemission,GPUcall,wait,queue/source/productionedit orcommit.",
+  "notes": [
+    "All931\u2013936aredefaultcontinuations,notnewmethodology orR17results;allfinal0hover/24takeoffs.",
+    "931final0escapes;932\u2013936final24escapes.9368.626mmaltitudeisafterfailure/resetandnotprogress.",
+    "Missingpre-resettracesexplicitlymarked; no exactfailuretimeinferredfromsparsepost-resetdata.",
+    "937actualmethodology_trialvelocity_reference_reward17_seed70601isunderoneverifiedOSlease,matchedimmutableR16control886hashesverified. This is factualdispatch,not assumedtrialIDortrainingoutcome.",
+    "Initialweighttensors/sourcephysicsguardsmatchcontrol; measuredinitialphysicalmetricsremainpendinguntilimmutablefinalresult.",
+    "New17campaignpending; no reward17benefit/promotionclaim. Reusedvalidationnonindependent/reservedauditseedsspare; modeluncalibrated/nooriginal1mmhardwareclaim."
+  ]
+}

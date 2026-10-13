@@ -166,7 +166,10 @@ class LandingBeforeSuccess:
 
 def zone_hover_reward(positions,velocity,orientation,center,failed,version=1):
     """Diagnostic14: carrier hover, square XY bounds, preserved full tether."""
-    if version not in (1,2,3):raise ValueError('Unsupported zone reward version')
+    if version not in (1,2,3,4):raise ValueError('Unsupported zone reward version')
+    if version==4:
+        from tether_sim.velocity_reference_reward import velocity_reference_reward
+        return velocity_reference_reward(positions,velocity,orientation,center,failed)
     if version==3:
         from tether_sim.fine_zone_reward import fine_zone_reward
         return fine_zone_reward(positions,velocity,orientation,center,failed)
@@ -297,7 +300,7 @@ class CudaVector:
             premature=self.landing_gate.update(s.position,s.velocity,self.goal,s.failed)
             self.reward=torch.where(premature,torch.full_like(self.reward,-1),self.reward)
         if self.diagnostic_zone_version:
-            zone_reward_version=3 if self.reward_version==16 else 2 if self.reward_version==15 else 1
+            zone_reward_version=4 if self.reward_version==17 else 3 if self.reward_version==16 else 2 if self.reward_version==15 else 1
             self.reward,escaped,band=zone_hover_reward(s.position,s.velocity,s.orientation,self.start[:,0],s.failed,version=zone_reward_version)
             self.zone_counts["band_steps"]+=int(band.sum())
             self.zone_counts["escapes"]+=int(escaped.sum())

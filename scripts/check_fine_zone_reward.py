@@ -62,7 +62,7 @@ def integration_checks(root):
     dispatched=task.zone_hover_reward(*inputs,version=3)
     require(all(torch.equal(x,y) for x,y in zip(direct,dispatched)), 'zoneversion3 exact fine-helper dispatch')
     rejected=[]
-    for version in (-1,0,4):
+    for version in (-1,0,99):
         try:task.zone_hover_reward(*inputs,version=version)
         except ValueError:rejected.append(version)
         else:raise AssertionError('invalid zone version accepted')

@@ -1,0 +1,163 @@
+{
+  "review": "0112",
+  "created_at_utc": "2026-10-13T20:44:56.330804+00:00",
+  "official_skill_path": "C:/Users/n33du/.codex/skills/huggingface-papers/SKILL.md",
+  "search_query": "learned quadrotor hover braking stabilization velocity tracking reward shaping actuator delay PPO",
+  "hf_retrieval_utc": "2026-10-13T20:41:45.877271+00:00",
+  "hf_manifest": "retrieval.json",
+  "optional_paper_manifest": "velocity_retrieval.json",
+  "retrieval_staging_directory": "/home/n33du/ai/drone-rl-lab/tmp/deep_audit_physics/review0112_hf_retrieval_v001",
+  "copy_contract": "Openx-onlynewfiles intoalready-existingreviewdirectory; preserveallparent/subagentfiles.",
+  "search_results": [
+    {
+      "id": "2211.12181",
+      "title": "User-Conditioned Neural Control Policies for Mobile Robotics",
+      "selected": false
+    },
+    {
+      "id": "2002.11564",
+      "title": "Mid-flight Propeller Failure Detection and Control of\n  Propeller-deficient Quadcopter using Reinforcement Learning",
+      "selected": false
+    },
+    {
+      "id": "2311.13081",
+      "title": "Learning to Fly in Seconds",
+      "selected": true
+    },
+    {
+      "id": "2403.08152",
+      "title": "Multi-Fidelity Reinforcement Learning for Time-Optimal Quadrotor\n  Re-planning",
+      "selected": false
+    },
+    {
+      "id": "2102.12124",
+      "title": "Safe Learning-based Gradient-free Model Predictive Control Based on\n  Cross-entropy Method",
+      "selected": false
+    },
+    {
+      "id": "2202.10796",
+      "title": "A Benchmark Comparison of Learned Control Policies for Agile Quadrotor Flight",
+      "selected": true
+    },
+    {
+      "id": "2509.08177",
+      "title": "Quadrotor Navigation using Reinforcement Learning with Privileged\n  Information",
+      "selected": false
+    },
+    {
+      "id": "2509.24892",
+      "title": "JuggleRL: Mastering Ball Juggling with a Quadrotor via Deep\n  Reinforcement Learning",
+      "selected": false
+    }
+  ],
+  "papers": [
+    {
+      "id": "2311.13081",
+      "version": "v2",
+      "title": "Learning to Fly in Seconds",
+      "original_version_date": "2024-04-08",
+      "hf_metadata": {
+        "url": "https://huggingface.co/api/papers/2311.13081",
+        "status": 200,
+        "evidence": "source_01.txt",
+        "sha256": "cadf3bea13bea4790e540c3bd2543d6db7073444bf9f6d85c9a2e7d0776bfa77"
+      },
+      "hf_markdown": {
+        "url": "https://huggingface.co/papers/2311.13081.md",
+        "status": 200,
+        "evidence": "source_02.txt",
+        "sha256": "c9f4f7465819fb168a7526c71a34ba06a55e73b78a6a630f82f5fe2f26033850"
+      },
+      "original_html": "https://arxiv.org/html/2311.13081v2",
+      "original_pdf": "https://arxiv.org/pdf/2311.13081v2",
+      "sections_read": [
+        "IV Methodology",
+        "V Experimental Setup"
+      ],
+      "author_code": {
+        "url": "https://github.com/arplaboratory/learning-to-fly",
+        "verified": true,
+        "verification": "HF githubRepo matches originalpaperSupplementaryMaterial Code link; authorrepositoryopened successfully throughweb. Noexecution.",
+        "verification_reference": "state/cuda_research/methodology/review_0109/original_sources.json; verifiedrepository/paperlinks2026-10-13, noreexecutionornewauthorcodedownload."
+      },
+      "reason_for_reuse": "Completedmatchedlongduration/rewardcampaigncatchup closes a newlocalcomparison; selected originalmethodpapers addresscredit andstabilization assumptions, notnewpublication, localcausalityornewretunejustification."
+    },
+    {
+      "id": "2006.05990",
+      "version": "v1",
+      "title": "What Matters In On-Policy Reinforcement Learning? A Large-Scale Empirical Study",
+      "original_version_date": "2020-06-10",
+      "hf_metadata": {
+        "url": "https://huggingface.co/api/papers/2006.05990",
+        "status": 404,
+        "evidence": "retrieval.json"
+      },
+      "hf_markdown": {
+        "url": "https://huggingface.co/papers/2006.05990.md",
+        "status": 404,
+        "evidence": "retrieval.json"
+      },
+      "original_html": "https://arxiv.org/html/2006.05990v1",
+      "original_pdf": "https://arxiv.org/pdf/2006.05990v1",
+      "original_abstract": "https://arxiv.org/abs/2006.05990",
+      "sections_read": [
+        "3.2 Networks architecture",
+        "3.3 Normalization and clipping",
+        "3.4 Advantage Estimation",
+        "3.5 Training setup"
+      ],
+      "author_code": {
+        "url": "https://github.com/google-research/seed_rl",
+        "verified": true,
+        "verification": "RepositoryREADME ConfigurableOnPolicyAgent links to arxiv2006.05990; followedlinkandreachedthisoriginalpaper. README Additional links also namesstudy. GeneralSEEDrepositoryisarchived; noexecution. Repository agents-directory fetch wasunavailable, so specificagentcode wasnotread.",
+        "verification_reference": "state/cuda_research/methodology/review_0109/original_sources.json; verifiedrepository/paperlinks2026-10-13, noreexecutionornewauthorcodedownload."
+      },
+      "reason_for_reuse": "Completedmatchedlongduration/rewardcampaigncatchup closes a newlocalcomparison; selected originalmethodpapers addresscredit andstabilization assumptions, notnewpublication, localcausalityornewretunejustification."
+    },
+    {
+      "id": "2202.10796",
+      "version": "v1",
+      "title": "A Benchmark Comparison of Learned Control Policies for Agile Quadrotor Flight",
+      "original_version_date": "2022-02-22",
+      "selection_reason": "FirmID fromfreshHFsearch; originaltrajectorytrackingmethods exposevelocityreference/direction andaction-level controller assumptions.",
+      "hf_metadata": {
+        "url": "https://huggingface.co/api/papers/2202.10796",
+        "status": 200,
+        "evidence": "velocity_source_metadata.txt",
+        "sha256": "5d0c4952f2cb9d081ccec7724d3d1516fda0ef5a1c8d137ad4cdf51e8658565f"
+      },
+      "hf_markdown": {
+        "url": "https://huggingface.co/papers/2202.10796.md",
+        "status": 404,
+        "evidence": "velocity_retrieval.json"
+      },
+      "original_html": "https://arxiv.org/html/2202.10796v1",
+      "original_pdf": "https://arxiv.org/pdf/2202.10796v1",
+      "original_abstract": "https://arxiv.org/abs/2202.10796",
+      "sections_read": [
+        "III-B Quadrotor Dynamics",
+        "IV-A Observations, Actions, and Rewards",
+        "IV-B Policy Learning",
+        "IV-C Training Details",
+        "V-A Simulation Experiments"
+      ],
+      "author_code": {
+        "url": null,
+        "verified": false,
+        "reason": "HFmetadatahasno githubRepo. OriginalSupplementaryMaterial links video only. TensorFlowAgents is a citedframeworkdependency, not a verifiedauthorbenchmarkimplementation."
+      },
+      "dependency_code_url": "https://github.com/tensorflow/agents",
+      "code_executed": false,
+      "applicability": "Untetheredreference-trajectoryPPO. SRTdirectactuation versusLV/CTBRusingclassicalcontrollers; publishedcomparisoncannotjustifyhiddenhelperorclaimourdynamicscalibrated. Relativevelocityreferences supportexplicitreward/observationcontracts, notproofspeedcostmustcausefailure."
+    }
+  ],
+  "local_counterevidence_references": [
+    "state/cuda_research/methodology/review_0038/review.md",
+    "state/cuda_research/methodology/review_0109/review.md",
+    "state/cuda_research/methodology/review_0111/review.md"
+  ],
+  "reason_for_reuse": "Completed6longarms885\u2013890 are a newlocal duration/rewardcomparison to beclosedbyparentreview. Thissourcework neitherreanalyzesresults norpresents oldpapersasnewpublication.",
+  "no_author_code_execution": true,
+  "no_gpu_controller_queue_source_config_changes": true,
+  "no_review_md_written": true
+}

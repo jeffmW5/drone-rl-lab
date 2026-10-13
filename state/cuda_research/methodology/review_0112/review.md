@@ -1,0 +1,49 @@
+# Review 0112: tenfold training improves boundary survival, not sustained hover
+
+Last reviewed completed trial index: 936. Date: 2026-10-13 UTC. Previous formal review0111 closed885. This is a catch-up review of886–930 plus a separately dated931–936 addendum,51 completed trials in total. The research agent hit its usage limit while the independent serial daemon continued; the required three-trial reviews did not occur on time. This document does not backdate them. The six frozen duration trials885–890 are now complete and assessed together. Healthy training was preserved; no daemon restart, duplicate trainer, concurrent compile or manual GPU test was used.
+
+## Measured campaign outcomes
+
+All six runs completed655360 transitions, totaling3932160, within1800s caps (about1072–1081s each). Three paired training seeds70601–70603 compare reward15 with fine-distance reward16 from source759, with physics5, ground reset3, observation2, control2, learner mask2 and horizon32 fixed. All core source guards matched within this frozen campaign and recorded numeric values were finite. The40 periodic evaluations per run and six final evaluations show zero sustained ground zone hovers. The best temporary hold was0.54s at890/114688, below the unchanged1s requirement. Takeoffs persisted.
+
+| Training seed | Reward15 escape-free checkpoints /40 | Reward16 escape-free checkpoints /40 | R15 maximum hold (s) | R16 maximum hold (s) | Final R15/R16 escapes |
+|---|---:|---:|---:|---:|---:|
+|70601|6|11|0.18|0.20|24/24|
+|70602|10|26|0.14|0.34|24/24|
+|70603|7|36|0.46|0.54|24/0|
+
+Reward16 has73/120 escape-free periodic checkpoints versus23/120 for reward15, improving this descriptive count in each paired training seed. These are correlated checkpoints and repeated physical starts, not120 independent validation trials. The third reward16 final890 avoids escape within five seconds but has zero hover and zero hold; its last sparse sample still moves about1.255m/s. The other five finals record24 repeated zone failures, first occurring at3.96/3.68/3.52/3.88/4.32s for885–889. No survival beyond five seconds has been tested here.
+
+Low altitude error must not be confused with stopping. The selected890/229376 checkpoint has1.604mm endpoint altitude error, but only0.10s hold, zero hover and2.114m legacy payload destination error. Its4.52s sample is approximately(-1.173,-0.827,0.920)m, moving1.462m/s and outside the1m square. The selected888/16384 checkpoint likewise has1.632mm altitude error but only0.24s hold. Initial-best selections for885/886/887/889 are preserved, not described as learned progress. Post-reset endpoints are never used to infer convergence.
+
+Evidence and source SHA manifests: campaign/completed_10x_campaign0885_0890_20261013T204213350674Z.json and its readable companion. All240 periodic rows, selected and final regressions and first-terminal evidence or recorded absence are preserved; raw immutable runs remain locally available.
+
+## Counterevidence and review gap
+
+catchup/evaluations_886_930.json contains initial, periodic, final and selected metrics with plan/result/evaluation hashes for45 completed trials. It includes the remaining third short reward pair891/892: both final policies escape in all repeated lanes, zero hover, first failures4.32/4.64s. Thus fine shaping does not improve every duration or every final outcome. Remaining recovery trials893–895 avoid five-second escapes but achieve no ground hover and finish moving about1.10–1.30m/s. Artificial airborne recovery starts and ground evaluation remain separate. Defaults896–930 also produce no sustained hover in the audited checkpoints. Some default artifacts lack decoded first-terminal traces; a missing trace is not evidence of survival when aggregate failures are present.
+
+The separate catchup/catchup0931_0936_and_r17_dispatch_20261013T205745594007Z.json/.md closes six subsequent default continuations. All initial/periodic/final/selected metrics and hashes are preserved. Their finals retain24 takeoffs and zero hover;931 records zero escapes while932–936 record24 each. Trial936's8.626mm altitude endpoint accompanies24 failures and is not convergence. Missing decoded failure times remain explicit. These are default continuations, not new methodology or reward17 outcomes. This addendum extends the formal reviewed index to936 without claiming on-time reviews.
+
+The duration request was actually tested; more total optimization alone did not solve this configuration. This does not prove that all longer training fails, nor isolate the cause. Total transitions also do not extend the fixed32-step (0.64s) data fragment. No new horizon, exploration, reset, gain or physics sweep is warranted solely by the failure. Existing signed gravity/thrust/rotation/normalization/slack checks under each trial's GPU lease passed within their narrow scope; they do not calibrate tether contact/materials/attachment or hardware. Training failure alone is not a physics diagnosis.
+
+## Original methods and applicability
+
+Official huggingface-papers retrieval used fresh searches, HF markdown/metadata and original arXiv fallbacks. URLs, retrieval dates, versions and missing author-code evidence are in retrieval.json, velocity_retrieval.json and original_sources.json; methods_notes.md records sections read. No author code was executed.
+
+- [Learning to Fly in Seconds v2](https://arxiv.org/html/2311.13081v2), IV/V: actuator modeling, state coverage and behavioral evaluation are relevant to stabilization. Its untethered TD3/RPM setup differs from our full-tether PPO and does not justify repeating rejected warm-start/exploration sweeps or claim local flight success.
+- [What Matters In On-Policy Reinforcement Learning? A Large-Scale Empirical Study v1](https://arxiv.org/html/2006.05990v1),3.2–3.5: initialization, normalization, advantage estimation and data collection are distinct audit dimensions. Duration and credit horizon remain separate experimental factors. HF404s are preserved; original methods supply the fallback.
+- [A Benchmark Comparison of Learned Control Policies for Agile Quadrotor Flight v1](https://arxiv.org/html/2202.10796v1), III-B, IV-A–C and V-A: relative position/velocity references and dense tracking objectives motivate an explicit velocity-reference contract. LV/CTBR use classical controllers; direct SRT is a different action level. HF metadata succeeded, markdown404 fell back to the original. No author benchmark repository was verified; the cited TensorFlow Agents dependency is not presented as author code.
+
+These papers support a testable design choice, not the claim that isotropic speed cost caused the observed drift. Published results are not outcomes of this simulator.
+
+## One new falsifiable reward adaptation
+
+Reward17 preserves reward16's distance, height, upright, ground, square boundary, failure and vertical-speed terms. Only the horizontal speed cost changes from2*||vXY||² to2*||vXY-v_ref||², where v_ref=-displacementXY*(1/s), with vector norm capped at0.5m/s. At the hover center v_ref is zero and the reward equals reward16. Away from center, equal-speed inward and outward motion receive different costs; the requested velocity decreases toward zero as position converges. This reference affects the reward only. The learned policy still chooses every motor action; no PID, action override or new simulator force was added. Angular-rate penalty remains absent.
+
+Hypothesis: direction-aware return and braking feedback may improve actual ground holds or sustained hover beyond the observed boundary-survival gains. Confidence is low pending trajectories. R16's remaining unit-quaternion, clipping/negative-core and C0 boundary limitations stay explicit; this test does not claim they are fixed.
+
+CPU checks passed10 groups: exact old14/15/16 function and real adapter parity against the pre17 source; reward17 dispatch; inward/outward sign, velocity cap, center equality, frame behavior; unchanged inputs/RNG/action commands; terminal failure reward, pre-reset observation, autoreset and timeout preservation. Existing fine-reward checks passed12 groups; their invalid-version fixture changed4→99 because4 is now supported. Evidence/source hashes are preserved in velocity_reference/. No GPU trainer was launched outside the daemon.
+
+New frozen queue configs/cuda_research/methodology_queue_v000_user_abca_00_velocity_reference.json contains three reward17 long treatments at70601–70603,655360 transitions/1800s, using immutable reward16 long controls886/888/890 instead of redundant reruns. Plan/result hashes and fixed learner/simulator/action settings are frozen. Changed dispatch/source files are versioned; they are not claimed text-identical to old controls. The first actual dispatched plan is937, velocity_reference_reward17_seed70601. Exactly one active trainer PID664455 and its OS FLOCK lease were verified; its physics5 signed thrust/rotation/slack checks passed. Matched886 physics/backend/host hashes and all10 initial policy tensors match. Actual initial physical metric/trajectory equivalence is still pending because the trainer stores those fields in final result.json; no manual GPU evaluation was used. The learned outcome is pending. The dated catch-up/dispatch addendum preserves this partial contract audit honestly.
+
+Reject promotion without replicated ground sustained-hover or credible braking/hold gains without added true failures or lost takeoffs. Endpoint altitude, reward magnitude, surviving only five seconds or a retained initial checkpoint is insufficient. Hardware/audit seeds71001+ remain reserved. Three reused validation seeds51011–13/eight identical lanes represent provisional repeated conditions, not24 independent domains. No original sustained1mm obstacle navigation, calibrated hardware precision or reliable destination navigation has been demonstrated.

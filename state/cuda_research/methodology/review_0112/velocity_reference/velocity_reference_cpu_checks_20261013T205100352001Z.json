@@ -1,0 +1,582 @@
+{
+  "integration": {
+    "scope": "Exact CudaVector.send/obs/recv with input-only CPU fake physics and CUDA constructor forbidden. Checks scoring/dispatch/state logic, not integration physics or learned flight.",
+    "baseline_source": {
+      "path": "/home/n33du/ai/drone-rl-lab/state/cuda_research/methodology/review_0112/velocity_reference/cuda_task_before_reward17.py",
+      "sha256": "592332aec6b4f6c8bf02a55a0f3109813920b3c00509673f12449807ff376ade"
+    },
+    "old_zone_functions_exact": {
+      "1": true,
+      "2": true,
+      "3": true
+    },
+    "old_adapter_dispatch_exact": {
+      "14": true,
+      "15": true,
+      "16": true
+    },
+    "zoneversion4_helper_exact": true,
+    "invalid_versions_rejected": [
+      -1,
+      0,
+      99
+    ],
+    "yaw_frame_rewards": [
+      0.6220415830612183,
+      0.6220415830612183
+    ],
+    "actions_unmodified_and_no_reference_motor_helper": true,
+    "adapter_rewards": [
+      0.6679695248603821,
+      0.0,
+      -0.30000001192092896,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      0.7452471256256104
+    ],
+    "done": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false
+    ],
+    "truncated": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "pre_reset_failed": [
+      0,
+      0,
+      0,
+      3,
+      3,
+      3,
+      1,
+      0
+    ],
+    "zone_counts": {
+      "band_steps": 1,
+      "escapes": 3
+    },
+    "command_for_collective_point2": [
+      [
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579
+      ],
+      [
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579
+      ],
+      [
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579
+      ],
+      [
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579
+      ],
+      [
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579
+      ],
+      [
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579
+      ],
+      [
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579
+      ],
+      [
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579
+      ]
+    ],
+    "timeout_distinct_pass": true,
+    "numerical_failure_rejected": true
+  },
+  "created_at_utc": "2026-10-13T20:51:00.351493+00:00",
+  "scope": "CPU-only pure reward functions. Reference velocity is used only in the reward, never in actions, controller or simulator. No GPU, training, physics, angular-rate penalty, exploration or queue change. Checked normalized quaternions for upper bound. Existing ground-band lower clip and exactlyzero1m reward remain. This does not establish learned hover, simulation fidelity or hardware precision.",
+  "checks_passed": [
+    "zero_safe_inward_one_per_second_reference_vector_norm_cap",
+    "inward_beats_outward_same_speed_both_axes_and_diagonal_signs",
+    "center_stationary_and_vertical_speed_cost_exact_reward16_parity",
+    "independent_scalar_formula_and_production16_baseline_parity",
+    "unchanged_square_bounds_negative_band_and_airborne_continuity",
+    "negative_ground_failure_override_and_ground_band_clip_limitation_retained",
+    "upright_terms_preserved_and_angular_rate_penalty_zero",
+    "finite_unit_quaternion_upper_bound_no_input_or_RNG_mutation_translation",
+    "stationary_center_millimetre_height_gradation_and_no_upper_clip_plateau",
+    "production17_dispatch_old14_15_16_parity_frame_actions_failure_and_autoreset"
+  ],
+  "reference_displacement_m": [
+    [
+      0.0,
+      0.0
+    ],
+    [
+      0.001,
+      0.0
+    ],
+    [
+      -0.001,
+      0.0
+    ],
+    [
+      0.3,
+      0.4
+    ],
+    [
+      0.5,
+      0.5
+    ],
+    [
+      -2.0,
+      1.0
+    ],
+    [
+      0.0,
+      -1.0
+    ]
+  ],
+  "reference_velocity_m_s": [
+    [
+      -0.0,
+      -0.0
+    ],
+    [
+      -0.001,
+      -0.0
+    ],
+    [
+      0.001,
+      -0.0
+    ],
+    [
+      -0.3,
+      -0.4
+    ],
+    [
+      -0.35355339059327373,
+      -0.35355339059327373
+    ],
+    [
+      0.4472135954999579,
+      -0.22360679774997896
+    ],
+    [
+      -0.0,
+      0.5
+    ]
+  ],
+  "reference_norm_m_s": [
+    0.0,
+    0.001,
+    0.001,
+    0.5,
+    0.49999999999999994,
+    0.49999999999999994,
+    0.5
+  ],
+  "inward_outward": {
+    "offsets_m": [
+      [
+        0.2,
+        0.0
+      ],
+      [
+        -0.2,
+        0.0
+      ],
+      [
+        0.0,
+        0.2
+      ],
+      [
+        0.0,
+        -0.2
+      ],
+      [
+        0.25,
+        0.3
+      ],
+      [
+        -0.25,
+        0.3
+      ],
+      [
+        0.25,
+        -0.3
+      ],
+      [
+        -0.25,
+        -0.3
+      ],
+      [
+        0.8,
+        0.1
+      ],
+      [
+        -0.8,
+        -0.1
+      ]
+    ],
+    "matched_speed_m_s": 0.2,
+    "inward_reward17": [
+      0.6785213947296143,
+      0.6785213947296143,
+      0.6785213947296143,
+      0.6785213947296143,
+      0.4498583972454071,
+      0.4498583972454071,
+      0.4498583972454071,
+      0.4498583972454071,
+      0.10220788419246674,
+      0.10220788419246674
+    ],
+    "outward_reward17": [
+      0.5432279706001282,
+      0.5432279706001282,
+      0.5432279706001282,
+      0.5432279706001282,
+      0.3335039019584656,
+      0.3335039019584656,
+      0.3335039019584656,
+      0.3335039019584656,
+      0.07642053067684174,
+      0.07642053067684174
+    ],
+    "same_speed_reward16": [
+      0.638307511806488,
+      0.638307511806488,
+      0.638307511806488,
+      0.638307511806488,
+      0.44794946908950806,
+      0.44794946908950806,
+      0.44794946908950806,
+      0.44794946908950806,
+      0.10691102594137192,
+      0.10691102594137192
+    ]
+  },
+  "independent_scalar_parity": [
+    {
+      "case": [
+        0.001,
+        -0.002,
+        0.805,
+        -0.01,
+        0.02,
+        0.01,
+        0
+      ],
+      "expected16": 0.9921867745145858,
+      "actual16": 0.9921867847442627,
+      "expected17": 0.9923647448682,
+      "actual17": 0.992364764213562
+    },
+    {
+      "case": [
+        0.2,
+        0.3,
+        0.8,
+        -0.2,
+        -0.1,
+        0.05,
+        0
+      ],
+      "expected16": 0.45444814814092555,
+      "actual16": 0.4544481337070465,
+      "expected17": 0.45980708178824065,
+      "actual17": 0.45980706810951233
+    },
+    {
+      "case": [
+        0.8,
+        0.1,
+        0.75,
+        -0.4,
+        0.1,
+        -0.2,
+        0
+      ],
+      "expected16": 0.08709405611092828,
+      "actual16": 0.08709405362606049,
+      "expected17": 0.09654038803109569,
+      "actual17": 0.09654039144515991
+    },
+    {
+      "case": [
+        -0.3,
+        0.4,
+        0.9,
+        0.1,
+        -0.2,
+        0.2,
+        0
+      ],
+      "expected16": 0.2864925664421946,
+      "actual16": 0.28649255633354187,
+      "expected17": 0.2797495246992649,
+      "actual17": 0.2797495126724243
+    },
+    {
+      "case": [
+        1.3,
+        -0.1,
+        0.8,
+        -0.2,
+        0,
+        0,
+        0
+      ],
+      "expected16": -0.30000000000000004,
+      "actual16": -0.30000001192092896,
+      "expected17": -0.30000000000000004,
+      "actual17": -0.30000001192092896
+    },
+    {
+      "case": [
+        1.3,
+        0,
+        0.05,
+        0,
+        0,
+        0,
+        0
+      ],
+      "expected16": -1.1,
+      "actual16": -1.100000023841858,
+      "expected17": -1.1,
+      "actual17": -1.100000023841858
+    },
+    {
+      "case": [
+        0.1,
+        0.1,
+        0.1,
+        -0.1,
+        -0.1,
+        0,
+        0
+      ],
+      "expected16": -0.7120490239230148,
+      "actual16": -0.7120490074157715,
+      "expected17": -0.7116131153748062,
+      "actual17": -0.711613118648529
+    },
+    {
+      "case": [
+        0.01,
+        0.01,
+        0.8,
+        0,
+        0,
+        0,
+        1
+      ],
+      "expected16": -1.0,
+      "actual16": -1.0,
+      "expected17": -1.0,
+      "actual17": -1.0
+    },
+    {
+      "case": [
+        2,
+        0,
+        0.8,
+        -0.5,
+        0,
+        0,
+        0
+      ],
+      "expected16": -1.0,
+      "actual16": -1.0,
+      "expected17": -1.0,
+      "actual17": -1.0
+    }
+  ],
+  "square_xy_m": [
+    [
+      0.0,
+      0.0
+    ],
+    [
+      0.9,
+      0.9
+    ],
+    [
+      1.0,
+      0.0
+    ],
+    [
+      1.0,
+      1.0
+    ],
+    [
+      1.0001,
+      0.0
+    ],
+    [
+      -1.5,
+      0.0
+    ],
+    [
+      0.0,
+      1.9999
+    ],
+    [
+      2.0,
+      0.0
+    ],
+    [
+      -2.0,
+      0.0
+    ],
+    [
+      0.0,
+      2.0
+    ],
+    [
+      2.0,
+      2.0
+    ]
+  ],
+  "square_reward17": [
+    1.0,
+    0.033962432295084,
+    0.0,
+    0.0,
+    -9.999999747378752e-05,
+    -0.5,
+    -0.9998999834060669,
+    -1.0,
+    -1.0,
+    -1.0,
+    -1.0
+  ],
+  "square_reward16": [
+    1.0,
+    0.03917129710316658,
+    0.0,
+    0.0,
+    -9.999999747378752e-05,
+    -0.5,
+    -0.9998999834060669,
+    -1.0,
+    -1.0,
+    -1.0,
+    -1.0
+  ],
+  "square_escaped": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    true
+  ],
+  "square_band": [
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+  ],
+  "boundary_rewards": [
+    4.3151860040779866e-07,
+    0.0,
+    -9.999999974752427e-07,
+    -0.9999989867210388,
+    -1.0,
+    -1.0
+  ],
+  "ground_rewards": [
+    -0.75,
+    -0.7950000166893005,
+    -0.800000011920929,
+    -0.800000011920929,
+    -0.8001000285148621,
+    -1.2999999523162842,
+    -1.7999000549316406,
+    -1.0,
+    -1.0,
+    -1.0,
+    -1.0
+  ],
+  "vertical_speed_m_s": [
+    0.0,
+    0.01,
+    0.1,
+    0.2,
+    0.5,
+    1.0
+  ],
+  "vertical_speed_reward16_and17": [
+    1.0,
+    0.9998100399971008,
+    0.9813725352287292,
+    0.9296296238899231,
+    0.6833333373069763,
+    0.36666667461395264
+  ],
+  "near_center_height_error_m": [
+    0.0,
+    0.001,
+    0.002,
+    0.005,
+    0.01
+  ],
+  "near_center_height_reward16_and17": [
+    1.0,
+    0.999810516834259,
+    0.9992480278015137,
+    0.9955357909202576,
+    0.984516441822052
+  ],
+  "sources": {
+    "tether_sim/fine_zone_reward.py": "4e468a9713dca4b512b43bad6ea714e0a0379316239ab60ed0b1cec547e8afe9",
+    "tether_sim/velocity_reference_reward.py": "01c79e143d45b5ce86337f7f34eaab413412527c57e3c92fb21966e12b07a907",
+    "tether_sim/cuda_task.py": "cb769e329a6b59f74e0ed833631028ebff8dcef84074f9cde7d76bdf88535b39",
+    "scripts/check_velocity_reference_reward.py": "ece789a9d478241f0d2bf6a76fe2e00dce467e32c81940cfc2f0e4f3fcdd0f65"
+  }
+}

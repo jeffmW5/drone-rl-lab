@@ -20,8 +20,10 @@ if plan.get("physics_version",1) in (3,4,5,6):
     prepare_and_check(out/"thrust_order_checks.json",plan["physics_version"])
 if plan.get('training_reset_version',1)==6:
     (out/'recovery_reset_source.py').write_bytes(Path('tether_sim/recovery_reset.py').read_bytes())
-if plan.get('reward_version',1)==16:
+if plan.get('reward_version',1) in (16,17):
     (out/'fine_zone_reward_source.py').write_bytes(Path('tether_sim/fine_zone_reward.py').read_bytes())
+if plan.get('reward_version',1)==17:
+    (out/'velocity_reference_reward_source.py').write_bytes(Path('tether_sim/velocity_reference_reward.py').read_bytes())
 snapshot={'mode':'initializing','positions':[]};guard=threading.Lock()
 class Handler(BaseHTTPRequestHandler):
     def log_message(self,*args): pass
