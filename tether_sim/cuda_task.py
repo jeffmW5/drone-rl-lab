@@ -183,9 +183,11 @@ def zone_hover_reward(positions,velocity,orientation,center,failed,version=1):
 
 
 class CudaVector:
-    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None,physics_version=1,training_reset_version=1,landing_penalty_version=0,diagnostic_zone_version=0,integration_version=1):
+    def __init__(self,count=256,direct=False,reward_version=1,phase='destination',control_version=1,training_region=None,physics_version=1,training_reset_version=1,landing_penalty_version=0,diagnostic_zone_version=0,integration_version=1,termination_version=1):
         if diagnostic_zone_version not in (0,1):raise ValueError("Unsupported diagnostic zone")
         if integration_version not in (1,2):raise ValueError("Unsupported integration version")
+        if termination_version not in (1,2):raise ValueError('Unsupported termination version')
+        self.termination_version=termination_version
         self.integration_version=integration_version
         self.diagnostic_zone_version=diagnostic_zone_version
         self.zone_counts=dict(band_steps=0,escapes=0)
@@ -292,7 +294,9 @@ class CudaVector:
             self.zone_counts["escapes"]+=int(escaped.sum())
             s.failed=torch.where(escaped & (s.failed==0),torch.full_like(s.failed,3),s.failed)
         self.previous_error=error
-        self.truncated=self.steps>=500;self.done=(s.failed!=0)|self.truncated
+        timeout=self.steps>=500
+        self.truncated=timeout & (s.failed==0) if getattr(self,'termination_version',1)==2 else timeout
+        self.done=(s.failed!=0)|self.truncated
         if self.training_region is not None:
             escaped=(torch.linalg.vector_norm(s.position[:,0,:2]-self.goal[:,:2],dim=1)>self.training_region['radius_m']) | (s.position[:,0,2]>self.training_region['ceiling_m'])
             self.truncated=self.truncated|escaped

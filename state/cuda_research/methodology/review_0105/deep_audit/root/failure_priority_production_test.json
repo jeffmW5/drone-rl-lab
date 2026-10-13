@@ -1,0 +1,14 @@
+[
+  {
+    "version": 1,
+    "physical_failure_counted": false,
+    "true_timeout_retained": true,
+    "terminal_reward_preserved": true
+  },
+  {
+    "version": 2,
+    "physical_failure_counted": true,
+    "true_timeout_retained": true,
+    "terminal_reward_preserved": true
+  }
+]

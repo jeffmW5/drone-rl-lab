@@ -1,0 +1,194 @@
+{
+  "scope": "CPU production task logic with fake no-op physics; not a dynamics, GPU or flight test",
+  "source_sha256": "5493230dc04011b4d93f19da378e8b98bddd4e7e8b646badd956158d18fc51f4",
+  "validation_state_hashes": {
+    "51011": "b228fee2b58d159a4e0347d3a5ac87fad20f2ee9c8b1d43cb01a40e253db488d",
+    "51012": "b228fee2b58d159a4e0347d3a5ac87fad20f2ee9c8b1d43cb01a40e253db488d",
+    "51013": "b228fee2b58d159a4e0347d3a5ac87fad20f2ee9c8b1d43cb01a40e253db488d"
+  },
+  "all_validation_states_identical": true,
+  "agents_identical": true,
+  "standard_escape": {
+    "failed": [
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "done": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "truncated": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "carrier_xyz": [
+      [
+        2.0,
+        0.0,
+        0.800000011920929
+      ],
+      [
+        0.0,
+        0.0,
+        0.04999999701976776
+      ],
+      [
+        0.0,
+        0.0,
+        0.04999999701976776
+      ],
+      [
+        0.0,
+        0.0,
+        0.04999999701976776
+      ],
+      [
+        0.0,
+        0.0,
+        0.04999999701976776
+      ],
+      [
+        0.0,
+        0.0,
+        0.04999999701976776
+      ],
+      [
+        0.0,
+        0.0,
+        0.04999999701976776
+      ],
+      [
+        0.0,
+        0.0,
+        0.04999999701976776
+      ]
+    ],
+    "reward": [
+      -1.0,
+      -0.75,
+      -0.75,
+      -0.75,
+      -0.75,
+      -0.75,
+      -0.75,
+      -0.75
+    ]
+  },
+  "escape_at_timeout": {
+    "failed": [
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "done": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "truncated": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "carrier_xyz": [
+      [
+        2.0,
+        0.0,
+        0.800000011920929
+      ],
+      [
+        0.0,
+        0.0,
+        0.04999999701976776
+      ],
+      [
+        0.0,
+        0.0,
+        0.04999999701976776
+      ],
+      [
+        0.0,
+        0.0,
+        0.04999999701976776
+      ],
+      [
+        0.0,
+        0.0,
+        0.04999999701976776
+      ],
+      [
+        0.0,
+        0.0,
+        0.04999999701976776
+      ],
+      [
+        0.0,
+        0.0,
+        0.04999999701976776
+      ],
+      [
+        0.0,
+        0.0,
+        0.04999999701976776
+      ]
+    ],
+    "reward": [
+      -1.0,
+      -0.75,
+      -0.75,
+      -0.75,
+      -0.75,
+      -0.75,
+      -0.75,
+      -0.75
+    ]
+  },
+  "standard_evaluator_crash_flag_at_timeout": false,
+  "default_exposure": {
+    "transitions": 65536,
+    "agents": 128,
+    "steps_per_agent": 512.0,
+    "seconds_per_agent": 10.24,
+    "batches": 16.0,
+    "optimizer_steps": 192.0,
+    "complete_max_length_episodes": 1,
+    "fragment_seconds": 0.64,
+    "gamma": 0.995,
+    "gae_lambda": 0.95,
+    "gae_decay_steps": 18.264840182648378,
+    "gae_decay_seconds": 0.3652968036529675
+  }
+}

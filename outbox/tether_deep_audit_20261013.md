@@ -12,7 +12,7 @@ We found a real learner boundary defect and demonstrated that the current polici
 | 25 CPU translated-physics flights | Five saved GPU ground-failure times reproduced; frame differences 0.23–4.18 mm | Useful diagnostic replay, not calibrated physical truth |
 | 24 production GPU recovery cases | All eventually failed; signed angle/rate disturbances failed rapidly | Recovery remains poor beyond the launch phase |
 | Validation reset comparison | Three seeds × eight agents have identical physical starting states | The nominal 24 checks represent one deterministic condition |
-| Failure/timeout overlap | Real failure on step 500 is also marked truncated | A separate reporting corner case; current 250-step evaluation is unaffected |
+| Failure/timeout overlap | Real failure on step 500 is also marked truncated | An opt-in version now fixes the reporting corner case; current 250-step evaluation is unaffected |
 
 ## What the GPU recovery test showed
 
@@ -35,3 +35,5 @@ GPU work remains serial. Healthy training was not interrupted. Reserved audit se
 ## Remaining limits
 
 No reliable takeoff-to-hover result, original strict 1 mm obstacle navigation, or hardware accuracy has been demonstrated. The tether’s material, contact, attachment and shortened-contour model remain uncalibrated. The boundary correction is real; its contribution to hover failure still needs the paired training results.
+
+An opt-in termination version also makes physical failures take priority over simultaneous timeouts. It passed a mixed-batch production-logic test with GPU visibility disabled. The training factorial retains the old termination version to keep its two factors separate.
