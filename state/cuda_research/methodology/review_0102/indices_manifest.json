@@ -1,0 +1,50 @@
+[
+  {
+    "path": "\\\\wsl.localhost\\Ubuntu-Laya\\home\\n33du\\ai\\drone-rl-lab\\tmp\\cuda-research\\cuda_auto_0819_takeoff\\minibatch_indices_65536_06.pt",
+    "sha256": "a9e89f5cb593816f927f4a7021bd13610f78b37f3558140ad9d6a88910bce747"
+  },
+  {
+    "path": "\\\\wsl.localhost\\Ubuntu-Laya\\home\\n33du\\ai\\drone-rl-lab\\tmp\\cuda-research\\cuda_auto_0819_takeoff\\minibatch_indices_65536_00.pt",
+    "sha256": "81377350bae75006cc9d19ca63701b67244fffb10a2a23356b478724c00470ca"
+  },
+  {
+    "path": "\\\\wsl.localhost\\Ubuntu-Laya\\home\\n33du\\ai\\drone-rl-lab\\tmp\\cuda-research\\cuda_auto_0819_takeoff\\minibatch_indices_65536_08.pt",
+    "sha256": "751c58f5455e078895fcf459c44b77ecc14c949afbbe8ea9d2e69242893f888c"
+  },
+  {
+    "path": "\\\\wsl.localhost\\Ubuntu-Laya\\home\\n33du\\ai\\drone-rl-lab\\tmp\\cuda-research\\cuda_auto_0819_takeoff\\minibatch_indices_65536_04.pt",
+    "sha256": "51e72a15d19e7b10654c4fe82ed2308b4229ce129081549cdf4b93f34ba9fa11"
+  },
+  {
+    "path": "\\\\wsl.localhost\\Ubuntu-Laya\\home\\n33du\\ai\\drone-rl-lab\\tmp\\cuda-research\\cuda_auto_0819_takeoff\\minibatch_indices_65536_09.pt",
+    "sha256": "21e2c81afe3265deb7b4c5084533661a2ac14a00426429cfcbde05a442584a42"
+  },
+  {
+    "path": "\\\\wsl.localhost\\Ubuntu-Laya\\home\\n33du\\ai\\drone-rl-lab\\tmp\\cuda-research\\cuda_auto_0819_takeoff\\minibatch_indices_65536_05.pt",
+    "sha256": "a74b1f79070ec4f09368920028fc647b23dc06c4ff5dc5cca74656a1dae8652e"
+  },
+  {
+    "path": "\\\\wsl.localhost\\Ubuntu-Laya\\home\\n33du\\ai\\drone-rl-lab\\tmp\\cuda-research\\cuda_auto_0819_takeoff\\minibatch_indices_65536_10.pt",
+    "sha256": "87c46e9b47f38e8198c7bdd96f103ebd91879e3bf2c45b7011c4935ba8ff263d"
+  },
+  {
+    "path": "\\\\wsl.localhost\\Ubuntu-Laya\\home\\n33du\\ai\\drone-rl-lab\\tmp\\cuda-research\\cuda_auto_0819_takeoff\\minibatch_indices_65536_02.pt",
+    "sha256": "dc3e10863d2ff93f1e951a44eeadb1aa34af95e5259a2db14a679fd7730d1263"
+  },
+  {
+    "path": "\\\\wsl.localhost\\Ubuntu-Laya\\home\\n33du\\ai\\drone-rl-lab\\tmp\\cuda-research\\cuda_auto_0819_takeoff\\minibatch_indices_65536_11.pt",
+    "sha256": "e272ccaee754dff0715b8784b98a591f4d54bc8c6527505c40178a42ae94061f"
+  },
+  {
+    "path": "\\\\wsl.localhost\\Ubuntu-Laya\\home\\n33du\\ai\\drone-rl-lab\\tmp\\cuda-research\\cuda_auto_0819_takeoff\\minibatch_indices_65536_03.pt",
+    "sha256": "1760d1c48d129759889c03e6d87c0ded8d956d32aff39d3988f49ce25ef23d2d"
+  },
+  {
+    "path": "\\\\wsl.localhost\\Ubuntu-Laya\\home\\n33du\\ai\\drone-rl-lab\\tmp\\cuda-research\\cuda_auto_0819_takeoff\\minibatch_indices_65536_07.pt",
+    "sha256": "bb4b3276e06bd44191be80547f6d1b201a3afb34d57cb1902474d0c37309887b"
+  },
+  {
+    "path": "\\\\wsl.localhost\\Ubuntu-Laya\\home\\n33du\\ai\\drone-rl-lab\\tmp\\cuda-research\\cuda_auto_0819_takeoff\\minibatch_indices_65536_01.pt",
+    "sha256": "040afcb9e2c51f906b1a4fdac6edb7635862223b068fe6135c04923e59feec32"
+  }
+]
