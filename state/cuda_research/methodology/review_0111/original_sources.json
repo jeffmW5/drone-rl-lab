@@ -1,0 +1,129 @@
+{
+  "review": "0111",
+  "created_at_utc": "2026-10-13T16:48:30.549101+00:00",
+  "official_skill_path": "C:/Users/n33du/.codex/skills/huggingface-papers/SKILL.md",
+  "search_query": "long horizon PPO policy instability quadrotor direct motor stabilization actor critic reward clipping curriculum learning",
+  "hf_retrieval_utc": "2026-10-13T16:47:17.463577+00:00",
+  "hf_manifest": "retrieval.json",
+  "retrieval_staging_directory": "/home/n33du/ai/drone-rl-lab/tmp/deep_audit_physics/review0111_hf_retrieval_v001",
+  "staging_reason": "hf_methodology refusesexistingoutputdir; otheragentownsreview0111subdirectories. Freshretrievalstagedseparatelyandcopiedonlynewfileswithopenx.",
+  "search_results": [
+    {
+      "id": "2609.36802",
+      "title": "EasyPPO: Stabilizing the Critic Is Key",
+      "assessed": false
+    },
+    {
+      "id": "2307.04964",
+      "title": "Secrets of RLHF in Large Language Models Part I: PPO",
+      "assessed": false
+    },
+    {
+      "id": "2609.37119",
+      "title": "Unlocking the Critic: Reward-Free Policy Optimization for LLM Post-Training",
+      "assessed": false
+    },
+    {
+      "id": "2507.10628",
+      "title": "GHPO: Adaptive Guidance for Stable and Efficient LLM Reinforcement\n  Learning",
+      "assessed": false
+    },
+    {
+      "id": "2503.01491",
+      "title": "What's Behind PPO's Collapse in Long-CoT? Value Optimization Holds the\n  Secret",
+      "assessed": false
+    },
+    {
+      "id": "2502.16944",
+      "title": "Lean and Mean: Decoupled Value Policy Optimization with Global Value\n  Guidance",
+      "assessed": false
+    },
+    {
+      "id": "2211.12181",
+      "title": "User-Conditioned Neural Control Policies for Mobile Robotics",
+      "assessed": false
+    },
+    {
+      "id": "2602.04651",
+      "title": "SAFE: Stable Alignment Finetuning with Entropy-Aware Predictive Control for RLHF",
+      "assessed": false
+    }
+  ],
+  "papers": [
+    {
+      "id": "2311.13081",
+      "version": "v2",
+      "title": "Learning to Fly in Seconds",
+      "original_version_date": "2024-04-08",
+      "hf_metadata": {
+        "url": "https://huggingface.co/api/papers/2311.13081",
+        "status": 200,
+        "evidence": "source_01.txt",
+        "sha256": "cadf3bea13bea4790e540c3bd2543d6db7073444bf9f6d85c9a2e7d0776bfa77"
+      },
+      "hf_markdown": {
+        "url": "https://huggingface.co/papers/2311.13081.md",
+        "status": 200,
+        "evidence": "source_02.txt",
+        "sha256": "c9f4f7465819fb168a7526c71a34ba06a55e73b78a6a630f82f5fe2f26033850"
+      },
+      "original_html": "https://arxiv.org/html/2311.13081v2",
+      "original_pdf": "https://arxiv.org/pdf/2311.13081v2",
+      "sections_read": [
+        "IV Methodology",
+        "V Experimental Setup"
+      ],
+      "author_code": {
+        "url": "https://github.com/arplaboratory/learning-to-fly",
+        "verified": true,
+        "verification": "HF githubRepo matches originalpaperSupplementaryMaterial Code link; authorrepositoryopened successfully throughweb. Noexecution.",
+        "verification_reference": "state/cuda_research/methodology/review_0109/original_sources.json; verifiedrepository/paperlinks2026-10-13, noreexecutionornewauthorcodedownload."
+      },
+      "reason_for_reuse": "Newcompleted10xdurationlocalcase motivatesexaminingtrainingprogress/regression andfragmentcredit; thisisreusingoriginalmethods, notnewpublication orproof ofanoptimizer/physics/signfault."
+    },
+    {
+      "id": "2006.05990",
+      "version": "v1",
+      "title": "What Matters In On-Policy Reinforcement Learning? A Large-Scale Empirical Study",
+      "original_version_date": "2020-06-10",
+      "hf_metadata": {
+        "url": "https://huggingface.co/api/papers/2006.05990",
+        "status": 404,
+        "evidence": "retrieval.json"
+      },
+      "hf_markdown": {
+        "url": "https://huggingface.co/papers/2006.05990.md",
+        "status": 404,
+        "evidence": "retrieval.json"
+      },
+      "original_html": "https://arxiv.org/html/2006.05990v1",
+      "original_pdf": "https://arxiv.org/pdf/2006.05990v1",
+      "original_abstract": "https://arxiv.org/abs/2006.05990",
+      "sections_read": [
+        "3.2 Networks architecture",
+        "3.3 Normalization and clipping",
+        "3.4 Advantage Estimation",
+        "3.5 Training setup"
+      ],
+      "author_code": {
+        "url": "https://github.com/google-research/seed_rl",
+        "verified": true,
+        "verification": "RepositoryREADME ConfigurableOnPolicyAgent links to arxiv2006.05990; followedlinkandreachedthisoriginalpaper. README Additional links also namesstudy. GeneralSEEDrepositoryisarchived; noexecution. Repository agents-directory fetch wasunavailable, so specificagentcode wasnotread.",
+        "verification_reference": "state/cuda_research/methodology/review_0109/original_sources.json; verifiedrepository/paperlinks2026-10-13, noreexecutionornewauthorcodedownload."
+      },
+      "reason_for_reuse": "Newcompleted10xdurationlocalcase motivatesexaminingtrainingprogress/regression andfragmentcredit; thisisreusingoriginalmethods, notnewpublication orproof ofanoptimizer/physics/signfault."
+    }
+  ],
+  "read_scope": "Original2311.13081v2 IV/V, original2006.05990v1 3.2\u20133.5 rereadfornewcompletedlong-trainingcomparisoncontext. FreshHFrequeststatuses/rawcontentpreserved; paperresultsnotlocalresults.",
+  "evidence_scope": "Sourcepreparationonly; parentreviewownscompleted883\u2013885facts. R16longcomparison886pendingatdelegation; noinferenceoffinaloutcome, newparameterproposalorcontroller/physicsfault.",
+  "prior_reward_edge_reference": {
+    "methods": "state/cuda_research/methodology/review_0109/methods_notes.md",
+    "reward_edge_checks": "tmp/deep_audit_physics/fine_reward_independent_edge_checks_v001.json",
+    "fine_reward_source": "tether_sim/fine_zone_reward.py",
+    "fine_reward_sha256": "4e468a9713dca4b512b43bad6ea714e0a0379316239ab60ed0b1cec547e8afe9",
+    "matches_previous_reward_hash": true
+  },
+  "no_review_md_written": true,
+  "no_author_code_execution": true,
+  "no_gpu_or_config_source_changes": true
+}

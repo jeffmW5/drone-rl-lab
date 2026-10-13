@@ -117,3 +117,11 @@ prefixes against short references; trial885's reward15 prefix passes. Remaining
 short and recovery plans are retained and healthy trainers drain naturally before
 queue priority changes. Review0110 closes882; report counterevidence and check
 current native loop.json rather than inferring dispatch from a trial counter.
+
+2026-10-13 review0111 now closes885. Long reward15 control885 completed655360
+transitions/1081.10s with zero sustained hover at all40 periodic checkpoints and
+final. Its65k weights and four prefix evaluations match short881 exactly. Long
+reward16 treatment886 remains pending; its65k weights/evaluation match short882.
+Keep the frozen long pairs running, preserve intermediate/final regressions and
+do not interpret post-reset altitude as precision. Next formal review is due
+after three further completed trials or a novel failure, using the latest index.

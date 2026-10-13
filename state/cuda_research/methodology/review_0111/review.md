@@ -1,0 +1,32 @@
+# Review 0111: completed tenfold control, matched treatment pending
+
+Last reviewed completed trial index: 885. Date: 2026-10-13 UTC. Review0110 ended at882;883-885 are the next three completed trials. Daemon554137 remains healthy and unpaused with one GPU trainer. No restart, interruption, duplicate job or manual GPU probe was used. All frozen duration and reward arms remain unchanged.
+
+## Observations
+
+The second short reward15/16 pair883/884 at training seed70602 completed65536 transitions within its600s budget. Initial physical metrics/trajectories, checkpoint hashes and core-source snapshots match. Both final checkpoints retain24 takeoffs, zero counted escapes and zero sustained ground hover. Peak holds are0.08/0.22s; altitude endpoints95.159/91.429mm. Treatment's selected16384 checkpoint has1.632mm altitude error but only0.24s hold, then regresses. At the last4.52s sampled frame, speeds0.837/0.791m/s and square extents1.195/1.032m still fail hover. There are no recorded pre-reset failures within these five-second tests; longer survival is untested.
+
+This preserves counterevidence to the first short seed's added reward16 escapes: those did not repeat in the second seed. Both short seeds still lack sustained hover. Do not promote reward16 or describe its small hold change as stable flight. Reused validation seeds/eight lanes repeat one physical condition, not24 independent domains.
+
+Long control885 completed all655360 requested transitions in1081.10s, below its1800s cap. Its exact65536 prefix reproduces short control881: all10 tensors/29931 elements, complete evaluation and terminal traces, plus actual source/reference hashes pass. Thus the observed later changes follow continued optimization within one run, rather than a mismatched initial prefix. Best_step remains0; no learned checkpoint promotion is established.
+
+All40 periodic evaluations and the final have zero sustained ground hover. Maximum temporary hold is0.18s. The first four saved checkpoints are escape-free; failures appear at81920, with the first escape at4.98s. Checkpoints278528 and376832 are also escape-free, preserving nonmonotonic counterevidence. Thirty-four of40 periodic checkpoints contain24 repeated zone escapes. Later first failures reach as early as3.64s at557056. Final885 has24 escapes,24 takeoffs, zero hover and zero peak hold, with first failure at3.96s (step198). Its carrier is approximately(-1.616,2.027,0.900)m, velocity(-1.588,1.795,-0.020)m/s and speed2.397m/s at the true pre-reset failure. The234.179mm final altitude endpoint is after reset, not convergence.
+
+The tenfold duration did not solve hovering in this seed and configuration. This does not establish that all longer RL training fails, or isolate the cause of drift. Initial/periodic/final trajectories, exact terminal flags and rejected intermediate checkpoints are preserved in long_control/. Existing per-trial leased physics5 signed rotation/thrust/normalization/slack-gravity checks passed; their narrow scope does not calibrate contact, material or attachment fidelity. Training failure alone does not demonstrate wrong physics or a global reward/action sign defect.
+
+## Original methods read
+
+The official huggingface-papers skill was used for a fresh search of long-horizon PPO instability and direct-motor stabilization.2311.13081 metadata/markdown succeeded;2006.05990 HF404s were preserved with original arXiv fallback. Retrieval URLs/date/versions, available author repositories and reuse rationale are in retrieval.json/original_sources.json. No author code was executed.
+
+- [Learning to Fly in Seconds v2](https://arxiv.org/html/2311.13081v2), IV/V: actuator/initial-state coverage and episode-length evaluation motivate checking recovery and behavioral outcomes. Its untethered TD3, RPM actions and asymmetric information differ from our privileged full-tether PPO task. Its published performance is not local hover evidence.
+- [What Matters In On-Policy Reinforcement Learning? A Large-Scale Empirical Study v1](https://arxiv.org/html/2006.05990v1),3.2-3.5: initialization/action scale, observation/value normalization, advantage/value-loss implementation and temporal data collection are relevant audit dimensions. More total transitions do not themselves increase the fragment credit horizon. Current total-duration and horizon32 remain separate factors; the paper does not prove a horizon or normalization change will fix this simulator.
+
+These original sections were reread for newly completed tenfold-duration evidence, not presented as a new publication. The independent learner boundary correction remains verified but has not shown reliable flight benefit. Reward16's finite-unit-quaternion, C0-boundary, ground-clipping and inverted/fast-state taper limitations remain in0109; there is no new evidence justifying changing those frozen definitions mid-pair.
+
+## Decision and next falsifiable comparison
+
+Continue the already-authorized matched long treatment886 and remaining frozen seed pairs without changing reward, physics, reset, action, learning rate or credit horizon. That is the concrete falsifiable current test: reward15 versus16 under the same655360-transition duration, with unchanged hover/failure criteria. Reject promotion without replicated sustained ground hover or credible motion/hold gains without added true failures/lost takeoffs. Reward magnitude, a better initial checkpoint or a post-reset altitude endpoint is insufficient. A separate credit-horizon, exploration, reset or physics adaptation is not yet justified by this single completed control while its matched treatment is incomplete.
+
+The886/882 first65536 prefix also passes all12 CPU checks: exact10-tensor/29931-element equality, reference SHA/CRC/stable finite reads, source snapshots including the reward helper, and full evaluation including terminal traces. Full886 outcome remains pending. No duration effect for reward16 is inferred from its partial checkpoints. A later review must close the actual completed pair before selecting another method.
+
+Evidence:883/884 full audit remains immutable in0110/fine_second_seed/;0111/long_control/ preserves885 initial/all40 periodic/final results and trajectory analysis; long_treatment_prefix/ records886/882 checks. Original strict sustained1mm obstacle navigation and hardware precision remain unachieved. Reserved audit/hardware seeds are untouched; validation remains provisional and the simulator uncalibrated.
