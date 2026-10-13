@@ -1,0 +1,126 @@
+{
+  "review": "0110",
+  "created_at_utc": "2026-10-13T16:16:15.635497+00:00",
+  "official_skill_path": "C:/Users/n33du/.codex/skills/huggingface-papers/SKILL.md",
+  "search_query": "dense reward clipping distance shaping quadrotor learned motor PPO near hover stabilization credit assignment",
+  "hf_retrieval_utc": "2026-10-13T16:14:15.632484+00:00",
+  "hf_manifest": "retrieval.json",
+  "search_results": [
+    {
+      "id": "2211.12181",
+      "title": "User-Conditioned Neural Control Policies for Mobile Robotics",
+      "assessed": false
+    },
+    {
+      "id": "2607.13033",
+      "title": "DenseReward: Dense Reward Learning via Failure Synthesis for Robotic Manipulation",
+      "assessed": false
+    },
+    {
+      "id": "2606.10305",
+      "title": "SARM2: Multi-Task Stage Aware Reward Modeling for Self Improving Robotic Manipulation",
+      "assessed": false
+    },
+    {
+      "id": "2606.24231",
+      "title": "FlowR2A: Learning Reward-to-Action Distribution for Multimodal Driving Planning",
+      "assessed": false
+    },
+    {
+      "id": "2509.24892",
+      "title": "JuggleRL: Mastering Ball Juggling with a Quadrotor via Deep\n  Reinforcement Learning",
+      "assessed": false
+    },
+    {
+      "id": "2508.02298",
+      "title": "CAPO: Towards Enhancing LLM Reasoning through Verifiable Generative\n  Credit Assignment",
+      "assessed": false
+    },
+    {
+      "id": "2302.00270",
+      "title": "Internally Rewarded Reinforcement Learning",
+      "assessed": false
+    },
+    {
+      "id": "2311.13081",
+      "title": "Learning to Fly in Seconds",
+      "assessed": false
+    }
+  ],
+  "papers": [
+    {
+      "id": "2311.13081",
+      "version": "v2",
+      "title": "Learning to Fly in Seconds",
+      "original_version_date": "2024-04-08",
+      "hf_metadata": {
+        "url": "https://huggingface.co/api/papers/2311.13081",
+        "status": 200,
+        "evidence": "source_01.txt",
+        "sha256": "cadf3bea13bea4790e540c3bd2543d6db7073444bf9f6d85c9a2e7d0776bfa77"
+      },
+      "hf_markdown": {
+        "url": "https://huggingface.co/papers/2311.13081.md",
+        "status": 200,
+        "evidence": "source_02.txt",
+        "sha256": "c9f4f7465819fb168a7526c71a34ba06a55e73b78a6a630f82f5fe2f26033850"
+      },
+      "original_html": "https://arxiv.org/html/2311.13081v2",
+      "original_pdf": "https://arxiv.org/pdf/2311.13081v2",
+      "sections_read": [
+        "IV Methodology",
+        "V Experimental Setup"
+      ],
+      "author_code": {
+        "url": "https://github.com/arplaboratory/learning-to-fly",
+        "verified": true,
+        "verification": "HF githubRepo matches originalpaperSupplementaryMaterial Code link; authorrepositoryopened successfully throughweb. Noexecution.",
+        "verification_reference": "state/cuda_research/methodology/review_0109/original_sources.json; verifiedrepository/paperlinks2026-10-13, noreexecutionornewauthorcodedownload."
+      },
+      "reason_for_reuse": "Recentlocaldense-distance-shaping/incomingreward-clipping hypothesis; unchangedoriginalmethodpaper reusedforapplicabilityandcounterevidence, notnewpublication ornewlocalcausalproof."
+    },
+    {
+      "id": "2006.05990",
+      "version": "v1",
+      "title": "What Matters In On-Policy Reinforcement Learning? A Large-Scale Empirical Study",
+      "original_version_date": "2020-06-10",
+      "hf_metadata": {
+        "url": "https://huggingface.co/api/papers/2006.05990",
+        "status": 404,
+        "evidence": "retrieval.json"
+      },
+      "hf_markdown": {
+        "url": "https://huggingface.co/papers/2006.05990.md",
+        "status": 404,
+        "evidence": "retrieval.json"
+      },
+      "original_html": "https://arxiv.org/html/2006.05990v1",
+      "original_pdf": "https://arxiv.org/pdf/2006.05990v1",
+      "original_abstract": "https://arxiv.org/abs/2006.05990",
+      "sections_read": [
+        "3.2 Networks architecture",
+        "3.3 Normalization and clipping",
+        "3.4 Advantage Estimation",
+        "3.5 Training setup"
+      ],
+      "author_code": {
+        "url": "https://github.com/google-research/seed_rl",
+        "verified": true,
+        "verification": "RepositoryREADME ConfigurableOnPolicyAgent links to arxiv2006.05990; followedlinkandreachedthisoriginalpaper. README Additional links also namesstudy. GeneralSEEDrepositoryisarchived; noexecution. Repository agents-directory fetch wasunavailable, so specificagentcode wasnotread.",
+        "verification_reference": "state/cuda_research/methodology/review_0109/original_sources.json; verifiedrepository/paperlinks2026-10-13, noreexecutionornewauthorcodedownload."
+      },
+      "reason_for_reuse": "Recentlocaldense-distance-shaping/incomingreward-clipping hypothesis; unchangedoriginalmethodpaper reusedforapplicabilityandcounterevidence, notnewpublication ornewlocalcausalproof."
+    }
+  ],
+  "read_scope": "Original2311.13081v2 IV/V and2006.05990v1 3.2\u20133.5 readthroughHFwhereavailable andarxivfallback. Searchisnotmethodvalidation; nonselectedhitsnotreadorclaimedapplicable.",
+  "reuse_context": "FreshHFsearchandmetadata/markdownattempt; sourcepapersremainold. Newlocalreward16clipping/shapinghypothesismotivatesreuse. Pairedcampaignincompleteatdispatch; thissourcepreparationmakesno882outcomeclaim andproposesnonewfactors.",
+  "local_prior_evidence": {
+    "methods": "state/cuda_research/methodology/review_0109/methods_notes.md",
+    "reward_edge_checks": "tmp/deep_audit_physics/fine_reward_independent_edge_checks_v001.json",
+    "fine_reward_source": "tether_sim/fine_zone_reward.py",
+    "fine_reward_sha256": "4e468a9713dca4b512b43bad6ea714e0a0379316239ab60ed0b1cec547e8afe9",
+    "matches_previous_reward_hash": true
+  },
+  "no_author_code_execution": true,
+  "no_gpu_or_config_changes": true
+}

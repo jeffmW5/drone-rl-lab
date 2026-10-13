@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-13T16:16:30.393629+00:00",
+  "user_request": "Train for 10x longer",
+  "queue": "configs/cuda_research/methodology_queue_v000_user_abca_0_tenfold_reward.json",
+  "queue_sha256": "df05f820ad81d2c6eba75207a593e497bedc45e9791526a6fcfaea0dcc707417",
+  "short_transitions": 65536,
+  "requested_transitions": 655360,
+  "budget_seconds_per_trial": 1800,
+  "parallel_environments": 128,
+  "control_hz": 50,
+  "nominal_seconds_per_environment": 102.4,
+  "evaluation_every_transitions": 16384,
+  "evaluation_episode_steps": 250,
+  "duration_comparison": "New runs recreate identical starting weights/seed/fresh Adam and then continue within the same optimizer/environment state. Prefix equality is expected and must be checked; it is not assumed from configuration alone.",
+  "pair_difference": "reward_version and identifying/reference labels only; fixed physics5/reset3/observation2/control2/mask2/learningrate3e-6",
+  "dispatch": "Queue takes priority only after the current healthy trainer drains; pending short and recovery plans remain frozen and retained.",
+  "rejection_rule": "The first short reward16 seed added escapes and no hover. Requested longer exposure is a falsifiable test, not a promoted method. Require replicated ground sustained-hover improvement with no additional true failures or lost takeoffs; inspect initial/periodic/final and verify exact short prefixes. Do not rank changed reward magnitudes or post-reset altitude.",
+  "scope": "Explicit user duration request despite short-run counterevidence. No hover, reward16 promotion, held-out validation or hardware accuracy claim."
+}

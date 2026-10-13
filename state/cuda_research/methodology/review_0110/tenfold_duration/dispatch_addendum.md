@@ -1,0 +1,3 @@
+# Tenfold dispatch correction
+
+An early draft inferred that884was the firstlongcontrol from the changedstatecounter. Actualimmutableplaninspection shows884is fine_distance_reward16_seed70602, still65536transitions. It was alreadylaunchedbefore thenewqueuewasread. Noactiveconfigorprocesswaschanged; the655360transition priorityqueue remainsnext. Theoriginalunpublisheddraft isretained asdispatch_draft_v001.md. Actualnexttrialnumberisnotassumed.

@@ -1,0 +1,30 @@
+{
+  "verified_at": "2026-10-13T16:20:59.417829+00:00",
+  "trial": "cuda_auto_0885_takeoff",
+  "methodology_trial": "fine_distance_10x_reward15_seed70601",
+  "requested_transitions": 655360,
+  "wall_clock_cap_seconds": 1800,
+  "environments": 128,
+  "plan_path": "configs/cuda_research/cuda_auto_0885_takeoff.json",
+  "plan_sha256": "9a0f6f2a37b089b40c2bc152e850002094ca807bf32dee4aa85f4c6091e9ecd4",
+  "training_status": {
+    "status": "training",
+    "steps": 49152,
+    "elapsed": 58.702599999000086
+  },
+  "physics_check": {
+    "status": "passed",
+    "physics_version": 5,
+    "max_impulse_error_ns": 3.644658783648897e-11,
+    "zero_rotation_baseline_difference_m": 3.511333446226672e-10,
+    "checks": "Positive/negative roll and pitch, yaw, quaternion normalization, updated-axis total impulse, no-rotation baseline",
+    "slack_freefall_error_m": 1.1237677455255835e-12,
+    "scope": "One-substep full-tether regression; not learned navigation success or numerical convergence"
+  },
+  "daemon_state": {
+    "status": "running cuda_auto_0885_takeoff",
+    "paused": false,
+    "error": null
+  },
+  "scope": "Verified long baseline launch; treatment queues next. No long-run outcome or exact-prefix equality claim yet."
+}

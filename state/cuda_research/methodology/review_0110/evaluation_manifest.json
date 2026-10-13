@@ -1,0 +1,236 @@
+[
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/result.json",
+    "sha256": "f7316c347eaa4e922843450b74c65bf8aed7db90d780a44cba14d62244d5665b",
+    "archived": "state/cuda_research/methodology/review_0110/results/880_result.json"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/selection.json",
+    "sha256": "5e3eaa868a97831baffa7b354fd18769abe0efbb8cf8a57eb35f44ab237d193c",
+    "archived": "state/cuda_research/methodology/review_0110/results/880_selection.json"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/config.json",
+    "sha256": "f176ebcb2d017dbb32c07fbb5cbd22deca20775a9ad4ef9394e648904d910f4b",
+    "archived": "state/cuda_research/methodology/review_0110/results/880_config.json"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/thrust_order_checks.json",
+    "sha256": "c0de654c936945f63cc634b19ae05e5c7ecb34796069b78eb12110d120f67d00",
+    "archived": "state/cuda_research/methodology/review_0110/results/880_thrust_order_checks.json"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/learner_valid_mask.json",
+    "sha256": "aab4f593a7fbd7a2e3572b3ae5db583983368f3007a71a9f9f96a4723faf7dd4",
+    "archived": "state/cuda_research/methodology/review_0110/results/880_learner_valid_mask.json"
+  },
+  {
+    "trial": 881,
+    "file": "tmp/cuda-research/cuda_auto_0881_takeoff/result.json",
+    "sha256": "e23c826eca156cadb906a31d02baa801f3c8fd94fc7a4b220d86b88845166540",
+    "archived": "state/cuda_research/methodology/review_0110/results/881_result.json"
+  },
+  {
+    "trial": 881,
+    "file": "tmp/cuda-research/cuda_auto_0881_takeoff/selection.json",
+    "sha256": "5e3eaa868a97831baffa7b354fd18769abe0efbb8cf8a57eb35f44ab237d193c",
+    "archived": "state/cuda_research/methodology/review_0110/results/881_selection.json"
+  },
+  {
+    "trial": 881,
+    "file": "tmp/cuda-research/cuda_auto_0881_takeoff/config.json",
+    "sha256": "ac62db01ce01a4081f4e6a896747077f93b84e21e79e8ab6ff8158d72f8f1b8f",
+    "archived": "state/cuda_research/methodology/review_0110/results/881_config.json"
+  },
+  {
+    "trial": 881,
+    "file": "tmp/cuda-research/cuda_auto_0881_takeoff/thrust_order_checks.json",
+    "sha256": "c0de654c936945f63cc634b19ae05e5c7ecb34796069b78eb12110d120f67d00",
+    "archived": "state/cuda_research/methodology/review_0110/results/881_thrust_order_checks.json"
+  },
+  {
+    "trial": 881,
+    "file": "tmp/cuda-research/cuda_auto_0881_takeoff/learner_valid_mask.json",
+    "sha256": "aab4f593a7fbd7a2e3572b3ae5db583983368f3007a71a9f9f96a4723faf7dd4",
+    "archived": "state/cuda_research/methodology/review_0110/results/881_learner_valid_mask.json"
+  },
+  {
+    "trial": 882,
+    "file": "tmp/cuda-research/cuda_auto_0882_takeoff/result.json",
+    "sha256": "c6d4e3c081eeffd12fd3d36bdff30ece344a7e10965cc6588264987b03be79df",
+    "archived": "state/cuda_research/methodology/review_0110/results/882_result.json"
+  },
+  {
+    "trial": 882,
+    "file": "tmp/cuda-research/cuda_auto_0882_takeoff/selection.json",
+    "sha256": "5e3eaa868a97831baffa7b354fd18769abe0efbb8cf8a57eb35f44ab237d193c",
+    "archived": "state/cuda_research/methodology/review_0110/results/882_selection.json"
+  },
+  {
+    "trial": 882,
+    "file": "tmp/cuda-research/cuda_auto_0882_takeoff/config.json",
+    "sha256": "d7c144feddcbc47c9bb4c085d280a605eba689cb7d44eb734f7fddb10a75cb28",
+    "archived": "state/cuda_research/methodology/review_0110/results/882_config.json"
+  },
+  {
+    "trial": 882,
+    "file": "tmp/cuda-research/cuda_auto_0882_takeoff/thrust_order_checks.json",
+    "sha256": "c0de654c936945f63cc634b19ae05e5c7ecb34796069b78eb12110d120f67d00",
+    "archived": "state/cuda_research/methodology/review_0110/results/882_thrust_order_checks.json"
+  },
+  {
+    "trial": 882,
+    "file": "tmp/cuda-research/cuda_auto_0882_takeoff/learner_valid_mask.json",
+    "sha256": "aab4f593a7fbd7a2e3572b3ae5db583983368f3007a71a9f9f96a4723faf7dd4",
+    "archived": "state/cuda_research/methodology/review_0110/results/882_learner_valid_mask.json"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_32768.json",
+    "sha256": "f00260f09c2993421f055f11a24f029a7de1158dcd4e522b6b8a27ac67bb2f5a",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_163840.json",
+    "sha256": "29ca78cfc69cb9fd41c2b88c78707cd2ebfa94436907500c79ddaeca89262264",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_245760.json",
+    "sha256": "69889fa5b00f2e4b146f940b7b58bb5bddb2e0a25e9581ab98b47a4f154da224",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_147456.json",
+    "sha256": "cef5badb7eb949067f862fd197e134a18a0d5e1d040397c27abfeb3f059d2b37",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_131072.json",
+    "sha256": "dbbb3ccac6cc8e76983420735c1239e86c6c3fedb95931e6a1976615afee1dda",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_262144.json",
+    "sha256": "c55b0f60f526c0a108221bc18e5fe55c79cd870c05c581216cfb024758dfd046",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_180224.json",
+    "sha256": "e28b4bd8d60696ea3959c112c10d456fcd5f1832a44e7bff4cfee667878f727e",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_49152.json",
+    "sha256": "929ccd8b1c3a18f99e6fb2b14c215ab4eb7cd28d7452daa5eb22f164e767e68b",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_81920.json",
+    "sha256": "a656e129f4be81b7cc2b576575bc797eedccdcdb99eec8a2047b62072025cf30",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_114688.json",
+    "sha256": "706df64170db5539fbf8949a9629326905b431a41f2293a5dde2c744223c2c33",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_212992.json",
+    "sha256": "c18ad14d32a5cfb89283da04d984a983881452df13a0328fdfa413b066198d62",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_16384.json",
+    "sha256": "cd7b7c4f5af7c6ceca913cec720eba7db10ff6f445eb1fa8192d02f710abc113",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_65536.json",
+    "sha256": "fe1fae208e3062f827514914fd0c74cf3397e1f21cd5c1756d30491f4bdecd9f",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_229376.json",
+    "sha256": "e0caeb774f84c49d9da37407d74c10ac8ce2744a855978e7e902b6e1fe4c0213",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_196608.json",
+    "sha256": "c7cfa62911854c18fc04efabe682651ea98bad7ec56c34c7323e067e343213d8",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 880,
+    "file": "tmp/cuda-research/cuda_auto_0880_takeoff/eval_98304.json",
+    "sha256": "0dd0955d5cb070af85a8e41dab888d4b2941374b629e129f1bbe80d40497212e",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 881,
+    "file": "tmp/cuda-research/cuda_auto_0881_takeoff/eval_32768.json",
+    "sha256": "a61442ad1a27fd7aaaff5253add48531749c10ea07e980cc43d3b2fadff29777",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 881,
+    "file": "tmp/cuda-research/cuda_auto_0881_takeoff/eval_49152.json",
+    "sha256": "adfa66d640ab39e96226c354811aef193e1a4672f46f00094b0983c7c462f667",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 881,
+    "file": "tmp/cuda-research/cuda_auto_0881_takeoff/eval_16384.json",
+    "sha256": "94f163c77a2629a3030ec35b7e51a98ffb0f3cc6b05a4ff57a040dea5f156d6a",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 881,
+    "file": "tmp/cuda-research/cuda_auto_0881_takeoff/eval_65536.json",
+    "sha256": "df19bfe72a6761062809b0fe4120e9b2952db7136335f5f7fb1ae480f4149197",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 882,
+    "file": "tmp/cuda-research/cuda_auto_0882_takeoff/eval_32768.json",
+    "sha256": "fdf3c5572135feccf73087fb66d09d97ad34b5ada4b317689d0aaacc1d21b1c2",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 882,
+    "file": "tmp/cuda-research/cuda_auto_0882_takeoff/eval_49152.json",
+    "sha256": "82c650e8efad27371467e26d21c6a5a77de58c723e8fdd2e39213f2c105b72af",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 882,
+    "file": "tmp/cuda-research/cuda_auto_0882_takeoff/eval_16384.json",
+    "sha256": "e4596b8cab8323bba7dd58c15fae51642e8c4659548c1857c24d73634253b22c",
+    "artifact": "immutable periodic evaluation"
+  },
+  {
+    "trial": 882,
+    "file": "tmp/cuda-research/cuda_auto_0882_takeoff/eval_65536.json",
+    "sha256": "6b0913e7a5c827773bee26ae7aa64bc463212b332510c811f60dae593316632b",
+    "artifact": "immutable periodic evaluation"
+  }
+]
