@@ -37,7 +37,7 @@ def publish(vec,mode,step):
         snapshot.update(mode=mode+(' · direct learned motors' if args.direct else ' · PD + AI residual'),step=step,positions=s.position[0].cpu().tolist(),goal=vec.goal[0].cpu().tolist(),boxes=s.boxes[0].cpu().tolist(),failed=int(s.failed[0]),gpu=torch.cuda.get_device_name(0))
 
 def evaluate(policy,seed):
-    vec=CudaVector(8,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),physics_version=plan.get('physics_version',1),integration_version=plan.get('integration_version',1),diagnostic_zone_version=plan.get('diagnostic_zone_version',0),training_reset_version=plan.get('training_reset_version',1) if plan.get('diagnostic_zone_version',0) else 1);vec.async_reset(seed);collisions=0;peak_height=torch.zeros(8,device='cuda');hold=torch.zeros(8,device='cuda');peak_hold=hold.clone();trajectory=[]
+    vec=CudaVector(8,direct=args.direct,reward_version=plan.get('reward_version',1),phase=plan.get('phase','destination'),control_version=plan.get('control_version',1),physics_version=plan.get('physics_version',1),integration_version=plan.get('integration_version',1),diagnostic_zone_version=plan.get('diagnostic_zone_version',0),training_reset_version=plan.get('evaluation_reset_version',plan.get('training_reset_version',1)) if plan.get('diagnostic_zone_version',0) else 1);vec.async_reset(seed);collisions=0;peak_height=torch.zeros(8,device='cuda');hold=torch.zeros(8,device='cuda');peak_hold=hold.clone();trajectory=[]
     zone_hold=hold.clone();peak_zone_hold=hold.clone()
     acquisition_hold=torch.zeros(8,device='cuda');peak_acquisition=acquisition_hold.clone()
     airborne_hold=acquisition_hold.clone();peak_airborne=acquisition_hold.clone()

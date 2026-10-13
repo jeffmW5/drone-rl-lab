@@ -79,8 +79,13 @@ def navigation_priority_reward(positions,velocity,orientation,goal,failed,reward
     return base
 
 def training_starts(start,version,phase):
-    if version not in (1,2,3):raise ValueError('Unsupported training reset version')
+    if version not in (1,2,3,4,5):raise ValueError('Unsupported training reset version')
     if version==1:return start
+    if version in (4,5):
+        result=training_starts(start,3,phase)
+        result[1::2,:,0]=0;result[1::2,:,1]=0
+        result[1::2,:,2]=.8-torch.arange(14,device=start.device,dtype=start.dtype)*.6/13
+        return result
     if version==3:
         if phase not in ('takeoff','hover'):raise ValueError('Valid ground reset requires takeoff/hover phase')
         result=start.clone()
@@ -95,6 +100,12 @@ def training_starts(start,version,phase):
     height=.2 if phase=='takeoff' else .6
     result[1::2,:,2]=height+.6-torch.arange(14,device=start.device,dtype=start.dtype)*.6/13
     return result
+
+
+def initial_motor_forces(mass,reset_version):
+    force=torch.zeros((mass.shape[0],4),device=mass.device,dtype=mass.dtype)
+    if reset_version==5:force[1::2]=mass[1::2].sum(1,keepdim=True)*9.81/4
+    return force
 
 
 class LandingBeforeSuccess:
@@ -180,6 +191,7 @@ class CudaVector:
             self.start.zero_();self.start[:,:,0]=torch.arange(14,device='cuda')*.6/13
             self.start[:,:,2]=.025;self.start[:,0,2]=.05
             self.start=training_starts(self.start,training_reset_version,phase)
+        self.reset_motor_forces=initial_motor_forces(self.sim.mass,training_reset_version)
         self.allocation=torch.tensor([[1,1,1,1],[.032,.032,-.032,-.032],[-.032,.032,.032,-.032],[-.006,.006,-.006,.006]],device='cuda')
 
     def async_reset(self,seed=41):
@@ -192,7 +204,7 @@ class CudaVector:
         self.sim.boxes[:,:,2]=.35;self.sim.boxes[:,:,3:]=torch.tensor([.1,.1,.35],device='cuda')
         self.sim.wind[:,:2]=(torch.rand(self.num_agents,2,device='cuda')-.5)*.012
         if self.direct:
-            self.sim.position[:]=self.start;self.sim.motors.zero_()
+            self.sim.position[:]=self.start;self.sim.motors[:]=self.reset_motor_forces
             self.sim.boxes[:,:,:2]+=2  # Keep takeoff strip clear in first experiment.
             if self.phase in ('takeoff','hover'):
                 self.goal[:,:2]=self.start[:,-1,:2]
@@ -272,7 +284,7 @@ class CudaVector:
             if getattr(self,'landing_gate',None) is not None:self.landing_gate.reset(mask)
             initial=self.start
             s.position[mask]=initial[mask];s.velocity[mask]=0;s.orientation[mask]=0;s.orientation[mask,0]=1
-            s.motors[mask]=0 if self.direct else s.mass[mask].sum(1,keepdim=True)*9.81/4;s.failed[mask]=0;self.steps[mask]=0
+            s.motors[mask]=self.reset_motor_forces[mask] if self.direct else s.mass[mask].sum(1,keepdim=True)*9.81/4;s.failed[mask]=0;self.steps[mask]=0
             self.previous_error[mask]=torch.linalg.vector_norm(s.position[mask,-1]-self.goal[mask],dim=1)
 
     def recv(self):
