@@ -1,0 +1,33 @@
+{
+  "retrieved_at": "2026-10-13T07:13:24.014726+00:00",
+  "query": "Adam optimizer moment state reinforcement learning resume",
+  "paper_ids": [
+    "1412.6980",
+    "2006.05990"
+  ],
+  "requests": [
+    {
+      "url": "https://huggingface.co/api/papers/search?q=Adam+optimizer+moment+state+reinforcement+learning+resume&limit=8",
+      "status": 200,
+      "file": "source_00.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/1412.6980",
+      "status": 200,
+      "file": "source_01.txt"
+    },
+    {
+      "url": "https://huggingface.co/papers/1412.6980.md",
+      "status": 200,
+      "file": "source_02.txt"
+    },
+    {
+      "url": "https://huggingface.co/api/papers/2006.05990",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://huggingface.co/papers/2006.05990.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}
