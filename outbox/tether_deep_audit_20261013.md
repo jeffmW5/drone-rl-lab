@@ -41,3 +41,5 @@ An opt-in termination version also makes physical failures take priority over si
 ## First training comparison
 
 The first short original/corrected pair completed on GPU with zero sustained hover in both arms. Final altitude errors were 59.83 and 56.99 mm; that small difference is not a success claim. The longer original-learner run has passed its 65k prefix: all checkpoint tensors match the short run exactly. Longer outcomes and the remaining training seeds are still pending.
+
+The first 262k control has now completed without hitting its budget cap. Its final policy had 24 zone escapes and zero sustained hover, versus zero escapes at its matched 65k prefix. Longer training alone regressed in this seed. The corrected long arm and remaining seeds continue serially; no factor is promoted.

@@ -1,0 +1,3 @@
+# First uninterrupted long control completed
+
+Trial850 reached262,144transitions in436.4trainingseconds, not censored by600scap.65kprefixmatched848shortfinal exactly, so laterbehaviorisactualcontinuationofsameoptimizationpath. Short848final0failures,59.834mmaltitudeerror,0hover. Long850final24zoneescapes,522.991mmaltitudeerror,0hover; all24takeoffsremainoneidenticalvalidationresetdomain. No duration-alone benefit in thisseed. Intermediate best/finalregressionsretained. Mask2long/otherseedsstillpending, no conclusion aboutfullfactorial orpromotion. Healthyserialdaemoncontinues.
